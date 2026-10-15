@@ -1,6 +1,7 @@
 "use client";
 
 import { Bell, ChevronDown, KeyRound, LogOut } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@davinci/types";
 import { sair } from "@/lib/acoes-sessao";
 import { prazoRelativo } from "@/lib/datas";
-import { BotaoRecolherMenu } from "./estado-do-menu";
+import { BotaoAbrirGaveta, BotaoRecolherMenu } from "./estado-do-menu";
 import { IconeDaTela } from "./icones-do-menu";
 import { LinhaDePrazo, telaDoIcone, textoDoSelo } from "./linha-de-prazo";
 import { Pesquisa } from "./pesquisa";
@@ -23,6 +24,8 @@ const naBarra =
 
 /**
  * Barra superior (branco gelo, 56 px): recolher o menu, trilha da página, "+ Novo", vencidos e o menu do usuário.
+ * Abaixo de 1024 px: símbolo da marca no lugar do recolher; no tablet, botão da gaveta; no celular o "Novo" vai
+ * para o "+" da barra inferior.
  * O ouro continua só no menu lateral e na logo (interface.md §7).
  */
 export function BarraSuperior({
@@ -40,47 +43,59 @@ export function BarraSuperior({
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-borda bg-barra px-3 text-texto sm:px-4 print:hidden">
       <BotaoRecolherMenu />
+      <BotaoAbrirGaveta />
+      <Link href="/" aria-label="Início" className="shrink-0 lg:hidden">
+        <Image
+          src="/brand/simbolo.svg"
+          alt=""
+          width={28}
+          height={28}
+          className="h-7 w-7"
+        />
+      </Link>
       <Trilha grupos={grupos} />
       <span className="flex-1" />
       <Pesquisa grupos={grupos} />
       {atalhos.length > 0 && (
-        <Suspenso
-          rotulo="Criar novo registro"
-          largura="w-64"
-          classeDoBotao="flex h-9 items-center gap-1.5 rounded-sm border border-borda-forte px-3 text-sm font-semibold text-texto hover:bg-superficie-2 aria-expanded:bg-superficie-2"
-          botao={
-            <>
-              Novo
-              <ChevronDown
-                aria-hidden
-                size={16}
-                strokeWidth={1.75}
-                className="text-texto-2"
-              />
-            </>
-          }
-        >
-          {(fechar) => (
-            <ul className="max-h-[70vh] overflow-y-auto py-1">
-              {atalhos.map((a) => (
-                <li key={a.href}>
-                  <Link
-                    href={a.href}
-                    onClick={fechar}
-                    className="flex items-center gap-2.5 px-3 py-2 text-base text-texto hover:bg-superficie-2"
-                  >
-                    <span className="text-texto-2">
-                      <IconeDaTela
-                        href={a.href.replace(/\/(nova|novo)$/, "")}
-                      />
-                    </span>
-                    {a.rotulo}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </Suspenso>
+        <div className="hidden md:block">
+          <Suspenso
+            rotulo="Criar novo registro"
+            largura="w-64"
+            classeDoBotao="flex h-9 items-center gap-1.5 rounded-sm border border-borda-forte px-3 text-sm font-semibold text-texto hover:bg-superficie-2 aria-expanded:bg-superficie-2"
+            botao={
+              <>
+                Novo
+                <ChevronDown
+                  aria-hidden
+                  size={16}
+                  strokeWidth={1.75}
+                  className="text-texto-2"
+                />
+              </>
+            }
+          >
+            {(fechar) => (
+              <ul className="max-h-[70vh] overflow-y-auto py-1">
+                {atalhos.map((a) => (
+                  <li key={a.href}>
+                    <Link
+                      href={a.href}
+                      onClick={fechar}
+                      className="flex items-center gap-2.5 px-3 py-2 text-base text-texto hover:bg-superficie-2"
+                    >
+                      <span className="text-texto-2">
+                        <IconeDaTela
+                          href={a.href.replace(/\/(nova|novo)$/, "")}
+                        />
+                      </span>
+                      {a.rotulo}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Suspenso>
+        </div>
       )}
       {eu?.permissoes.includes("paineis.ver") && <Sino vencidos={vencidos} />}
       {eu && <MenuDoUsuario eu={eu} />}

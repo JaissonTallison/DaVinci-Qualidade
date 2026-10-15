@@ -6,6 +6,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Adicionado
 
+- Sistema responsivo para celular e tablet, como na DaVinci Finance (decisão Q15): menu em gaveta abaixo de 1024 px, barra inferior no celular (Início · NCs · + · Vencimentos · Menu, com o "+" abrindo os registros do botão Novo), tabelas que viram cartões, filtros na largura toda, abas com rolagem lateral e destaque do início empilhado.
 - Meio Ambiente no serviço `ambiental` ([módulo](docs/05-modulos/ambiental.md)), parte 1: aspectos e impactos (LAIA) com significância calculada e controle obrigatório quando significativo, requisitos legais com avaliação anual de atendimento, licenças com alerta de renovação (120 dias, CONAMA 237), protocolo e condicionantes periódicas, resíduos com saídas por MTR e cobrança do CDF em 30 dias; entram no painel de vencimentos, na pesquisa, no botão Novo e numa aba do início (sexta cor de série, `serie-6`).
 - Recolher e expandir o menu lateral com animação suave da largura (400 ms); o modo compacto surge ao fim, esmaecendo. Sem animação para quem pediu "reduzir movimento".
 - Botões de criar mostram o ícone do assunto (o mesmo do menu) no lugar do "+"; o botão Novo da barra superior mostra a seta de lista. Listas de prazos (início, sino e painel) com o ícone do assunto e um selo de texto com a situação.

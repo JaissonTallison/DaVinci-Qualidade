@@ -112,3 +112,184 @@
     animation: none;
   }
 }
+
+/*
+ * Responsivo (decisão Q15, igual à DaVinci Finance): no celular, toda tabela do conteúdo vira lista de cartões. Cada linha é um cartão; cada célula
+ * mostra o nome da coluna (data-rotulo, posto por <RotulosDasTabelas/>) e o valor. A primeira célula com conteúdo
+ * é o título do cartão. Tabela sem cabeçalho (resumos de rótulo e valor) ou com data-tabela="fixa" continua tabela.
+ */
+@media screen and (max-width: 639px) {
+  main table:has(thead):not([data-tabela="fixa"], .sr-only) {
+    display: block;
+    width: 100%;
+    max-width: none;
+  }
+  main table:has(thead):not([data-tabela="fixa"], .sr-only) > thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot) {
+    display: block;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    + tr {
+    border-top: 1px solid var(--dv-borda);
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th) {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    padding: 0;
+    text-align: right;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th)::before {
+    content: attr(data-rotulo);
+    flex-shrink: 0;
+    max-width: 50%;
+    color: var(--dv-texto-2);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-align: left;
+  }
+  /* Sem rótulo (coluna de ações, caixa de seleção) ou célula vazia: sem a linha "rótulo  valor" */
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th):not([data-rotulo])::before,
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th)[data-rotulo=""]::before {
+    content: none;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th):empty {
+    display: none;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th)[data-titulo] {
+    justify-content: flex-start;
+    text-align: left;
+    font-size: 0.9375rem;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th)[data-titulo]::before {
+    content: none;
+  }
+  /* Linha com uma célula só (mensagem "nenhum registro", subtítulo): ocupa o cartão inteiro */
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th)[colspan] {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  /* Campos (linhas editáveis de formulário): rótulo em cima, campo na largura toda */
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th):has(
+      input:not([type="checkbox"], [type="radio"]),
+      select,
+      textarea
+    ) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    text-align: left;
+  }
+  main
+    table:has(thead):not([data-tabela="fixa"], .sr-only)
+    > :is(tbody, tfoot)
+    > tr
+    > :is(td, th)
+    > :is(input, select, textarea) {
+    width: 100%;
+  }
+}
+
+/* Abas e filtros por situação: no celular ficam numa linha só, com rolagem lateral (em vez de quebrar em várias) */
+@media screen and (max-width: 639px) {
+  main
+    :is(
+      [role="tablist"],
+      nav:has(> a[aria-current]),
+      nav:has(> a[aria-selected])
+    ) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  main
+    :is(
+      [role="tablist"],
+      nav:has(> a[aria-current]),
+      nav:has(> a[aria-selected])
+    )
+    > * {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* Tablet e telas estreitas: tabela larga rola dentro do próprio quadro, sem empurrar a página (tabelas com campos
+   ficam de fora, para não cortar as listas de sugestões que abrem por cima) */
+@media screen and (min-width: 640px) {
+  main :is(div, section):has(> table:not(:has(input, select, textarea))) {
+    overflow-x: auto;
+  }
+}
+
+/* Filtros das listas (formulário em linha que quebra): no celular cada campo ocupa a largura toda */
+@media screen and (max-width: 639px) {
+  main form.flex-wrap > :is(input:not([type="checkbox"], [type="radio"], [type="hidden"]), select) {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}
