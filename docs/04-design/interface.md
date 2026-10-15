@@ -157,7 +157,9 @@ Riscos (probabilidade × impacto), aspectos ambientais e materialidade ESG usam 
 | ------------------------------- | ------------------------------------------ |
 | `fundo`                         | `#0D1522`                                  |
 | `superficie`                    | `#131D2D`                                  |
+| `superficie-2`                  | `#1A2537`                                  |
 | `borda`                         | `#243146`                                  |
+| `borda-forte`                   | `#4A5A72`                                  |
 | `texto` / `texto-2` / `texto-3` | `#E7EBF1` / `#AEB8C6` / `#8D98A8`          |
 | `ouro`                          | `#D9A441`                                  |
 | Botão primário                  | fundo `#E7EBF1`, texto `marinho` (15,71:1) |
@@ -274,4 +276,4 @@ A estrutura (monorepo, microsserviços, gateway, pacotes) é a mesma da Finance.
 | Centro da tela            | Números e valores | Registro, número e status                                  |
 | Cores semânticas próprias | Finanças          | Conformidade, prazos e níveis de risco                     |
 
-Esta é a v1. Os tokens serão implementados em `packages/tokens` quando o `apps/web` for criado; qualquer mudança de cor passa por aqui primeiro, com o contraste medido.
+Os tokens estão em `packages/tokens/css/tema.css`. O tema do Tailwind é zerado e só recebe estes tokens, e o ESLint do `apps/web` recusa degradê, cor solta, canto e sombra grandes, emoji e as fontes Inter, Geist, Manrope, Sora e Poppins. Qualquer mudança de cor passa por aqui primeiro, com o contraste medido.

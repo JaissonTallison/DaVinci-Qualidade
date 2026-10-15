@@ -5,7 +5,7 @@ Sistema de gestão da qualidade em **microsserviços**, com a mesma estrutura da
 ## Estrutura
 
 ```text
-apps/        api-gateway (NestJS) → 3171 · web (Next.js, a criar) → 3170
+apps/        web (Next.js) → 3170 · api-gateway (NestJS) → 3171
 services/    12 microsserviços NestJS, cada um com fila RabbitMQ e banco próprios
   plataforma:   identidade/  codex/  integracoes/  plataforma/
   domínio:      qualidade/  auditorias/  sgi/  servicos/  seguranca/  ambiental/  esg/
@@ -30,7 +30,7 @@ pnpm env:criar      # cria os .env (raiz, apps e serviços) a partir dos .env.ex
 pnpm infra:up       # RabbitMQ + Postgres + Mailpit (aguarda ficarem saudáveis)
 pnpm db:migrate     # tabelas dos 12 serviços
 pnpm identidade:instalar   # chaves de login, empresa, perfis e administrador (mostra a senha UMA vez)
-pnpm dev            # gateway + 12 serviços
+pnpm dev            # web + gateway + 12 serviços → http://localhost:3170
 ```
 
 Com login, `GET localhost:3171/health/services` mostra os 12 serviços com o banco de cada um.

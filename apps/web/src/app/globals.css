@@ -1,0 +1,3 @@
+@import "tailwindcss";
+/* Sistema visual da DaVinci Qualidade (docs/04-design/interface.md) */
+@import "@davinci/tokens/tema.css";

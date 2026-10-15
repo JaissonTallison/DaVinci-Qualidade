@@ -1,0 +1,172 @@
+/*
+ * Sistema visual da DaVinci Qualidade. Fonte da verdade: docs/04-design/interface.md (contrastes medidos lá).
+ * Mudou uma cor? Mude primeiro no documento, com o contraste medido, e depois aqui.
+ *
+ * O tema do Tailwind é ZERADO (cores, cantos, sombras e fontes) e só recebe os nossos tokens.
+ * Por isso `bg-purple-500`, `rounded-2xl` e `shadow-xl` não existem: a "cara de IA" não compila.
+ */
+
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+
+  /* Marca */
+  --color-marinho: #001228;
+  --color-ouro: var(--dv-ouro);
+  --color-ouro-texto: var(--dv-ouro-texto);
+
+  /* Neutros */
+  --color-fundo: var(--dv-fundo);
+  --color-superficie: var(--dv-superficie);
+  --color-superficie-2: var(--dv-superficie-2);
+  --color-borda: var(--dv-borda);
+  --color-borda-forte: var(--dv-borda-forte);
+  --color-texto: var(--dv-texto);
+  --color-texto-2: var(--dv-texto-2);
+  --color-texto-3: var(--dv-texto-3);
+
+  /* Ação primária: marinho no claro, quase branco no escuro */
+  --color-primaria: var(--dv-primaria);
+  --color-primaria-texto: var(--dv-primaria-texto);
+
+  /* Status do registro */
+  --color-conforme: var(--dv-conforme);
+  --color-nao-conforme: var(--dv-nao-conforme);
+  --color-atencao: var(--dv-atencao);
+  --color-info: var(--dv-info);
+  --color-neutro: var(--dv-neutro);
+
+  /* Escala de nível (só no marcador; o texto fica em texto) */
+  --color-nivel-baixo: #1d7044;
+  --color-nivel-medio: #c99a06;
+  --color-nivel-alto: #b4470b;
+  --color-nivel-critico: #8e1b1b;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+
+  /* Tipografia: Source Serif 4 (títulos), Source Sans 3 (interface), Source Code Pro (números de registro) */
+  --font-sans: var(--dv-fonte-sans), system-ui, sans-serif;
+  --font-serif: var(--dv-fonte-serif), Georgia, serif;
+  --font-mono: var(--dv-fonte-mono), ui-monospace, monospace;
+
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.8125rem;
+  --text-sm--line-height: 1.125rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.25rem;
+  --text-md: 1rem;
+  --text-md--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.625rem;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl: 1.625rem;
+  --text-2xl--line-height: 2rem;
+
+  /* Cantos de 2 a 6 px; nada maior existe */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-full: 9999px;
+
+  /* Sombra só em menu suspenso (sm) e modal (md) */
+  --shadow-sm: 0 2px 6px rgb(0 18 40 / 0.1);
+  --shadow-md: 0 8px 24px rgb(0 18 40 / 0.16);
+}
+
+:root,
+[data-theme='claro'] {
+  color-scheme: light;
+  --dv-fundo: #f4f5f7;
+  --dv-superficie: #ffffff;
+  --dv-superficie-2: #eef0f3;
+  --dv-borda: #d5dae1;
+  --dv-borda-forte: #9aa3b0;
+  --dv-texto: #0e1a2b;
+  --dv-texto-2: #475264;
+  --dv-texto-3: #5f6b7c;
+  --dv-ouro: #a06d10;
+  --dv-ouro-texto: #986600;
+  --dv-primaria: #001228;
+  --dv-primaria-texto: #ffffff;
+  --dv-conforme: #1d7044;
+  --dv-nao-conforme: #b3261e;
+  --dv-atencao: #a8470a;
+  --dv-info: #2b5597;
+  --dv-neutro: #586273;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='claro']) {
+    color-scheme: dark;
+    --dv-fundo: #0d1522;
+    --dv-superficie: #131d2d;
+    --dv-superficie-2: #1a2537;
+    --dv-borda: #243146;
+    --dv-borda-forte: #4a5a72;
+    --dv-texto: #e7ebf1;
+    --dv-texto-2: #aeb8c6;
+    --dv-texto-3: #8d98a8;
+    --dv-ouro: #d9a441;
+    --dv-ouro-texto: #e8b860;
+    --dv-primaria: #e7ebf1;
+    --dv-primaria-texto: #001228;
+    --dv-conforme: #5cc48a;
+    --dv-nao-conforme: #f2877e;
+    --dv-atencao: #f0a35c;
+    --dv-info: #8ab0ee;
+    --dv-neutro: #9aa4b2;
+  }
+}
+
+[data-theme='escuro'] {
+  color-scheme: dark;
+  --dv-fundo: #0d1522;
+  --dv-superficie: #131d2d;
+  --dv-superficie-2: #1a2537;
+  --dv-borda: #243146;
+  --dv-borda-forte: #4a5a72;
+  --dv-texto: #e7ebf1;
+  --dv-texto-2: #aeb8c6;
+  --dv-texto-3: #8d98a8;
+  --dv-ouro: #d9a441;
+  --dv-ouro-texto: #e8b860;
+  --dv-primaria: #e7ebf1;
+  --dv-primaria-texto: #001228;
+  --dv-conforme: #5cc48a;
+  --dv-nao-conforme: #f2877e;
+  --dv-atencao: #f0a35c;
+  --dv-info: #8ab0ee;
+  --dv-neutro: #9aa4b2;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-size: 100%;
+  }
+  body {
+    background: var(--dv-fundo);
+    color: var(--dv-texto);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--dv-info);
+    outline-offset: 2px;
+  }
+}

@@ -82,10 +82,20 @@ Filtros: status, gravidade, origem, só vencidas e busca por número ou título.
 
 Toda alteração leva a `versao` que a tela leu. Versão desatualizada responde `409` com "Esta NC foi alterada por outra pessoa".
 
-## 5. Ainda não feito (próximos passos)
+## 5. Telas (web)
+
+| Tela     | Caminho                             | O que tem                                                                                                                |
+| -------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Lista    | `/qualidade/nao-conformidades`      | Resumo no topo, filtros na URL (dá para compartilhar o link), tabela com prazo relativo e marcação de reincidência       |
+| Abrir NC | `/qualidade/nao-conformidades/nova` | Só o necessário para abrir; custo aceita "1.250,00"                                                                      |
+| Detalhe  | `/qualidade/nao-conformidades/:id`  | O registro em seções e, embaixo, só a próxima ação possível para o status. Revisar a análise e cancelar ficam recolhidos |
+
+## 6. Ainda não feito (próximos passos)
 
 - [ ] Abrir NC a partir de outro serviço por evento (constatação de auditoria, reclamação de cliente, inspeção reprovada)
 - [ ] Ligar a NC a um Plano de Ação (5W2H)
 - [ ] Evidências anexadas (serviço `plataforma`)
 - [ ] Responsável escolhido do cadastro de funcionários (`codex`); por enquanto é texto
 - [ ] Histórico de alterações centralizado
+- [ ] Corrigir campos descritivos pela tela (a rota `PUT` já existe)
+- [ ] Tabela da lista em formato de cartões no celular (hoje rola na horizontal)
