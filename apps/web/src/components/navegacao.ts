@@ -27,6 +27,11 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/qualidade/nao-conformidades",
         permissao: "qualidade.ver",
       },
+      {
+        rotulo: "Planos de ação",
+        href: "/qualidade/planos-de-acao",
+        permissao: "qualidade.ver",
+      },
     ],
   },
 ];

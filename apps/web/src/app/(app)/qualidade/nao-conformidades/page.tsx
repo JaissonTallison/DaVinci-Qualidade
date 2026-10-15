@@ -10,6 +10,7 @@ import {
   type ResumoNcs,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { SelecaoDeFiltro } from "@/components/filtros";
 import { GravidadeDaNc, StatusDaNc } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
@@ -83,19 +84,19 @@ export default async function ListaDeNcs({
             aria-label="Buscar por número ou título"
             className={`${campoCompacto} w-56`}
           />
-          <Selecao
+          <SelecaoDeFiltro
             nome="status"
             rotulo="Status"
             opcoes={STATUS_NC}
             valor={params.status}
           />
-          <Selecao
+          <SelecaoDeFiltro
             nome="gravidade"
             rotulo="Gravidade"
             opcoes={GRAVIDADES_NC}
             valor={params.gravidade}
           />
-          <Selecao
+          <SelecaoDeFiltro
             nome="origem"
             rotulo="Origem"
             opcoes={ORIGENS_NC}
@@ -139,34 +140,6 @@ export default async function ListaDeNcs({
         )}
       </section>
     </>
-  );
-}
-
-function Selecao({
-  nome,
-  rotulo,
-  opcoes,
-  valor,
-}: {
-  nome: string;
-  rotulo: string;
-  opcoes: Record<string, string>;
-  valor?: string;
-}) {
-  return (
-    <select
-      name={nome}
-      defaultValue={valor ?? ""}
-      aria-label={rotulo}
-      className={campoCompacto}
-    >
-      <option value="">{rotulo}: todos</option>
-      {Object.entries(opcoes).map(([chave, nome]) => (
-        <option key={chave} value={chave}>
-          {nome}
-        </option>
-      ))}
-    </select>
   );
 }
 

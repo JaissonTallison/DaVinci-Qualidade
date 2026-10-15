@@ -69,7 +69,4 @@ export function formatarNumeroNc(ano: number, sequencial: number): string {
   return `NC-${ano}-${String(sequencial).padStart(3, '0')}`;
 }
 
-/** Data de hoje (AAAA-MM-DD) no fuso de Brasília: o prazo é uma data civil, não um instante. */
-export function hojeEmBrasilia(agora = new Date()): string {
-  return agora.toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
-}
+export { hojeEmBrasilia } from '../datas.js';

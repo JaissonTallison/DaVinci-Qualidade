@@ -1,32 +1,20 @@
 "use client";
 
-import { useActionState, type ReactNode } from "react";
 import {
   CATEGORIAS_6M,
   METODOS_ANALISE,
   type NaoConformidade,
 } from "@davinci/types";
-import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
 import {
   cancelarNc,
   enviarParaVerificacao,
   registrarTratamento,
   verificarEficacia,
-  type EstadoDaAcao,
 } from "@/lib/acoes-nc";
 import { hojeEmBrasilia } from "@/lib/datas";
-import {
-  areaDeTexto,
-  botaoPerigo,
-  botaoPrimario,
-  campo,
-  painel,
-  tituloDaSecao,
-} from "@/lib/estilos";
-import { errosPorCampo } from "@/lib/formularios";
-
-type Acao = (estado: EstadoDaAcao, form: FormData) => Promise<EstadoDaAcao>;
+import { areaDeTexto, campo } from "@/lib/estilos";
 
 /** O próximo passo da NC, conforme o status (docs/05-modulos/nao-conformidades.md §1). */
 export function AcoesDaNc({
@@ -261,83 +249,6 @@ function FormularioTratamento({ nc }: { nc: NaoConformidade }) {
         </>
       )}
     </Formulario>
-  );
-}
-
-/** Formulário de uma ação: erro geral no topo, erros de campo nos campos, versão lida enviada junto. */
-function Formulario({
-  acao,
-  versao,
-  rotuloDoBotao,
-  perigo = false,
-  children,
-}: {
-  acao: Acao;
-  versao: string;
-  rotuloDoBotao: string;
-  perigo?: boolean;
-  children: (
-    erros: Record<string, string>,
-    valores: Record<string, string>,
-  ) => ReactNode;
-}) {
-  const [estado, enviar, enviando] = useActionState<EstadoDaAcao, FormData>(
-    acao,
-    {},
-  );
-  const erros = errosPorCampo(estado.erro?.detalhes);
-  const erroGeral =
-    estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
-  return (
-    <form action={enviar} noValidate className="mt-4 flex flex-col gap-5">
-      {erroGeral && <AvisoDeErro erro={erroGeral} />}
-      <input type="hidden" name="versao" value={versao} />
-      {children(erros, estado.valores ?? {})}
-      <div>
-        <button
-          type="submit"
-          className={perigo ? botaoPerigo : botaoPrimario}
-          disabled={enviando}
-        >
-          {enviando ? "Salvando…" : rotuloDoBotao}
-        </button>
-      </div>
-    </form>
-  );
-}
-
-function Bloco({
-  titulo,
-  descricao,
-  children,
-}: {
-  titulo: string;
-  descricao: string;
-  children: ReactNode;
-}) {
-  return (
-    <section className={`${painel} mt-6 p-5`}>
-      <h2 className={tituloDaSecao}>{titulo}</h2>
-      <p className="mt-1 text-base text-texto-2">{descricao}</p>
-      {children}
-    </section>
-  );
-}
-
-function Recolhido({
-  titulo,
-  children,
-}: {
-  titulo: string;
-  children: ReactNode;
-}) {
-  return (
-    <details className={`${painel} mt-4 px-5 py-3`}>
-      <summary className="cursor-pointer text-base font-semibold text-texto-2">
-        {titulo}
-      </summary>
-      <div className="mt-3">{children}</div>
-    </details>
   );
 }
 

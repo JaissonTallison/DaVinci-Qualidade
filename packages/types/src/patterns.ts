@@ -115,6 +115,20 @@ export const PATTERNS = {
     verificarEficacia: 'nao-conformidades.verificar-eficacia',
     cancelar: 'nao-conformidades.cancelar',
   },
+  /** Qualidade: planos de ação (docs/05-modulos/planos-de-acao.md). */
+  planosDeAcao: {
+    listar: 'planos-de-acao.listar',
+    resumo: 'planos-de-acao.resumo',
+    obter: 'planos-de-acao.obter',
+    criar: 'planos-de-acao.criar',
+    atualizar: 'planos-de-acao.atualizar',
+    incluirTarefa: 'planos-de-acao.incluir-tarefa',
+    concluirTarefa: 'planos-de-acao.concluir-tarefa',
+    reabrirTarefa: 'planos-de-acao.reabrir-tarefa',
+    cancelarTarefa: 'planos-de-acao.cancelar-tarefa',
+    verificarEficacia: 'planos-de-acao.verificar-eficacia',
+    cancelar: 'planos-de-acao.cancelar',
+  },
   /** Codex: tabelas oficiais de referência (CNAE, setores, bancos). */
   referencias: {
     cnaes: 'referencias.cnaes',

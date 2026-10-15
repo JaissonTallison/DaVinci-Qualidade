@@ -13,6 +13,7 @@ import {
   type NaoConformidade,
 } from "@davinci/types";
 import { chamarApi } from "./api";
+import { valorEmReais } from "./valores";
 
 export type EstadoDaAcao = {
   erro?: ErroPadrao;
@@ -50,13 +51,6 @@ async function enviar(
     };
   const r = await chamarApi<NaoConformidade>(caminho, { metodo, corpo: dados });
   return r.ok ? { nc: r.dados } : { erro: r.erro, valores };
-}
-
-/** "1.250,00" → "1250.00". Quem digita no padrão brasileiro não precisa adivinhar o formato. */
-function valorEmReais(texto: string | undefined): string | undefined {
-  const t = texto?.trim();
-  if (!t || !t.includes(",")) return t;
-  return t.replace(/\./g, "").replace(",", ".");
 }
 
 export async function abrirNc(

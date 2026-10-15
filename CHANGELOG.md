@@ -6,6 +6,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Adicionado
 
+- Planos de ação no serviço `qualidade` ([módulo](docs/05-modulos/planos-de-acao.md)): tarefas no formato 5W2H, status que segue as tarefas (concluir a última leva a "aguardando eficácia"), verificação de eficácia que pede tarefas novas quando o objetivo não foi alcançado, progresso e prazo calculados, cancelamento de tarefa e de plano com motivo. Rotas em `/planos-de-acao`.
+- Telas de planos de ação (lista, criação e detalhe com as ações na linha de cada tarefa); a NC mostra os planos ligados e cria um plano já preenchido; a tela de início ganha o resumo dos planos.
+- `pnpm db:generate` de todos os serviços tira sozinho o esquema `"public"` que o drizzle-kit escreve nas chaves estrangeiras.
+
 - Não conformidades no serviço `qualidade`: abertura com numeração `NC-AAAA-NNN`, ciclo aberta → em tratamento → em verificação → encerrada, verificação de eficácia com ciclos, cancelamento com motivo, lista com filtros e resumo. Rotas em `/nao-conformidades` ([módulo](docs/05-modulos/nao-conformidades.md)).
 - `apps/web` (Next.js 16, porta 3170): login, código de 2 etapas, troca da senha inicial, casca com menu dos grupos do QSSMA (filtrado por módulo e permissão) e as telas de Não conformidades: lista, abertura e detalhe com o ciclo de tratamento.
 - `packages/tokens`: cores, tipografia (família Source), cantos e sombras do padrão da Qualidade, com o tema do Tailwind zerado.

@@ -2,9 +2,11 @@
 // Recusa migração com esquema fixo ("public"."tabela"). O drizzle-kit gera chaves estrangeiras assim, mas os
 // testes de integração rodam cada serviço num esquema temporário: com "public" fixo, a chave estrangeira
 // aponta para a tabela de desenvolvimento e o teste quebra (ou, pior, grava contra dados reais).
-import { readdirSync, readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+// --corrigir: tira o prefixo em vez de recusar (roda depois de todo `pnpm db:generate`)
+const corrigir = process.argv.includes('--corrigir');
 const raiz = new URL('..', import.meta.url).pathname;
 const problemas = [];
 for (const servico of readdirSync(join(raiz, 'services'))) {
@@ -16,7 +18,16 @@ for (const servico of readdirSync(join(raiz, 'services'))) {
     continue;
   }
   for (const arquivo of arquivos) {
-    readFileSync(join(pasta, arquivo), 'utf8')
+    const caminho = join(pasta, arquivo);
+    if (corrigir) {
+      const sqlOriginal = readFileSync(caminho, 'utf8');
+      const sqlCorrigido = sqlOriginal.replaceAll('"public".', '');
+      if (sqlCorrigido !== sqlOriginal) {
+        writeFileSync(caminho, sqlCorrigido);
+        console.log(`  corrigido: services/${servico}/drizzle/${arquivo}`);
+      }
+    }
+    readFileSync(caminho, 'utf8')
       .split('\n')
       .forEach((linha, i) => {
         if (linha.includes('"public".'))

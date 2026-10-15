@@ -9,12 +9,24 @@ import {
   TIPOS_NC,
   type DadosDoUsuario,
   type NaoConformidade,
+  type Pagina,
+  type PlanoResumo,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { GravidadeDaNc, StatusDaNc } from "@/components/marcadores";
+import {
+  GravidadeDaNc,
+  Progresso,
+  StatusDaNc,
+  StatusDoPlano,
+} from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  botaoSecundario,
+  painel,
+  tituloDaPagina,
+  tituloDaSecao,
+} from "@/lib/estilos";
 import { AcoesDaNc } from "./acoes";
 
 export const metadata: Metadata = { title: "Não conformidade" };
@@ -35,9 +47,12 @@ export default async function DetalheDaNc({
 }: PageProps<"/qualidade/nao-conformidades/[id]">) {
   const { id } = await params;
   const { aviso } = (await searchParams) as { aviso?: string };
-  const [r, eu] = await Promise.all([
+  const [r, eu, planos] = await Promise.all([
     chamarApi<NaoConformidade>(`/nao-conformidades/${id}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<Pagina<PlanoResumo>>(
+      `/planos-de-acao?ncId=${encodeURIComponent(id)}&porPagina=100`,
+    ),
   ]);
   if (!r.ok && r.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
@@ -164,6 +179,45 @@ export default async function DetalheDaNc({
           )}
         </Secao>
       )}
+
+      <section className={`${painel} mt-6 p-5`}>
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 className={tituloDaSecao}>Planos de ação</h2>
+          {!terminada && permissoes.includes("qualidade.editar") && (
+            <Link
+              href={`/qualidade/planos-de-acao/novo?nc=${nc.id}`}
+              className={botaoSecundario}
+            >
+              Criar plano de ação
+            </Link>
+          )}
+        </div>
+        {planos.ok && planos.dados.itens.length > 0 ? (
+          <ul className="mt-3 divide-y divide-borda">
+            {planos.dados.itens.map((p) => (
+              <li
+                key={p.id}
+                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
+              >
+                <Link
+                  href={`/qualidade/planos-de-acao/${p.id}`}
+                  className="font-mono text-sm font-medium text-info hover:underline"
+                >
+                  {p.numero}
+                </Link>
+                <span className="min-w-48 flex-1">{p.titulo}</span>
+                <Progresso valor={p.progresso} />
+                <StatusDoPlano status={p.status} atrasado={p.atrasado} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-2 text-base text-texto-2">
+            Nenhum plano ligado. Quando a ação corretiva tiver mais de um passo,
+            organize as tarefas num plano.
+          </p>
+        )}
+      </section>
 
       {nc.status === "cancelada" && (
         <Secao titulo="Cancelamento">

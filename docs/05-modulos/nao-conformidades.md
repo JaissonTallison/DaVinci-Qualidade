@@ -93,7 +93,7 @@ Toda alteração leva a `versao` que a tela leu. Versão desatualizada responde 
 ## 6. Ainda não feito (próximos passos)
 
 - [ ] Abrir NC a partir de outro serviço por evento (constatação de auditoria, reclamação de cliente, inspeção reprovada)
-- [ ] Ligar a NC a um Plano de Ação (5W2H)
+- [x] Ligar a NC a um Plano de Ação (5W2H): ver [planos-de-acao.md](planos-de-acao.md)
 - [ ] Evidências anexadas (serviço `plataforma`)
 - [ ] Responsável escolhido do cadastro de funcionários (`codex`); por enquanto é texto
 - [ ] Histórico de alterações centralizado
