@@ -1,0 +1,34 @@
+{
+  "name": "@davinci/types",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Contratos entre serviços (filas, mensagens, erros, DTOs e validações Zod) e utilitários puros (uuidv7, Dinheiro)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "oxlint --type-aware src/",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@davinci/config": "workspace:*",
+    "@types/node": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  }
+}

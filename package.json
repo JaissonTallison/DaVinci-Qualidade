@@ -1,0 +1,42 @@
+{
+  "name": "DaVinci-Qualidade",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DaVinci Qualidade — monorepo de microsserviços (pnpm + Turborepo + NestJS + Next.js)",
+  "scripts": {
+    "dev": "turbo run dev --concurrency=40",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "infra:up": "docker compose up -d --wait",
+    "infra:down": "docker compose down",
+    "infra:logs": "docker compose logs -f",
+    "env:criar": "node scripts/env-criar.mjs",
+    "db:generate": "turbo run db:generate",
+    "db:migrate": "turbo run db:migrate",
+    "test:integracao": "turbo run test:integracao",
+    "brand:svg": "python3 scripts/brand/build_svgs.py",
+    "brand:export": "python3 scripts/brand/export_rasters.py",
+    "novo:servico": "node scripts/novo-servico.mjs",
+    "identidade:instalar": "pnpm --filter @davinci/identidade instalar"
+  },
+  "license": "UNLICENSED",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.3.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "prettier": "^3.9.9",
+    "turbo": "^2.11.7"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

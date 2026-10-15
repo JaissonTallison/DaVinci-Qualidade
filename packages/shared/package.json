@@ -1,0 +1,53 @@
+{
+  "name": "@davinci/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Utilitários de runtime compartilhados pelos serviços NestJS (env, RabbitMQ)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./load-env": {
+      "types": "./dist/load-env.d.ts",
+      "default": "./dist/load-env.js"
+    },
+    "./eventos": {
+      "types": "./dist/eventos.d.ts",
+      "default": "./dist/eventos.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "oxlint --type-aware src/",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@davinci/types": "workspace:*",
+    "zod": "catalog:",
+    "amqp-connection-manager": "catalog:",
+    "amqplib": "catalog:"
+  },
+  "peerDependencies": {
+    "@nestjs/microservices": "catalog:"
+  },
+  "devDependencies": {
+    "@davinci/config": "workspace:*",
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/microservices": "catalog:",
+    "@types/node": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

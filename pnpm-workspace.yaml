@@ -1,0 +1,40 @@
+packages:
+  - 'apps/*'
+  - 'services/*'
+  - 'packages/*'
+
+allowBuilds:
+  # esbuild: usado pelo drizzle-kit para ler drizzle.config.ts (confere o binário da plataforma)
+  esbuild: true
+  unrs-resolver: false
+
+# Versões únicas para todo o monorepo. Nos package.json use "catalog:".
+catalog:
+  '@nestjs/cli': ^12.0.0
+  '@nestjs/common': ^12.1.2
+  '@nestjs/core': ^12.1.2
+  '@nestjs/microservices': ^12.1.2
+  '@nestjs/platform-express': ^12.1.2
+  '@nestjs/schematics': ^12.0.0
+  '@nestjs/testing': ^12.1.2
+  '@phosphor-icons/react': ^2.1.10
+  '@types/node': ^24.0.0
+  '@types/pg': ^8.23.0
+  '@types/react': ^19
+  '@types/react-dom': ^19
+  '@vitest/coverage-v8': ^4.1.2
+  amqp-connection-manager: ^5.0.0
+  amqplib: ^2.2.0
+  drizzle-kit: ^0.31.10
+  drizzle-orm: ^0.45.3
+  jose: ^6.0.0
+  oxlint: ^1.58.0
+  oxlint-tsgolint: ^7.0.2001
+  pg: ^8.23.0
+  react: 19.3.0
+  react-dom: 19.3.0
+  reflect-metadata: ^0.2.2
+  rxjs: ^7.8.1
+  typescript: ^6.0.2
+  vitest: ^4.1.2
+  zod: ^4.6.0

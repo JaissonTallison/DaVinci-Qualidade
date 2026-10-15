@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Lint, tipos, testes e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm turbo run lint typecheck test build
+
+  integracao:
+    name: Testes de integração (Postgres real)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: davinci
+          POSTGRES_PASSWORD: davinci
+          POSTGRES_DB: davinci
+        # mesma porta do ambiente local: os .env.example funcionam sem ajuste
+        ports:
+          - 5550:5432
+        options: >-
+          --health-cmd "pg_isready -U davinci -d davinci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Bancos e usuários por serviço (mesmo SQL do ambiente local)
+        env:
+          PGPASSWORD: davinci
+        run: psql -h localhost -p 5550 -U davinci -d davinci -v ON_ERROR_STOP=1 -f infra/postgres/init/01-bancos-por-servico.sql
+
+      - name: .env de cada serviço a partir dos exemplos
+        run: for f in services/*/.env.example; do cp "$f" "${f%.example}"; done
+
+      - run: pnpm turbo run test:integracao

@@ -1,0 +1,52 @@
+{
+  "name": "@davinci/api-gateway",
+  "version": "1.0.0",
+  "description": "Porta de entrada HTTP: recebe requisições e conversa com os microsserviços via RabbitMQ",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "start": "nest start",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "oxlint --type-aware src/ test/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "test:debug": "vitest --inspect-brk --no-file-parallelism",
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@davinci/shared": "workspace:*",
+    "@davinci/types": "workspace:*",
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/microservices": "catalog:",
+    "@nestjs/observe": "^0.3.0",
+    "@nestjs/platform-express": "catalog:",
+    "amqp-connection-manager": "catalog:",
+    "amqplib": "catalog:",
+    "jose": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@davinci/config": "workspace:*",
+    "@nestjs/cli": "catalog:",
+    "@nestjs/schematics": "catalog:",
+    "@nestjs/testing": "catalog:",
+    "@types/express": "^5.0.0",
+    "@types/node": "catalog:",
+    "@types/supertest": "^7.0.0",
+    "@vitest/coverage-v8": "catalog:",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:",
+    "supertest": "^7.0.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

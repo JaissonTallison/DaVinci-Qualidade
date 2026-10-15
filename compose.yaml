@@ -1,0 +1,60 @@
+# Infraestrutura de desenvolvimento local.
+# Portas no host seguem o bloco 555x (evita conflito com os outros projetos DaVinci).
+#   pnpm infra:up    sobe RabbitMQ + Postgres + Mailpit e espera ficarem saudáveis
+#   Portas e credenciais vêm do .env da raiz (padrões abaixo).
+#   pnpm infra:down  para (os dados ficam nos volumes)
+name: davinci-qualidade
+
+services:
+  rabbitmq:
+    image: docker.io/library/rabbitmq:4-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USUARIO:-davinci}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_SENHA:-davinci}
+    ports:
+      - '${RABBITMQ_PORTA:-5551}:5672' # AMQP (serviços)
+      - '${RABBITMQ_PAINEL_PORTA:-5552}:15672' # painel web: http://localhost:5552
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 5s
+      timeout: 10s
+      retries: 12
+
+  postgres:
+    image: docker.io/library/postgres:17-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-davinci}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-davinci}
+      POSTGRES_DB: davinci
+    ports:
+      - '${POSTGRES_PORTA:-5550}:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      # Executado só na primeira criação do volume
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d davinci']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # Captura TODOS os e-mails enviados em desenvolvimento (nenhum sai para a internet).
+  # Caixa de entrada: http://localhost:5554
+  mailpit:
+    image: docker.io/axllent/mailpit:v1.27
+    ports:
+      - '${SMTP_PORTA:-5553}:1025' # SMTP
+      - '${MAILPIT_PORTA:-5554}:8025' # caixa de entrada web
+    environment:
+      MP_MAX_MESSAGES: 500
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  rabbitmq-data:
+  postgres-data:

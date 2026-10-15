@@ -1,0 +1,1 @@
+ALTER TABLE "usuarios" ADD COLUMN "tema" varchar(6) DEFAULT 'claro' NOT NULL;

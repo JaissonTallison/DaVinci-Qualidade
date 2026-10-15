@@ -1,0 +1,12 @@
+{
+  "name": "@davinci/config",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Configurações compartilhadas (TypeScript) do monorepo DaVinci",
+  "exports": {
+    "./tsconfig/*.json": "./tsconfig/*.json"
+  },
+  "files": [
+    "tsconfig"
+  ]
+}
