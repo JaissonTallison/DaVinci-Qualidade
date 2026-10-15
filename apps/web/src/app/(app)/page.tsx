@@ -502,8 +502,8 @@ export default async function Inicio() {
         className="dv-destaque dv-entrar relative overflow-hidden p-6 text-primaria-texto sm:p-8"
         aria-label="Saúde do sistema de gestão"
       >
-        <div className="flex flex-wrap items-center justify-between gap-8">
-          <div className="min-w-0 flex-1">
+        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0 md:flex-1">
             <p className="text-xs font-semibold tracking-[0.12em] text-primaria-texto/70 uppercase">
               DaVinci Qualidade · {data}
             </p>
@@ -560,7 +560,7 @@ export default async function Inicio() {
           <div className="flex flex-col items-center gap-4">
             <Anel valor={saude} />
             {componentes.length > 0 && (
-              <ul className="w-56 space-y-1.5 text-xs text-primaria-texto/80">
+              <ul className="w-full max-w-xs space-y-1.5 text-xs text-primaria-texto/80 md:w-56">
                 {componentes.map((c, i) => (
                   <li key={c.nome}>
                     <Link

@@ -5,13 +5,19 @@ import type {
   Prazo,
 } from "@davinci/types";
 import { BarraSuperior } from "@/components/barra-superior";
-import { ColunaDoMenu, ProvedorDoMenu } from "@/components/estado-do-menu";
+import { BarraInferior } from "@/components/barra-inferior";
+import {
+  ColunaDoMenu,
+  GavetaDoMenu,
+  ProvedorDoMenu,
+} from "@/components/estado-do-menu";
 import { MenuLateral } from "@/components/menu-lateral";
 import {
   COOKIE_GRUPOS_FECHADOS,
   COOKIE_MENU_COMPACTO,
 } from "@/components/preferencias-do-menu";
 import { atalhosVisiveis, gruposVisiveis } from "@/components/navegacao";
+import { RotulosDasTabelas } from "@/components/rotulos-das-tabelas";
 import { chamarApi } from "@/lib/api";
 
 /** Casca do sistema: menu lateral com os grupos do QSSMA, barra superior e o conteúdo. */
@@ -51,24 +57,31 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
             atalhos={eu ? atalhosVisiveis(eu.permissoes, eu.recursos) : []}
             vencidos={listaDeVencidos}
           />
-          {/* Telas estreitas: o mesmo menu, recolhido no topo */}
-          <details className="border-b border-borda bg-superficie lg:hidden print:hidden">
-            <summary className="cursor-pointer px-4 py-2.5 text-base font-semibold text-texto">
-              Menu
-            </summary>
-            <div className="border-t border-borda">
-              <MenuLateral
-                grupos={grupos}
-                fechadosIniciais={fechados}
-                permiteCompactar={false}
-              />
-            </div>
-          </details>
-          <main id="conteudo" className="min-w-0 flex-1 px-4 py-6 sm:px-6">
+          <main
+            id="conteudo"
+            className="min-w-0 flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 md:pb-6"
+          >
             <div className="mx-auto w-full max-w-[90rem]">{children}</div>
           </main>
         </div>
       </div>
+      <GavetaDoMenu>
+        <MenuLateral
+          grupos={grupos}
+          fechadosIniciais={fechados}
+          permiteCompactar={false}
+        />
+      </GavetaDoMenu>
+      <BarraInferior
+        atalhos={eu ? atalhosVisiveis(eu.permissoes, eu.recursos) : []}
+        verNcs={grupos.some((g) =>
+          g.itens.some((i) => i.href === "/qualidade/nao-conformidades"),
+        )}
+        verVencimentos={grupos.some((g) =>
+          g.itens.some((i) => i.href === "/paineis/vencimentos"),
+        )}
+      />
+      <RotulosDasTabelas />
     </ProvedorDoMenu>
   );
 }

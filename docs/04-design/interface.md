@@ -204,8 +204,18 @@ Não existe `rounded-lg` para cima. Sombra só em menu suspenso (`shadow-sm`) e 
 
 - **Menu lateral** verde-petróleo (`menu`), com os grupos do QSSMA na ordem do documento de domínio. Grupo de módulo não contratado não aparece. O item ativo tem fundo um pouco mais claro e uma barra de 3 px em `ouro-claro` à esquerda.
 - **Cabeçalho da página:** título serifado, uma linha de resumo em `texto-2` com os números que importam, e as ações à direita (primária por último).
-- **A lista é uma tabela,** com filtros no topo. Não usamos cards para listar registros.
+- **A lista é uma tabela,** com filtros no topo. Não usamos cards para listar registros (no celular a própria tabela é que vira cartões, §7.1).
 - **Registro aberto:** número em mono e status no topo. Conteúdo em seções com título serifado. O **histórico de alterações** fica sempre no rodapé do registro, porque é a trilha que o auditor pede.
+
+### 7.1 Celular e tablet (decisão Q15)
+
+O mesmo modelo da DaVinci Finance:
+
+- **Computador (≥ 1024 px):** menu lateral fixo, recolhível.
+- **Tablet (768–1023 px):** o menu abre como **gaveta** pelo botão da barra superior (fecha ao navegar, ao tocar fora, no X e com Esc); a trilha encolhe; tabelas largas rolam dentro do próprio quadro.
+- **Celular (< 768 px):** **barra inferior** fixa, Início · NCs · **+** · Vencimentos · Menu (atalho sem permissão não aparece). O "+" abre uma folha com os mesmos registros do botão Novo, que some da barra superior; Menu abre a gaveta. O conteúdo ganha folga embaixo para não ficar atrás da barra, respeitando a área segura do iPhone.
+- **Celular estreito (< 640 px):** toda tabela com cabeçalho vira **lista de cartões**: a primeira coluna com texto é o título, as outras aparecem como "rótulo valor" (o rótulo vem do cabeçalho, copiado por `components/rotulos-das-tabelas.tsx`). Tabela que precisa continuar tabela: `data-tabela="fixa"`. Abas numa linha só, com rolagem lateral; filtros e campos na largura toda.
+- Regras globais em `app/globals.css`. Evite largura fixa (`w-64`, `min-w-60`) sem prefixo `sm:`.
 
 ---
 
@@ -300,12 +310,12 @@ As classes ficam em `apps/web/src/app/globals.css`. As `animate-*` do Tailwind c
 
 SVG próprio em `components/graficos.tsx`: colunas empilhadas, colunas agrupadas, rosca e linha. Regras:
 
-| Regra                                                       | Como                                                                                                                           |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Cor por módulo, em ordem fixa, nunca recalculada por filtro | Tokens `serie-1` a `serie-6` (Qualidade, Segurança, ASO e treinamentos, SGI, Serviços, Meio Ambiente), validados para daltonismo              |
-| Três cores ficam abaixo de 3:1 sobre o branco               | Legenda sempre visível e com os números; tooltip com o valor exato                                                             |
-| Marcas finas                                                | Coluna de no máximo 24 px, topo arredondado de 4 px e base reta; 2 px de respiro entre segmentos; linha de 2 px; grade de 1 px |
-| Texto nunca na cor da série                                 | Rótulos e valores nas cores de texto; a cor fica no quadradinho ao lado                                                        |
-| Interação                                                   | Tooltip ao passar o mouse, realce da série pela legenda, clique abre a lista filtrada                                          |
+| Regra                                                       | Como                                                                                                                             |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Cor por módulo, em ordem fixa, nunca recalculada por filtro | Tokens `serie-1` a `serie-6` (Qualidade, Segurança, ASO e treinamentos, SGI, Serviços, Meio Ambiente), validados para daltonismo |
+| Três cores ficam abaixo de 3:1 sobre o branco               | Legenda sempre visível e com os números; tooltip com o valor exato                                                               |
+| Marcas finas                                                | Coluna de no máximo 24 px, topo arredondado de 4 px e base reta; 2 px de respiro entre segmentos; linha de 2 px; grade de 1 px   |
+| Texto nunca na cor da série                                 | Rótulos e valores nas cores de texto; a cor fica no quadradinho ao lado                                                          |
+| Interação                                                   | Tooltip ao passar o mouse, realce da série pela legenda, clique abre a lista filtrada                                            |
 
 O destaque do topo do início (`.dv-destaque` em `globals.css`) é a única área com degradê e canto de 12 px do sistema.
