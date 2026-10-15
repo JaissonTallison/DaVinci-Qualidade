@@ -5,12 +5,14 @@ import * as schema from './db/schema.js';
 import { HealthController } from './health.controller.js';
 import { NaoConformidadesModule } from './nao-conformidades/nao-conformidades.module.js';
 import { PlanosDeAcaoModule } from './planos-de-acao/planos-de-acao.module.js';
+import { InspecoesModule } from './inspecoes/inspecoes.module.js';
 
 @Module({
   imports: [
     DatabaseModule.forRoot({ url: requireEnv('DATABASE_URL'), schema }),
     NaoConformidadesModule,
     PlanosDeAcaoModule,
+    InspecoesModule,
   ],
   controllers: [HealthController],
 })

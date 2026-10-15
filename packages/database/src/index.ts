@@ -10,6 +10,7 @@ export {
   type DatabaseModuleOptions,
 } from './database.module.js';
 export { pingDatabase } from './health.js';
+export { violacaoUnica } from './erros.js';
 export {
   colunaDinheiro,
   colunaQuantidade,

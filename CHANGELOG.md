@@ -6,6 +6,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Adicionado
 
+- Inspeções no serviço `qualidade` ([módulo](docs/05-modulos/inspecoes.md)): uma tela para inspeções e checklists, com tipo; itens respondidos OK, NOK ou N/A; um NOK reprova; concluir exige tudo respondido e NOK descrito; concluída, vira registro. Modelos de inspeção reaproveitáveis, com itens copiados para cada inspeção. Rotas em `/inspecoes` e `/modelos-de-inspecao`.
+- Telas de inspeções e modelos; inspeção reprovada abre a NC já preenchida com os itens NOK, e lista as NCs abertas a partir dela; o início ganha o resumo das inspeções.
+- [Armadilhas conhecidas](docs/01-engenharia/armadilhas.md) do projeto.
+
 - Planos de ação no serviço `qualidade` ([módulo](docs/05-modulos/planos-de-acao.md)): tarefas no formato 5W2H, status que segue as tarefas (concluir a última leva a "aguardando eficácia"), verificação de eficácia que pede tarefas novas quando o objetivo não foi alcançado, progresso e prazo calculados, cancelamento de tarefa e de plano com motivo. Rotas em `/planos-de-acao`.
 - Telas de planos de ação (lista, criação e detalhe com as ações na linha de cada tarefa); a NC mostra os planos ligados e cria um plano já preenchido; a tela de início ganha o resumo dos planos.
 - `pnpm db:generate` de todos os serviços tira sozinho o esquema `"public"` que o drizzle-kit escreve nas chaves estrangeiras.
@@ -18,6 +22,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 - Checagem que recusa migração com esquema `"public"` fixo (`scripts/conferir-migracoes.mjs`, roda no `pnpm lint` e no CI).
 
 ### Corrigido
+
+- `pnpm db:generate --name=<assunto>` repassa o nome ao drizzle-kit (antes, ia parar na checagem e a migração saía com nome aleatório).
 
 - Chaves estrangeiras da migração do `codex` apontavam para `"public"`, o que quebrava os testes de integração de parceiros.
 

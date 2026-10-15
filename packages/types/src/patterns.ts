@@ -129,6 +129,24 @@ export const PATTERNS = {
     verificarEficacia: 'planos-de-acao.verificar-eficacia',
     cancelar: 'planos-de-acao.cancelar',
   },
+  /** Qualidade: inspeções e modelos de inspeção (docs/05-modulos/inspecoes.md). */
+  inspecoes: {
+    listar: 'inspecoes.listar',
+    resumo: 'inspecoes.resumo',
+    obter: 'inspecoes.obter',
+    criar: 'inspecoes.criar',
+    responder: 'inspecoes.responder',
+    concluir: 'inspecoes.concluir',
+    cancelar: 'inspecoes.cancelar',
+  },
+  modelosDeInspecao: {
+    listar: 'modelos-de-inspecao.listar',
+    obter: 'modelos-de-inspecao.obter',
+    criar: 'modelos-de-inspecao.criar',
+    atualizar: 'modelos-de-inspecao.atualizar',
+    inativar: 'modelos-de-inspecao.inativar',
+    reativar: 'modelos-de-inspecao.reativar',
+  },
   /** Codex: tabelas oficiais de referência (CNAE, setores, bancos). */
   referencias: {
     cnaes: 'referencias.cnaes',

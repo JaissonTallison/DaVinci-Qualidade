@@ -2,6 +2,7 @@
 import { sql } from 'drizzle-orm';
 import {
   boolean,
+  jsonb,
   check,
   date,
   index,
@@ -152,6 +153,83 @@ export const planosAcaoTarefas = pgTable(
     check(
       'planos_acao_tarefas_situacao',
       sql`${t.situacao} IN ('pendente', 'concluida', 'cancelada')`,
+    ),
+  ],
+);
+
+/** Modelos de inspeção: listas de itens reaproveitáveis. Nunca apagados; inativar tira da escolha. */
+export const modelosInspecao = pgTable(
+  'modelos_inspecao',
+  {
+    ...colunasPadrao(),
+    nome: varchar({ length: 120 }).notNull(),
+    tipo: varchar({ length: 20 }).notNull(),
+    /** [{ verificar, criterio }]: copiados para cada inspeção criada a partir do modelo. */
+    itens: jsonb()
+      .$type<{ verificar: string; criterio: string | null }[]>()
+      .notNull(),
+    ativo: boolean().notNull().default(true),
+  },
+  (t) => [unique('modelos_inspecao_nome_por_empresa').on(t.empresaId, t.nome)],
+);
+
+/** Inspeções (docs/05-modulos/inspecoes.md). Concluída, não muda mais: é registro de qualidade. */
+export const inspecoes = pgTable(
+  'inspecoes',
+  {
+    ...colunasPadrao(),
+    numero: varchar({ length: 20 }).notNull(),
+    tipo: varchar({ length: 20 }).notNull(),
+    objeto: varchar({ length: 200 }).notNull(),
+    lote: varchar({ length: 60 }),
+    local: varchar({ length: 120 }),
+    quantidade: integer(),
+    inspetor: varchar({ length: 120 }).notNull(),
+    data: date({ mode: 'string' }).notNull(),
+    modeloId: uuid().references(() => modelosInspecao.id),
+    /** Nome do modelo no dia da inspeção (o modelo pode ser renomeado depois). */
+    modeloNome: varchar({ length: 120 }),
+    observacoes: text(),
+    status: varchar({ length: 15 }).notNull().default('em_andamento'),
+    concluidaEm: timestamp({ withTimezone: true, precision: 3 }),
+    concluidaPor: uuid(),
+    motivoCancelamento: varchar({ length: 500 }),
+    canceladaEm: timestamp({ withTimezone: true, precision: 3 }),
+    canceladaPor: uuid(),
+  },
+  (t) => [
+    unique('inspecoes_numero_por_empresa').on(t.empresaId, t.numero),
+    index('inspecoes_empresa_status_data_idx').on(
+      t.empresaId,
+      t.status,
+      t.data,
+    ),
+    check(
+      'inspecoes_status',
+      sql`${t.status} IN ('em_andamento', 'aprovada', 'reprovada', 'cancelada')`,
+    ),
+  ],
+);
+
+/** Itens da inspeção: cópia do modelo (ou digitados), com a resposta. */
+export const inspecoesItens = pgTable(
+  'inspecoes_itens',
+  {
+    ...colunasPadrao(),
+    inspecaoId: uuid()
+      .notNull()
+      .references(() => inspecoes.id),
+    ordem: smallint().notNull(),
+    verificar: varchar({ length: 300 }).notNull(),
+    criterio: varchar({ length: 300 }),
+    resposta: varchar({ length: 3 }),
+    observacao: text(),
+  },
+  (t) => [
+    index('inspecoes_itens_inspecao_idx').on(t.inspecaoId, t.ordem),
+    check(
+      'inspecoes_itens_resposta',
+      sql`${t.resposta} IS NULL OR ${t.resposta} IN ('ok', 'nok', 'na')`,
     ),
   ],
 );

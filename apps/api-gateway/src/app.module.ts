@@ -20,6 +20,10 @@ import { FiltroDeErrosHttp } from './filtro-erros-http.js';
 import { HealthController } from './health.controller.js';
 import { NaoConformidadesController } from './qualidade/nao-conformidades.controller.js';
 import { PlanosDeAcaoController } from './qualidade/planos-de-acao.controller.js';
+import {
+  InspecoesController,
+  ModelosDeInspecaoController,
+} from './qualidade/inspecoes.controller.js';
 import { MensageriaService } from './mensageria.service.js';
 import { ConsultasController } from './parceiros/consultas.controller.js';
 import { ParceirosController } from './parceiros/parceiros.controller.js';
@@ -58,6 +62,8 @@ export const observeEnabled = Boolean(
     ConsultasController,
     NaoConformidadesController,
     PlanosDeAcaoController,
+    InspecoesController,
+    ModelosDeInspecaoController,
   ],
   providers: [
     MensageriaService,

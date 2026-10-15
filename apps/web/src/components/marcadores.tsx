@@ -1,8 +1,10 @@
 import {
   GRAVIDADES_NC,
+  STATUS_INSPECAO,
   STATUS_NC,
   STATUS_PLANO,
   type GravidadeNc,
+  type StatusInspecao,
   type StatusNc,
   type StatusPlano,
 } from "@davinci/types";
@@ -100,6 +102,29 @@ export function Progresso({ valor }: { valor: number }) {
         />
       </span>
       <span className="text-sm text-texto-2">{valor}%</span>
+    </span>
+  );
+}
+
+const COR_DA_INSPECAO: Record<StatusInspecao, string> = {
+  em_andamento: "bg-info",
+  aprovada: "bg-conforme",
+  reprovada: "bg-nao-conforme",
+  cancelada: "bg-neutro",
+};
+
+/** Reprovada ganha fundo: é o resultado que pede ação (abrir NC). */
+export function StatusDaInspecao({ status }: { status: StatusInspecao }) {
+  const reprovada = status === "reprovada";
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap ${reprovada ? "rounded-xs bg-nao-conforme/10 px-1.5 text-nao-conforme" : "text-texto"}`}
+    >
+      <span
+        aria-hidden
+        className={`size-2 shrink-0 rounded-full ${COR_DA_INSPECAO[status]}`}
+      />
+      {STATUS_INSPECAO[status]}
     </span>
   );
 }

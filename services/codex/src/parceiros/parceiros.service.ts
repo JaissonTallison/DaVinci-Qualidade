@@ -10,7 +10,7 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
-import { DATABASE, type Database } from '@davinci/database';
+import { DATABASE, type Database, violacaoUnica } from '@davinci/database';
 import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   atualizarParceiroSchema,
@@ -100,14 +100,6 @@ function paraColunas(d: Dados) {
     origem: d.origem,
     observacoes: d.observacoes,
   };
-}
-
-/** Violação de unicidade do Postgres (23505), com o nome da regra. */
-function violacaoUnica(erro: unknown): string | null {
-  const e =
-    (erro as { cause?: { code?: string; constraint?: string } })?.cause ??
-    (erro as { code?: string; constraint?: string });
-  return e?.code === '23505' ? (e.constraint ?? '') : null;
 }
 
 function exigirId(id: unknown): string {

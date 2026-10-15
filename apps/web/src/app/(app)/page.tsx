@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { DadosDoUsuario, ResumoNcs, ResumoPlanos } from "@davinci/types";
+import type {
+  DadosDoUsuario,
+  ResumoInspecoes,
+  ResumoNcs,
+  ResumoPlanos,
+} from "@davinci/types";
 import { FaixaDeIndicadores } from "@/components/faixa-de-indicadores";
 import { chamarApi } from "@/lib/api";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
@@ -11,12 +16,13 @@ export const metadata: Metadata = { title: "Início" };
 export default async function Inicio() {
   const eu = await chamarApi<DadosDoUsuario>("/auth/eu");
   const veQualidade = eu.ok && eu.dados.permissoes.includes("qualidade.ver");
-  const [ncs, planos] = veQualidade
+  const [ncs, planos, inspecoes] = veQualidade
     ? await Promise.all([
         chamarApi<ResumoNcs>("/nao-conformidades/resumo"),
         chamarApi<ResumoPlanos>("/planos-de-acao/resumo"),
+        chamarApi<ResumoInspecoes>("/inspecoes/resumo"),
       ])
-    : [null, null];
+    : [null, null, null];
   return (
     <>
       <h1 className={tituloDaPagina}>Início</h1>
@@ -63,6 +69,29 @@ export default async function Inicio() {
                 rotulo: "Aguardando eficácia",
                 valor: planos.dados.aguardandoEficacia,
                 href: "/qualidade/planos-de-acao?status=aguardando_eficacia",
+              },
+            ]}
+          />
+        </Quadro>
+      )}
+      {inspecoes?.ok && (
+        <Quadro titulo="Inspeções" href="/qualidade/inspecoes">
+          <FaixaDeIndicadores
+            itens={[
+              {
+                rotulo: "Em andamento",
+                valor: inspecoes.dados.emAndamento,
+                href: "/qualidade/inspecoes?status=em_andamento",
+              },
+              {
+                rotulo: "Reprovadas nos últimos 30 dias",
+                valor: inspecoes.dados.reprovadas30Dias,
+                alerta: inspecoes.dados.reprovadas30Dias > 0,
+                href: "/qualidade/inspecoes?status=reprovada",
+              },
+              {
+                rotulo: "Aprovação nos últimos 30 dias (%)",
+                valor: inspecoes.dados.taxaDeAprovacao30Dias ?? 0,
               },
             ]}
           />

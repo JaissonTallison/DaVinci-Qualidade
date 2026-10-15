@@ -64,8 +64,7 @@ const arquivos = {
           lint: 'oxlint --type-aware src/',
           test: 'vitest run',
           'test:watch': 'vitest',
-          'db:generate':
-            'drizzle-kit generate && node ../../scripts/conferir-migracoes.mjs --corrigir',
+          'db:generate': 'node ../../scripts/gerar-migracao.mjs',
           'db:migrate': 'drizzle-kit migrate',
         },
         dependencies: {

@@ -63,6 +63,8 @@ export class NaoConformidadesService {
     if (f.gravidade)
       condicoes.push(eq(naoConformidades.gravidade, f.gravidade));
     if (f.origem) condicoes.push(eq(naoConformidades.origem, f.origem));
+    if (f.origemRef)
+      condicoes.push(eq(naoConformidades.origemRef, f.origemRef));
     if (f.vencidas)
       condicoes.push(
         lt(naoConformidades.prazo, hoje),

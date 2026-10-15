@@ -29,6 +29,13 @@
       "when": 1792036996683,
       "tag": "0003_planos_de_acao",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792038121889,
+      "tag": "0004_inspecoes",
+      "breakpoints": true
     }
   ]
 }

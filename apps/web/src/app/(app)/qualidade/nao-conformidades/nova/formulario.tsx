@@ -15,13 +15,19 @@ import {
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
-export function FormularioNovaNc({ hoje }: { hoje: string }) {
+export function FormularioNovaNc({
+  hoje,
+  inicial,
+}: {
+  hoje: string;
+  inicial?: Record<string, string>;
+}) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     abrirNc,
     {},
   );
   const erros = errosPorCampo(estado.erro?.detalhes);
-  const v = estado.valores ?? {};
+  const v = estado.valores ?? inicial ?? {};
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
   const invalido = (nome: string) => ({

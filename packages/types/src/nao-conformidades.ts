@@ -147,6 +147,8 @@ export const cancelarNcSchema = z.object({
 export type CancelarNc = z.input<typeof cancelarNcSchema>;
 
 export const filtroNcsSchema = z.object({
+  /** Registro de origem exato (ex.: INS-2026-004): as NCs abertas a partir dele. */
+  origemRef: opcional(z.string().trim().max(60)),
   busca: opcional(z.string().trim().max(100, 'Use no máximo 100 caracteres.')),
   status: enumOpcional(STATUS_NC, 'Status desconhecido.'),
   gravidade: enumOpcional(GRAVIDADES_NC, 'Gravidade desconhecida.'),
