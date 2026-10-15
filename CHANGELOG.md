@@ -10,6 +10,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 - `apps/web` (Next.js 16, porta 3170): login, código de 2 etapas, troca da senha inicial, casca com menu dos grupos do QSSMA (filtrado por módulo e permissão) e as telas de Não conformidades: lista, abertura e detalhe com o ciclo de tratamento.
 - `packages/tokens`: cores, tipografia (família Source), cantos e sombras do padrão da Qualidade, com o tema do Tailwind zerado.
 - ESLint do web recusa degradê, cor solta, canto e sombra grandes, vidro fosco, animação decorativa, emoji e as fontes Inter, Geist, Manrope, Sora e Poppins.
+- `pnpm dev:tudo`: um comando sobe infraestrutura, migrações, web, gateway e serviços, com os logs no mesmo terminal; `--essencial` sobe só o que as telas usam. Ctrl+C encerra o grupo inteiro de processos.
 - Checagem que recusa migração com esquema `"public"` fixo (`scripts/conferir-migracoes.mjs`, roda no `pnpm lint` e no CI).
 
 ### Corrigido

@@ -24,16 +24,25 @@ docs/        documentação
 
 ## Como rodar
 
+Primeira vez:
+
 ```bash
 pnpm install
-pnpm env:criar      # cria os .env (raiz, apps e serviços) a partir dos .env.example
-pnpm infra:up       # RabbitMQ + Postgres + Mailpit (aguarda ficarem saudáveis)
-pnpm db:migrate     # tabelas dos 12 serviços
+pnpm env:criar             # cria os .env (raiz, apps e serviços) a partir dos .env.example
+pnpm infra:up              # RabbitMQ + Postgres + Mailpit
+pnpm db:migrate            # tabelas dos 12 serviços
 pnpm identidade:instalar   # chaves de login, empresa, perfis e administrador (mostra a senha UMA vez)
-pnpm dev            # web + gateway + 12 serviços → http://localhost:3170
 ```
 
-Com login, `GET localhost:3171/health/services` mostra os 12 serviços com o banco de cada um.
+Dia a dia, **um comando sobe tudo** (infraestrutura, migrações, web, gateway e serviços), com os logs de todos no mesmo terminal. Ctrl+C encerra tudo.
+
+```bash
+pnpm dev:tudo              # web + gateway + os 12 serviços (~6 GB de RAM)
+pnpm dev:tudo --essencial  # só o que as telas usam hoje: web, gateway, identidade e qualidade (~2 GB)
+pnpm dev:tudo --sem-infra  # pula infraestrutura e migrações (já no ar)
+```
+
+Abra http://localhost:3170. Com login, `GET localhost:3171/health/services` mostra os serviços com o banco de cada um.
 
 ## Antes de contribuir
 
