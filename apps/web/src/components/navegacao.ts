@@ -49,6 +49,17 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
       },
     ],
   },
+  {
+    titulo: "Auditorias",
+    recurso: "auditorias",
+    itens: [
+      {
+        rotulo: "Auditorias",
+        href: "/auditorias",
+        permissao: "auditorias.ver",
+      },
+    ],
+  },
 ];
 
 /** Grupos visíveis para quem está logado: módulo ligado na empresa e ao menos um item permitido. */

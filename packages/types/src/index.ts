@@ -19,3 +19,4 @@ export * from './nao-conformidades.js';
 export * from './planos-de-acao.js';
 export * from './inspecoes.js';
 export * from './calibracao.js';
+export * from './auditorias.js';

@@ -1,4 +1,2 @@
-/** Data de hoje (AAAA-MM-DD) no fuso de Brasília: prazos são datas civis, não instantes. */
-export function hojeEmBrasilia(agora = new Date()): string {
-  return agora.toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
-}
+// Mantido para os imports locais do serviço; a função mora em @davinci/shared (usada também por auditorias).
+export { hojeEmBrasilia } from '@davinci/shared';

@@ -164,15 +164,13 @@ export class CalibracaoService {
           'REGRA_DE_NEGOCIO',
           'O instrumento está fora de uso. Volte-o para uso antes de registrar uma calibração.',
         );
-      await tx
-        .insert(calibracoes)
-        .values({
-          ...cal,
-          instrumentoId: linha.id,
-          empresaId: ctx.empresaId,
-          criadoPor: ctx.usuarioId,
-          atualizadoPor: ctx.usuarioId,
-        });
+      await tx.insert(calibracoes).values({
+        ...cal,
+        instrumentoId: linha.id,
+        empresaId: ctx.empresaId,
+        criadoPor: ctx.usuarioId,
+        atualizadoPor: ctx.usuarioId,
+      });
     });
   }
 

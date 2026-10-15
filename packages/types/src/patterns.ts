@@ -158,6 +158,20 @@ export const PATTERNS = {
     registrar: 'calibracao.registrar',
     anular: 'calibracao.anular',
   },
+  /** Auditorias e constatações (docs/05-modulos/auditorias.md). */
+  auditorias: {
+    listar: 'auditorias.listar',
+    resumo: 'auditorias.resumo',
+    obter: 'auditorias.obter',
+    criar: 'auditorias.criar',
+    atualizar: 'auditorias.atualizar',
+    iniciar: 'auditorias.iniciar',
+    registrarConstatacao: 'auditorias.registrar-constatacao',
+    alterarConstatacao: 'auditorias.alterar-constatacao',
+    formalizarNc: 'auditorias.formalizar-nc',
+    concluir: 'auditorias.concluir',
+    cancelar: 'auditorias.cancelar',
+  },
   /** Codex: tabelas oficiais de referência (CNAE, setores, bancos). */
   referencias: {
     cnaes: 'referencias.cnaes',

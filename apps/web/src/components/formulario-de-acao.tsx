@@ -20,14 +20,7 @@ type Acao = (
   form: FormData,
 ) => Promise<EstadoDeFormulario>;
 
-/** Formulário de uma ação de registro: erro geral no topo, erros de campo nos campos, versão lida enviada junto. */
-export function Formulario({
-  acao,
-  versao,
-  rotuloDoBotao,
-  perigo = false,
-  children,
-}: {
+type PropsDoFormulario = {
   acao: Acao;
   versao: string;
   rotuloDoBotao: string;
@@ -37,7 +30,24 @@ export function Formulario({
     valores: Record<string, string>,
     estado: EstadoDeFormulario,
   ) => ReactNode;
-}) {
+};
+
+/**
+ * Formulário de uma ação de registro: erro geral no topo, erros de campo nos campos, versão lida enviada junto.
+ * Recomeça do zero quando a versão do registro muda: outra ação na mesma tela (ex.: formalizar a NC) não deixa
+ * aqui um erro que já não vale (ex.: "formalize a NC pendente").
+ */
+export function Formulario(props: PropsDoFormulario) {
+  return <FormularioDaVersao key={props.versao} {...props} />;
+}
+
+function FormularioDaVersao({
+  acao,
+  versao,
+  rotuloDoBotao,
+  perigo = false,
+  children,
+}: PropsDoFormulario) {
   const [estado, enviar, enviando] = useActionState<
     EstadoDeFormulario,
     FormData

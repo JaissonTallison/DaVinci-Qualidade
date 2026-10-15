@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type {
   DadosDoUsuario,
+  ResumoAuditorias,
   ResumoCalibracao,
   ResumoInspecoes,
   ResumoNcs,
@@ -25,6 +26,10 @@ export default async function Inicio() {
         chamarApi<ResumoCalibracao>("/instrumentos/resumo"),
       ])
     : [null, null, null, null];
+  const veAuditorias = eu.ok && eu.dados.permissoes.includes("auditorias.ver");
+  const auditorias = veAuditorias
+    ? await chamarApi<ResumoAuditorias>("/auditorias/resumo")
+    : null;
   return (
     <>
       <h1 className={tituloDaPagina}>Início</h1>
@@ -124,7 +129,29 @@ export default async function Inicio() {
           />
         </Quadro>
       )}
-      {!veQualidade && (
+      {auditorias?.ok && (
+        <Quadro titulo="Auditorias" href="/auditorias">
+          <FaixaDeIndicadores
+            itens={[
+              {
+                rotulo: "Planejadas",
+                valor: auditorias.dados.planejadas,
+                href: "/auditorias?status=planejada",
+              },
+              {
+                rotulo: "Em andamento",
+                valor: auditorias.dados.emAndamento,
+                href: "/auditorias?status=em_andamento",
+              },
+              {
+                rotulo: "NCs em auditorias dos últimos 12 meses",
+                valor: auditorias.dados.ncsUltimos12Meses,
+              },
+            ]}
+          />
+        </Quadro>
+      )}
+      {!veQualidade && !veAuditorias && (
         <p className="mt-4 text-base text-texto-2">
           Nenhum módulo liberado para o seu perfil. Fale com o administrador da
           sua empresa.

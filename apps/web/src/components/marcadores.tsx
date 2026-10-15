@@ -1,14 +1,18 @@
 import {
   GRAVIDADES_NC,
   SITUACOES_INSTRUMENTO,
+  STATUS_AUDITORIA,
   STATUS_INSPECAO,
   STATUS_NC,
   STATUS_PLANO,
+  TIPOS_CONSTATACAO,
   type GravidadeNc,
   type SituacaoInstrumento,
+  type StatusAuditoria,
   type StatusInspecao,
   type StatusNc,
   type StatusPlano,
+  type TipoConstatacao,
 } from "@davinci/types";
 
 const COR_DO_STATUS: Record<StatusNc, string> = {
@@ -156,6 +160,46 @@ export function SituacaoDoInstrumento({
         className={`size-2 shrink-0 rounded-full ${COR_DO_INSTRUMENTO[situacao]}`}
       />
       {SITUACOES_INSTRUMENTO[situacao]}
+    </span>
+  );
+}
+
+const COR_DA_AUDITORIA: Record<StatusAuditoria, string> = {
+  planejada: "bg-neutro",
+  em_andamento: "bg-info",
+  concluida: "bg-conforme",
+  cancelada: "bg-neutro",
+};
+
+export function StatusDaAuditoria({ status }: { status: StatusAuditoria }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-texto">
+      <span
+        aria-hidden
+        className={`size-2 shrink-0 rounded-full ${COR_DA_AUDITORIA[status]}`}
+      />
+      {STATUS_AUDITORIA[status]}
+    </span>
+  );
+}
+
+const COR_DA_CONSTATACAO: Record<TipoConstatacao, string> = {
+  conformidade: "bg-conforme",
+  nc_maior: "bg-nivel-critico",
+  nc_menor: "bg-nivel-alto",
+  observacao: "bg-nivel-medio",
+  oportunidade: "bg-info",
+};
+
+/** Tipo da constatação: marcador na cor do nível, texto na cor do texto (interface.md §5.4). */
+export function TipoDaConstatacao({ tipo }: { tipo: TipoConstatacao }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-texto">
+      <span
+        aria-hidden
+        className={`size-2 shrink-0 rounded-xs ${COR_DA_CONSTATACAO[tipo]}`}
+      />
+      {TIPOS_CONSTATACAO[tipo]}
     </span>
   );
 }
