@@ -22,6 +22,8 @@ import {
   type NaoConformidade,
   type NaoConformidadeResumo,
   type Pagina,
+  ncsPorMesSchema,
+  type NcsDoMes,
   type ResumoNcs,
 } from '@davinci/types';
 import type { z } from 'zod';
@@ -50,6 +52,21 @@ export class NaoConformidadesController {
     return this.mensageria.enviar<Pagina<NaoConformidadeResumo>>(
       SERVICES.QUALIDADE,
       P.listar,
+      filtro,
+      ctx,
+    );
+  }
+
+  @Get('por-mes')
+  @Permissao('qualidade.ver')
+  porMes(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(ncsPorMesSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<NcsDoMes[]>(
+      SERVICES.QUALIDADE,
+      P.porMes,
       filtro,
       ctx,
     );

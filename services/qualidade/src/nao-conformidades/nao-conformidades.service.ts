@@ -13,7 +13,7 @@ import {
   type SQL,
 } from 'drizzle-orm';
 import { DATABASE, type Database } from '@davinci/database';
-import { ErroDeNegocio, validar } from '@davinci/shared';
+import { ErroDeNegocio, somarMeses, validar } from '@davinci/shared';
 import {
   atualizarNcSchema,
   cancelarNcSchema,
@@ -28,6 +28,8 @@ import {
   type NaoConformidade,
   type NaoConformidadeResumo,
   type Pagina,
+  ncsPorMesSchema,
+  type NcsDoMes,
   type ResumoNcs,
   type StatusNc,
 } from '@davinci/types';
@@ -102,6 +104,47 @@ export class NaoConformidadesService {
       pagina: f.pagina,
       porPagina: f.porPagina,
     };
+  }
+
+  /** NCs abertas (data de abertura) e encerradas (dia do encerramento em Brasília) por mês, para o gráfico do início. */
+  async porMes(ctx: Contexto, dados: unknown): Promise<NcsDoMes[]> {
+    const { meses } = validar(ncsPorMesSchema, dados ?? {});
+    const inicio = somarMeses(
+      `${hojeEmBrasilia().slice(0, 7)}-01`,
+      -(meses - 1),
+    );
+    const mesAbertura = sql<string>`to_char(${naoConformidades.dataAbertura}, 'YYYY-MM')`;
+    const mesEncerramento = sql<string>`to_char(${naoConformidades.encerradaEm} AT TIME ZONE 'America/Sao_Paulo', 'YYYY-MM')`;
+    const [abertas, encerradas] = await Promise.all([
+      this.db
+        .select({ mes: mesAbertura, total: count() })
+        .from(naoConformidades)
+        .where(
+          and(
+            eq(naoConformidades.empresaId, ctx.empresaId),
+            sql`${naoConformidades.dataAbertura} >= ${inicio}`,
+          ),
+        )
+        .groupBy(mesAbertura),
+      this.db
+        .select({ mes: mesEncerramento, total: count() })
+        .from(naoConformidades)
+        .where(
+          and(
+            eq(naoConformidades.empresaId, ctx.empresaId),
+            sql`(${naoConformidades.encerradaEm} AT TIME ZONE 'America/Sao_Paulo')::date >= ${inicio}`,
+          ),
+        )
+        .groupBy(mesEncerramento),
+    ]);
+    return Array.from({ length: meses }, (_, i) => {
+      const mes = somarMeses(inicio, i).slice(0, 7);
+      return {
+        mes,
+        abertas: abertas.find((a) => a.mes === mes)?.total ?? 0,
+        encerradas: encerradas.find((e) => e.mes === mes)?.total ?? 0,
+      };
+    });
   }
 
   async resumo(ctx: Contexto): Promise<ResumoNcs> {

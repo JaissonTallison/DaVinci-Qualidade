@@ -1,5 +1,7 @@
+import { ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   GRAVIDADES_NC,
   ORIGENS_NC,
@@ -67,6 +69,7 @@ export default async function ListaDeNcs({
             href="/qualidade/nao-conformidades/nova"
             className={botaoPrimario}
           >
+            <IconeDaTela href={"/qualidade/nao-conformidades/nova"} />
             Abrir NC
           </Link>
         )}
@@ -113,6 +116,7 @@ export default async function ListaDeNcs({
             Só vencidas
           </label>
           <button type="submit" className={botaoSecundario}>
+            <ListFilter aria-hidden size={16} strokeWidth={2} />
             Filtrar
           </button>
           {filtrando && (
@@ -158,7 +162,7 @@ function Tabela({
   };
   return (
     <>
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <table className="w-full text-left">
           <thead className="bg-superficie-2 text-xs text-texto-2">
             <tr>

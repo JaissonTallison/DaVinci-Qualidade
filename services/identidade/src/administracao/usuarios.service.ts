@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, count, eq, isNull, ne, sql } from 'drizzle-orm';
-import { DATABASE, type Database } from '@davinci/database';
+import { and, count, eq, isNull, ne, sql } from 'drizzle-orm';
+import { DATABASE, type Database, ordemAlfabetica } from '@davinci/database';
 import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   alterarPerfilDoUsuarioSchema,
@@ -330,7 +330,7 @@ export class UsuariosService {
           usuarioId ? eq(vinculos.usuarioId, usuarioId) : undefined,
         ),
       )
-      .orderBy(asc(sql`lower(${usuarios.nome})`));
+      .orderBy(ordemAlfabetica(usuarios.nome));
     return linhas.map(({ u, v, p, outras: total }) => ({
       id: u.id,
       nome: u.nome,

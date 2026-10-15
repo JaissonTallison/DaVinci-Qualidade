@@ -1,11 +1,13 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 import { TIPOS_INSPECAO, type ModeloDeInspecao } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { LinhasDeItem } from "@/components/linhas-de-item";
+import { Selecao } from "@/components/selecao";
 import { salvarModelo, type EstadoDaAcao } from "@/lib/acoes-inspecoes";
 import {
   botaoPrimario,
@@ -57,7 +59,7 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
             />
           </Campo>
           <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
-            <select
+            <Selecao
               id="tipo"
               name="tipo"
               defaultValue={v.tipo ?? ""}
@@ -72,7 +74,7 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
                   {nome}
                 </option>
               ))}
-            </select>
+            </Selecao>
           </Campo>
         </div>
       </div>
@@ -87,6 +89,7 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
         <Link href="/qualidade/modelos-de-inspecao" className={botaoSecundario}>
+          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
           Voltar
         </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>

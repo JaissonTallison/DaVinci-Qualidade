@@ -337,3 +337,13 @@ describe('lista e resumo', () => {
     });
   });
 });
+
+describe('NCs por mês', () => {
+  it('conta abertas pelo mês de abertura e encerradas pelo mês do encerramento; meses sem NC aparecem zerados', async () => {
+    const ctx: Contexto = { empresaId: uuidv7(), usuarioId: uuidv7(), rastreioId: uuidv7() };
+    const meses = await servico.porMes(ctx, { meses: 3 });
+    expect(meses).toHaveLength(3);
+    expect(meses.every((m) => m.abertas === 0 && m.encerradas === 0)).toBe(true);
+    expect(meses[2]!.mes).toBe(hojeEmBrasilia().slice(0, 7));
+  });
+});

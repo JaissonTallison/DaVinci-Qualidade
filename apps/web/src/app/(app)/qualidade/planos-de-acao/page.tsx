@@ -1,5 +1,7 @@
+import { ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   ORIGENS_PLANO,
   STATUS_PLANO,
@@ -57,6 +59,7 @@ export default async function ListaDePlanos({
         </div>
         {podeCriar && (
           <Link href="/qualidade/planos-de-acao/novo" className={botaoPrimario}>
+            <IconeDaTela href={"/qualidade/planos-de-acao/novo"} />
             Criar plano
           </Link>
         )}
@@ -97,6 +100,7 @@ export default async function ListaDePlanos({
             Só atrasados
           </label>
           <button type="submit" className={botaoSecundario}>
+            <ListFilter aria-hidden size={16} strokeWidth={2} />
             Filtrar
           </button>
           {filtrando && (
@@ -120,7 +124,7 @@ export default async function ListaDePlanos({
               : "Nenhum plano de ação ainda. Crie um a partir de uma NC ou pelo botão Criar plano."}
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-superficie-2 text-xs text-texto-2">
                 <tr>

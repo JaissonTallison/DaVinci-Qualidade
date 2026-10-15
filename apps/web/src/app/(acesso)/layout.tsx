@@ -9,16 +9,8 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
     >
       <div className="w-full max-w-[22rem]">
         <Image
-          className="h-auto w-[200px] dark:hidden"
+          className="h-auto w-[200px]"
           src="/brand/logo.svg"
-          alt="DaVinci Qualidade e Certificações"
-          width={573}
-          height={215}
-          priority
-        />
-        <Image
-          className="hidden h-auto w-[200px] dark:block"
-          src="/brand/logo-fundo-escuro.svg"
           alt="DaVinci Qualidade e Certificações"
           width={573}
           height={215}

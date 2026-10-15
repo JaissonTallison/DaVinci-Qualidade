@@ -1,10 +1,12 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 import { NORMAS, TIPOS_AUDITORIA, type Auditoria } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Selecao } from "@/components/selecao";
 import { salvarAuditoria, type EstadoDaAcao } from "@/lib/acoes-auditorias";
 import {
   areaDeTexto,
@@ -56,7 +58,7 @@ export function FormularioDeAuditoria({
         {erroGeral && <AvisoDeErro erro={erroGeral} />}
         <div className="grid gap-5 sm:grid-cols-3">
           <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
-            <select
+            <Selecao
               id="tipo"
               name="tipo"
               defaultValue={v.tipo ?? ""}
@@ -71,7 +73,7 @@ export function FormularioDeAuditoria({
                   {nome}
                 </option>
               ))}
-            </select>
+            </Selecao>
           </Campo>
           <Campo id="dataInicio" rotulo="Início" erro={erros.dataInicio}>
             <input
@@ -185,6 +187,7 @@ export function FormularioDeAuditoria({
       >
         {!embutido && (
           <Link href="/auditorias" className={botaoSecundario}>
+            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
             Voltar
           </Link>
         )}

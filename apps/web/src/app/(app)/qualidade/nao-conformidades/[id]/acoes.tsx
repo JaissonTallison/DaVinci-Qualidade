@@ -7,6 +7,7 @@ import {
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
 import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Selecao as SelecaoDeFormulario } from "@/components/selecao";
 import {
   cancelarNc,
   enviarParaVerificacao,
@@ -264,13 +265,18 @@ function Selecao({
   vazio?: string;
 }) {
   return (
-    <select id={id} name={id} defaultValue={valor} className={campo}>
+    <SelecaoDeFormulario
+      id={id}
+      name={id}
+      defaultValue={valor}
+      className={campo}
+    >
       {vazio && <option value="">{vazio}</option>}
       {Object.entries(opcoes).map(([chave, nome]) => (
         <option key={chave} value={chave}>
           {nome}
         </option>
       ))}
-    </select>
+    </SelecaoDeFormulario>
   );
 }

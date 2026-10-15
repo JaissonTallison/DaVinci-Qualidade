@@ -13,6 +13,7 @@
   "dependencies": {
     "@davinci/tokens": "workspace:*",
     "@davinci/types": "workspace:*",
+    "lucide-react": "catalog:",
     "next": "16.4.0",
     "react": "catalog:",
     "react-dom": "catalog:",

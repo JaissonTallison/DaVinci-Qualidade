@@ -87,6 +87,7 @@ export class CalibracaoService {
     const contar = (s: SituacaoInstrumento) =>
       todos.filter((i) => i.situacao === s).length;
     return {
+      emUso: todos.filter((i) => i.situacao !== 'fora_de_uso').length,
       vencidos: contar('vencido'),
       vencemEmBreve: contar('vence_em_breve'),
       reprovados: contar('reprovado'),

@@ -1,10 +1,12 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 import { GRAVIDADES_NC, ORIGENS_NC, TIPOS_NC } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Selecao } from "@/components/selecao";
 import { abrirNc, type EstadoDaAcao } from "@/lib/acoes-nc";
 import {
   areaDeTexto,
@@ -194,6 +196,7 @@ export function FormularioNovaNc({
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
         <Link href="/qualidade/nao-conformidades" className={botaoSecundario}>
+          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
           Voltar
         </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
@@ -217,7 +220,7 @@ function Opcoes({
   "aria-describedby"?: string;
 }) {
   return (
-    <select
+    <Selecao
       id={id}
       name={id}
       defaultValue={valor ?? ""}
@@ -232,6 +235,6 @@ function Opcoes({
           {nome}
         </option>
       ))}
-    </select>
+    </Selecao>
   );
 }

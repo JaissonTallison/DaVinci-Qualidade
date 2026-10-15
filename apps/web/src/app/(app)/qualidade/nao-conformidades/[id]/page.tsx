@@ -28,10 +28,13 @@ import {
   tituloDaSecao,
 } from "@/lib/estilos";
 import { AcoesDaNc } from "./acoes";
+import { Anexos } from "@/components/anexos";
 
 export const metadata: Metadata = { title: "Não conformidade" };
 
 const AVISOS: Record<string, string> = {
+  anexado: "Arquivo anexado.",
+  "anexo-removido": "Anexo removido.",
   aberta: "NC aberta. Quando a causa estiver analisada, registre o tratamento.",
   tratamento: "Tratamento registrado.",
   verificacao: "Enviada para verificação de eficácia.",
@@ -241,6 +244,12 @@ export default async function DetalheDaNc({
           podeCancelar={permissoes.includes("qualidade.excluir")}
         />
       )}
+      <Anexos
+        registro="nao_conformidade"
+        registroId={nc.id}
+        voltar={`/qualidade/nao-conformidades/${nc.id}`}
+        podeEditar={permissoes.includes("qualidade.editar")}
+      />
     </article>
   );
 }

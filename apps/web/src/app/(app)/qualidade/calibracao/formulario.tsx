@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useActionState } from "react";
 import type { Instrumento } from "@davinci/types";
@@ -130,6 +131,7 @@ export function FormularioDeInstrumento({
       >
         {!embutido && (
           <Link href="/qualidade/calibracao" className={botaoSecundario}>
+            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
             Voltar
           </Link>
         )}

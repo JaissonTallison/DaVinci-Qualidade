@@ -232,7 +232,7 @@ describe('lista e resumo', () => {
     expect(
       (await servico.listar(ctx, { busca: 'reprov' })).itens.map((i) => i.id),
     ).toEqual([reprovado.id]);
-    expect(await servico.resumo(ctx)).toEqual({
+    expect(await servico.resumo(ctx)).toMatchObject({
       vencidos: 1,
       vencemEmBreve: 0,
       reprovados: 1,

@@ -259,16 +259,14 @@ export class AuditoriasService {
       'constatar',
       async (tx, linha, lista) => {
         exigirNormaDaAuditoria(linha, constatacao.norma);
-        await tx
-          .insert(constatacoes)
-          .values({
-            ...constatacao,
-            ordem: lista.length,
-            auditoriaId: linha.id,
-            empresaId: ctx.empresaId,
-            criadoPor: ctx.usuarioId,
-            atualizadoPor: ctx.usuarioId,
-          });
+        await tx.insert(constatacoes).values({
+          ...constatacao,
+          ordem: lista.length,
+          auditoriaId: linha.id,
+          empresaId: ctx.empresaId,
+          criadoPor: ctx.usuarioId,
+          atualizadoPor: ctx.usuarioId,
+        });
       },
     );
   }

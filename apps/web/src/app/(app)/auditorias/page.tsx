@@ -1,5 +1,7 @@
+import { ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   NORMAS,
   STATUS_AUDITORIA,
@@ -59,6 +61,7 @@ export default async function ListaDeAuditorias({
         </div>
         {podeCriar && (
           <Link href="/auditorias/nova" className={botaoPrimario}>
+            <IconeDaTela href={"/auditorias/nova"} />
             Planejar auditoria
           </Link>
         )}
@@ -88,6 +91,7 @@ export default async function ListaDeAuditorias({
             valor={params.tipo}
           />
           <button type="submit" className={botaoSecundario}>
+            <ListFilter aria-hidden size={16} strokeWidth={2} />
             Filtrar
           </button>
           {filtrando && (
@@ -110,7 +114,7 @@ export default async function ListaDeAuditorias({
               : "Nenhuma auditoria registrada. Planeje a primeira com escopo, normas e equipe."}
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-superficie-2 text-xs text-texto-2">
                 <tr>

@@ -17,3 +17,4 @@ export {
   colunasBase,
   colunasPadrao,
 } from './colunas.js';
+export { ordemAlfabetica } from './ordem.js';

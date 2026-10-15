@@ -2,7 +2,8 @@ import Link from "next/link";
 
 export interface Indicador {
   rotulo: string;
-  valor: number;
+  /** `null` = sem dados (ex.: taxa sem horas lançadas): mostra "—", nunca zero. */
+  valor: number | null;
   /** Número que pede atenção: único lugar onde a faixa ganha cor. */
   alerta?: boolean;
   href?: string;
@@ -11,13 +12,15 @@ export interface Indicador {
 /** Indicadores numa faixa única, separados por divisória. Sem ícone, sem card colorido (interface.md §8). */
 export function FaixaDeIndicadores({ itens }: { itens: Indicador[] }) {
   return (
-    <dl className="grid grid-cols-1 divide-y divide-borda sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+    <dl
+      className={`grid grid-cols-1 divide-y divide-borda sm:divide-x sm:divide-y-0 ${itens.length === 4 ? "sm:grid-cols-4" : itens.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}
+    >
       {itens.map((i) => {
         const numero = (
           <span
             className={`text-xl font-semibold ${i.alerta ? "text-nao-conforme" : "text-texto"}`}
           >
-            {i.valor.toLocaleString("pt-BR")}
+            {i.valor === null ? "—" : i.valor.toLocaleString("pt-BR")}
           </span>
         );
         return (

@@ -22,10 +22,13 @@ import {
 } from "@/lib/estilos";
 import { CancelarInspecao } from "./cancelar";
 import { RespostasDaInspecao } from "./respostas";
+import { Anexos } from "@/components/anexos";
 
 export const metadata: Metadata = { title: "Inspeção" };
 
 const AVISOS: Record<string, string> = {
+  anexado: "Arquivo anexado.",
+  "anexo-removido": "Anexo removido.",
   salva: "Respostas salvas.",
   aprovada: "Inspeção concluída: aprovada.",
   reprovada:
@@ -203,6 +206,12 @@ export default async function DetalheDaInspecao({
       {emAndamento && permissoes.includes("qualidade.excluir") && (
         <CancelarInspecao inspecao={i} />
       )}
+      <Anexos
+        registro="inspecao"
+        registroId={i.id}
+        voltar={`/qualidade/inspecoes/${i.id}`}
+        podeEditar={permissoes.includes("qualidade.editar")}
+      />
     </article>
   );
 }

@@ -152,6 +152,8 @@ export type InstrumentoResumo = Pick<
 >;
 
 export interface ResumoCalibracao {
+  /** Instrumentos em uso (base dos percentuais). */
+  emUso: number;
   vencidos: number;
   vencemEmBreve: number;
   reprovados: number;

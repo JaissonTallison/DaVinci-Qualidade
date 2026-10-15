@@ -9,6 +9,7 @@ import {
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
 import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Selecao } from "@/components/selecao";
 import {
   cancelarAuditoria,
   concluirAuditoria,
@@ -58,7 +59,7 @@ export function RegistrarConstatacao({ auditoria }: { auditoria: Auditoria }) {
           <>
             <div className="grid gap-5 sm:grid-cols-4">
               <Campo id="tipo" rotulo="Tipo" erro={erros["constatacao.tipo"]}>
-                <select
+                <Selecao
                   id="tipo"
                   name="tipo"
                   defaultValue={v.tipo ?? ""}
@@ -73,14 +74,14 @@ export function RegistrarConstatacao({ auditoria }: { auditoria: Auditoria }) {
                       {nome}
                     </option>
                   ))}
-                </select>
+                </Selecao>
               </Campo>
               <Campo
                 id="norma"
                 rotulo="Norma"
                 erro={erros["constatacao.norma"]}
               >
-                <select
+                <Selecao
                   id="norma"
                   name="norma"
                   defaultValue={v.norma ?? auditoria.normas[0]}
@@ -92,7 +93,7 @@ export function RegistrarConstatacao({ auditoria }: { auditoria: Auditoria }) {
                       {NORMAS[n]}
                     </option>
                   ))}
-                </select>
+                </Selecao>
               </Campo>
               <Campo
                 id="clausula"

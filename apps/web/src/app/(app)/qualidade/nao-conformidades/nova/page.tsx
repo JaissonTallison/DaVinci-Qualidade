@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   RESPOSTAS_ITEM,
+  type Acidente,
   type Inspecao,
   type Instrumento,
   type TipoInspecao,
@@ -71,39 +72,68 @@ function aPartirDoInstrumento(i: Instrumento): Record<string, string> {
   };
 }
 
+/** Vindo de um acidente: o tratamento (ação corretiva e eficácia) segue no ciclo da NC. */
+function aPartirDoAcidente(a: Acidente): Record<string, string> {
+  const gravidade = {
+    com_afastamento: "alta",
+    sem_afastamento: "media",
+    incidente: "media",
+    quase_acidente: "baixa",
+  }[a.tipo];
+  return {
+    titulo: `${a.numero}: ${a.descricao}`.slice(0, 150),
+    descricao: [
+      `${a.numero} de ${a.data.split("-").reverse().join("/")} em ${a.local}${a.acidentado ? `, com ${a.acidentado}` : ""}.`,
+      a.descricao,
+      a.causas ? `Causas apontadas na investigação: ${a.causas}` : "",
+      a.medidas ? `Medidas definidas: ${a.medidas}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
+    origem: "acidente",
+    origemRef: a.numero,
+    tipo: "processo",
+    gravidade,
+    setor: a.setor ?? "",
+  };
+}
+
 export default async function NovaNc({
   searchParams,
 }: PageProps<"/qualidade/nao-conformidades/nova">) {
-  const { inspecao: inspecaoId, instrumento: instrumentoId } =
-    (await searchParams) as { inspecao?: string; instrumento?: string };
-  // A NC pode vir de uma inspeção reprovada ou de um instrumento reprovado na calibração, já preenchida
-  const [inspecao, instrumento] = await Promise.all([
-    inspecaoId ? chamarApi<Inspecao>(`/inspecoes/${inspecaoId}`) : null,
-    instrumentoId
-      ? chamarApi<Instrumento>(`/instrumentos/${instrumentoId}`)
+  const q = (await searchParams) as {
+    inspecao?: string;
+    instrumento?: string;
+    acidente?: string;
+  };
+  // A NC pode vir de uma inspeção reprovada, de um instrumento reprovado ou de um acidente, já preenchida
+  const [inspecao, instrumento, acidente] = await Promise.all([
+    q.inspecao ? chamarApi<Inspecao>(`/inspecoes/${q.inspecao}`) : null,
+    q.instrumento
+      ? chamarApi<Instrumento>(`/instrumentos/${q.instrumento}`)
       : null,
+    q.acidente ? chamarApi<Acidente>(`/acidentes/${q.acidente}`) : null,
   ]);
-  const daInspecao =
+  const origem =
     inspecao?.ok && inspecao.dados.status === "reprovada"
-      ? inspecao.dados
-      : null;
-  const doInstrumento =
-    instrumento?.ok && instrumento.dados.situacao === "reprovado"
-      ? instrumento.dados
-      : null;
-  const origem = daInspecao
-    ? {
-        href: `/qualidade/inspecoes/${daInspecao.id}`,
-        rotulo: daInspecao.numero,
-        inicial: aPartirDaInspecao(daInspecao),
-      }
-    : doInstrumento
       ? {
-          href: `/qualidade/calibracao/${doInstrumento.id}`,
-          rotulo: doInstrumento.tag,
-          inicial: aPartirDoInstrumento(doInstrumento),
+          href: `/qualidade/inspecoes/${inspecao.dados.id}`,
+          rotulo: inspecao.dados.numero,
+          inicial: aPartirDaInspecao(inspecao.dados),
         }
-      : null;
+      : instrumento?.ok && instrumento.dados.situacao === "reprovado"
+        ? {
+            href: `/qualidade/calibracao/${instrumento.dados.id}`,
+            rotulo: instrumento.dados.tag,
+            inicial: aPartirDoInstrumento(instrumento.dados),
+          }
+        : acidente?.ok && acidente.dados.status !== "cancelado"
+          ? {
+              href: `/seguranca/acidentes/${acidente.dados.id}`,
+              rotulo: acidente.dados.numero,
+              inicial: aPartirDoAcidente(acidente.dados),
+            }
+          : null;
   return (
     <>
       <Link

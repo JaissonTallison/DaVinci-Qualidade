@@ -30,6 +30,46 @@ import { ParceirosController } from './parceiros/parceiros.controller.js';
 import { ReferenciasController } from './parceiros/referencias.controller.js';
 import { CalibracaoController } from './qualidade/calibracao.controller.js';
 import { AuditoriasController } from './auditorias/auditorias.controller.js';
+import { AcidentesController } from './seguranca/acidentes.controller.js';
+import { EpisController } from './seguranca/epis.controller.js';
+import { RegistrosDeSegurancaController } from './seguranca/registros.controller.js';
+import { TerceirosController } from './seguranca/terceiros.controller.js';
+import {
+  SgiController,
+  RiscosEOportunidadesController,
+  ObjetivosController,
+  AnalisesCriticasController,
+  MudancasController,
+} from './sgi/sgi.controller.js';
+import {
+  PermissoesDeTrabalhoController,
+  RiscosController,
+} from './seguranca/pgr-e-pt.controller.js';
+import { AnexosController } from './anexos/anexos.controller.js';
+import { PaineisController } from './paineis/paineis.controller.js';
+import {
+  ServicosController,
+  OrdensDeServicoController,
+  NpsController,
+  AvaliacoesDeFornecedoresController,
+} from './servicos/servicos.controller.js';
+import {
+  AmbientalController,
+  AspectosAmbientaisController,
+  RequisitosLegaisController,
+  LicencasController,
+  ResiduosController,
+} from './ambiental/ambiental.controller.js';
+import {
+  AsosController,
+  TreinamentosController,
+  VencimentosController,
+} from './cadastros/exames-e-treinamentos.controller.js';
+import {
+  FuncionariosController,
+  FuncoesController,
+  SetoresDaEmpresaController,
+} from './cadastros/funcionarios.controller.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -68,6 +108,34 @@ export const observeEnabled = Boolean(
     ModelosDeInspecaoController,
     CalibracaoController,
     AuditoriasController,
+    AcidentesController,
+    EpisController,
+    RegistrosDeSegurancaController,
+    TerceirosController,
+    SgiController,
+    RiscosEOportunidadesController,
+    ObjetivosController,
+    AnalisesCriticasController,
+    MudancasController,
+    RiscosController,
+    PermissoesDeTrabalhoController,
+    AnexosController,
+    PaineisController,
+    ServicosController,
+    AmbientalController,
+    AspectosAmbientaisController,
+    RequisitosLegaisController,
+    LicencasController,
+    ResiduosController,
+    OrdensDeServicoController,
+    NpsController,
+    AvaliacoesDeFornecedoresController,
+    AsosController,
+    TreinamentosController,
+    VencimentosController,
+    FuncionariosController,
+    SetoresDaEmpresaController,
+    FuncoesController,
   ],
   providers: [
     MensageriaService,

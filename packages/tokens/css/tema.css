@@ -16,6 +16,16 @@
   /* Marca */
   --color-marinho: #001228;
   --color-ouro: var(--dv-ouro);
+  /* Ouro sobre o marinho (menu lateral): o ouro normal perde contraste no fundo escuro */
+  --color-ouro-claro: var(--dv-ouro-claro);
+  --color-menu: var(--dv-menu);
+  --color-barra: var(--dv-barra);
+  --color-serie-1: var(--dv-serie-1);
+  --color-serie-2: var(--dv-serie-2);
+  --color-serie-3: var(--dv-serie-3);
+  --color-serie-4: var(--dv-serie-4);
+  --color-serie-5: var(--dv-serie-5);
+  --color-serie-6: var(--dv-serie-6);
   --color-ouro-texto: var(--dv-ouro-texto);
 
   /* Neutros */
@@ -28,7 +38,7 @@
   --color-texto-2: var(--dv-texto-2);
   --color-texto-3: var(--dv-texto-3);
 
-  /* Ação primária: marinho no claro, quase branco no escuro */
+  /* Ação primária: marinho. O sistema é sempre claro (decisão Q12). */
   --color-primaria: var(--dv-primaria);
   --color-primaria-texto: var(--dv-primaria-texto);
 
@@ -68,6 +78,9 @@
   --text-xl--line-height: 1.75rem;
   --text-2xl: 1.625rem;
   --text-2xl--line-height: 2rem;
+  /* Número em destaque dos cards do início */
+  --text-3xl: 2rem;
+  --text-3xl--line-height: 2.25rem;
 
   /* Cantos de 2 a 6 px; nada maior existe */
   --radius-xs: 2px;
@@ -80,12 +93,25 @@
   --shadow-md: 0 8px 24px rgb(0 18 40 / 0.16);
 }
 
-:root,
-[data-theme='claro'] {
+:root {
   color-scheme: light;
   --dv-fundo: #f4f5f7;
   --dv-superficie: #ffffff;
   --dv-superficie-2: #eef0f3;
+  --dv-ouro-claro: #d9a441;
+  --dv-menu: #1c5560;
+  --dv-barra: #f8fafc;
+  /* Séries dos gráficos, uma por módulo, em ordem fixa (validadas para daltonismo; três abaixo de 3:1 → sempre com legenda e tabela) */
+  --dv-serie-1: #2a78d6;
+  --dv-serie-2: #eb6834;
+  --dv-serie-3: #1baf7a;
+  --dv-serie-4: #eda100;
+  --dv-serie-5: #e87ba4;
+  --dv-serie-6: #008300;
+  /* Destaque do início (decisão Q14): o único degradê do sistema */
+  --dv-destaque-1: #1c5560;
+  --dv-destaque-2: #0f3f47;
+  --dv-destaque-3: #14583f;
   --dv-borda: #d5dae1;
   --dv-borda-forte: #9aa3b0;
   --dv-texto: #0e1a2b;
@@ -102,49 +128,7 @@
   --dv-neutro: #586273;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='claro']) {
-    color-scheme: dark;
-    --dv-fundo: #0d1522;
-    --dv-superficie: #131d2d;
-    --dv-superficie-2: #1a2537;
-    --dv-borda: #243146;
-    --dv-borda-forte: #4a5a72;
-    --dv-texto: #e7ebf1;
-    --dv-texto-2: #aeb8c6;
-    --dv-texto-3: #8d98a8;
-    --dv-ouro: #d9a441;
-    --dv-ouro-texto: #e8b860;
-    --dv-primaria: #e7ebf1;
-    --dv-primaria-texto: #001228;
-    --dv-conforme: #5cc48a;
-    --dv-nao-conforme: #f2877e;
-    --dv-atencao: #f0a35c;
-    --dv-info: #8ab0ee;
-    --dv-neutro: #9aa4b2;
-  }
-}
 
-[data-theme='escuro'] {
-  color-scheme: dark;
-  --dv-fundo: #0d1522;
-  --dv-superficie: #131d2d;
-  --dv-superficie-2: #1a2537;
-  --dv-borda: #243146;
-  --dv-borda-forte: #4a5a72;
-  --dv-texto: #e7ebf1;
-  --dv-texto-2: #aeb8c6;
-  --dv-texto-3: #8d98a8;
-  --dv-ouro: #d9a441;
-  --dv-ouro-texto: #e8b860;
-  --dv-primaria: #e7ebf1;
-  --dv-primaria-texto: #001228;
-  --dv-conforme: #5cc48a;
-  --dv-nao-conforme: #f2877e;
-  --dv-atencao: #f0a35c;
-  --dv-info: #8ab0ee;
-  --dv-neutro: #9aa4b2;
-}
 
 @layer base {
   html {

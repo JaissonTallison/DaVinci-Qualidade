@@ -1,5 +1,7 @@
+import { ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   SITUACOES_INSTRUMENTO,
   type DadosDoUsuario,
@@ -58,6 +60,7 @@ export default async function ListaDeInstrumentos({
         </div>
         {podeCriar && (
           <Link href="/qualidade/calibracao/novo" className={botaoPrimario}>
+            <IconeDaTela href={"/qualidade/calibracao/novo"} />
             Cadastrar instrumento
           </Link>
         )}
@@ -82,6 +85,7 @@ export default async function ListaDeInstrumentos({
             valor={params.situacao}
           />
           <button type="submit" className={botaoSecundario}>
+            <ListFilter aria-hidden size={16} strokeWidth={2} />
             Filtrar
           </button>
           {filtrando && (
@@ -104,7 +108,7 @@ export default async function ListaDeInstrumentos({
               : "Nenhum instrumento cadastrado. Cadastre os instrumentos usados nas inspeções e medições."}
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-superficie-2 text-xs text-texto-2">
                 <tr>

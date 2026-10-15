@@ -1,5 +1,7 @@
+import { ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   STATUS_INSPECAO,
   TIPOS_INSPECAO,
@@ -59,6 +61,7 @@ export default async function ListaDeInspecoes({
         </div>
         {podeCriar && (
           <Link href="/qualidade/inspecoes/nova" className={botaoPrimario}>
+            <IconeDaTela href={"/qualidade/inspecoes/nova"} />
             Nova inspeção
           </Link>
         )}
@@ -89,6 +92,7 @@ export default async function ListaDeInspecoes({
             valor={params.tipo}
           />
           <button type="submit" className={botaoSecundario}>
+            <ListFilter aria-hidden size={16} strokeWidth={2} />
             Filtrar
           </button>
           {filtrando && (
@@ -112,7 +116,7 @@ export default async function ListaDeInspecoes({
               : "Nenhuma inspeção registrada. Para listas que se repetem, crie antes um modelo de inspeção."}
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-superficie-2 text-xs text-texto-2">
                 <tr>

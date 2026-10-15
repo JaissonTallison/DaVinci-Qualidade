@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   TIPOS_INSPECAO,
   type DadosDoUsuario,
@@ -50,6 +51,7 @@ export default async function ListaDeModelos({
             href="/qualidade/modelos-de-inspecao/novo"
             className={botaoPrimario}
           >
+            <IconeDaTela href={"/qualidade/modelos-de-inspecao/novo"} />
             Criar modelo
           </Link>
         )}

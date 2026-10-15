@@ -16,10 +16,13 @@ import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { formatarReais } from "@/lib/valores";
 import { AcoesDaTarefa, AcoesDoPlano } from "./acoes";
+import { Anexos } from "@/components/anexos";
 
 export const metadata: Metadata = { title: "Plano de ação" };
 
 const AVISOS: Record<string, string> = {
+  anexado: "Arquivo anexado.",
+  "anexo-removido": "Anexo removido.",
   criado: "Plano criado. Conclua as tarefas conforme forem feitas.",
   "tarefa-incluida": "Tarefa incluída.",
   "tudo-concluido":
@@ -109,7 +112,7 @@ export default async function DetalheDoPlano({
 
       <section className={`${painel} mt-6`}>
         <h2 className={`${tituloDaSecao} px-5 pt-5`}>Tarefas</h2>
-        <div className="mt-3 overflow-x-auto">
+        <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-superficie-2 text-xs text-texto-2">
               <tr>
@@ -225,6 +228,12 @@ export default async function DetalheDoPlano({
           podeCancelar={permissoes.includes("qualidade.excluir")}
         />
       )}
+      <Anexos
+        registro="plano_de_acao"
+        registroId={p.id}
+        voltar={`/qualidade/planos-de-acao/${p.id}`}
+        podeEditar={permissoes.includes("qualidade.editar")}
+      />
     </article>
   );
 }

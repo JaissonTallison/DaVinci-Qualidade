@@ -1,6 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, eq, type SQL } from 'drizzle-orm';
-import { DATABASE, type Database, violacaoUnica } from '@davinci/database';
+import { and, eq, type SQL } from 'drizzle-orm';
+import {
+  DATABASE,
+  type Database,
+  violacaoUnica,
+  ordemAlfabetica,
+} from '@davinci/database';
 import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   atualizarModeloSchema,
@@ -38,7 +43,7 @@ export class ModelosDeInspecaoService {
       .select()
       .from(modelosInspecao)
       .where(and(...condicoes))
-      .orderBy(asc(modelosInspecao.nome));
+      .orderBy(ordemAlfabetica(modelosInspecao.nome));
     return linhas.map(montar);
   }
 

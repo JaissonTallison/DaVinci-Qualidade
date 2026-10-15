@@ -232,3 +232,14 @@ export interface ResumoNcs {
   /** Altas e críticas que ainda não terminaram. */
   graves: number;
 }
+
+export const ncsPorMesSchema = z.object({
+  meses: z.coerce.number().int().min(1).max(24).default(12),
+});
+
+/** Quantas NCs foram abertas e quantas foram encerradas em cada mês (AAAA-MM), do mais antigo ao atual. */
+export interface NcsDoMes {
+  mes: string;
+  abertas: number;
+  encerradas: number;
+}

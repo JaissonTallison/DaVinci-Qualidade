@@ -218,3 +218,121 @@ export const bancos = pgTable('bancos', {
   nome: varchar({ length: 150 }).notNull(),
   nomeCurto: varchar({ length: 80 }).notNull(),
 });
+
+// ---------------------------------------------------------------- funcionários (docs/05-modulos/funcionarios.md)
+
+/** Setores da empresa (Produção, Expedição…). Não confundir com `setores`, as seções da CNAE. */
+export const setoresEmpresa = pgTable(
+  'setores_empresa',
+  {
+    ...colunasPadrao(),
+    nome: varchar({ length: 100 }).notNull(),
+    ativo: boolean().notNull().default(true),
+  },
+  (t) => [unique('setores_empresa_nome_por_empresa').on(t.empresaId, t.nome)],
+);
+
+/** Funções (cargos), com o CBO quando houver. */
+export const funcoes = pgTable(
+  'funcoes',
+  {
+    ...colunasPadrao(),
+    nome: varchar({ length: 100 }).notNull(),
+    cbo: char({ length: 6 }),
+    ativo: boolean().notNull().default(true),
+  },
+  (t) => [unique('funcoes_nome_por_empresa').on(t.empresaId, t.nome)],
+);
+
+/** Funcionários. Não se apagam: são desligados, com data e motivo. */
+export const funcionarios = pgTable(
+  'funcionarios',
+  {
+    ...colunasPadrao(),
+    matricula: varchar({ length: 20 }).notNull(),
+    nome: varchar({ length: 120 }).notNull(),
+    cpf: char({ length: 11 }).notNull(),
+    setorId: uuid()
+      .notNull()
+      .references(() => setoresEmpresa.id),
+    funcaoId: uuid()
+      .notNull()
+      .references(() => funcoes.id),
+    admissao: date({ mode: 'string' }).notNull(),
+    email: varchar({ length: 150 }),
+    telefone: varchar({ length: 11 }),
+    ativo: boolean().notNull().default(true),
+    desligamento: date({ mode: 'string' }),
+    motivoDesligamento: varchar({ length: 300 }),
+  },
+  (t) => [
+    unique('funcionarios_matricula_por_empresa').on(t.empresaId, t.matricula),
+    unique('funcionarios_cpf_por_empresa').on(t.empresaId, t.cpf),
+    index('funcionarios_empresa_nome_idx').on(t.empresaId, t.nome),
+    check(
+      'funcionarios_desligamento',
+      sql`${t.desligamento} IS NULL OR ${t.desligamento} >= ${t.admissao}`,
+    ),
+  ],
+);
+
+/** Exames ocupacionais (ASO, NR-7). Não se editam: registro errado é anulado com motivo. */
+export const asos = pgTable(
+  'asos',
+  {
+    ...colunasPadrao(),
+    funcionarioId: uuid()
+      .notNull()
+      .references(() => funcionarios.id),
+    tipo: varchar({ length: 25 }).notNull(),
+    data: date({ mode: 'string' }).notNull(),
+    resultado: varchar({ length: 25 }).notNull(),
+    proximoExame: date({ mode: 'string' }),
+    medico: varchar({ length: 120 }),
+    crm: varchar({ length: 20 }),
+    observacao: varchar({ length: 300 }),
+    motivoAnulacao: varchar({ length: 300 }),
+  },
+  (t) => [
+    index('asos_funcionario_idx').on(t.empresaId, t.funcionarioId, t.data),
+  ],
+);
+
+/** Catálogo de treinamentos (NR-35, NR-10, integração...). */
+export const treinamentos = pgTable(
+  'treinamentos',
+  {
+    ...colunasPadrao(),
+    nome: varchar({ length: 120 }).notNull(),
+    norma: varchar({ length: 30 }),
+    cargaHoraria: smallint().notNull(),
+    validadeMeses: smallint(),
+    ativo: boolean().notNull().default(true),
+  },
+  (t) => [unique('treinamentos_nome_por_empresa').on(t.empresaId, t.nome)],
+);
+
+/** Participação de um funcionário num treinamento. A validade é calculada na gravação. */
+export const treinamentosRealizados = pgTable(
+  'treinamentos_realizados',
+  {
+    ...colunasPadrao(),
+    funcionarioId: uuid()
+      .notNull()
+      .references(() => funcionarios.id),
+    treinamentoId: uuid()
+      .notNull()
+      .references(() => treinamentos.id),
+    data: date({ mode: 'string' }).notNull(),
+    validade: date({ mode: 'string' }),
+    instrutor: varchar({ length: 120 }),
+    motivoAnulacao: varchar({ length: 300 }),
+  },
+  (t) => [
+    index('treinamentos_realizados_funcionario_idx').on(
+      t.empresaId,
+      t.funcionarioId,
+      t.data,
+    ),
+  ],
+);

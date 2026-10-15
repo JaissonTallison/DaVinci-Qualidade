@@ -10,7 +10,12 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
-import { DATABASE, type Database, violacaoUnica } from '@davinci/database';
+import {
+  DATABASE,
+  type Database,
+  violacaoUnica,
+  ordemAlfabetica,
+} from '@davinci/database';
 import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   atualizarParceiroSchema,
@@ -154,7 +159,7 @@ export class ParceirosService {
         .leftJoin(cnaes, eq(cnaes.codigo, parceiros.cnaePrincipal))
         .leftJoin(setores, eq(setores.id, cnaes.setor))
         .where(onde)
-        .orderBy(asc(parceiros.nome), asc(parceiros.codigo))
+        .orderBy(ordemAlfabetica(parceiros.nome), asc(parceiros.codigo))
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db

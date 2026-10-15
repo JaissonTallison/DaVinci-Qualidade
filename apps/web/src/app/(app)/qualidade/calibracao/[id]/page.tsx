@@ -21,10 +21,13 @@ import {
   RegistrarCalibracao,
   UsoDoInstrumento,
 } from "./acoes";
+import { Anexos } from "@/components/anexos";
 
 export const metadata: Metadata = { title: "Instrumento" };
 
 const AVISOS: Record<string, string> = {
+  anexado: "Arquivo anexado.",
+  "anexo-removido": "Anexo removido.",
   criado:
     "Instrumento cadastrado. Registre a última calibração para calcular a próxima.",
   salvo: "Instrumento salvo.",
@@ -141,7 +144,7 @@ export default async function DetalheDoInstrumento({
             Nenhuma calibração registrada.
           </p>
         ) : (
-          <div className="mt-3 overflow-x-auto">
+          <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-superficie-2 text-xs text-texto-2">
                 <tr>
@@ -210,6 +213,12 @@ export default async function DetalheDoInstrumento({
         </Recolhido>
       )}
       {gestor && <UsoDoInstrumento instrumento={i} />}
+      <Anexos
+        registro="instrumento"
+        registroId={i.id}
+        voltar={`/qualidade/calibracao/${i.id}`}
+        podeEditar={permissoes.includes("qualidade.editar")}
+      />
     </article>
   );
 }

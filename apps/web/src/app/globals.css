@@ -1,3 +1,114 @@
 @import "tailwindcss";
 /* Sistema visual da DaVinci Qualidade (docs/04-design/interface.md) */
 @import "@davinci/tokens/tema.css";
+
+/*
+ * Animações permitidas (interface.md, decisão Q13): uma vez, curtas, só na entrada e no passar do mouse.
+ * Quem pediu "reduzir movimento" no sistema operacional não vê nenhuma.
+ */
+@keyframes dv-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes dv-crescer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.dv-entrar {
+  animation: dv-entrar 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--atraso, 0ms);
+}
+.dv-crescer {
+  transform-origin: left;
+  animation: dv-crescer 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--atraso, 0ms);
+}
+@keyframes dv-crescer-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes dv-tracar {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes dv-anel {
+  from {
+    stroke-dashoffset: var(--circunferencia);
+  }
+}
+.dv-crescer-y {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: dv-crescer-y 650ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--atraso, 0ms);
+}
+.dv-tracar {
+  stroke-dasharray: 1;
+  animation: dv-tracar 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--atraso, 0ms);
+}
+.dv-anel {
+  animation: dv-anel 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: 200ms;
+}
+
+/* Destaque do início: o único degradê do sistema (decisão Q14). Cantos de 12 px só aqui. */
+.dv-destaque {
+  border-radius: 12px;
+  background:
+    radial-gradient(
+      120% 140% at 100% 100%,
+      var(--dv-destaque-3) 0%,
+      transparent 55%
+    ),
+    linear-gradient(135deg, var(--dv-destaque-1) 0%, var(--dv-destaque-2) 100%);
+}
+.dv-destaque-interno {
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-primaria-texto) 9%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-primaria-texto) 12%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dv-entrar,
+  .dv-crescer,
+  .dv-crescer-y,
+  .dv-tracar,
+  .dv-anel {
+    animation: none;
+  }
+}
+
+/* Menu compacto aparece esmaecendo quando a coluna termina de encolher. */
+@keyframes dv-surgir {
+  from {
+    opacity: 0;
+  }
+}
+.dv-surgir {
+  animation: dv-surgir 220ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dv-surgir {
+    animation: none;
+  }
+}

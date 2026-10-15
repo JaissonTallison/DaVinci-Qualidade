@@ -1,11 +1,13 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { MAXIMO_DE_TAREFAS, ORIGENS_PLANO, TIPOS_PLANO } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { LinhasDeTarefa } from "@/components/linhas-de-tarefa";
+import { Selecao } from "@/components/selecao";
 import { criarPlano, type EstadoDaAcao } from "@/lib/acoes-planos";
 import {
   areaDeTexto,
@@ -149,6 +151,7 @@ export function FormularioNovoPlano({
 
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
         <Link href="/qualidade/planos-de-acao" className={botaoSecundario}>
+          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
           Voltar
         </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
@@ -169,7 +172,7 @@ function Opcoes({
   valor?: string;
 }) {
   return (
-    <select id={id} name={id} defaultValue={valor ?? ""} className={campo}>
+    <Selecao id={id} name={id} defaultValue={valor ?? ""} className={campo}>
       <option value="" disabled>
         Escolha
       </option>
@@ -178,6 +181,6 @@ function Opcoes({
           {nome}
         </option>
       ))}
-    </select>
+    </Selecao>
   );
 }

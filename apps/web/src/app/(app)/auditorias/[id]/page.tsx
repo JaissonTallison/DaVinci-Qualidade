@@ -24,10 +24,13 @@ import {
   IniciarAuditoria,
   RegistrarConstatacao,
 } from "./acoes";
+import { Anexos } from "@/components/anexos";
 
 export const metadata: Metadata = { title: "Auditoria" };
 
 const AVISOS: Record<string, string> = {
+  anexado: "Arquivo anexado.",
+  "anexo-removido": "Anexo removido.",
   planejada:
     "Auditoria planejada. Inicie-a no dia para registrar as constatações.",
   salva: "Planejamento salvo.",
@@ -211,6 +214,12 @@ export default async function DetalheDaAuditoria({
       {aberta && permissoes.includes("auditorias.excluir") && (
         <CancelarAuditoria auditoria={a} />
       )}
+      <Anexos
+        registro="auditoria"
+        registroId={a.id}
+        voltar={`/auditorias/${a.id}`}
+        podeEditar={permissoes.includes("auditorias.editar")}
+      />
     </article>
   );
 }
