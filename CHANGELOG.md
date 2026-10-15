@@ -6,6 +6,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Adicionado
 
+- Calibração no serviço `qualidade` ([módulo](docs/05-modulos/calibracao.md)): instrumentos com TAG única, histórico de calibrações, situação calculada (sem calibração, em dia, vence em até 30 dias, vencido, reprovado, fora de uso), próxima calibração pela frequência em meses respeitando o fim do mês, reprovada bloqueia até nova aprovada, anulação com motivo no lugar de edição. Rotas em `/instrumentos`; telas de lista, cadastro e detalhe; instrumento reprovado abre a NC já preenchida; o início ganha o resumo de calibração.
+
 - Inspeções no serviço `qualidade` ([módulo](docs/05-modulos/inspecoes.md)): uma tela para inspeções e checklists, com tipo; itens respondidos OK, NOK ou N/A; um NOK reprova; concluir exige tudo respondido e NOK descrito; concluída, vira registro. Modelos de inspeção reaproveitáveis, com itens copiados para cada inspeção. Rotas em `/inspecoes` e `/modelos-de-inspecao`.
 - Telas de inspeções e modelos; inspeção reprovada abre a NC já preenchida com os itens NOK, e lista as NCs abertas a partir dela; o início ganha o resumo das inspeções.
 - [Armadilhas conhecidas](docs/01-engenharia/armadilhas.md) do projeto.

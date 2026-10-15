@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type {
   DadosDoUsuario,
+  ResumoCalibracao,
   ResumoInspecoes,
   ResumoNcs,
   ResumoPlanos,
@@ -16,13 +17,14 @@ export const metadata: Metadata = { title: "Início" };
 export default async function Inicio() {
   const eu = await chamarApi<DadosDoUsuario>("/auth/eu");
   const veQualidade = eu.ok && eu.dados.permissoes.includes("qualidade.ver");
-  const [ncs, planos, inspecoes] = veQualidade
+  const [ncs, planos, inspecoes, calibracao] = veQualidade
     ? await Promise.all([
         chamarApi<ResumoNcs>("/nao-conformidades/resumo"),
         chamarApi<ResumoPlanos>("/planos-de-acao/resumo"),
         chamarApi<ResumoInspecoes>("/inspecoes/resumo"),
+        chamarApi<ResumoCalibracao>("/instrumentos/resumo"),
       ])
-    : [null, null, null];
+    : [null, null, null, null];
   return (
     <>
       <h1 className={tituloDaPagina}>Início</h1>
@@ -92,6 +94,31 @@ export default async function Inicio() {
               {
                 rotulo: "Aprovação nos últimos 30 dias (%)",
                 valor: inspecoes.dados.taxaDeAprovacao30Dias ?? 0,
+              },
+            ]}
+          />
+        </Quadro>
+      )}
+      {calibracao?.ok && (
+        <Quadro titulo="Calibração" href="/qualidade/calibracao">
+          <FaixaDeIndicadores
+            itens={[
+              {
+                rotulo: "Vencidos",
+                valor: calibracao.dados.vencidos,
+                alerta: calibracao.dados.vencidos > 0,
+                href: "/qualidade/calibracao?situacao=vencido",
+              },
+              {
+                rotulo: "Reprovados",
+                valor: calibracao.dados.reprovados,
+                alerta: calibracao.dados.reprovados > 0,
+                href: "/qualidade/calibracao?situacao=reprovado",
+              },
+              {
+                rotulo: "Vencem em até 30 dias",
+                valor: calibracao.dados.vencemEmBreve,
+                href: "/qualidade/calibracao?situacao=vence_em_breve",
               },
             ]}
           />

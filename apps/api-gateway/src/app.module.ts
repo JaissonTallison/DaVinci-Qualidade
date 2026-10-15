@@ -28,6 +28,7 @@ import { MensageriaService } from './mensageria.service.js';
 import { ConsultasController } from './parceiros/consultas.controller.js';
 import { ParceirosController } from './parceiros/parceiros.controller.js';
 import { ReferenciasController } from './parceiros/referencias.controller.js';
+import { CalibracaoController } from './qualidade/calibracao.controller.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -64,6 +65,7 @@ export const observeEnabled = Boolean(
     PlanosDeAcaoController,
     InspecoesController,
     ModelosDeInspecaoController,
+    CalibracaoController,
   ],
   providers: [
     MensageriaService,

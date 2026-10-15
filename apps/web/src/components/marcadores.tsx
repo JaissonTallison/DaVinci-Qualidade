@@ -1,9 +1,11 @@
 import {
   GRAVIDADES_NC,
+  SITUACOES_INSTRUMENTO,
   STATUS_INSPECAO,
   STATUS_NC,
   STATUS_PLANO,
   type GravidadeNc,
+  type SituacaoInstrumento,
   type StatusInspecao,
   type StatusNc,
   type StatusPlano,
@@ -125,6 +127,35 @@ export function StatusDaInspecao({ status }: { status: StatusInspecao }) {
         className={`size-2 shrink-0 rounded-full ${COR_DA_INSPECAO[status]}`}
       />
       {STATUS_INSPECAO[status]}
+    </span>
+  );
+}
+
+const COR_DO_INSTRUMENTO: Record<SituacaoInstrumento, string> = {
+  em_dia: "bg-conforme",
+  vence_em_breve: "bg-atencao",
+  vencido: "bg-nao-conforme",
+  reprovado: "bg-nao-conforme",
+  sem_calibracao: "bg-neutro",
+  fora_de_uso: "bg-neutro",
+};
+
+/** Vencido e reprovado ganham fundo: o instrumento não deve ser usado. */
+export function SituacaoDoInstrumento({
+  situacao,
+}: {
+  situacao: SituacaoInstrumento;
+}) {
+  const bloqueia = situacao === "vencido" || situacao === "reprovado";
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap ${bloqueia ? "rounded-xs bg-nao-conforme/10 px-1.5 text-nao-conforme" : "text-texto"}`}
+    >
+      <span
+        aria-hidden
+        className={`size-2 shrink-0 rounded-full ${COR_DO_INSTRUMENTO[situacao]}`}
+      />
+      {SITUACOES_INSTRUMENTO[situacao]}
     </span>
   );
 }

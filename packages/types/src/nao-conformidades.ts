@@ -15,6 +15,7 @@ import {
 
 export const ORIGENS_NC = {
   inspecao: 'Inspeção',
+  calibracao: 'Calibração',
   auditoria: 'Auditoria',
   reclamacao_cliente: 'Reclamação de cliente',
   fornecedor: 'Fornecedor',

@@ -147,6 +147,17 @@ export const PATTERNS = {
     inativar: 'modelos-de-inspecao.inativar',
     reativar: 'modelos-de-inspecao.reativar',
   },
+  /** Qualidade: instrumentos e calibrações (docs/05-modulos/calibracao.md). */
+  calibracao: {
+    listar: 'calibracao.listar',
+    resumo: 'calibracao.resumo',
+    obter: 'calibracao.obter',
+    criar: 'calibracao.criar',
+    atualizar: 'calibracao.atualizar',
+    mudarUso: 'calibracao.mudar-uso',
+    registrar: 'calibracao.registrar',
+    anular: 'calibracao.anular',
+  },
   /** Codex: tabelas oficiais de referência (CNAE, setores, bancos). */
   referencias: {
     cnaes: 'referencias.cnaes',

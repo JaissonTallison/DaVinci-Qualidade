@@ -38,6 +38,11 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "qualidade.ver",
       },
       {
+        rotulo: "Calibração",
+        href: "/qualidade/calibracao",
+        permissao: "qualidade.ver",
+      },
+      {
         rotulo: "Modelos de inspeção",
         href: "/qualidade/modelos-de-inspecao",
         permissao: "qualidade.ver",

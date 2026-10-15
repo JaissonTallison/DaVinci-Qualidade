@@ -233,3 +233,53 @@ export const inspecoesItens = pgTable(
     ),
   ],
 );
+
+/** Instrumentos de medição (docs/05-modulos/calibracao.md). A situação é calculada pelo histórico, nunca gravada. */
+export const instrumentos = pgTable(
+  'instrumentos',
+  {
+    ...colunasPadrao(),
+    tag: varchar({ length: 30 }).notNull(),
+    descricao: varchar({ length: 150 }).notNull(),
+    fabricante: varchar({ length: 80 }),
+    modelo: varchar({ length: 80 }),
+    numeroSerie: varchar({ length: 60 }),
+    local: varchar({ length: 120 }),
+    responsavel: varchar({ length: 120 }),
+    faixa: varchar({ length: 80 }),
+    criterioAceitacao: varchar({ length: 200 }),
+    frequenciaMeses: smallint().notNull(),
+    emUso: boolean().notNull().default(true),
+  },
+  (t) => [
+    unique('instrumentos_tag_por_empresa').on(t.empresaId, t.tag),
+    check(
+      'instrumentos_frequencia',
+      sql`${t.frequenciaMeses} BETWEEN 1 AND 60`,
+    ),
+  ],
+);
+
+/** Histórico de calibrações. Não se edita: registro errado é anulado com motivo. */
+export const calibracoes = pgTable(
+  'calibracoes',
+  {
+    ...colunasPadrao(),
+    instrumentoId: uuid()
+      .notNull()
+      .references(() => instrumentos.id),
+    data: date({ mode: 'string' }).notNull(),
+    laboratorio: varchar({ length: 120 }).notNull(),
+    certificado: varchar({ length: 60 }),
+    aprovada: boolean().notNull(),
+    erroEncontrado: varchar({ length: 200 }),
+    observacao: text(),
+    custo: colunaDinheiro(),
+    anulada: boolean().notNull().default(false),
+    motivoAnulacao: varchar({ length: 300 }),
+    anuladaPor: uuid(),
+  },
+  (t) => [
+    index('calibracoes_instrumento_data_idx').on(t.instrumentoId, t.data),
+  ],
+);

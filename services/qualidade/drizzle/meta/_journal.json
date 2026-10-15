@@ -36,6 +36,13 @@
       "when": 1792038121889,
       "tag": "0004_inspecoes",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792039034010,
+      "tag": "0005_calibracao",
+      "breakpoints": true
     }
   ]
 }

@@ -6,6 +6,7 @@ import { HealthController } from './health.controller.js';
 import { NaoConformidadesModule } from './nao-conformidades/nao-conformidades.module.js';
 import { PlanosDeAcaoModule } from './planos-de-acao/planos-de-acao.module.js';
 import { InspecoesModule } from './inspecoes/inspecoes.module.js';
+import { CalibracaoModule } from './calibracao/calibracao.module.js';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { InspecoesModule } from './inspecoes/inspecoes.module.js';
     NaoConformidadesModule,
     PlanosDeAcaoModule,
     InspecoesModule,
+    CalibracaoModule,
   ],
   controllers: [HealthController],
 })
