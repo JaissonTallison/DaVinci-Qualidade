@@ -8,9 +8,11 @@ import { ContaModule } from './conta/conta.module.js';
 import { EmpresaModule } from './empresa/empresa.module.js';
 import { RecuperacaoModule } from './recuperacao/recuperacao.module.js';
 import { IdentidadeModule } from './identidade/identidade.module.js';
+import { AvisosModule } from './avisos/avisos.module.js';
 
 @Module({
   imports: [
+    AvisosModule,
     DatabaseModule.forRoot({ url: requireEnv('DATABASE_URL'), schema }),
     IdentidadeModule,
     AdministracaoModule,

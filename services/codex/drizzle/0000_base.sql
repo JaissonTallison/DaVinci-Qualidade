@@ -134,11 +134,11 @@ CREATE TABLE "setores" (
 	"nome" varchar(120) NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "cnaes" ADD CONSTRAINT "cnaes_setor_setores_id_fk" FOREIGN KEY ("setor") REFERENCES "public"."setores"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "parceiro_chaves_pix" ADD CONSTRAINT "parceiro_chaves_pix_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "parceiro_contas_bancarias" ADD CONSTRAINT "parceiro_contas_bancarias_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "parceiro_contatos" ADD CONSTRAINT "parceiro_contatos_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "parceiro_enderecos" ADD CONSTRAINT "parceiro_enderecos_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "public"."parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "cnaes" ADD CONSTRAINT "cnaes_setor_setores_id_fk" FOREIGN KEY ("setor") REFERENCES "setores"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "parceiro_chaves_pix" ADD CONSTRAINT "parceiro_chaves_pix_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "parceiro_contas_bancarias" ADD CONSTRAINT "parceiro_contas_bancarias_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "parceiro_contatos" ADD CONSTRAINT "parceiro_contatos_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "parceiro_enderecos" ADD CONSTRAINT "parceiro_enderecos_parceiro_id_parceiros_id_fk" FOREIGN KEY ("parceiro_id") REFERENCES "parceiros"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "cnaes_setor_idx" ON "cnaes" USING btree ("setor");--> statement-breakpoint
 CREATE INDEX "parceiro_chaves_pix_parceiro_idx" ON "parceiro_chaves_pix" USING btree ("parceiro_id");--> statement-breakpoint
 CREATE INDEX "parceiro_contas_parceiro_idx" ON "parceiro_contas_bancarias" USING btree ("parceiro_id");--> statement-breakpoint

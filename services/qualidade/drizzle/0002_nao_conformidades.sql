@@ -1,0 +1,51 @@
+CREATE TABLE "nao_conformidades" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"empresa_id" uuid NOT NULL,
+	"criado_em" timestamp (3) with time zone DEFAULT now() NOT NULL,
+	"atualizado_em" timestamp (3) with time zone DEFAULT now() NOT NULL,
+	"criado_por" uuid,
+	"atualizado_por" uuid,
+	"numero" varchar(20) NOT NULL,
+	"titulo" varchar(150) NOT NULL,
+	"descricao" text NOT NULL,
+	"origem" varchar(30) NOT NULL,
+	"origem_ref" varchar(60),
+	"tipo" varchar(20) NOT NULL,
+	"gravidade" varchar(10) NOT NULL,
+	"setor" varchar(100),
+	"produto" varchar(150),
+	"lote" varchar(60),
+	"responsavel" varchar(120) NOT NULL,
+	"prazo" date NOT NULL,
+	"data_abertura" date NOT NULL,
+	"contencao" text,
+	"custo_estimado" numeric(18, 2),
+	"status" varchar(20) DEFAULT 'aberta' NOT NULL,
+	"metodo_analise" varchar(20),
+	"categoria6m" varchar(20),
+	"porques" text[] DEFAULT '{}'::text[] NOT NULL,
+	"causa_raiz" text,
+	"acao_corretiva" text,
+	"data_implantacao" date,
+	"ciclos" smallint DEFAULT 0 NOT NULL,
+	"eficaz" boolean,
+	"parecer_eficacia" text,
+	"verificado_por" uuid,
+	"verificado_em" timestamp (3) with time zone,
+	"encerrada_em" timestamp (3) with time zone,
+	"motivo_cancelamento" varchar(500),
+	"cancelada_em" timestamp (3) with time zone,
+	"cancelada_por" uuid,
+	CONSTRAINT "nao_conformidades_numero_por_empresa" UNIQUE("empresa_id","numero"),
+	CONSTRAINT "nao_conformidades_status" CHECK ("nao_conformidades"."status" IN ('aberta', 'em_tratamento', 'em_verificacao', 'encerrada', 'cancelada')),
+	CONSTRAINT "nao_conformidades_gravidade" CHECK ("nao_conformidades"."gravidade" IN ('baixa', 'media', 'alta', 'critica'))
+);
+--> statement-breakpoint
+CREATE TABLE "sequencias" (
+	"empresa_id" uuid NOT NULL,
+	"nome" varchar(30) NOT NULL,
+	"ultimo" integer NOT NULL,
+	CONSTRAINT "sequencias_empresa_id_nome_pk" PRIMARY KEY("empresa_id","nome")
+);
+--> statement-breakpoint
+CREATE INDEX "nao_conformidades_empresa_status_prazo_idx" ON "nao_conformidades" USING btree ("empresa_id","status","prazo");

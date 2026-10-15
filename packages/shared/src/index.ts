@@ -3,3 +3,5 @@ export * from './rmq.js';
 export * from './erros.js';
 export * from './mensagens.js';
 export * from './validacao.js';
+export * from './pedido.js';
+export * from './datas.js';

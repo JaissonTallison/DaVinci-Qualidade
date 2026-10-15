@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, count, eq, sql } from 'drizzle-orm';
-import { DATABASE, type Database } from '@davinci/database';
+import { and, count, eq, sql } from 'drizzle-orm';
+import { DATABASE, type Database, ordemAlfabetica } from '@davinci/database';
 import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   TODAS_AS_PERMISSOES,
@@ -134,7 +134,7 @@ export class PerfisService {
         ),
       )
       // Administrador primeiro; os demais em ordem alfabética
-      .orderBy(sql`${perfis.protegido} desc`, asc(sql`lower(${perfis.nome})`));
+      .orderBy(sql`${perfis.protegido} desc`, ordemAlfabetica(perfis.nome));
     return linhas.map(({ p, usuarios }) => ({
       id: p.id,
       nome: p.nome,

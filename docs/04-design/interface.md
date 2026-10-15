@@ -34,30 +34,30 @@ Toda tela nova passa pelo [checklist da seção 10](#10-checklist-de-tela) antes
 1. **O registro é o centro.** O QSSMA é um sistema de registros auditáveis: NC, inspeção, acidente, licença. A tela mostra o registro, o número dele, o status e quem mexeu, sem decoração competindo.
 2. **Sobriedade de documento oficial.** A referência visual é um relatório de auditoria ou uma norma ISO impressa, não um app de consumo. Serifa nos títulos, hierarquia clara, margens regulares.
 3. **Status sempre legível sem cor.** Toda cor de status vem com texto ("Não conforme", "Vencida"). Quem é daltônico ou imprime em preto e branco precisa entender igual.
-4. **A marca aparece pouco e no lugar certo.** O marinho é a cor de trabalho. O ouro é a assinatura: entra só na logo, no item ativo do menu e em selos de certificação.
+4. **A marca aparece pouco e no lugar certo.** O marinho é a cor de trabalho. O ouro é a assinatura: entra só na logo, no item ativo do menu, nos ícones dos grupos do menu e em selos de certificação. A barra superior é branco gelo (`barra`) e o menu lateral é verde-petróleo (`menu`, #1C5560); no menu o ouro usado é o `ouro-claro` (#D9A441), que mantém contraste no fundo escuro.
 5. **Densidade de ferramenta.** Quem usa passa o dia no sistema. Mais linhas visíveis, menos rolagem, menos cliques.
 
 ---
 
 ## 3. Cara de IA: o que é proibido
 
-| Proibido                                                                          | Como fazemos                                                                                 |
-| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Inter, Geist ou fonte padrão do sistema em tudo                                   | Família **Source** (seção 4): serifa nos títulos, sem serifa na interface                    |
-| Degradês em fundo, botão ou texto (roxo → azul, "aurora")                         | Cores sólidas dos tokens. O único gradiente é o metálico da logo                             |
-| Cantos muito arredondados (`rounded-xl` para cima)                                | Cantos de 2 a 6 px. Os tamanhos maiores não existem no tema                                  |
-| Sombra grande e difusa, "brilho" em volta de card, vidro fosco (_glassmorphism_)  | Borda fina separa camadas. Sombra só em menu suspenso e modal                                |
-| Ícone dentro de círculo colorido em cada card                                     | Ícone pequeno, alinhado ao rótulo, na cor do texto                                           |
-| Grade de cards de indicador soltos, cada um de uma cor                            | Indicadores numa faixa única com divisórias, cor só no número que pede atenção               |
-| Emoji em título, botão, mensagem ou estado vazio                                  | Nenhum emoji na interface                                                                    |
-| "Bem-vindo de volta!", "Ops! Algo deu errado", "Tudo pronto! 🎉"                  | Texto direto e específico (seção 9)                                                          |
-| Ilustração "fofa" ou genérica em estado vazio                                     | Uma frase do que falta e o botão que resolve                                                 |
-| Hero com título gigante dentro do sistema                                         | Título da página em 26 px serifado, ações à direita                                          |
-| Badge colorido e cheio para todo status                                           | Ponto colorido + texto; fundo colorido só em status que exige ação                           |
-| Cor hexadecimal solta no código (`text-[#7C3AED]`)                                | Só tokens semânticos (`text-nao-conforme`)                                                   |
-| Animação de entrada em lista, _hover_ que "pula"                                  | Transição só de cor e opacidade, até 150 ms                                                  |
-| Texto de exemplo (_lorem ipsum_, "Usuário Teste", "Empresa XYZ") em tela entregue | Dados reais ou de demonstração plausíveis (NC-2026-014, "Calibração do paquímetro TAG-0042") |
-| Ícones de várias bibliotecas misturadas                                           | Um conjunto só, mesmo traço e mesmo tamanho                                                  |
+| Proibido                                                                          | Como fazemos                                                                                          |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Inter, Geist ou fonte padrão do sistema em tudo                                   | Família **Source** (seção 4): serifa nos títulos, sem serifa na interface                             |
+| Degradês em fundo, botão ou texto (roxo → azul, "aurora")                         | Cores sólidas dos tokens. O único gradiente é o metálico da logo                                      |
+| Cantos muito arredondados (`rounded-xl` para cima)                                | Cantos de 2 a 6 px. Os tamanhos maiores não existem no tema                                           |
+| Sombra grande e difusa, "brilho" em volta de card, vidro fosco (_glassmorphism_)  | Borda fina separa camadas. Sombra só em menu suspenso e modal                                         |
+| Ícone dentro de círculo colorido em cada card                                     | Ícone pequeno, alinhado ao rótulo, na cor do texto                                                    |
+| Grade de cards de indicador soltos, cada um de uma cor                            | Indicadores numa faixa única com divisórias, cor só no número que pede atenção                        |
+| Emoji em título, botão, mensagem ou estado vazio                                  | Nenhum emoji na interface                                                                             |
+| "Bem-vindo de volta!", "Ops! Algo deu errado", "Tudo pronto! 🎉"                  | Texto direto e específico (seção 9)                                                                   |
+| Ilustração "fofa" ou genérica em estado vazio                                     | Uma frase do que falta e o botão que resolve                                                          |
+| Hero com título gigante dentro do sistema                                         | Título da página em 26 px serifado, ações à direita                                                   |
+| Badge colorido e cheio para todo status                                           | Ponto colorido + texto; fundo colorido só em status que exige ação                                    |
+| Cor hexadecimal solta no código (`text-[#7C3AED]`)                                | Só tokens semânticos (`text-nao-conforme`)                                                            |
+| Animação de entrada em lista, _hover_ que "pula"                                  | Transição só de cor e opacidade, até 150 ms                                                           |
+| Texto de exemplo (_lorem ipsum_, "Usuário Teste", "Empresa XYZ") em tela entregue | Dados reais ou de demonstração plausíveis (NC-2026-014, "Calibração do paquímetro TAG-0042")          |
+| Ícones de várias bibliotecas misturadas                                           | Só **Lucide** (`lucide-react`), traço 1,75 a 2, 16 px em botão e item de menu, 18 px em grupo e aviso |
 
 ---
 
@@ -88,6 +88,7 @@ Corpo de **14 px**, como em sistemas de gestão densos.
 | `text-lg`   | 18 / 26 px      | Subtítulo, título de modal                         |
 | `text-xl`   | 22 / 28 px      | Título de seção (serifado), valor de indicador     |
 | `text-2xl`  | 26 / 32 px      | **Título da página** (serifado)                    |
+| `text-3xl`  | 32 / 36 px      | Número em destaque dos cards do início             |
 
 ### 4.3 Regras
 
@@ -105,11 +106,11 @@ As cores saem da logo (ver [logos.md](logos.md)). O contraste de cada par texto/
 
 ### 5.1 Marca
 
-| Token        | HEX       | Papel                                                                                                               |
-| ------------ | --------- | ------------------------------------------------------------------------------------------------------------------- |
-| `marinho`    | `#001228` | **Cor de trabalho:** botão primário, texto forte, cabeçalho da tabela no PDF                                        |
-| `ouro`       | `#A06D10` | Só gráfico: moldura da logo, barra do item ativo no menu, selo. **Nunca como texto** (4,48:1 sobre branco, reprova) |
-| `ouro-texto` | `#986600` | Ouro quando precisa ser texto (4,96:1). Uso raro: selo "Certificado", destaque de marca                             |
+| Token        | HEX       | Papel                                                                                   |
+| ------------ | --------- | --------------------------------------------------------------------------------------- |
+| `marinho`    | `#001228` | **Cor de trabalho:** botão primário, texto forte, cabeçalho da tabela no PDF            |
+| `ouro`       | `#A06D10` | Só gráfico: moldura da logo, selo. **Nunca como texto** (4,48:1 sobre branco, reprova)  |
+| `ouro-texto` | `#986600` | Ouro quando precisa ser texto (4,96:1). Uso raro: selo "Certificado", destaque de marca |
 
 ### 5.2 Neutros (tema claro)
 
@@ -151,16 +152,9 @@ Riscos (probabilidade × impacto), aspectos ambientais e materialidade ESG usam 
 | Alto    | `#B4470B`        | Risco 12–19 · Significância e materialidade ≥ 15  |
 | Crítico | `#8E1B1B`        | Risco ≥ 20                                        |
 
-### 5.5 Tema escuro
+### 5.5 Tema: sempre claro
 
-| Token                           | HEX                                        |
-| ------------------------------- | ------------------------------------------ |
-| `fundo`                         | `#0D1522`                                  |
-| `superficie`                    | `#131D2D`                                  |
-| `borda`                         | `#243146`                                  |
-| `texto` / `texto-2` / `texto-3` | `#E7EBF1` / `#AEB8C6` / `#8D98A8`          |
-| `ouro`                          | `#D9A441`                                  |
-| Botão primário                  | fundo `#E7EBF1`, texto `marinho` (15,71:1) |
+O sistema é **sempre claro**, mesmo quando o computador está no modo escuro (decisão Q12): todo mundo vê o mesmo visual, igual aos prints, manuais e treinamentos. Não há tokens nem `dark:` no código; o `color-scheme: light` mantém claros também os campos nativos (data, seleção).
 
 ### 5.6 Exceção: cores oficiais dos ODS
 
@@ -208,7 +202,7 @@ Não existe `rounded-lg` para cima. Sombra só em menu suspenso (`shadow-sm`) e 
 └────────────┴──────────────────────────────────────────────────────────────┘
 ```
 
-- **Menu lateral** com os 7 grupos do QSSMA, na ordem do documento de domínio. Grupo de módulo não contratado não aparece. O item ativo tem uma barra de 3 px em `ouro` à esquerda, e esse é o único ouro da tela.
+- **Menu lateral** verde-petróleo (`menu`), com os grupos do QSSMA na ordem do documento de domínio. Grupo de módulo não contratado não aparece. O item ativo tem fundo um pouco mais claro e uma barra de 3 px em `ouro-claro` à esquerda.
 - **Cabeçalho da página:** título serifado, uma linha de resumo em `texto-2` com os números que importam, e as ações à direita (primária por último).
 - **A lista é uma tabela,** com filtros no topo. Não usamos cards para listar registros.
 - **Registro aberto:** número em mono e status no topo. Conteúdo em seções com título serifado. O **histórico de alterações** fica sempre no rodapé do registro, porque é a trilha que o auditor pede.
@@ -254,10 +248,10 @@ Antes do merge, quem abriu o PR confere:
 - [ ] Nenhum item da [tabela da seção 3](#3-cara-de-ia-o-que-é-proibido) aparece na tela
 - [ ] Só tokens de cor, nenhum HEX no componente
 - [ ] Todo status tem texto, não só cor
-- [ ] Ouro aparece no máximo no menu e na logo
+- [ ] Ouro aparece só no menu (barra do ativo e ícones dos grupos, em `ouro-claro`) e na logo
 - [ ] Títulos em Source Serif 4, números de registro em Source Code Pro
 - [ ] Textos com verbo + objeto e mensagens de erro que dizem como corrigir
-- [ ] Conferida nos temas claro e escuro e em 1280 px e 390 px de largura
+- [ ] Conferida em 1280 px e 390 px de largura
 - [ ] Dados de demonstração plausíveis, sem _lorem ipsum_
 - [ ] Uma pessoa olhou a tela pronta e responderia "não" para "isso parece feito por IA?"
 
@@ -274,4 +268,44 @@ A estrutura (monorepo, microsserviços, gateway, pacotes) é a mesma da Finance.
 | Centro da tela            | Números e valores | Registro, número e status                                  |
 | Cores semânticas próprias | Finanças          | Conformidade, prazos e níveis de risco                     |
 
-Esta é a v1. Os tokens serão implementados em `packages/tokens` quando o `apps/web` for criado; qualquer mudança de cor passa por aqui primeiro, com o contraste medido.
+Os tokens estão em `packages/tokens/css/tema.css`. O tema do Tailwind é zerado e só recebe estes tokens, e o ESLint do `apps/web` recusa degradê, cor solta, canto e sombra grandes, emoji e as fontes Inter, Geist, Manrope, Sora e Poppins. Qualquer mudança de cor passa por aqui primeiro, com o contraste medido.
+
+## Ícones
+
+Biblioteca única: **Lucide** (`lucide-react`, versão fixa no catálogo do monorepo). Onde entra:
+
+| Lugar              | Regra                                                                                                                                                                           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Menu lateral       | Um ícone por grupo (18 px) e por tela (16 px), mapeados em `components/icones-do-menu.tsx`. Tela nova ganha ícone lá                                                            |
+| Botões             | Criar e registrar: `Plus`. Filtrar: `ListFilter`. Voltar: `ArrowLeft`. Anexar: `Paperclip`. Ícone antes do texto, 16 px                                                         |
+| Barra superior     | Recolher o menu, empresa, usuário e sair                                                                                                                                        |
+| Avisos e situações | Sucesso: `CircleCheck` verde. Erro: `CircleAlert`. Situação que exige ação (vencido, bloqueado, pendente) troca o ponto colorido por `CircleAlert`, para não depender só da cor |
+
+Sempre `aria-hidden`: o texto ao lado já diz o que é. Nunca dentro de círculo colorido.
+
+## Animações (decisão Q13)
+
+Só na tela de início e sempre uma vez, ao carregar; nada que pisque, gire ou repita. Quem marcou "reduzir movimento" no sistema operacional não vê nenhuma.
+
+| Animação                    | Onde                           | Como                                                                     |
+| --------------------------- | ------------------------------ | ------------------------------------------------------------------------ |
+| Entrada suave               | Blocos do início, em sequência | `.dv-entrar` (opacidade e 8 px de subida, 420 ms; atraso por `--atraso`) |
+| Números contando            | Número principal dos cards     | `Contador` (de 0 ao valor em 700 ms)                                     |
+| Barras crescendo            | Barras de proporção dos cards  | `.dv-crescer` (700 ms)                                                   |
+| Elevação no passar do mouse | Cards clicáveis                | Sobe 2 px, borda mais forte e `shadow-sm` (200 ms)                       |
+
+As classes ficam em `apps/web/src/app/globals.css`. As `animate-*` do Tailwind continuam proibidas pelo ESLint.
+
+## Gráficos (decisão Q14)
+
+SVG próprio em `components/graficos.tsx`: colunas empilhadas, colunas agrupadas, rosca e linha. Regras:
+
+| Regra                                                       | Como                                                                                                                           |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Cor por módulo, em ordem fixa, nunca recalculada por filtro | Tokens `serie-1` a `serie-6` (Qualidade, Segurança, ASO e treinamentos, SGI, Serviços, Meio Ambiente), validados para daltonismo              |
+| Três cores ficam abaixo de 3:1 sobre o branco               | Legenda sempre visível e com os números; tooltip com o valor exato                                                             |
+| Marcas finas                                                | Coluna de no máximo 24 px, topo arredondado de 4 px e base reta; 2 px de respiro entre segmentos; linha de 2 px; grade de 1 px |
+| Texto nunca na cor da série                                 | Rótulos e valores nas cores de texto; a cor fica no quadradinho ao lado                                                        |
+| Interação                                                   | Tooltip ao passar o mouse, realce da série pela legenda, clique abre a lista filtrada                                          |
+
+O destaque do topo do início (`.dv-destaque` em `globals.css`) é a única área com degradê e canto de 12 px do sistema.

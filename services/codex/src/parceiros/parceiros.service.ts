@@ -10,7 +10,12 @@ import {
   sql,
   type SQL,
 } from 'drizzle-orm';
-import { DATABASE, type Database } from '@davinci/database';
+import {
+  DATABASE,
+  type Database,
+  violacaoUnica,
+  ordemAlfabetica,
+} from '@davinci/database';
 import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   atualizarParceiroSchema,
@@ -102,14 +107,6 @@ function paraColunas(d: Dados) {
   };
 }
 
-/** Violação de unicidade do Postgres (23505), com o nome da regra. */
-function violacaoUnica(erro: unknown): string | null {
-  const e =
-    (erro as { cause?: { code?: string; constraint?: string } })?.cause ??
-    (erro as { code?: string; constraint?: string });
-  return e?.code === '23505' ? (e.constraint ?? '') : null;
-}
-
 function exigirId(id: unknown): string {
   if (!isUuid(id)) throw new ErroDeNegocio('NAO_ENCONTRADO', NAO_ENCONTRADO);
   return id;
@@ -162,7 +159,7 @@ export class ParceirosService {
         .leftJoin(cnaes, eq(cnaes.codigo, parceiros.cnaePrincipal))
         .leftJoin(setores, eq(setores.id, cnaes.setor))
         .where(onde)
-        .orderBy(asc(parceiros.nome), asc(parceiros.codigo))
+        .orderBy(ordemAlfabetica(parceiros.nome), asc(parceiros.codigo))
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db

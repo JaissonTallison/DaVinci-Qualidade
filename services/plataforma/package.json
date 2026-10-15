@@ -14,7 +14,8 @@
     "lint": "oxlint --type-aware src/",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:generate": "drizzle-kit generate",
+    "test:integracao": "vitest run --config vitest.config.integracao.ts",
+    "db:generate": "node ../../scripts/gerar-migracao.mjs",
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {

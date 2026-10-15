@@ -1,0 +1,338 @@
+{
+  "id": "19e4fa25-ed9b-4955-b94a-4b93c2c5f04c",
+  "prevId": "4dc0ecf3-3ecc-4ce7-9a4a-c348de1fc525",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.nao_conformidades": {
+      "name": "nao_conformidades",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numero": {
+          "name": "numero",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "origem": {
+          "name": "origem",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "origem_ref": {
+          "name": "origem_ref",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gravidade": {
+          "name": "gravidade",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "setor": {
+          "name": "setor",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "produto": {
+          "name": "produto",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lote": {
+          "name": "lote",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "responsavel": {
+          "name": "responsavel",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prazo": {
+          "name": "prazo",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_abertura": {
+          "name": "data_abertura",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contencao": {
+          "name": "contencao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "custo_estimado": {
+          "name": "custo_estimado",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'aberta'"
+        },
+        "metodo_analise": {
+          "name": "metodo_analise",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "categoria6m": {
+          "name": "categoria6m",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "porques": {
+          "name": "porques",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "causa_raiz": {
+          "name": "causa_raiz",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "acao_corretiva": {
+          "name": "acao_corretiva",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_implantacao": {
+          "name": "data_implantacao",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ciclos": {
+          "name": "ciclos",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "eficaz": {
+          "name": "eficaz",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parecer_eficacia": {
+          "name": "parecer_eficacia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verificado_por": {
+          "name": "verificado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verificado_em": {
+          "name": "verificado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "encerrada_em": {
+          "name": "encerrada_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_cancelamento": {
+          "name": "motivo_cancelamento",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelada_em": {
+          "name": "cancelada_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelada_por": {
+          "name": "cancelada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "nao_conformidades_empresa_status_prazo_idx": {
+          "name": "nao_conformidades_empresa_status_prazo_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "prazo",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "nao_conformidades_numero_por_empresa": {
+          "name": "nao_conformidades_numero_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": ["empresa_id", "numero"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "nao_conformidades_status": {
+          "name": "nao_conformidades_status",
+          "value": "\"nao_conformidades\".\"status\" IN ('aberta', 'em_tratamento', 'em_verificacao', 'encerrada', 'cancelada')"
+        },
+        "nao_conformidades_gravidade": {
+          "name": "nao_conformidades_gravidade",
+          "value": "\"nao_conformidades\".\"gravidade\" IN ('baixa', 'media', 'alta', 'critica')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sequencias": {
+      "name": "sequencias",
+      "schema": "",
+      "columns": {
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ultimo": {
+          "name": "ultimo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "sequencias_empresa_id_nome_pk": {
+          "name": "sequencias_empresa_id_nome_pk",
+          "columns": ["empresa_id", "nome"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

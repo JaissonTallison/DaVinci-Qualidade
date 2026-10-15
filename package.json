@@ -5,8 +5,9 @@
   "description": "DaVinci Qualidade — monorepo de microsserviços (pnpm + Turborepo + NestJS + Next.js)",
   "scripts": {
     "dev": "turbo run dev --concurrency=40",
+    "dev:tudo": "node scripts/dev-tudo.mjs",
     "build": "turbo run build",
-    "lint": "turbo run lint",
+    "lint": "node scripts/conferir-migracoes.mjs && turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "format": "prettier --write .",

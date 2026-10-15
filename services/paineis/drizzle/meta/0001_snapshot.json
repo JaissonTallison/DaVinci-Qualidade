@@ -1,0 +1,65 @@
+{
+  "id": "19bd06d0-fba5-463c-a71a-98965157fb62",
+  "prevId": "08c6752a-e782-47bb-94b5-3018e68e2f9f",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.avisos_enviados": {
+      "name": "avisos_enviados",
+      "schema": "",
+      "columns": {
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emails": {
+          "name": "emails",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enviado_em": {
+          "name": "enviado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "avisos_enviados_empresa_id_data_pk": {
+          "name": "avisos_enviados_empresa_id_data_pk",
+          "columns": [
+            "empresa_id",
+            "data"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

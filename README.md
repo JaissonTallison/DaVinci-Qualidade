@@ -5,7 +5,7 @@ Sistema de gestão da qualidade em **microsserviços**, com a mesma estrutura da
 ## Estrutura
 
 ```text
-apps/        api-gateway (NestJS) → 3171 · web (Next.js, a criar) → 3170
+apps/        web (Next.js) → 3170 · api-gateway (NestJS) → 3171
 services/    12 microsserviços NestJS, cada um com fila RabbitMQ e banco próprios
   plataforma:   identidade/  codex/  integracoes/  plataforma/
   domínio:      qualidade/  auditorias/  sgi/  servicos/  seguranca/  ambiental/  esg/
@@ -24,16 +24,25 @@ docs/        documentação
 
 ## Como rodar
 
+Primeira vez:
+
 ```bash
 pnpm install
-pnpm env:criar      # cria os .env (raiz, apps e serviços) a partir dos .env.example
-pnpm infra:up       # RabbitMQ + Postgres + Mailpit (aguarda ficarem saudáveis)
-pnpm db:migrate     # tabelas dos 12 serviços
+pnpm env:criar             # cria os .env (raiz, apps e serviços) a partir dos .env.example
+pnpm infra:up              # RabbitMQ + Postgres + Mailpit
+pnpm db:migrate            # tabelas dos 12 serviços
 pnpm identidade:instalar   # chaves de login, empresa, perfis e administrador (mostra a senha UMA vez)
-pnpm dev            # gateway + 12 serviços
 ```
 
-Com login, `GET localhost:3171/health/services` mostra os 12 serviços com o banco de cada um.
+Dia a dia, **um comando sobe tudo** (infraestrutura, migrações, web, gateway e serviços), com os logs de todos no mesmo terminal. Ctrl+C encerra tudo.
+
+```bash
+pnpm dev:tudo              # web + gateway + os 12 serviços (~6 GB de RAM)
+pnpm dev:tudo --essencial  # só o que as telas usam hoje: web, gateway, identidade e qualidade (~2 GB)
+pnpm dev:tudo --sem-infra  # pula infraestrutura e migrações (já no ar)
+```
+
+Abra http://localhost:3170. Com login, `GET localhost:3171/health/services` mostra os serviços com o banco de cada um.
 
 ## Antes de contribuir
 

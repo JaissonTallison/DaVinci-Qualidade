@@ -1,0 +1,389 @@
+{
+  "id": "0a2e6687-95f8-426b-aa64-b50a9de07ee6",
+  "prevId": "df46d060-aaa3-4212-a1dc-b2880aef4910",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.auditorias": {
+      "name": "auditorias",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "numero": {
+          "name": "numero",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "escopo": {
+          "name": "escopo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normas": {
+          "name": "normas",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "areas": {
+          "name": "areas",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auditor_lider": {
+          "name": "auditor_lider",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "equipe": {
+          "name": "equipe",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "representante": {
+          "name": "representante",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_inicio": {
+          "name": "data_inicio",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_fim": {
+          "name": "data_fim",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'planejada'"
+        },
+        "conclusao": {
+          "name": "conclusao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "concluida_em": {
+          "name": "concluida_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_cancelamento": {
+          "name": "motivo_cancelamento",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelada_em": {
+          "name": "cancelada_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "auditorias_empresa_status_idx": {
+          "name": "auditorias_empresa_status_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "data_inicio",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "auditorias_numero_por_empresa": {
+          "name": "auditorias_numero_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": ["empresa_id", "numero"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "auditorias_status": {
+          "name": "auditorias_status",
+          "value": "\"auditorias\".\"status\" IN ('planejada', 'em_andamento', 'concluida', 'cancelada')"
+        },
+        "auditorias_datas": {
+          "name": "auditorias_datas",
+          "value": "\"auditorias\".\"data_fim\" >= \"auditorias\".\"data_inicio\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.constatacoes": {
+      "name": "constatacoes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auditoria_id": {
+          "name": "auditoria_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordem": {
+          "name": "ordem",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "norma": {
+          "name": "norma",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clausula": {
+          "name": "clausula",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "area": {
+          "name": "area",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "evidencia": {
+          "name": "evidencia",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nc_id": {
+          "name": "nc_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nc_numero": {
+          "name": "nc_numero",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "constatacoes_auditoria_idx": {
+          "name": "constatacoes_auditoria_idx",
+          "columns": [
+            {
+              "expression": "auditoria_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ordem",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "constatacoes_auditoria_id_auditorias_id_fk": {
+          "name": "constatacoes_auditoria_id_auditorias_id_fk",
+          "tableFrom": "constatacoes",
+          "tableTo": "auditorias",
+          "columnsFrom": ["auditoria_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "constatacoes_tipo": {
+          "name": "constatacoes_tipo",
+          "value": "\"constatacoes\".\"tipo\" IN ('conformidade', 'nc_maior', 'nc_menor', 'observacao', 'oportunidade')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sequencias": {
+      "name": "sequencias",
+      "schema": "",
+      "columns": {
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ultimo": {
+          "name": "ultimo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "sequencias_empresa_id_nome_pk": {
+          "name": "sequencias_empresa_id_nome_pk",
+          "columns": ["empresa_id", "nome"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

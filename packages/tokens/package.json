@@ -1,0 +1,16 @@
+{
+  "name": "@davinci/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sistema visual da DaVinci Qualidade: cores, tipografia, cantos e sombras como variáveis CSS e tema do Tailwind v4 (docs/04-design/interface.md)",
+  "type": "module",
+  "exports": {
+    "./tema.css": "./css/tema.css"
+  },
+  "files": [
+    "css"
+  ],
+  "sideEffects": [
+    "*.css"
+  ]
+}

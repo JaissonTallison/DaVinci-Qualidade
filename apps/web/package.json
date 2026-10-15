@@ -1,0 +1,32 @@
+{
+  "name": "@davinci/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3170",
+    "build": "next build",
+    "start": "next start --port 3170",
+    "start:prod": "next start --port ${PORT:-3170}",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "@davinci/tokens": "workspace:*",
+    "@davinci/types": "workspace:*",
+    "lucide-react": "catalog:",
+    "next": "16.4.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "tailwindcss": "^4",
+    "typescript": "catalog:"
+  }
+}
