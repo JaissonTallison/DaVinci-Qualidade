@@ -25,7 +25,16 @@ export interface Serie {
 }
 
 const ALTURA = 200;
-const MARGEM = { topo: 12, base: 28, esquerda: 32, direita: 8 };
+const MARGEM = { topo: 12, base: 28, esquerda: 40, direita: 8 };
+
+/** Rótulo do eixo: a partir de 10 mil, abreviado ("20 mil", "1,5 mi") para caber na margem. */
+const rotuloDoEixo = (v: number) =>
+  v >= 10_000
+    ? v.toLocaleString("pt-BR", {
+        notation: "compact",
+        maximumFractionDigits: 1,
+      })
+    : Math.round(v).toLocaleString("pt-BR");
 
 /** Eixo com passos iguais e redondos: até 4, de 1 em 1; acima, 4 passos de 1, 2 ou 5 × 10^k. */
 function escala(max: number): { teto: number; passos: number } {
@@ -141,7 +150,7 @@ function Grade({
               fontSize={11}
               fill="var(--color-texto-3)"
             >
-              {Math.round(v).toLocaleString("pt-BR")}
+              {rotuloDoEixo(v)}
             </text>
           </g>
         );

@@ -26,6 +26,17 @@ import {
   registrarSaidaSchema,
   renovacaoSolicitadaSchema,
   situacaoDoAspectoSchema,
+  atualizarMonitoramentoSchema,
+  atualizarProdutoSchema,
+  definirFatorSchema,
+  filtroConsumoSchema,
+  filtroProdutosSchema,
+  novoMonitoramentoSchema,
+  novoProdutoSchema,
+  registrarConsumoSchema,
+  registrarResultadoSchema,
+  situacaoDoMonitoramentoSchema,
+  situacaoDoProdutoSchema,
   PATTERNS,
   SERVICES,
   type Contexto,
@@ -312,5 +323,185 @@ export class ResiduosController {
   ) {
     validarEntrada(registrarCdfSchema, alteracoes, ctx.rastreioId);
     return this.mensageria.enviar(S, P.registrarCdf, { id, alteracoes }, ctx);
+  }
+}
+
+/** Produtos químicos e FDS. Inativar: gestor (ambiental.excluir). */
+@Controller('produtos-quimicos')
+export class ProdutosQuimicosController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('ambiental.ver')
+  listarProdutos(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroProdutosSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar(S, P.listarProdutos, filtro, ctx);
+  }
+
+  @Get(':id')
+  @Permissao('ambiental.ver')
+  obterProduto(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(S, P.obterProduto, { id }, ctx);
+  }
+
+  @Post()
+  @Permissao('ambiental.editar')
+  criarProduto(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novoProdutoSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar(S, P.criarProduto, dados, ctx);
+  }
+
+  @Put(':id')
+  @Permissao('ambiental.editar')
+  atualizarProduto(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(atualizarProdutoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      S,
+      P.atualizarProduto,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Post(':id/situacao')
+  @Permissao('ambiental.excluir')
+  @HttpCode(200)
+  situacaoProduto(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(situacaoDoProdutoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      S,
+      P.situacaoProduto,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+}
+
+/** Consumo mensal de água, energia e combustíveis e o inventário de GEE. */
+@Controller('consumo-ambiental')
+export class ConsumoAmbientalController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('ambiental.ver')
+  listarConsumos(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroConsumoSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar(S, P.listarConsumos, filtro, ctx);
+  }
+
+  @Post()
+  @Permissao('ambiental.editar')
+  registrarConsumo(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(registrarConsumoSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar(S, P.registrarConsumo, dados, ctx);
+  }
+
+  @Get('gee')
+  @Permissao('ambiental.ver')
+  inventarioGee(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroConsumoSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar(S, P.inventarioGee, filtro, ctx);
+  }
+
+  @Post('gee/fatores')
+  @Permissao('ambiental.editar')
+  definirFator(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(definirFatorSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar(S, P.definirFator, dados, ctx);
+  }
+}
+
+/** Monitoramentos ambientais e resultados. Inativar: gestor (ambiental.excluir). */
+@Controller('monitoramentos')
+export class MonitoramentosController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('ambiental.ver')
+  listarMonitoramentos(
+    @ContextoHttp() ctx: Contexto,
+    @Query('situacao') situacao?: string,
+  ) {
+    return this.mensageria.enviar(S, P.listarMonitoramentos, { situacao }, ctx);
+  }
+
+  @Get(':id')
+  @Permissao('ambiental.ver')
+  obterMonitoramento(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(S, P.obterMonitoramento, { id }, ctx);
+  }
+
+  @Post()
+  @Permissao('ambiental.editar')
+  criarMonitoramento(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novoMonitoramentoSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar(S, P.criarMonitoramento, dados, ctx);
+  }
+
+  @Put(':id')
+  @Permissao('ambiental.editar')
+  atualizarMonitoramento(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(atualizarMonitoramentoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      S,
+      P.atualizarMonitoramento,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Post(':id/situacao')
+  @Permissao('ambiental.excluir')
+  @HttpCode(200)
+  situacaoMonitoramento(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(situacaoDoMonitoramentoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      S,
+      P.situacaoMonitoramento,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Post(':id/resultados')
+  @Permissao('ambiental.editar')
+  @HttpCode(200)
+  registrarResultado(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(registrarResultadoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      S,
+      P.registrarResultado,
+      { id, alteracoes },
+      ctx,
+    );
   }
 }

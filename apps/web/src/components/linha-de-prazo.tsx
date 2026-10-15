@@ -26,6 +26,9 @@ const TELA_DO_TIPO: Record<string, string> = {
   "Avaliação de requisito legal": "/ambiental/requisitos",
   "Ação de aspecto ambiental": "/ambiental/aspectos",
   "CDF de resíduo": "/ambiental/residuos",
+  "Revisão de FDS": "/ambiental/produtos-quimicos",
+  "Coleta de monitoramento": "/ambiental/monitoramentos",
+  "Meta ESG": "/esg/temas",
 };
 
 export type TomDoSelo = "vencido" | "proximo" | "aguardando";

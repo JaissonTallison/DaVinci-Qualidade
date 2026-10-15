@@ -24,6 +24,9 @@ export const REGISTROS_COM_ANEXO = {
   ordem_de_servico: { rotulo: 'Ordem de serviço', modulo: 'servicos' },
   licenca: { rotulo: 'Licença', modulo: 'ambiental' },
   requisito_legal: { rotulo: 'Requisito legal', modulo: 'ambiental' },
+  produto_quimico: { rotulo: 'Produto químico (FDS)', modulo: 'ambiental' },
+  monitoramento: { rotulo: 'Monitoramento ambiental', modulo: 'ambiental' },
+  tema_esg: { rotulo: 'Tema ESG', modulo: 'esg' },
   saida_de_residuo: {
     rotulo: 'Saída de resíduo (MTR/CDF)',
     modulo: 'ambiental',

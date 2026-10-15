@@ -17,6 +17,7 @@ import { PaineisService } from './paineis.service.js';
         SERVICES.SGI,
         SERVICES.SERVICOS,
         SERVICES.AMBIENTAL,
+        SERVICES.ESG,
         SERVICES.IDENTIDADE,
         SERVICES.PLATAFORMA,
       ].map(rmqClientOptions),

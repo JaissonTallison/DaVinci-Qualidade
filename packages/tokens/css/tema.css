@@ -26,6 +26,7 @@
   --color-serie-4: var(--dv-serie-4);
   --color-serie-5: var(--dv-serie-5);
   --color-serie-6: var(--dv-serie-6);
+  --color-serie-7: var(--dv-serie-7);
   --color-ouro-texto: var(--dv-ouro-texto);
 
   /* Neutros */
@@ -108,6 +109,25 @@
   --dv-serie-4: #eda100;
   --dv-serie-5: #e87ba4;
   --dv-serie-6: #008300;
+  --dv-serie-7: #6250d6;
+  /* Cores oficiais dos 17 ODS da ONU: só no ícone de cada ODS (interface.md §5.6). */
+  --dv-ods-1: #E5243B;
+  --dv-ods-2: #DDA63A;
+  --dv-ods-3: #4C9F38;
+  --dv-ods-4: #C5192D;
+  --dv-ods-5: #FF3A21;
+  --dv-ods-6: #26BDE2;
+  --dv-ods-7: #FCC30B;
+  --dv-ods-8: #A21942;
+  --dv-ods-9: #FD6925;
+  --dv-ods-10: #DD1367;
+  --dv-ods-11: #FD9D24;
+  --dv-ods-12: #BF8B2E;
+  --dv-ods-13: #3F7E44;
+  --dv-ods-14: #0A97D9;
+  --dv-ods-15: #56C02B;
+  --dv-ods-16: #00689D;
+  --dv-ods-17: #19486A;
   /* Destaque do início (decisão Q14): o único degradê do sistema */
   --dv-destaque-1: #1c5560;
   --dv-destaque-2: #0f3f47;

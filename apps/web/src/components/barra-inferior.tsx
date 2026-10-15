@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarClock, FileWarning, House, Menu, Plus } from "lucide-react";
+import { CalendarClock, TriangleAlert, House, Menu, Plus } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -62,12 +62,12 @@ export function BarraInferior({
   return (
     <>
       <nav
-        aria-label="Atalhos"
+        aria-label="Navegação"
         className="fixed inset-x-0 bottom-0 z-30 border-t border-borda bg-barra pb-[env(safe-area-inset-bottom)] md:hidden print:hidden"
       >
         <div className="flex h-16 items-stretch">
           {link("/", "Início", House)}
-          {verNcs && link("/qualidade/nao-conformidades", "NCs", FileWarning)}
+          {verNcs && link("/qualidade/nao-conformidades", "NCs", TriangleAlert)}
           {atalhos.length > 0 && (
             <div className="flex flex-1 items-center justify-center">
               <button

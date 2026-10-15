@@ -8,22 +8,33 @@ import {
   type Prazo,
 } from '@davinci/types';
 import { AmbientalService } from '../ambiental/ambiental.service.js';
+import { MonitoramentosService } from '../monitoramentos/monitoramentos.service.js';
+import { QuimicosService } from '../quimicos/quimicos.service.js';
 
-/** Prazos de Meio Ambiente: renovação e validade de licença, condicionante, avaliação de requisito, ação de aspecto e CDF. */
+/**
+ * Prazos de Meio Ambiente: renovação e validade de licença, condicionante, avaliação de requisito, ação de aspecto,
+ * CDF, revisão de FDS e próxima coleta de monitoramento.
+ */
 @Injectable()
 export class PrazosService {
-  constructor(private readonly ambiental: AmbientalService) {}
+  constructor(
+    private readonly ambiental: AmbientalService,
+    private readonly quimicos: QuimicosService,
+    private readonly monitoramentos: MonitoramentosService,
+  ) {}
 
   /** `dias`: horizonte pedido pelo painel (30, 90 ou 365). */
   async prazos(ctx: Contexto, dados?: unknown): Promise<Prazo[]> {
     const { dias } = validar(horizonteSchema, dados ?? {});
     const hoje = hojeEmBrasilia();
     const limite = somarDias(hoje, dias);
-    const [ls, rs, as, ss] = await Promise.all([
+    const [ls, rs, as, ss, ps, ms] = await Promise.all([
       this.ambiental.listarLicencas(ctx),
       this.ambiental.listarRequisitos(ctx, {}),
       this.ambiental.listarAspectos(ctx, {}),
       this.ambiental.listarSaidas(ctx, { semCdf: 'sim' }),
+      this.quimicos.listar(ctx, {}),
+      this.monitoramentos.listar(ctx),
     ]);
     const lista: Prazo[] = [];
     for (const l of ls) {
@@ -114,6 +125,34 @@ export class PrazosService {
           ),
         );
     }
+    for (const p of ps)
+      if (p.proximaRevisaoFds <= limite)
+        lista.push(
+          prazo(
+            {
+              modulo: 'ambiental',
+              tipo: 'Revisão de FDS',
+              descricao: `${p.nome} · ${p.fabricante}`,
+              data: p.proximaRevisaoFds,
+              href: `/ambiental/produtos-quimicos/${p.id}`,
+            },
+            hoje,
+          ),
+        );
+    for (const m of ms)
+      if (m.proximaColeta <= limite)
+        lista.push(
+          prazo(
+            {
+              modulo: 'ambiental',
+              tipo: 'Coleta de monitoramento',
+              descricao: `${m.parametro} · ${m.ponto}`,
+              data: m.proximaColeta,
+              href: `/ambiental/monitoramentos/${m.id}`,
+            },
+            hoje,
+          ),
+        );
     return lista;
   }
 }
