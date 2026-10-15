@@ -34,7 +34,7 @@ A Qualidade vende controle e rastreabilidade para empresas certificadas. O próp
 ## 3. Como trabalhamos
 
 1. **Ler antes de escrever.** Antes de criar algo, veja como o projeto já faz: o mesmo padrão em outro serviço, o pacote `@davinci/shared`, o gerador `pnpm novo:servico`. Repetir o padrão é melhor que inventar outro.
-2. **Portar com leitura, não com cópia cega.** As regras do QSSMA vêm do DaVinciERP. Cada regra portada é lida, entendida e coberta por teste no serviço de destino. Se a regra do ERP tem um defeito conhecido (ver as limitações no documento de domínio), corrigimos ao portar e registramos.
+2. **Regra de negócio é decisão nossa.** O domínio vem dos materiais de referência do projeto. Não copiamos código de outros sistemas, nem do DaVinciERP (decisão Q9). Cada regra nasce com teste e, quando não for óbvia, com o porquê registrado.
 3. **Mudança pequena e com propósito.** Um PR resolve uma coisa. Refatoração e funcionalidade vão em PRs separados.
 4. **Teste junto com a regra.** Todo cálculo e toda transição de status tem teste unitário. Toda consulta ao banco relevante tem teste de integração (`*.int-spec.ts`).
 5. **Erros com mensagem útil.** Erro de negócio usa `ErroDeNegocio` com texto que diz como corrigir. Erro inesperado é registrado, nunca engolido.
