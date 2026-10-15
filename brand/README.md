@@ -38,13 +38,13 @@ apps/web/public/brand/ logo*.svg · simbolo*.svg · icon-192/512.png · icon-mas
 
 ## Versões
 
-| Versão              | Quando usar                                                               |
-| ------------------- | ------------------------------------------------------------------------- |
-| **Logo horizontal** | **Padrão.** Cabeçalho do sistema, site, documentos, certificados, e-mails |
-| **Logo empilhado**  | Espaços quadrados ou verticais: tela de login, splash, crachás            |
-| **Logotipo**        | Quando o símbolo já aparece por perto, ou não há altura para ele          |
-| **Símbolo**         | Favicon, avatar, marca d'água, espaços pequenos                           |
-| **Ícone de app**    | PWA, lojas de apps, atalhos (símbolo sobre fundo marinho)                 |
+| Versão              | Quando usar                                                                   |
+| ------------------- | ----------------------------------------------------------------------------- |
+| **Logo horizontal** | **Padrão.** Cabeçalho do sistema, site, documentos, certificados, e-mails     |
+| **Logo empilhado**  | Espaços quadrados ou verticais: tela de login, splash, crachás                |
+| **Logotipo**        | Quando o símbolo já aparece por perto, ou não há altura para ele              |
+| **Símbolo**         | Favicon, avatar, marca d'água, espaços pequenos                               |
+| **Ícone de app**    | PWA, lojas de apps, atalhos (símbolo sobre o verde-petróleo do menu, #1C5560) |
 
 Cada versão tem quatro variantes de cor:
 

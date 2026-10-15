@@ -315,10 +315,12 @@ def build_logos() -> None:
 
 
 NAVY = "#001228"
+# Fundo do ícone de app e do favicon: o verde-petróleo do menu lateral (token `menu`).
+FUNDO_DO_ICONE = "#1C5560"
 
 
 def app_icon(size: int, *, radius: float, safe: float, stroke: float, title: str) -> str:
-    """Símbolo (versão fundo escuro) centralizado sobre fundo marinho.
+    """Símbolo (versão fundo escuro) centralizado sobre o verde-petróleo do menu.
     `safe` = fração do lado ocupada pelo símbolo."""
     mode = MODES[1]
     defs, body = symbol_parts(mode, stroke=stroke)
@@ -328,7 +330,7 @@ def app_icon(size: int, *, radius: float, safe: float, stroke: float, title: str
     ty = size / 2 - (sy + sh / 2) * scale
     return svg_doc(
         title, (0, 0, size, size), defs,
-        f'<rect width="{size}" height="{size}" rx="{radius:g}" fill="{NAVY}"/>'
+        f'<rect width="{size}" height="{size}" rx="{radius:g}" fill="{FUNDO_DO_ICONE}"/>'
         f'<g transform="translate({tx:.2f} {ty:.2f}) scale({scale:.4f})">{body}</g>',
     )
 
