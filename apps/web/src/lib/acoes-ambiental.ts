@@ -15,8 +15,19 @@ import {
   registrarSaidaSchema,
   renovacaoSolicitadaSchema,
   situacaoDoAspectoSchema,
+  atualizarMonitoramentoSchema,
+  atualizarProdutoSchema,
+  definirFatorSchema,
+  novoMonitoramentoSchema,
+  novoProdutoSchema,
+  registrarConsumoSchema,
+  registrarResultadoSchema,
+  situacaoDoMonitoramentoSchema,
+  situacaoDoProdutoSchema,
   type AspectoAmbiental,
   type Licenca,
+  type Monitoramento,
+  type ProdutoQuimico,
   type RequisitoLegal,
 } from "@davinci/types";
 import { chamar, textos, versaoDe, type EstadoDaAcao } from "./acao";
@@ -231,4 +242,166 @@ export async function registrarCdf(
   );
   if ("erro" in r) return r;
   redirect("/ambiental/residuos?aviso=cdf");
+}
+
+// ---------------------------------------------------------------- parte 2
+
+/** Perigos vêm de várias caixas com o mesmo nome; nos valores devolvidos ficam juntos por vírgula. */
+function dadosDoProduto(form: FormData) {
+  const v = textos(form);
+  const perigos = form.getAll("perigos").map(String);
+  return { v: { ...v, perigos: perigos.join(",") }, dados: { ...v, perigos } };
+}
+
+export async function criarProduto(
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const { v, dados } = dadosDoProduto(form);
+  const r = await chamar<ProdutoQuimico>(
+    novoProdutoSchema,
+    dados,
+    "/produtos-quimicos",
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`/ambiental/produtos-quimicos/${r.dados.id}?aviso=criado`);
+}
+
+export async function atualizarProduto(
+  id: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const { v, dados } = dadosDoProduto(form);
+  const r = await chamar(
+    atualizarProdutoSchema,
+    { ...dados, versao: versaoDe(form) },
+    `/produtos-quimicos/${id}`,
+    "PUT",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`/ambiental/produtos-quimicos/${id}?aviso=salvo`);
+}
+
+export async function situacaoDoProduto(
+  id: string,
+  ativo: boolean,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const r = await chamar(
+    situacaoDoProdutoSchema,
+    { versao: versaoDe(form), ativo },
+    `/produtos-quimicos/${id}/situacao`,
+    "POST",
+  );
+  if ("erro" in r) return r;
+  redirect(
+    `/ambiental/produtos-quimicos/${id}?aviso=${ativo ? "reativado" : "inativado"}`,
+  );
+}
+
+export async function registrarConsumo(
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar(
+    registrarConsumoSchema,
+    v,
+    "/consumo-ambiental",
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(
+    `/ambiental/consumo?ano=${v.competencia?.slice(0, 4) ?? ""}&aviso=registrado`,
+  );
+}
+
+export async function definirFator(
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar(
+    definirFatorSchema,
+    v,
+    "/consumo-ambiental/gee/fatores",
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`/ambiental/gee?ano=${v.ano ?? ""}&aviso=fator`);
+}
+
+export async function criarMonitoramento(
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar<Monitoramento>(
+    novoMonitoramentoSchema,
+    v,
+    "/monitoramentos",
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`/ambiental/monitoramentos/${r.dados.id}?aviso=criado`);
+}
+
+export async function atualizarMonitoramento(
+  id: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar(
+    atualizarMonitoramentoSchema,
+    { ...v, versao: versaoDe(form) },
+    `/monitoramentos/${id}`,
+    "PUT",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`/ambiental/monitoramentos/${id}?aviso=salvo`);
+}
+
+export async function situacaoDoMonitoramento(
+  id: string,
+  ativo: boolean,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const r = await chamar(
+    situacaoDoMonitoramentoSchema,
+    { versao: versaoDe(form), ativo },
+    `/monitoramentos/${id}/situacao`,
+    "POST",
+  );
+  if ("erro" in r) return r;
+  redirect(
+    `/ambiental/monitoramentos/${id}?aviso=${ativo ? "reativado" : "inativado"}`,
+  );
+}
+
+export async function registrarResultado(
+  id: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar(
+    registrarResultadoSchema,
+    v,
+    `/monitoramentos/${id}/resultados`,
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`/ambiental/monitoramentos/${id}?aviso=resultado`);
 }

@@ -30,6 +30,7 @@ const COR_DO_MODULO: Record<ModuloDoPainel, string> = {
   sgi: "var(--color-serie-4)",
   servicos: "var(--color-serie-5)",
   ambiental: "var(--color-serie-6)",
+  esg: "var(--color-serie-7)",
 };
 const SERIES: Serie[] = (Object.keys(COR_DO_MODULO) as ModuloDoPainel[]).map(
   (m) => ({ id: m, rotulo: MODULOS_DO_PAINEL[m], cor: COR_DO_MODULO[m] }),
@@ -69,7 +70,13 @@ export interface Atencao {
 }
 
 export type Aba =
-  "geral" | "qualidade" | "seguranca" | "sgi" | "servicos" | "ambiental";
+  | "geral"
+  | "qualidade"
+  | "seguranca"
+  | "sgi"
+  | "servicos"
+  | "ambiental"
+  | "esg";
 const NOME_DA_ABA: Record<Aba, string> = {
   geral: "Visão geral",
   qualidade: "Qualidade",
@@ -77,6 +84,7 @@ const NOME_DA_ABA: Record<Aba, string> = {
   sgi: "Gestão do SGI",
   servicos: "Serviços",
   ambiental: "Meio Ambiente",
+  esg: "Agenda ESG",
 };
 
 const PERIODOS: { dias: Periodo; rotulo: string }[] = [
@@ -401,7 +409,7 @@ function Quadro({
 function FaixaDeNumeros({ itens }: { itens: Indicador[] }) {
   return (
     <div
-      className={`grid grid-cols-2 overflow-hidden rounded-md border border-borda bg-superficie sm:grid-cols-3 ${itens.length === 5 ? "xl:grid-cols-5" : itens.length >= 4 ? "xl:grid-cols-4" : ""}`}
+      className={`grid grid-cols-2 overflow-hidden rounded-md border border-borda bg-superficie sm:grid-cols-3 ${itens.length === 6 ? "" : itens.length === 5 ? "xl:grid-cols-5" : itens.length >= 4 ? "xl:grid-cols-4" : ""}`}
     >
       {itens.map((i, k) => {
         const ruim = i.alerta && (i.valor ?? 0) > 0;

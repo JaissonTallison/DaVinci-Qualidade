@@ -288,7 +288,12 @@
 
 /* Filtros das listas (formulário em linha que quebra): no celular cada campo ocupa a largura toda */
 @media screen and (max-width: 639px) {
-  main form.flex-wrap > :is(input:not([type="checkbox"], [type="radio"], [type="hidden"]), select) {
+  main
+    form.flex-wrap
+    > :is(
+      input:not([type="checkbox"], [type="radio"], [type="hidden"]),
+      select
+    ) {
     flex: 1 1 100%;
     width: 100%;
   }

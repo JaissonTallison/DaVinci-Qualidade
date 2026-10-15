@@ -9,6 +9,7 @@ export const MODULOS_DA_BUSCA = {
   sgi: 'Gestão do SGI',
   servicos: 'Serviços',
   ambiental: 'Meio Ambiente',
+  esg: 'Agenda ESG',
   seguranca: 'Segurança do Trabalho',
   funcionarios: 'Cadastros',
 } as const;
@@ -57,6 +58,7 @@ const EXIGE: Record<
   sgi: { permissao: 'sgi.ver', recurso: 'sgi' },
   servicos: { permissao: 'servicos.ver', recurso: 'servicos' },
   ambiental: { permissao: 'ambiental.ver', recurso: 'ambiental' },
+  esg: { permissao: 'esg.ver', recurso: 'esg' },
   seguranca: { permissao: 'seguranca.ver', recurso: 'seguranca' },
   funcionarios: { permissao: 'funcionarios.ver', recurso: null },
 };

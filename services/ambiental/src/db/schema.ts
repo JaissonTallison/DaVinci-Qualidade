@@ -7,6 +7,7 @@ import {
   pgTable,
   smallint,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
@@ -107,4 +108,75 @@ export const saidas = pgTable(
     cdfRegistradoEm: timestamp({ withTimezone: true, precision: 3 }),
   },
   (t) => [index('saidas_residuo_idx').on(t.empresaId, t.residuoId, t.data)],
+);
+
+/** Produtos químicos com a FDS (NBR 14725). `perigos`: pictogramas do GHS. */
+export const produtos = pgTable('produtos_quimicos', {
+  ...colunasPadrao(),
+  nome: varchar({ length: 150 }).notNull(),
+  fabricante: varchar({ length: 150 }).notNull(),
+  cas: varchar({ length: 15 }),
+  perigos: varchar({ length: 15 }).array().notNull().default([]),
+  local: varchar({ length: 150 }).notNull(),
+  quantidadeMaxima: doublePrecision(),
+  unidade: varchar({ length: 4 }).notNull(),
+  fdsRevisao: date({ mode: 'string' }).notNull(),
+  ativo: boolean().notNull().default(true),
+});
+
+/** Consumo mensal por fonte (água, energia, combustíveis): um registro por fonte e mês. */
+export const consumos = pgTable(
+  'consumos',
+  {
+    ...colunasPadrao(),
+    fonte: varchar({ length: 15 }).notNull(),
+    competencia: varchar({ length: 7 }).notNull(),
+    quantidade: doublePrecision().notNull(),
+    custo: doublePrecision(),
+  },
+  (t) => [
+    uniqueIndex('consumos_mes_unico').on(t.empresaId, t.fonte, t.competencia),
+  ],
+);
+
+/** Fator de emissão (kg CO₂e por unidade) informado pela empresa, por fonte e ano. */
+export const fatores = pgTable(
+  'fatores_emissao',
+  {
+    ...colunasPadrao(),
+    fonte: varchar({ length: 15 }).notNull(),
+    ano: smallint().notNull(),
+    fator: doublePrecision().notNull(),
+    referencia: varchar({ length: 200 }).notNull(),
+  },
+  (t) => [uniqueIndex('fatores_ano_unico').on(t.empresaId, t.fonte, t.ano)],
+);
+
+/** Plano de monitoramento: ponto, parâmetro, limites e periodicidade. */
+export const monitoramentos = pgTable('monitoramentos', {
+  ...colunasPadrao(),
+  tipo: varchar({ length: 10 }).notNull(),
+  ponto: varchar({ length: 150 }).notNull(),
+  parametro: varchar({ length: 100 }).notNull(),
+  unidade: varchar({ length: 20 }).notNull(),
+  limiteMinimo: doublePrecision(),
+  limiteMaximo: doublePrecision(),
+  referencia: varchar({ length: 200 }),
+  periodicidadeMeses: smallint().notNull(),
+  ativo: boolean().notNull().default(true),
+});
+
+/** Resultado de cada coleta. A conformidade é calculada com os limites do monitoramento. */
+export const resultados = pgTable(
+  'resultados_monitoramento',
+  {
+    ...colunasPadrao(),
+    monitoramentoId: uuid()
+      .notNull()
+      .references(() => monitoramentos.id),
+    data: date({ mode: 'string' }).notNull(),
+    valor: doublePrecision().notNull(),
+    laudo: varchar({ length: 100 }),
+  },
+  (t) => [index('resultados_monitoramento_idx').on(t.monitoramentoId, t.data)],
 );

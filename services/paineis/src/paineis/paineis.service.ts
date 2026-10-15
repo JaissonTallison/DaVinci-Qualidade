@@ -53,6 +53,7 @@ export class PaineisService
     @Inject(SERVICES.AUDITORIAS) private readonly auditorias: Cliente,
     @Inject(SERVICES.SERVICOS) private readonly servicos: Cliente,
     @Inject(SERVICES.AMBIENTAL) private readonly ambiental: Cliente,
+    @Inject(SERVICES.ESG) private readonly esg: Cliente,
     @Inject(SERVICES.IDENTIDADE) private readonly identidade: Cliente,
     @Inject(SERVICES.PLATAFORMA) private readonly plataforma: Cliente,
   ) {}
@@ -75,6 +76,7 @@ export class PaineisService
       sgi: [this.sgi, PATTERNS.busca.sgi, 'SGI'],
       servicos: [this.servicos, PATTERNS.busca.servicos, 'Serviços'],
       ambiental: [this.ambiental, PATTERNS.busca.ambiental, 'Meio Ambiente'],
+      esg: [this.esg, PATTERNS.busca.esg, 'Agenda ESG'],
       seguranca: [this.seguranca, PATTERNS.busca.seguranca, 'Segurança'],
       funcionarios: [this.codex, PATTERNS.busca.codex, 'Cadastros'],
     };
@@ -153,6 +155,7 @@ export class PaineisService
         'sgi',
         'servicos',
         'ambiental',
+        'esg',
       ]);
       let daEmpresa = 0;
       for (const p of pessoas) {
@@ -230,6 +233,7 @@ export class PaineisService
       sgi: [this.sgi, PATTERNS.prazos.sgi, 'SGI'],
       servicos: [this.servicos, PATTERNS.prazos.servicos, 'Serviços'],
       ambiental: [this.ambiental, PATTERNS.prazos.ambiental, 'Meio Ambiente'],
+      esg: [this.esg, PATTERNS.prazos.esg, 'Agenda ESG'],
     };
     const respostas = await Promise.allSettled(
       modulos.map((m) =>

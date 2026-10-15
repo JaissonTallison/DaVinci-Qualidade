@@ -11,6 +11,7 @@ import {
   type PainelDeVencimentos,
   type ResumoAcidentes,
   type ResumoAmbiental,
+  type ResumoEsg,
   type ResumoAuditorias,
   type ResumoCalibracao,
   type ResumoEpis,
@@ -81,6 +82,7 @@ export default async function Inicio() {
     ptsR,
     vencR,
     ambR,
+    esgR,
   ] = await Promise.all([
     pode("paineis.ver")
       ? chamarApi<PainelDeVencimentos>("/paineis/vencimentos?dias=30")
@@ -124,6 +126,7 @@ export default async function Inicio() {
     pode("ambiental.ver")
       ? chamarApi<ResumoAmbiental>("/ambiental/resumo")
       : null,
+    pode("esg.ver") ? chamarApi<ResumoEsg>("/esg/resumo") : null,
   ]);
   const [
     painel,
@@ -142,6 +145,7 @@ export default async function Inicio() {
     pts,
     venc,
     amb,
+    esgRes,
   ] = [
     ok(painelR),
     ok(ncsMesR),
@@ -159,6 +163,7 @@ export default async function Inicio() {
     ok(ptsR),
     ok(vencR),
     ok(ambR),
+    ok(esgR),
   ];
 
   // ---------------------------------------------------------------- saúde do sistema de gestão
@@ -447,9 +452,9 @@ export default async function Inicio() {
         alerta: true,
       },
       {
-        rotulo: "Condicionantes vencidas",
-        valor: amb.condicionantesVencidas,
-        href: "/ambiental/licencas",
+        rotulo: "Condicionantes e CDFs atrasados",
+        valor: amb.condicionantesVencidas + amb.cdfsAtrasados,
+        href: "/paineis/vencimentos",
         alerta: true,
       },
       {
@@ -459,16 +464,47 @@ export default async function Inicio() {
         alerta: true,
       },
       {
-        rotulo: "CDFs atrasados",
-        valor: amb.cdfsAtrasados,
-        href: "/ambiental/residuos",
+        rotulo: "Monitoramentos fora do limite",
+        valor: amb.foraDoLimite,
+        href: "/ambiental/monitoramentos",
         alerta: true,
+      },
+      {
+        rotulo: "FDS para revisar",
+        valor: amb.fdsVencidas,
+        href: "/ambiental/produtos-quimicos?fds=vencida",
+        alerta: true,
+      },
+    ];
+  if (esgRes)
+    indicadores.esg = [
+      {
+        rotulo: "Temas materiais",
+        valor: esgRes.materiais,
+        href: "/esg/materialidade",
+      },
+      {
+        rotulo: "Metas atrasadas",
+        valor: esgRes.metasAtrasadas,
+        href: "/esg/temas",
+        alerta: true,
+      },
+      {
+        rotulo: "Temas sem avaliação",
+        valor: esgRes.semAvaliacao,
+        href: "/esg/temas",
+        alerta: true,
+      },
+      {
+        rotulo: "ODS com tema material",
+        valor: esgRes.odsComTemaMaterial,
+        href: "/esg/ods",
       },
     ];
   const abas: Aba[] = [
     "geral",
     ...(
-      ["qualidade", "seguranca", "sgi", "servicos", "ambiental"] as const
+      ["qualidade", "seguranca", "sgi", "servicos", "ambiental", "esg"] as const
     ).filter((a) => indicadores[a]?.length),
   ];
 

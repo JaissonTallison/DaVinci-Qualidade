@@ -28,6 +28,7 @@ export * from './pgr.js';
 export * from './sgi.js';
 export * from './servicos.js';
 export * from './ambiental.js';
+export * from './esg.js';
 export * from './paineis.js';
 export * from './busca.js';
 export * from './terceiros.js';

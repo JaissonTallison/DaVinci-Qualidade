@@ -12,11 +12,18 @@ import {
   type TipoLicenca,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
-import { aspectos, licencas, requisitos, residuos } from '../db/schema.js';
+import {
+  aspectos,
+  licencas,
+  monitoramentos,
+  produtos,
+  requisitos,
+  residuos,
+} from '../db/schema.js';
 
 type Db = Database<typeof schema>;
 
-/** Pesquisa geral: licenças, requisitos legais, aspectos e resíduos. */
+/** Pesquisa geral: licenças, requisitos legais, aspectos, resíduos, produtos químicos e monitoramentos. */
 @Injectable()
 export class BuscaService {
   constructor(@Inject(DATABASE) private readonly db: Db) {}
@@ -24,7 +31,7 @@ export class BuscaService {
   async buscar(ctx: Contexto, dados: unknown): Promise<ResultadoDaBusca[]> {
     const { termo } = validar(buscaSchema, dados);
     const p = padraoDeBusca(termo);
-    const [ls, rs, as, res] = await Promise.all([
+    const [ls, rs, as, res, ps, ms] = await Promise.all([
       this.db
         .select()
         .from(licencas)
@@ -66,6 +73,33 @@ export class BuscaService {
           and(eq(residuos.empresaId, ctx.empresaId), ilike(residuos.nome, p)),
         )
         .limit(RESULTADOS_POR_TIPO),
+      this.db
+        .select()
+        .from(produtos)
+        .where(
+          and(
+            eq(produtos.empresaId, ctx.empresaId),
+            or(
+              ilike(produtos.nome, p),
+              ilike(produtos.fabricante, p),
+              ilike(produtos.cas, p),
+            ),
+          ),
+        )
+        .limit(RESULTADOS_POR_TIPO),
+      this.db
+        .select()
+        .from(monitoramentos)
+        .where(
+          and(
+            eq(monitoramentos.empresaId, ctx.empresaId),
+            or(
+              ilike(monitoramentos.ponto, p),
+              ilike(monitoramentos.parametro, p),
+            ),
+          ),
+        )
+        .limit(RESULTADOS_POR_TIPO),
     ]);
     return [
       ...ls.map((l): ResultadoDaBusca => ({
@@ -95,6 +129,20 @@ export class BuscaService {
         titulo: r.nome,
         detalhe: r.destinacao,
         href: '/ambiental/residuos',
+      })),
+      ...ps.map((x): ResultadoDaBusca => ({
+        modulo: 'ambiental',
+        tipo: 'Produto químico',
+        titulo: x.nome,
+        detalhe: x.fabricante,
+        href: `/ambiental/produtos-quimicos/${x.id}`,
+      })),
+      ...ms.map((x): ResultadoDaBusca => ({
+        modulo: 'ambiental',
+        tipo: 'Monitoramento',
+        titulo: `${x.parametro} · ${x.ponto}`,
+        detalhe: x.unidade,
+        href: `/ambiental/monitoramentos/${x.id}`,
       })),
     ];
   }

@@ -60,6 +60,8 @@ import {
   type UnidadeResiduo,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
+import { MonitoramentosService } from '../monitoramentos/monitoramentos.service.js';
+import { QuimicosService } from '../quimicos/quimicos.service.js';
 import {
   aspectos,
   condicionantes,
@@ -88,7 +90,11 @@ export function situacaoDaLicenca(
 
 @Injectable()
 export class AmbientalService {
-  constructor(@Inject(DATABASE) private readonly db: Db) {}
+  constructor(
+    @Inject(DATABASE) private readonly db: Db,
+    private readonly quimicos: QuimicosService,
+    private readonly monitoramentos: MonitoramentosService,
+  ) {}
 
   // ---------------------------------------------------------------- aspectos e impactos
 
@@ -524,11 +530,13 @@ export class AmbientalService {
   // ---------------------------------------------------------------- resumo
 
   async resumo(ctx: Contexto): Promise<ResumoAmbiental> {
-    const [as, rs, ls, ss] = await Promise.all([
+    const [as, rs, ls, ss, ps, ms] = await Promise.all([
       this.listarAspectos(ctx, {}),
       this.listarRequisitos(ctx, {}),
       this.listarLicencas(ctx),
       this.listarSaidas(ctx, { semCdf: 'sim' }),
+      this.quimicos.listar(ctx, {}),
+      this.monitoramentos.listar(ctx),
     ]);
     return {
       licencas: ls.length,
@@ -544,6 +552,9 @@ export class AmbientalService {
         .flatMap((l) => l.condicionantes)
         .filter((c) => c.vencida).length,
       cdfsAtrasados: ss.filter((s) => s.cdfAtrasado).length,
+      fdsVencidas: ps.filter((p) => p.fdsVencida).length,
+      foraDoLimite: ms.filter((m) => m.ultimo && !m.ultimo.conforme).length,
+      coletasVencidas: ms.filter((m) => m.coletaVencida).length,
     };
   }
 

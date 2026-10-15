@@ -158,7 +158,7 @@ O sistema é **sempre claro**, mesmo quando o computador está no modo escuro (d
 
 ### 5.6 Exceção: cores oficiais dos ODS
 
-A tela de ODS usa as **17 cores oficiais da ONU**, porque são reconhecidas por quem trabalha com ESG. Elas aparecem só no ícone de cada ODS, nunca no resto da interface.
+A tela de ODS usa as **17 cores oficiais da ONU** (tokens `--dv-ods-1` a `--dv-ods-17`, componente `IconeOds`), porque são reconhecidas por quem trabalha com ESG. Elas aparecem só no ícone de cada ODS, nunca no resto da interface.
 
 ---
 
@@ -310,12 +310,12 @@ As classes ficam em `apps/web/src/app/globals.css`. As `animate-*` do Tailwind c
 
 SVG próprio em `components/graficos.tsx`: colunas empilhadas, colunas agrupadas, rosca e linha. Regras:
 
-| Regra                                                       | Como                                                                                                                             |
-| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Cor por módulo, em ordem fixa, nunca recalculada por filtro | Tokens `serie-1` a `serie-6` (Qualidade, Segurança, ASO e treinamentos, SGI, Serviços, Meio Ambiente), validados para daltonismo |
-| Três cores ficam abaixo de 3:1 sobre o branco               | Legenda sempre visível e com os números; tooltip com o valor exato                                                               |
-| Marcas finas                                                | Coluna de no máximo 24 px, topo arredondado de 4 px e base reta; 2 px de respiro entre segmentos; linha de 2 px; grade de 1 px   |
-| Texto nunca na cor da série                                 | Rótulos e valores nas cores de texto; a cor fica no quadradinho ao lado                                                          |
-| Interação                                                   | Tooltip ao passar o mouse, realce da série pela legenda, clique abre a lista filtrada                                            |
+| Regra                                                       | Como                                                                                                                                         |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cor por módulo, em ordem fixa, nunca recalculada por filtro | Tokens `serie-1` a `serie-7` (Qualidade, Segurança, ASO e treinamentos, SGI, Serviços, Meio Ambiente, Agenda ESG), validados para daltonismo |
+| Três cores ficam abaixo de 3:1 sobre o branco               | Legenda sempre visível e com os números; tooltip com o valor exato                                                                           |
+| Marcas finas                                                | Coluna de no máximo 24 px, topo arredondado de 4 px e base reta; 2 px de respiro entre segmentos; linha de 2 px; grade de 1 px               |
+| Texto nunca na cor da série                                 | Rótulos e valores nas cores de texto; a cor fica no quadradinho ao lado                                                                      |
+| Interação                                                   | Tooltip ao passar o mouse, realce da série pela legenda, clique abre a lista filtrada                                                        |
 
 O destaque do topo do início (`.dv-destaque` em `globals.css`) é a única área com degradê e canto de 12 px do sistema.

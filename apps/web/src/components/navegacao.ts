@@ -192,6 +192,40 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/ambiental/residuos",
         permissao: "ambiental.ver",
       },
+      {
+        rotulo: "Produtos químicos",
+        href: "/ambiental/produtos-quimicos",
+        permissao: "ambiental.ver",
+      },
+      {
+        rotulo: "Consumo de água e energia",
+        href: "/ambiental/consumo",
+        permissao: "ambiental.ver",
+      },
+      {
+        rotulo: "Inventário de GEE",
+        href: "/ambiental/gee",
+        permissao: "ambiental.ver",
+      },
+      {
+        rotulo: "Monitoramentos",
+        href: "/ambiental/monitoramentos",
+        permissao: "ambiental.ver",
+      },
+    ],
+  },
+  {
+    titulo: "Agenda ESG",
+    recurso: "esg",
+    itens: [
+      { rotulo: "Painel ESG", href: "/esg/painel", permissao: "esg.ver" },
+      { rotulo: "Temas ESG", href: "/esg/temas", permissao: "esg.ver" },
+      {
+        rotulo: "Matriz de materialidade",
+        href: "/esg/materialidade",
+        permissao: "esg.ver",
+      },
+      { rotulo: "ODS", href: "/esg/ods", permissao: "esg.ver" },
     ],
   },
   {
@@ -360,6 +394,24 @@ export const ATALHOS_DE_CRIACAO: AtalhoDeCriacao[] = [
     href: "/ambiental/licencas/nova",
     permissao: "ambiental.editar",
     recurso: "ambiental",
+  },
+  {
+    rotulo: "Produto químico",
+    href: "/ambiental/produtos-quimicos/novo",
+    permissao: "ambiental.editar",
+    recurso: "ambiental",
+  },
+  {
+    rotulo: "Monitoramento ambiental",
+    href: "/ambiental/monitoramentos/novo",
+    permissao: "ambiental.editar",
+    recurso: "ambiental",
+  },
+  {
+    rotulo: "Tema ESG",
+    href: "/esg/temas/novo",
+    permissao: "esg.editar",
+    recurso: "esg",
   },
 ];
 

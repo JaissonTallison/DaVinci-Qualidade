@@ -404,4 +404,291 @@ export interface ResumoAmbiental {
   licencasParaRenovar: number;
   condicionantesVencidas: number;
   cdfsAtrasados: number;
+  fdsVencidas: number;
+  /** Monitoramentos ativos cujo último resultado ficou fora do limite. */
+  foraDoLimite: number;
+  coletasVencidas: number;
+}
+
+// ================================================================ parte 2
+
+const numeroLivre = (rotulo: string) =>
+  z.preprocess(
+    (v) =>
+      typeof v === 'string' ? v.trim().replace(/\./g, '').replace(',', '.') : v,
+    z.coerce.number({ error: `Informe ${rotulo} em número.` }),
+  );
+const competencia = z
+  .string({ error: 'Informe o mês.' })
+  .regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'Informe o mês como 2026-10.');
+
+// ---------------------------------------------------------------- produtos químicos e FDS
+
+/** Pictogramas do GHS (NBR 14725). */
+export const PERIGOS_GHS = {
+  explosivo: 'Explosivo',
+  inflamavel: 'Inflamável',
+  oxidante: 'Oxidante',
+  gas_pressao: 'Gás sob pressão',
+  corrosivo: 'Corrosivo',
+  toxico: 'Toxicidade aguda',
+  irritante: 'Irritante ou sensibilizante',
+  saude: 'Perigo à saúde',
+  ambiente: 'Perigoso ao meio ambiente',
+} as const;
+export type PerigoGhs = keyof typeof PERIGOS_GHS;
+export const UNIDADES_PRODUTO = { kg: 'kg', L: 'L', un: 'unidades' } as const;
+export type UnidadeProduto = keyof typeof UNIDADES_PRODUTO;
+/** A FDS é conferida com o fornecedor a cada 5 anos (decisão nossa; a NBR 14725 pede revisão quando há informação nova). */
+export const MESES_REVISAO_FDS = 60;
+
+const camposProduto = {
+  nome: texto('o nome comercial', 150, 2),
+  fabricante: texto('o fabricante ou fornecedor', 150, 2),
+  cas: opcional(
+    z
+      .string()
+      .trim()
+      .regex(/^\d{2,7}-\d{2}-\d$/, 'Número CAS no formato 64-17-5.'),
+  ),
+  perigos: z
+    .array(z.enum(chaves(PERIGOS_GHS)))
+    .max(9)
+    .default([]),
+  local: texto('onde é armazenado', 150, 2),
+  quantidadeMaxima: opcional(
+    numeroLivre('a quantidade máxima').pipe(
+      z.number().positive('Informe a quantidade maior que zero.'),
+    ),
+  ),
+  unidade: z.enum(chaves(UNIDADES_PRODUTO), { error: 'Escolha a unidade.' }),
+  fdsRevisao: data('a data de revisão da FDS'),
+};
+export const novoProdutoSchema = z.object(camposProduto);
+export type NovoProduto = z.input<typeof novoProdutoSchema>;
+export const atualizarProdutoSchema = z.object({ ...camposProduto, versao });
+export const situacaoDoProdutoSchema = z.object({ versao, ativo: z.boolean() });
+export const filtroProdutosSchema = z.object({
+  situacao: z.enum(['ativos', 'inativos', 'todos']).default('ativos'),
+  fds: z.enum(['vencida']).optional(),
+});
+
+export interface ProdutoQuimico {
+  id: string;
+  nome: string;
+  fabricante: string;
+  cas: string | null;
+  perigos: PerigoGhs[];
+  local: string;
+  quantidadeMaxima: number | null;
+  unidade: UnidadeProduto;
+  fdsRevisao: string;
+  proximaRevisaoFds: string;
+  fdsVencida: boolean;
+  ativo: boolean;
+  versao: string;
+}
+
+// ---------------------------------------------------------------- consumo de recursos
+
+export const FONTES_DE_CONSUMO = {
+  agua: 'Água',
+  energia: 'Energia elétrica',
+  gas_natural: 'Gás natural',
+  glp: 'GLP',
+  diesel: 'Óleo diesel',
+  gasolina: 'Gasolina',
+} as const;
+export type FonteDeConsumo = keyof typeof FONTES_DE_CONSUMO;
+export const UNIDADE_DA_FONTE: Record<FonteDeConsumo, string> = {
+  agua: 'm³',
+  energia: 'kWh',
+  gas_natural: 'm³',
+  glp: 'kg',
+  diesel: 'L',
+  gasolina: 'L',
+};
+/** Escopo do GHG Protocol: combustão própria é escopo 1; energia comprada, escopo 2. Água não entra no inventário. */
+export const ESCOPO_DA_FONTE: Record<FonteDeConsumo, 1 | 2 | null> = {
+  agua: null,
+  energia: 2,
+  gas_natural: 1,
+  glp: 1,
+  diesel: 1,
+  gasolina: 1,
+};
+
+/** Um registro por fonte e mês; registrar de novo o mesmo mês substitui. */
+export const registrarConsumoSchema = z.object({
+  fonte: z.enum(chaves(FONTES_DE_CONSUMO), { error: 'Escolha a fonte.' }),
+  competencia,
+  quantidade: numeroLivre('a quantidade').pipe(
+    z.number().min(0, 'A quantidade não pode ser negativa.'),
+  ),
+  custo: opcional(
+    numeroLivre('o custo').pipe(
+      z.number().min(0, 'O custo não pode ser negativo.'),
+    ),
+  ),
+});
+export const filtroConsumoSchema = z.object({
+  ano: z.coerce.number().int().min(2000).max(2100),
+});
+
+export interface ConsumoDoMes {
+  fonte: FonteDeConsumo;
+  competencia: string;
+  quantidade: number;
+  custo: number | null;
+}
+
+// ---------------------------------------------------------------- inventário de GEE
+
+/** Fator de emissão informado pela empresa (kg CO₂e por unidade da fonte), por ano, com a referência usada. */
+export const definirFatorSchema = z.object({
+  fonte: z.enum(
+    chaves(FONTES_DE_CONSUMO).filter((f) => f !== 'agua') as [
+      FonteDeConsumo,
+      ...FonteDeConsumo[],
+    ],
+    { error: 'Escolha a fonte.' },
+  ),
+  ano: z.coerce
+    .number({ error: 'Informe o ano.' })
+    .int()
+    .min(2000, 'Ano inválido.')
+    .max(2100, 'Ano inválido.'),
+  fator: numeroLivre('o fator').pipe(
+    z.number().positive('O fator precisa ser maior que zero.'),
+  ),
+  referencia: texto(
+    'a referência do fator (ex.: Programa Brasileiro GHG Protocol, ferramenta 2026)',
+    200,
+    3,
+  ),
+});
+
+export interface LinhaDoInventario {
+  fonte: FonteDeConsumo;
+  escopo: 1 | 2;
+  consumo: number;
+  unidade: string;
+  /** kg CO₂e por unidade; null quando ainda não foi informado para o ano. */
+  fator: number | null;
+  referencia: string | null;
+  /** t CO₂e; null sem fator. */
+  emissao: number | null;
+}
+
+export interface InventarioGee {
+  ano: number;
+  linhas: LinhaDoInventario[];
+  escopo1: number;
+  escopo2: number;
+  total: number;
+  /** Fontes com consumo no ano e sem fator: o total fica incompleto. */
+  semFator: FonteDeConsumo[];
+}
+
+// ---------------------------------------------------------------- monitoramentos
+
+export const TIPOS_MONITORAMENTO = {
+  efluente: 'Efluente líquido',
+  emissao: 'Emissão atmosférica',
+  ruido: 'Ruído ambiental',
+  agua: 'Água (poço, corpo receptor)',
+  solo: 'Solo',
+  outro: 'Outro',
+} as const;
+export type TipoMonitoramento = keyof typeof TIPOS_MONITORAMENTO;
+
+const camposMonitoramento = {
+  tipo: z.enum(chaves(TIPOS_MONITORAMENTO), { error: 'Escolha o tipo.' }),
+  ponto: texto('o ponto de coleta', 150, 2),
+  parametro: texto('o parâmetro (ex.: DBO, pH, MP)', 100, 1),
+  unidade: texto('a unidade (ex.: mg/L, dB(A))', 20, 1),
+  limiteMinimo: opcional(numeroLivre('o limite mínimo')),
+  limiteMaximo: opcional(numeroLivre('o limite máximo')),
+  referencia: textoOpcional(200),
+  periodicidadeMeses: z.coerce
+    .number({ error: 'Informe a periodicidade em meses.' })
+    .int('Informe meses inteiros.')
+    .min(1, 'Informe ao menos 1 mês.')
+    .max(60, 'Use no máximo 60 meses.'),
+};
+const limitesCoerentes = (
+  m: { limiteMinimo?: number | null; limiteMaximo?: number | null },
+  ctx: z.RefinementCtx,
+) => {
+  if (m.limiteMinimo == null && m.limiteMaximo == null)
+    ctx.addIssue({
+      code: 'custom',
+      path: ['limiteMaximo'],
+      message: 'Informe ao menos um limite (mínimo ou máximo).',
+    });
+  if (
+    m.limiteMinimo != null &&
+    m.limiteMaximo != null &&
+    m.limiteMinimo > m.limiteMaximo
+  )
+    ctx.addIssue({
+      code: 'custom',
+      path: ['limiteMaximo'],
+      message: 'O máximo precisa ser maior ou igual ao mínimo.',
+    });
+};
+export const novoMonitoramentoSchema = z
+  .object(camposMonitoramento)
+  .superRefine(limitesCoerentes);
+export type NovoMonitoramento = z.input<typeof novoMonitoramentoSchema>;
+export const atualizarMonitoramentoSchema = z
+  .object({ ...camposMonitoramento, versao })
+  .superRefine(limitesCoerentes);
+export const situacaoDoMonitoramentoSchema = z.object({
+  versao,
+  ativo: z.boolean(),
+});
+export const registrarResultadoSchema = z.object({
+  data: data('a data da coleta'),
+  valor: numeroLivre('o resultado'),
+  laudo: textoOpcional(100),
+});
+
+/** Dentro do limite: valor ≥ mínimo (se houver) e ≤ máximo (se houver). */
+export function resultadoConforme(
+  valor: number,
+  minimo: number | null,
+  maximo: number | null,
+): boolean {
+  return (
+    (minimo === null || valor >= minimo) && (maximo === null || valor <= maximo)
+  );
+}
+
+export interface ResultadoDeMonitoramento {
+  id: string;
+  data: string;
+  valor: number;
+  laudo: string | null;
+  conforme: boolean;
+}
+
+export interface Monitoramento {
+  id: string;
+  tipo: TipoMonitoramento;
+  ponto: string;
+  parametro: string;
+  unidade: string;
+  limiteMinimo: number | null;
+  limiteMaximo: number | null;
+  referencia: string | null;
+  periodicidadeMeses: number;
+  ultimo: ResultadoDeMonitoramento | null;
+  /** Última coleta + periodicidade; sem coleta, hoje. */
+  proximaColeta: string;
+  coletaVencida: boolean;
+  ativo: boolean;
+  versao: string;
+  /** Só no detalhe (do mais recente para o mais antigo). */
+  resultados?: ResultadoDeMonitoramento[];
 }

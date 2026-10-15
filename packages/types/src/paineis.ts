@@ -14,6 +14,7 @@ export const MODULOS_DO_PAINEL = {
   sgi: 'Gestão do SGI',
   servicos: 'Serviços',
   ambiental: 'Meio Ambiente',
+  esg: 'Agenda ESG',
 } as const;
 export type ModuloDoPainel = keyof typeof MODULOS_DO_PAINEL;
 
@@ -87,6 +88,7 @@ const EXIGE: Record<
   sgi: { permissao: 'sgi.ver', recurso: 'sgi' },
   servicos: { permissao: 'servicos.ver', recurso: 'servicos' },
   ambiental: { permissao: 'ambiental.ver', recurso: 'ambiental' },
+  esg: { permissao: 'esg.ver', recurso: 'esg' },
 };
 
 /** Módulos do painel que a pessoa vê: precisa da permissão e do módulo ligado na empresa. */

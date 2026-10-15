@@ -59,7 +59,11 @@ import {
   RequisitosLegaisController,
   LicencasController,
   ResiduosController,
+  ProdutosQuimicosController,
+  ConsumoAmbientalController,
+  MonitoramentosController,
 } from './ambiental/ambiental.controller.js';
+import { EsgController } from './esg/esg.controller.js';
 import {
   AsosController,
   TreinamentosController,
@@ -127,6 +131,10 @@ export const observeEnabled = Boolean(
     RequisitosLegaisController,
     LicencasController,
     ResiduosController,
+    ProdutosQuimicosController,
+    ConsumoAmbientalController,
+    MonitoramentosController,
+    EsgController,
     OrdensDeServicoController,
     NpsController,
     AvaliacoesDeFornecedoresController,
