@@ -18,6 +18,7 @@ import { RevogacoesService } from './auth/revogacoes.service.js';
 import { ContextoMiddleware } from './contexto.js';
 import { FiltroDeErrosHttp } from './filtro-erros-http.js';
 import { HealthController } from './health.controller.js';
+import { NaoConformidadesController } from './qualidade/nao-conformidades.controller.js';
 import { MensageriaService } from './mensageria.service.js';
 import { ConsultasController } from './parceiros/consultas.controller.js';
 import { ParceirosController } from './parceiros/parceiros.controller.js';
@@ -54,6 +55,7 @@ export const observeEnabled = Boolean(
     ParceirosController,
     ReferenciasController,
     ConsultasController,
+    NaoConformidadesController,
   ],
   providers: [
     MensageriaService,

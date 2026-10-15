@@ -15,3 +15,4 @@ export * from './cep.js';
 export * from './recursos.js';
 export * from './importacao.js';
 export * from './chaves-api.js';
+export * from './nao-conformidades.js';

@@ -15,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "test:integracao": "vitest run --config vitest.config.integracao.ts"
   },
   "dependencies": {
     "@davinci/database": "workspace:*",

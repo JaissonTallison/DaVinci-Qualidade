@@ -103,6 +103,18 @@ export const PATTERNS = {
   notificacoes: {
     enviarEmail: 'notificacoes.enviar-email',
   },
+  /** Qualidade: não conformidades (docs/05-modulos/nao-conformidades.md). */
+  naoConformidades: {
+    listar: 'nao-conformidades.listar',
+    resumo: 'nao-conformidades.resumo',
+    obter: 'nao-conformidades.obter',
+    criar: 'nao-conformidades.criar',
+    atualizar: 'nao-conformidades.atualizar',
+    registrarTratamento: 'nao-conformidades.registrar-tratamento',
+    enviarParaVerificacao: 'nao-conformidades.enviar-para-verificacao',
+    verificarEficacia: 'nao-conformidades.verificar-eficacia',
+    cancelar: 'nao-conformidades.cancelar',
+  },
   /** Codex: tabelas oficiais de referência (CNAE, setores, bancos). */
   referencias: {
     cnaes: 'referencias.cnaes',

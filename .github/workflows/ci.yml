@@ -28,6 +28,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Migrações sem esquema fixo
+        run: node scripts/conferir-migracoes.mjs
+
       - run: pnpm turbo run lint typecheck test build
 
   integracao:
