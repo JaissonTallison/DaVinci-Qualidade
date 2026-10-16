@@ -67,7 +67,7 @@ export default async function DetalheDaOs({
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
         <span className="font-mono text-lg text-texto-2">{o.numero}</span>
-        <StatusDaOs status={o.status} atrasada={o.atrasada} />
+        <StatusDaOs status={o.status} atrasada={o.atrasada} prazo={o.prazo} />
       </header>
       <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">
         <h1 className={tituloDaPagina}>{o.titulo}</h1>

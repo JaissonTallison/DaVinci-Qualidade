@@ -12,7 +12,13 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  aba as estiloDaAba,
+  painel,
+  tituloDaPagina,
+  tituloDaSecao,
+  trilho,
+} from "@/lib/estilos";
 import {
   ConfiguracaoDoEsocial,
   GerarEvento,
@@ -73,16 +79,13 @@ export default async function Esocial({
       )}
       {p.configurado && (
         <>
-          <nav
-            aria-label="Eventos"
-            className="mt-6 flex flex-wrap gap-2 border-b border-borda"
-          >
+          <nav aria-label="Eventos" className={`mt-6 ${trilho}`}>
             {(Object.keys(EVENTOS_SST) as EventoSst[]).map((e) => (
               <Link
                 key={e}
                 href={`?evento=${e}`}
                 aria-current={filtro === e ? "page" : undefined}
-                className={`-mb-px border-b-2 px-3 pb-2.5 text-base ${filtro === e ? "border-menu font-semibold text-texto" : "border-transparent text-texto-2 hover:text-texto"}`}
+                className={estiloDaAba(filtro === e)}
               >
                 {EVENTOS_SST[e]}
                 {prontos(e) > 0 && (

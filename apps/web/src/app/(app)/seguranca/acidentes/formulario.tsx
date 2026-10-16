@@ -74,11 +74,7 @@ export function FormularioDeAcidente({
     </Campo>
   );
   return (
-    <form
-      action={acao}
-      noValidate
-      className={embutido ? "" : `${painel} mt-6`}
-    >
+    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
       {acidente && (
         <input type="hidden" name="versao" value={acidente.versao} />
       )}

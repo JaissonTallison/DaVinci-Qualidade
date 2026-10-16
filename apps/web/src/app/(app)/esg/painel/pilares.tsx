@@ -20,7 +20,7 @@ export function PilaresDaSustentabilidade() {
             className="border-b border-borda px-4 py-3 text-center sm:border-r sm:border-b-0 sm:last:border-r-0"
           >
             <span className="block text-xs text-texto-2">Sustentabilidade</span>
-            <span className="font-serif text-lg">{p}</span>
+            <span className="font-bold text-lg">{p}</span>
           </li>
         ))}
       </ul>

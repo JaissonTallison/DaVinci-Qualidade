@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -50,21 +51,21 @@ export default async function ListaDeAcidentes({
         <div>
           <h1 className={tituloDaPagina}>Acidentes</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              {resumo.dados.diasSemAcidente === null
-                ? "Nenhum acidente com afastamento registrado"
-                : `${resumo.dados.diasSemAcidente} dias sem acidente com afastamento`}{" "}
-              · {resumo.dados.emAberto} em aberto
-              {resumo.dados.catsAtrasadas > 0 && (
-                <span className="text-nao-conforme">
-                  {" "}
-                  · {resumo.dados.catsAtrasadas}{" "}
-                  {resumo.dados.catsAtrasadas === 1
-                    ? "CAT atrasada"
-                    : "CATs atrasadas"}
-                </span>
-              )}
-            </p>
+            <Pendencias
+              itens={[
+                {
+                  valor: resumo.dados.diasSemAcidente ?? "—",
+                  rotulo: "dias sem acidente com afastamento",
+                },
+                { valor: resumo.dados.emAberto, rotulo: "em aberto" },
+                {
+                  valor: resumo.dados.catsAtrasadas,
+                  rotulo: "CATs atrasadas",
+                  singular: "CAT atrasada",
+                  alerta: true,
+                },
+              ]}
+            />
           )}
         </div>
         {podeRegistrar && (
@@ -124,7 +125,7 @@ export default async function ListaDeAcidentes({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Número</th>
                   <th className="px-4 py-2 font-semibold">Data</th>
@@ -137,7 +138,7 @@ export default async function ListaDeAcidentes({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.itens.map((a) => (
-                  <tr key={a.id} className="hover:bg-superficie-2">
+                  <tr key={a.id} className="">
                     <td className="px-4 py-2 whitespace-nowrap">
                       <Link
                         href={`/seguranca/acidentes/${a.id}`}

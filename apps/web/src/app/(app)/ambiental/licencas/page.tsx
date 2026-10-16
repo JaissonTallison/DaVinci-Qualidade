@@ -50,7 +50,7 @@ export default async function Licencas() {
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Licença</th>
                   <th className="px-4 py-2 font-semibold">Órgão</th>
@@ -67,7 +67,7 @@ export default async function Licencas() {
                   );
                   const vencidas = pendentes.filter((c) => c.vencida).length;
                   return (
-                    <tr key={l.id} className="hover:bg-superficie-2">
+                    <tr key={l.id} className="">
                       <td className="px-4 py-2">
                         <Link
                           href={`/ambiental/licencas/${l.id}`}

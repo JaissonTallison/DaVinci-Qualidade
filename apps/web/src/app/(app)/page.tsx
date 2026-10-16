@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
-import { ArrowRight } from "lucide-react";
+import { botaoPrimario } from "@/lib/estilos";
 import type { CSSProperties } from "react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import {
   MODULOS_DO_PAINEL,
   type DadosDoUsuario,
@@ -24,7 +24,6 @@ import {
   type ResumoSgi,
   type ResumoVencimentos,
 } from "@davinci/types";
-import { atalhosVisiveis } from "@/components/navegacao";
 import {
   PainelDoInicio,
   type Aba,
@@ -48,16 +47,13 @@ interface Componente {
 const ok = <T,>(r: Resultado<T> | null): T | null => (r?.ok ? r.dados : null);
 const plural = (n: number, um: string, varios: string) =>
   `${n.toLocaleString("pt-BR")} ${n === 1 ? um : varios}`;
+/** Data (AAAA-MM-DD) n dias depois. */
+const diasDepois = (dia: string, n: number) =>
+  new Date(Date.parse(`${dia}T00:00:00Z`) + n * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
 const pct = (bons: number, total: number) =>
   Math.round((Math.max(bons, 0) / total) * 100);
-
-const ORDEM_DOS_ATALHOS = [
-  "/qualidade/nao-conformidades/nova",
-  "/seguranca/acidentes/novo",
-  "/qualidade/inspecoes/nova",
-  "/seguranca/permissoes-de-trabalho/nova",
-  "/servicos/ordens/nova",
-];
 
 export default async function Inicio() {
   const r = await chamarApi<DadosDoUsuario>("/auth/eu");
@@ -522,111 +518,99 @@ export default async function Inicio() {
     month: "long",
     timeZone: "America/Sao_Paulo",
   }).format(agora);
-  const atalhos = atalhosVisiveis(eu.permissoes, eu.recursos)
-    .filter((a) => ORDEM_DOS_ATALHOS.includes(a.href))
-    .sort(
-      (a, b) =>
-        ORDEM_DOS_ATALHOS.indexOf(a.href) - ORDEM_DOS_ATALHOS.indexOf(b.href),
-    )
-    .slice(0, 4);
   const vencidos =
     painel?.prazos.filter((p) => p.situacao === "vencido").length ?? 0;
+  const emSeteDias = diasDepois(hoje, 7);
+  const nestaSemana =
+    painel?.prazos.filter(
+      (p) => p.situacao !== "vencido" && p.data <= emSeteDias,
+    ).length ?? 0;
 
   return (
     <div className="flex flex-col gap-6">
       <section
-        className="dv-destaque dv-entrar relative overflow-hidden p-6 text-primaria-texto sm:p-8"
-        aria-label="Saúde do sistema de gestão"
+        className="dv-entrar overflow-hidden rounded-md border border-borda bg-superficie shadow-cartao md:grid md:grid-cols-[minmax(0,1fr)_auto]"
+        aria-label="Resumo do dia"
       >
-        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
-          <div className="min-w-0 md:flex-1">
-            <p className="text-xs font-semibold tracking-[0.12em] text-primaria-texto/70 uppercase">
-              DaVinci Qualidade · {data}
-            </p>
-            <h1 className="mt-2 font-serif text-3xl">
-              {saudacao}, {eu.usuario.nome.split(" ")[0]}
-            </h1>
-            <p className="mt-1 text-base text-primaria-texto/80">
-              {vencidos
-                ? `${plural(vencidos, "prazo vencido", "prazos vencidos")} em ${eu.empresa.nome}.`
-                : `Nenhum prazo vencido em ${eu.empresa.nome}.`}
-            </p>
-
-            {pior && pior.pct < 100 ? (
-              <div className="dv-destaque-interno mt-5 max-w-xl p-4">
-                <p className="text-base font-semibold">
-                  Comece por: {pior.nome.toLowerCase()}
-                </p>
-                <p className="mt-0.5 text-sm text-primaria-texto/80">
-                  Está em {pior.pct}%: {pior.detalhe}.
-                </p>
-                <Link
-                  href={pior.href}
-                  className="mt-3 inline-flex h-9 items-center gap-2 rounded-sm bg-primaria-texto px-4 text-base font-semibold text-primaria transition-opacity hover:opacity-90"
-                >
-                  Resolver agora
-                  <ArrowRight aria-hidden size={16} strokeWidth={2} />
-                </Link>
-              </div>
+        <div className="min-w-0 p-5">
+          <p className="text-sm text-texto-2 first-letter:uppercase">{data}</p>
+          <h1 className="mt-0.5 text-2xl text-texto">
+            {saudacao}, {eu.usuario.nome.split(" ")[0]}
+          </h1>
+          <p className="mt-1 text-base text-texto-2">
+            {vencidos ? (
+              <span className="font-semibold text-nao-conforme">
+                {plural(vencidos, "prazo vencido", "prazos vencidos")}
+              </span>
             ) : (
-              <div className="dv-destaque-interno mt-5 max-w-xl p-4">
-                <p className="text-base font-semibold">Tudo em dia</p>
-                <p className="mt-0.5 text-sm text-primaria-texto/80">
-                  Nenhum indicador abaixo de 100%. Bom trabalho.
-                </p>
-              </div>
-            )}
+              "Nenhum prazo vencido"
+            )}{" "}
+            {nestaSemana > 0 && (
+              <>
+                {" "}
+                ·{" "}
+                <span className="font-semibold text-atencao">
+                  {plural(nestaSemana, "vence", "vencem")} nos próximos 7 dias
+                </span>
+              </>
+            )}{" "}
+            em {eu.empresa.nome}.
+          </p>
+          {pior && pior.pct < 100 ? (
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-borda pt-3">
+              <p className="min-w-0 flex-1 text-base text-texto">
+                <span className="mr-2 text-xs font-semibold tracking-[0.08em] text-acao uppercase">
+                  Prioridade
+                </span>
+                {pior.nome}: {pior.detalhe}.
+              </p>
+              <Link href={pior.href} className={botaoPrimario}>
+                Resolver
+                <ArrowRight aria-hidden size={16} strokeWidth={2} />
+              </Link>
+            </div>
+          ) : (
+            <p className="mt-4 border-t border-borda pt-3 text-base text-conforme">
+              Todos os indicadores em 100%. Nada pede ação agora.
+            </p>
+          )}
+        </div>
 
-            {atalhos.length > 0 && (
-              <nav aria-label="Atalhos" className="mt-5 flex flex-wrap gap-2">
-                {atalhos.map((a) => (
-                  <Link
-                    key={a.href}
-                    href={a.href}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-sm border border-primaria-texto/25 px-3 text-sm text-primaria-texto transition-colors hover:bg-primaria-texto/10"
-                  >
-                    <IconeDaTela href={a.href} />
-                    {a.rotulo}
-                  </Link>
-                ))}
-              </nav>
-            )}
-          </div>
-
-          <div className="flex flex-col items-center gap-4">
+        {componentes.length > 0 && (
+          <div className="flex items-center gap-5 border-t border-borda bg-campo p-5 md:border-t-0 md:border-l">
             <Anel valor={saude} />
-            {componentes.length > 0 && (
-              <ul className="w-full max-w-xs space-y-1.5 text-xs text-primaria-texto/80 md:w-56">
-                {componentes.map((c, i) => (
+            <div className="min-w-48">
+              <p className="text-sm font-semibold text-texto">
+                Saúde do sistema de gestão
+              </p>
+              <ul className="mt-1.5 space-y-0.5 text-sm">
+                {componentes.map((c) => (
                   <li key={c.nome}>
                     <Link
                       href={c.href}
-                      className="block rounded-xs hover:text-primaria-texto"
+                      className="group -mx-2 flex items-center justify-between gap-4 rounded-sm px-2 py-0.5 text-texto-2 transition-colors hover:bg-superficie hover:text-texto"
                     >
-                      <span className="flex justify-between">
-                        <span>{c.nome}</span>
-                        <span className="font-semibold text-primaria-texto tabular-nums">
+                      <span className="truncate">{c.nome}</span>
+                      <span className="flex items-center gap-1">
+                        <span
+                          className={`font-semibold tabular-nums ${c.pct < 100 ? "text-nao-conforme" : "text-texto"}`}
+                        >
                           {c.pct}%
                         </span>
-                      </span>
-                      <span className="mt-0.5 block h-1 overflow-hidden rounded-xs bg-primaria-texto/15">
-                        <span
-                          className="dv-crescer block h-full bg-ouro-claro"
-                          style={
-                            {
-                              width: `${c.pct}%`,
-                              "--atraso": `${400 + i * 80}ms`,
-                            } as CSSProperties
-                          }
+                        <ChevronRight
+                          aria-hidden
+                          size={14}
+                          strokeWidth={2}
+                          className="text-texto-3 opacity-0 transition-opacity group-hover:opacity-100"
                         />
                       </span>
                     </Link>
                   </li>
                 ))}
               </ul>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       <PainelDoInicio
@@ -643,51 +627,59 @@ export default async function Inicio() {
   );
 }
 
-/** Anel da saúde: preenche até o valor ao abrir (animação de 1,1 s; parada com "reduzir movimento"). */
+/** Saúde em anel compacto: verde a partir de 90%, âmbar de 70 a 89%, vermelho abaixo; preenche ao abrir. */
 function Anel({ valor }: { valor: number | null }) {
-  const r = 58;
+  const r = 38;
   const c = 2 * Math.PI * r;
   const v = valor ?? 0;
+  const cor =
+    valor === null
+      ? "stroke-borda"
+      : v >= 90
+        ? "stroke-conforme"
+        : v >= 70
+          ? "stroke-ambar"
+          : "stroke-nao-conforme";
   return (
-    <div className="relative size-40">
-      <svg viewBox="0 0 140 140" className="size-full -rotate-90" aria-hidden>
+    <div
+      className="relative size-[88px] shrink-0"
+      role="img"
+      aria-label={
+        valor === null
+          ? "Saúde sem dados"
+          : `Saúde do sistema de gestão: ${valor}%`
+      }
+    >
+      <svg viewBox="0 0 88 88" className="size-full -rotate-90" aria-hidden>
         <circle
-          cx={70}
-          cy={70}
+          cx={44}
+          cy={44}
           r={r}
           fill="none"
-          strokeWidth={10}
-          className="stroke-primaria-texto/15"
+          strokeWidth={7}
+          className="stroke-borda"
         />
         <circle
-          cx={70}
-          cy={70}
+          cx={44}
+          cy={44}
           r={r}
           fill="none"
-          strokeWidth={10}
+          strokeWidth={7}
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - v / 100)}
-          className="dv-anel stroke-ouro-claro"
+          className={`dv-anel ${cor}`}
           style={{ "--circunferencia": c } as CSSProperties}
         />
       </svg>
-      <div
-        className="absolute inset-0 flex flex-col items-center justify-center"
-        role="img"
-        aria-label={
-          valor === null
-            ? "Saúde sem dados"
-            : `Saúde do sistema de gestão: ${valor}%`
-        }
-      >
-        <span className="text-3xl font-semibold tabular-nums">
+      <span className="absolute inset-0 flex flex-col items-center justify-center leading-none">
+        <span className="text-xl font-bold text-texto tabular-nums">
           {valor === null ? "—" : `${valor}%`}
         </span>
-        <span className="text-xs tracking-[0.12em] text-primaria-texto/70 uppercase">
-          Saúde
+        <span className="mt-1 text-[0.625rem] font-semibold tracking-[0.1em] text-texto-3 uppercase">
+          saúde
         </span>
-      </div>
+      </span>
     </div>
   );
 }

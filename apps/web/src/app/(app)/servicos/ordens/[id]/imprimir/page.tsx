@@ -38,7 +38,7 @@ export default async function RelatorioDaOs({
         <p className="text-sm text-texto-2">
           Relatório de ordem de serviço · {o.numero} · {STATUS_OS[o.status]}
         </p>
-        <h1 className="font-serif text-2xl">{o.titulo}</h1>
+        <h1 className="font-bold text-2xl">{o.titulo}</h1>
         <p className="mt-1 text-sm">
           Cliente: {o.clienteNome}
           {o.contratoNumero && ` · Contrato ${o.contratoNumero}`} · Prazo{" "}

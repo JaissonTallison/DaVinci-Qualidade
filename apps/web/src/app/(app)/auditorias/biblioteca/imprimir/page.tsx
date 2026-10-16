@@ -31,7 +31,7 @@ export default async function ImprimirBiblioteca({
         <BotaoImprimir />
       </div>
       <header className="border-b-2 border-texto pb-3">
-        <h1 className="font-serif text-2xl">
+        <h1 className="font-bold text-2xl">
           Evidências objetivas por cláusula
         </h1>
         <p className="mt-1 text-sm text-texto-2">

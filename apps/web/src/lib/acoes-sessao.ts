@@ -234,6 +234,22 @@ export async function redefinirSenha(
   redirect("/entrar?aviso=senha-redefinida");
 }
 
+/** Troca a empresa da sessão (menu da conta): token novo com as permissões da outra empresa; volta ao início. */
+export async function trocarEmpresa(
+  empresaId: string,
+): Promise<{ erro?: ErroPadrao } | void> {
+  const tokenRenovacao = await lerCookie(COOKIE_RENOVACAO);
+  if (!tokenRenovacao) redirect("/entrar");
+  const r = await chamarApi<Sessao>("/auth/empresa", {
+    metodo: "POST",
+    corpo: { tokenRenovacao, empresaId },
+    publica: true,
+  });
+  if (!r.ok) return { erro: r.erro };
+  await gravarSessao(r.dados);
+  redirect("/");
+}
+
 /** Senha provisória primeiro; senão, para onde a pessoa ia. */
 function destinoAposEntrar(sessao: Sessao, volta: string): string {
   return sessao.usuario.deveTrocarSenha ? "/trocar-senha" : volta;

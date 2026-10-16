@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -46,15 +47,20 @@ export default async function PermissoesDeTrabalho({
         <div>
           <h1 className={tituloDaPagina}>Permissões de trabalho</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              {resumo.dados.aguardandoLiberacao} aguardando liberação ·{" "}
-              {resumo.dados.emExecucao} em execução ·{" "}
-              <span
-                className={resumo.dados.vencidas > 0 ? "text-nao-conforme" : ""}
-              >
-                {resumo.dados.vencidas} com horário vencido sem encerramento
-              </span>
-            </p>
+            <Pendencias
+              itens={[
+                {
+                  valor: resumo.dados.aguardandoLiberacao,
+                  rotulo: "aguardando liberação",
+                },
+                { valor: resumo.dados.emExecucao, rotulo: "em execução" },
+                {
+                  valor: resumo.dados.vencidas,
+                  rotulo: "com horário vencido",
+                  alerta: true,
+                },
+              ]}
+            />
           )}
         </div>
         {podeCriar && (
@@ -107,7 +113,7 @@ export default async function PermissoesDeTrabalho({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Número</th>
                   <th className="px-4 py-2 font-semibold">Tipo</th>
@@ -118,7 +124,7 @@ export default async function PermissoesDeTrabalho({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.itens.map((p) => (
-                  <tr key={p.id} className="hover:bg-superficie-2">
+                  <tr key={p.id} className="">
                     <td className="px-4 py-2 whitespace-nowrap">
                       <Link
                         href={`/seguranca/permissoes-de-trabalho/${p.id}`}
@@ -140,7 +146,11 @@ export default async function PermissoesDeTrabalho({
                       {periodoDaPt(p.inicio, p.fim)}
                     </td>
                     <td className="px-4 py-2">
-                      <StatusDaPt status={p.status} vencida={p.vencida} />
+                      <StatusDaPt
+                        status={p.status}
+                        vencida={p.vencida}
+                        fim={p.fim}
+                      />
                     </td>
                   </tr>
                 ))}

@@ -53,10 +53,6 @@ export default async function Ods() {
                   <ul className="mt-2 space-y-1 text-sm">
                     {temas.map((t) => (
                       <li key={t.id} className="flex items-baseline gap-1.5">
-                        <span
-                          aria-hidden
-                          className={`size-1.5 shrink-0 translate-y-[-1px] rounded-full ${t.material ? "bg-nivel-alto" : "bg-borda-forte"}`}
-                        />
                         <Link
                           href={`/esg/temas/${t.id}`}
                           className={`hover:underline ${t.material ? "font-semibold text-texto" : "text-texto-2"}`}

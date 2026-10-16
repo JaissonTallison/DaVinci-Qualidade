@@ -46,11 +46,7 @@ export function FormularioDeAuditoria({
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
   return (
-    <form
-      action={acao}
-      noValidate
-      className={embutido ? "" : `${painel} mt-6`}
-    >
+    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
       {auditoria && (
         <input type="hidden" name="versao" value={auditoria.versao} />
       )}

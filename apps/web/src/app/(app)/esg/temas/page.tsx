@@ -118,7 +118,7 @@ export default async function Temas({ searchParams }: PageProps<"/esg/temas">) {
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Tema</th>
                   <th className="px-4 py-2 font-semibold">Pilar</th>
@@ -129,7 +129,7 @@ export default async function Temas({ searchParams }: PageProps<"/esg/temas">) {
               </thead>
               <tbody className="divide-y divide-borda">
                 {r.dados.map((t) => (
-                  <tr key={t.id} className="hover:bg-superficie-2">
+                  <tr key={t.id} className="">
                     <td className="max-w-sm px-4 py-2">
                       <Link
                         href={`/esg/temas/${t.id}`}

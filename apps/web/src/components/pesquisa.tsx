@@ -30,6 +30,15 @@ export function Pesquisa({ grupos }: { grupos: GrupoDoMenu[] }) {
   const [aberta, setAberta] = useState(false);
   useEffect(() => {
     const atalho = (e: KeyboardEvent) => {
+      // Ctrl K (ou ⌘K) abre e fecha; "/" abre quando não se está digitando num campo (padrão da Finance)
+      const digitando = (e.target as HTMLElement | null)?.closest?.(
+        "input, textarea, select, [contenteditable]",
+      );
+      if (e.key === "/" && !digitando && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setAberta(true);
+        return;
+      }
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setAberta((a) => !a);
@@ -43,7 +52,7 @@ export function Pesquisa({ grupos }: { grupos: GrupoDoMenu[] }) {
       <button
         type="button"
         onClick={() => setAberta(true)}
-        className="flex h-9 min-w-0 items-center gap-2 rounded-sm border border-borda-forte bg-superficie px-3 text-sm text-texto-2 hover:bg-superficie-2 hover:text-texto sm:w-64 lg:w-80"
+        className="flex h-9 min-w-0 items-center gap-2 rounded-campo border border-borda-campo bg-campo px-3 text-sm text-texto-2 hover:bg-superficie hover:text-texto sm:w-64 lg:w-80"
       >
         <Search aria-hidden size={16} strokeWidth={1.75} className="shrink-0" />
         <span className="hidden flex-1 truncate text-left sm:inline">

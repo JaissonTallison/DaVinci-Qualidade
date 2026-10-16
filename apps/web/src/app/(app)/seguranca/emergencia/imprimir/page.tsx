@@ -34,7 +34,7 @@ export default async function PlanoImpresso() {
       </div>
       <header className="border-b-2 border-texto pb-3">
         <p className="text-sm text-texto-2">Plano de emergência</p>
-        <h1 className="font-serif text-2xl">
+        <h1 className="font-bold text-2xl">
           {eu.ok ? eu.dados.empresa.nome : ""}
         </h1>
         {p && (

@@ -61,8 +61,16 @@ export default async function DetalheDoPlano({
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-mono text-lg text-texto-2">{p.numero}</span>
-        <StatusDoPlano status={p.status} atrasado={p.atrasado} />
-        <Progresso valor={p.progresso} />
+        <StatusDoPlano
+          status={p.status}
+          atrasado={p.atrasado}
+          prazo={p.prazo}
+        />
+        <Progresso
+          valor={p.progresso}
+          feitos={p.tarefas.filter((t) => t.situacao === "concluida").length}
+          total={p.tarefas.filter((t) => t.situacao !== "cancelada").length}
+        />
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
 
@@ -115,7 +123,7 @@ export default async function DetalheDoPlano({
         <h2 className={`${tituloDaSecao} px-5 pt-5`}>Tarefas</h2>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-xs text-texto-2">
+            <thead className="bg-superficie-2 text-sm text-texto-2">
               <tr>
                 <th className="px-5 py-2 font-semibold">O que fazer</th>
                 <th className="px-4 py-2 font-semibold">Quem</th>

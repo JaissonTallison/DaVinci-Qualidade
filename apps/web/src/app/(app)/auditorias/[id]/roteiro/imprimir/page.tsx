@@ -48,7 +48,7 @@ export default async function RoteiroDeCampo({
       </div>
       <header className="border-b-2 border-texto pb-3">
         <p className="text-sm text-texto-2">Roteiro de campo · {aud.numero}</p>
-        <h1 className="font-serif text-2xl">
+        <h1 className="font-bold text-2xl">
           Auditoria {TIPOS_AUDITORIA[aud.tipo].toLowerCase()} ·{" "}
           {aud.normas.map((n) => NORMAS[n]).join(", ")}
         </h1>

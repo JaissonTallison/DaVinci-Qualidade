@@ -8,7 +8,13 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoPrimario, painel, tituloDaPagina } from "@/lib/estilos";
+import {
+  aba as estiloDaAba,
+  botaoPrimario,
+  painel,
+  tituloDaPagina,
+  trilho,
+} from "@/lib/estilos";
 
 export const metadata: Metadata = { title: "Modelos de inspeção" };
 
@@ -65,26 +71,18 @@ export default async function ListaDeModelos({
         </p>
       )}
 
-      <nav aria-label="Situação" className="mt-6 flex gap-4 text-base">
+      <nav aria-label="Situação" className={`mt-6 ${trilho}`}>
         <Link
           href="/qualidade/modelos-de-inspecao"
           aria-current={!verInativos ? "page" : undefined}
-          className={
-            !verInativos
-              ? "font-semibold text-texto underline underline-offset-4"
-              : "text-texto-2 hover:underline"
-          }
+          className={estiloDaAba(!verInativos)}
         >
           Ativos
         </Link>
         <Link
           href="/qualidade/modelos-de-inspecao?situacao=inativos"
           aria-current={verInativos ? "page" : undefined}
-          className={
-            verInativos
-              ? "font-semibold text-texto underline underline-offset-4"
-              : "text-texto-2 hover:underline"
-          }
+          className={estiloDaAba(verInativos)}
         >
           Inativos
         </Link>
@@ -103,7 +101,7 @@ export default async function ListaDeModelos({
           </p>
         ) : (
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-xs text-texto-2">
+            <thead className="bg-superficie-2 text-sm text-texto-2">
               <tr>
                 <th className="px-4 py-2 font-semibold">Nome</th>
                 <th className="px-4 py-2 font-semibold">Tipo</th>
@@ -112,7 +110,7 @@ export default async function ListaDeModelos({
             </thead>
             <tbody className="divide-y divide-borda">
               {lista.dados.map((m) => (
-                <tr key={m.id} className="hover:bg-superficie-2">
+                <tr key={m.id} className="">
                   <td className="px-4 py-2">
                     <Link
                       href={`/qualidade/modelos-de-inspecao/${m.id}`}

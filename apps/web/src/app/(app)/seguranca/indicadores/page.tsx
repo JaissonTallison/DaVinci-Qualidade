@@ -115,7 +115,7 @@ export default async function Indicadores({
         <h2 className={`${tituloDaSecao} px-5 pt-5`}>Mês a mês</h2>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-xs text-texto-2">
+            <thead className="bg-superficie-2 text-sm text-texto-2">
               <tr>
                 <th className="px-5 py-2 font-semibold">Mês</th>
                 <th className="px-4 py-2 text-right font-semibold">

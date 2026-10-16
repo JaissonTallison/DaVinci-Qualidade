@@ -54,7 +54,7 @@ export default async function DetalheDaPt({
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-mono text-lg text-texto-2">{pt.numero}</span>
-        <StatusDaPt status={pt.status} vencida={pt.vencida} />
+        <StatusDaPt status={pt.status} vencida={pt.vencida} fim={pt.fim} />
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>
         {TIPOS_PT[pt.tipo]} · {pt.local}

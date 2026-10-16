@@ -49,7 +49,11 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
     <ProvedorDoMenu compactoInicial={compacto}>
       <div className="flex min-h-screen flex-1">
         <ColunaDoMenu>
-          <MenuLateral grupos={grupos} fechadosIniciais={fechados} />
+          <MenuLateral
+            grupos={grupos}
+            fechadosIniciais={fechados}
+            usuarioId={eu?.usuario.id}
+          />
         </ColunaDoMenu>
         <div className="flex min-w-0 flex-1 flex-col">
           <BarraSuperior
@@ -74,6 +78,7 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
           grupos={grupos}
           fechadosIniciais={fechados}
           permiteCompactar={false}
+          usuarioId={eu?.usuario.id}
         />
       </GavetaDoMenu>
       <BarraInferior

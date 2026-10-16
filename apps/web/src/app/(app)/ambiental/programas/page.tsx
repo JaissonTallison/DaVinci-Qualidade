@@ -73,18 +73,11 @@ export default async function Programas() {
                     {p.unidade}
                   </p>
                   {p.progresso !== null && (
-                    <div
-                      className="mt-1 h-2 rounded-xs bg-superficie-2"
-                      role="img"
-                      aria-label={`${p.progresso}% do caminho até a meta`}
+                    <p
+                      className={`mt-0.5 ${p.progresso >= 100 ? "font-semibold text-conforme" : "text-texto-2"}`}
                     >
-                      <div
-                        className={`h-full rounded-xs ${p.progresso >= 100 ? "bg-conforme" : "bg-info"}`}
-                        style={{
-                          width: `${Math.max(0, Math.min(100, p.progresso))}%`,
-                        }}
-                      />
-                    </div>
+                      {p.progresso}% do caminho até a meta
+                    </p>
                   )}
                 </div>
               </li>

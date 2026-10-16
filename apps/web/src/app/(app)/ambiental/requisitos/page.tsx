@@ -81,7 +81,7 @@ export default async function Requisitos({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Legislação</th>
                   <th className="px-4 py-2 font-semibold">Esfera</th>
@@ -92,7 +92,7 @@ export default async function Requisitos({
               </thead>
               <tbody className="divide-y divide-borda">
                 {r.dados.map((q) => (
-                  <tr key={q.id} className="hover:bg-superficie-2">
+                  <tr key={q.id} className="">
                     <td className="max-w-md px-4 py-2">
                       <Link
                         href={`/ambiental/requisitos/${q.id}`}

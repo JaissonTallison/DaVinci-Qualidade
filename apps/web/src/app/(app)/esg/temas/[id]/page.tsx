@@ -104,19 +104,14 @@ export default async function DetalheDoTema({
         <section className={`${painel} mt-6 p-5`}>
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className={tituloDaSecao}>Andamento da meta</h2>
-            <span className="text-2xl font-semibold tabular-nums">
-              {t.progresso}%
+            <span
+              className={`text-2xl font-semibold tabular-nums ${t.metaAtrasada ? "text-nao-conforme" : "text-texto"}`}
+            >
+              {t.progresso}% da meta
+              {t.metaAtrasada && (
+                <span className="ml-2 text-sm font-normal">atrasada</span>
+              )}
             </span>
-          </div>
-          <div
-            className="mt-3 h-2 overflow-hidden rounded-xs bg-superficie-2"
-            role="img"
-            aria-label={`${t.progresso}% da meta atingido`}
-          >
-            <div
-              className={`h-full ${t.metaAtrasada ? "bg-nao-conforme" : "bg-conforme"}`}
-              style={{ width: `${t.progresso}%` }}
-            />
           </div>
           {(t.andamentos ?? []).length > 0 && (
             <ul className="mt-4 divide-y divide-borda text-base">

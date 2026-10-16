@@ -52,7 +52,7 @@ export default async function OrdemDeServico({
           Ordem de serviço de segurança e saúde no trabalho · NR-1, item 1.4.1,
           alínea c
         </p>
-        <h1 className="font-serif text-2xl">{f.nome}</h1>
+        <h1 className="font-bold text-2xl">{f.nome}</h1>
         <p className="text-sm">
           {empresa} · Matrícula {f.matricula} · {f.funcaoNome} · {f.setorNome}
         </p>

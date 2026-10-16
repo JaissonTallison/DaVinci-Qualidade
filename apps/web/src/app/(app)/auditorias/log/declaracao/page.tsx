@@ -63,7 +63,7 @@ export default async function Declaracao({
         <BotaoImprimir />
       </div>
       <header className="border-b-2 border-texto pb-3">
-        <h1 className="font-serif text-2xl">
+        <h1 className="font-bold text-2xl">
           Declaração de experiência em auditoria
         </h1>
         <p className="mt-1 text-sm text-texto-2">

@@ -49,7 +49,7 @@ export default async function CatImpressa({
           Comunicação de acidente de trabalho · {a.numero}
           {a.catNumero && ` · CAT ${a.catNumero}`}
         </p>
-        <h1 className="font-serif text-2xl">
+        <h1 className="font-bold text-2xl">
           {p?.nome ?? a.acidentado ?? "Acidentado"}
         </h1>
         <p className="text-sm">

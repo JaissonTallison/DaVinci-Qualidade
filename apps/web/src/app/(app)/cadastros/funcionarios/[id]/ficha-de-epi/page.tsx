@@ -48,7 +48,7 @@ export default async function FichaDeEpi({
         <p className="text-sm text-texto-2">
           Ficha de entrega de equipamento de proteção individual · NR-6
         </p>
-        <h1 className="font-serif text-2xl">{f.nome}</h1>
+        <h1 className="font-bold text-2xl">{f.nome}</h1>
         <p className="text-sm">
           {eu.ok ? eu.dados.empresa.nome : ""} · Matrícula {f.matricula} ·{" "}
           {f.funcaoNome} · {f.setorNome}

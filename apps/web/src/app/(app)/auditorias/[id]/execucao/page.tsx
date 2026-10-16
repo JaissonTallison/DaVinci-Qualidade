@@ -18,7 +18,7 @@ import {
   TipoDaEvidencia,
 } from "@/components/marcadores-auditoria";
 import { chamarApi } from "@/lib/api";
-import { painel } from "@/lib/estilos";
+import { aba as estiloDaAba, painel, trilho } from "@/lib/estilos";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { RespostaDaPergunta } from "./resposta";
 
@@ -89,14 +89,11 @@ export default async function Execucao({
             <span className="font-semibold tabular-nums">{c[k]}</span>
           </span>
         ))}
-        <nav
-          aria-label="Filtrar"
-          className="ml-auto flex flex-wrap gap-1.5 text-sm"
-        >
+        <nav aria-label="Filtrar" className={`ml-auto ${trilho}`}>
           <Link
             href={`/auditorias/${id}/execucao${pendentes ? "?pendentes=1" : ""}`}
             aria-current={!processo ? "page" : undefined}
-            className={`rounded-sm px-2 py-1 ${!processo ? "bg-superficie-2 font-semibold" : "text-texto-2 hover:text-texto"}`}
+            className={estiloDaAba(!processo, true)}
           >
             Todos os processos
           </Link>
@@ -105,14 +102,14 @@ export default async function Execucao({
               key={p}
               href={`/auditorias/${id}/execucao?processo=${p}${pendentes ? "&pendentes=1" : ""}`}
               aria-current={processo === p ? "page" : undefined}
-              className={`rounded-sm px-2 py-1 ${processo === p ? "bg-superficie-2 font-semibold" : "text-texto-2 hover:text-texto"}`}
+              className={estiloDaAba(processo === p, true)}
             >
               {PROCESSOS_AUDITADOS[p]}
             </Link>
           ))}
           <Link
             href={`/auditorias/${id}/execucao?${processo ? `processo=${processo}&` : ""}${pendentes ? "" : "pendentes=1"}`}
-            className="rounded-sm px-2 py-1 text-info hover:underline"
+            className="rounded-sm px-3 py-1 text-sm font-semibold text-info hover:underline"
           >
             {pendentes ? "Mostrar todas" : "Só pendentes"}
           </Link>

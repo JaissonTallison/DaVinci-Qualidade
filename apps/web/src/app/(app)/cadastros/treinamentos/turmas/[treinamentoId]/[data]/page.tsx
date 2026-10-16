@@ -53,7 +53,7 @@ export default async function TurmaImpressa({
               <p className="text-sm tracking-[0.2em] text-texto-2 uppercase">
                 Certificado
               </p>
-              <h1 className="mt-4 font-serif text-3xl">{p.nome}</h1>
+              <h1 className="mt-4 font-bold text-3xl">{p.nome}</h1>
               <p className="mt-4 max-w-[60ch] text-base">
                 concluiu o treinamento <strong>{titulo}</strong>, com carga
                 horária de {t.treinamento.cargaHoraria} hora(s), realizado em{" "}
@@ -79,7 +79,7 @@ export default async function TurmaImpressa({
         <>
           <header className="border-b-2 border-texto pb-3">
             <p className="text-sm text-texto-2">Lista de presença</p>
-            <h1 className="font-serif text-2xl">{titulo}</h1>
+            <h1 className="font-bold text-2xl">{titulo}</h1>
             <p className="text-sm">
               {empresa} · {formatarData(t.data)} · {t.treinamento.cargaHoraria}{" "}
               h{t.instrutor && ` · Instrutor: ${t.instrutor}`}

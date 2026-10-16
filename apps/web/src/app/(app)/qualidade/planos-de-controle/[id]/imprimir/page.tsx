@@ -52,7 +52,7 @@ export default async function PlanoDeControleImpresso({
           Plano de controle · {FASES_DO_PLANO_DE_CONTROLE[p.fase]} · {p.numero}
           {p.revisao && ` · rev. ${p.revisao}`}
         </p>
-        <h1 className="font-serif text-xl">{p.titulo}</h1>
+        <h1 className="font-bold text-xl">{p.titulo}</h1>
         <p className="text-sm">
           {p.item}
           {p.fmeaNumero && ` · FMEA ${p.fmeaNumero}`} · Atualizado em{" "}

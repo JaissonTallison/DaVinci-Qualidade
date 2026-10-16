@@ -14,8 +14,10 @@
   --text-*: initial;
 
   /* Marca */
-  --color-marinho: #001228;
+  --color-marinho: #102a43;
   --color-ouro: var(--dv-ouro);
+  /* Âmbar da paleta: só marcador (ponto, faixa, ícone); como texto reprova (2,15:1). Texto de atenção usa `atencao` */
+  --color-ambar: var(--dv-ambar);
   /* Ouro sobre o marinho (menu lateral): o ouro normal perde contraste no fundo escuro */
   --color-ouro-claro: var(--dv-ouro-claro);
   --color-menu: var(--dv-menu);
@@ -42,6 +44,12 @@
   /* Ação primária: marinho. O sistema é sempre claro (decisão Q12). */
   --color-primaria: var(--dv-primaria);
   --color-primaria-texto: var(--dv-primaria-texto);
+  /* Ação principal (botão primário): verde esmeralda da paleta */
+  --color-acao: var(--dv-acao);
+  --color-acao-escuro: var(--dv-acao-escuro);
+  /* Campo de formulário: fundo cinza-gelo e borda suave */
+  --color-campo: var(--dv-campo);
+  --color-borda-campo: var(--dv-borda-campo);
 
   /* Status do registro */
   --color-conforme: var(--dv-conforme);
@@ -65,42 +73,47 @@
   --font-serif: var(--dv-fonte-serif), Georgia, serif;
   --font-mono: var(--dv-fonte-mono), ui-monospace, monospace;
 
-  --text-xs: 0.75rem;
-  --text-xs--line-height: 1rem;
-  --text-sm: 0.8125rem;
-  --text-sm--line-height: 1.125rem;
-  --text-base: 0.875rem;
-  --text-base--line-height: 1.25rem;
-  --text-md: 1rem;
-  --text-md--line-height: 1.5rem;
-  --text-lg: 1.125rem;
-  --text-lg--line-height: 1.625rem;
-  --text-xl: 1.375rem;
-  --text-xl--line-height: 1.75rem;
-  --text-2xl: 1.625rem;
-  --text-2xl--line-height: 2rem;
+  /* Escala de trabalho (16/10/2026): texto principal de 15 px, nada abaixo de 12,5 px */
+  --text-xs: 0.78125rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 0.9375rem;
+  --text-base--line-height: 1.4rem;
+  --text-md: 1.0625rem;
+  --text-md--line-height: 1.6rem;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.7rem;
+  --text-xl: 1.4375rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.75rem;
+  --text-2xl--line-height: 2.125rem;
   /* Número em destaque dos cards do início */
-  --text-3xl: 2rem;
-  --text-3xl--line-height: 2.25rem;
+  --text-3xl: 2.125rem;
+  --text-3xl--line-height: 2.375rem;
 
   /* Cantos de 2 a 6 px; nada maior existe */
   --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
+  --radius-sm: 8px;
+  --radius-md: 8px;
+  /* Campos, botões, painéis e cartões: todos com 8 px (padrão da tela de entrar, 16/10/2026) */
+  --radius-campo: 8px;
   --radius-full: 9999px;
 
   /* Sombra só em menu suspenso (sm) e modal (md) */
-  --shadow-sm: 0 2px 6px rgb(0 18 40 / 0.1);
-  --shadow-md: 0 8px 24px rgb(0 18 40 / 0.16);
+  /* Cards e painéis: profundidade suave em tom petróleo (16/10/2026) */
+  --shadow-cartao: 0 1px 2px rgb(16 42 67 / 0.05), 0 4px 12px rgb(16 42 67 / 0.06);
+  --shadow-sm: 0 2px 6px rgb(16 42 67 / 0.1);
+  --shadow-md: 0 8px 24px rgb(16 42 67 / 0.16);
 }
 
 :root {
   color-scheme: light;
-  --dv-fundo: #f4f5f7;
+  --dv-fundo: #f4f7fa;
   --dv-superficie: #ffffff;
   --dv-superficie-2: #eef0f3;
   --dv-ouro-claro: #d9a441;
-  --dv-menu: #1c5560;
+  --dv-menu: #102a43;
   --dv-barra: #f8fafc;
   /* Séries dos gráficos, uma por módulo, em ordem fixa (validadas para daltonismo; três abaixo de 3:1 → sempre com legenda e tabela) */
   --dv-serie-1: #2a78d6;
@@ -111,44 +124,47 @@
   --dv-serie-6: #008300;
   --dv-serie-7: #6250d6;
   /* Cores oficiais dos 17 ODS da ONU: só no ícone de cada ODS (interface.md §5.6). */
-  --dv-ods-1: #E5243B;
-  --dv-ods-2: #DDA63A;
-  --dv-ods-3: #4C9F38;
-  --dv-ods-4: #C5192D;
-  --dv-ods-5: #FF3A21;
-  --dv-ods-6: #26BDE2;
-  --dv-ods-7: #FCC30B;
-  --dv-ods-8: #A21942;
-  --dv-ods-9: #FD6925;
-  --dv-ods-10: #DD1367;
-  --dv-ods-11: #FD9D24;
-  --dv-ods-12: #BF8B2E;
-  --dv-ods-13: #3F7E44;
-  --dv-ods-14: #0A97D9;
-  --dv-ods-15: #56C02B;
-  --dv-ods-16: #00689D;
-  --dv-ods-17: #19486A;
+  --dv-ods-1: #e5243b;
+  --dv-ods-2: #dda63a;
+  --dv-ods-3: #4c9f38;
+  --dv-ods-4: #c5192d;
+  --dv-ods-5: #ff3a21;
+  --dv-ods-6: #26bde2;
+  --dv-ods-7: #fcc30b;
+  --dv-ods-8: #a21942;
+  --dv-ods-9: #fd6925;
+  --dv-ods-10: #dd1367;
+  --dv-ods-11: #fd9d24;
+  --dv-ods-12: #bf8b2e;
+  --dv-ods-13: #3f7e44;
+  --dv-ods-14: #0a97d9;
+  --dv-ods-15: #56c02b;
+  --dv-ods-16: #00689d;
+  --dv-ods-17: #19486a;
   /* Destaque do início (decisão Q14): o único degradê do sistema */
-  --dv-destaque-1: #1c5560;
-  --dv-destaque-2: #0f3f47;
-  --dv-destaque-3: #14583f;
+  --dv-destaque-1: #102a43;
+  --dv-destaque-2: #0b1f33;
+  --dv-destaque-3: #0d5f59;
   --dv-borda: #d5dae1;
   --dv-borda-forte: #9aa3b0;
   --dv-texto: #0e1a2b;
-  --dv-texto-2: #475264;
+  --dv-texto-2: #334155;
   --dv-texto-3: #5f6b7c;
   --dv-ouro: #a06d10;
   --dv-ouro-texto: #986600;
-  --dv-primaria: #001228;
+  --dv-primaria: #102a43;
   --dv-primaria-texto: #ffffff;
-  --dv-conforme: #1d7044;
+  --dv-acao: #0f766e;
+  --dv-acao-escuro: #0b5e58;
+  --dv-campo: #f5f7fb;
+  --dv-borda-campo: #dfe5ee;
+  --dv-conforme: #0f766e;
   --dv-nao-conforme: #b3261e;
-  --dv-atencao: #a8470a;
+  --dv-atencao: #b45309;
+  --dv-ambar: #f59e0b;
   --dv-info: #2b5597;
   --dv-neutro: #586273;
 }
-
-
 
 @layer base {
   html {
@@ -165,8 +181,8 @@
   }
   h1,
   h2 {
-    font-family: var(--font-serif);
-    font-weight: 600;
+    font-family: var(--font-sans);
+    font-weight: 700;
     letter-spacing: -0.005em;
   }
   :focus-visible {

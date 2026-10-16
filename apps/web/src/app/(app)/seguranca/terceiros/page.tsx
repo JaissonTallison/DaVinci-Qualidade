@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -42,22 +43,20 @@ export default async function Terceiros({
         <div>
           <h1 className={tituloDaPagina}>Terceiros</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              {resumo.dados.liberadas}{" "}
-              {resumo.dados.liberadas === 1 ? "liberada" : "liberadas"} ·{" "}
-              <span
-                className={
-                  resumo.dados.comPendencia > 0 ? "text-nao-conforme" : ""
-                }
-              >
-                {resumo.dados.comPendencia} com pendência
-              </span>{" "}
-              · {resumo.dados.documentosVencendo}{" "}
-              {resumo.dados.documentosVencendo === 1
-                ? "documento vence"
-                : "documentos vencem"}{" "}
-              em até 30 dias
-            </p>
+            <Pendencias
+              itens={[
+                { valor: resumo.dados.liberadas, rotulo: "liberadas" },
+                {
+                  valor: resumo.dados.comPendencia,
+                  rotulo: "com pendência",
+                  alerta: true,
+                },
+                {
+                  valor: resumo.dados.documentosVencendo,
+                  rotulo: "documentos vencem em 30 dias",
+                },
+              ]}
+            />
           )}
         </div>
         {podeCriar && (

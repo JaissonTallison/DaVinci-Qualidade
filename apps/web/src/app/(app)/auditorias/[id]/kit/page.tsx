@@ -81,16 +81,6 @@ export default async function KitDaAuditoria({
             )}
           </p>
         </div>
-        <div
-          className="mt-3 h-2 overflow-hidden rounded-xs bg-superficie-2"
-          role="img"
-          aria-label={`${k.prontidao}% de prontidão`}
-        >
-          <div
-            className="h-full bg-conforme"
-            style={{ width: `${k.prontidao}%` }}
-          />
-        </div>
         {k.somenteLeitura && (
           <p className="mt-3 text-sm text-texto-2">
             Auditoria encerrada: o kit fica como registro e não muda mais.

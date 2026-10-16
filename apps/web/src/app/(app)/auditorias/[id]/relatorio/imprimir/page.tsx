@@ -110,7 +110,7 @@ export default async function RelatorioImpresso({
           Relatório de auditoria{executivo ? " · resumo executivo" : ""} ·{" "}
           {aud.numero}
         </p>
-        <h1 className="font-serif text-2xl">
+        <h1 className="font-bold text-2xl">
           {p.empresaAuditada ?? "Organização auditada"}
         </h1>
         <p className="mt-1 text-sm">

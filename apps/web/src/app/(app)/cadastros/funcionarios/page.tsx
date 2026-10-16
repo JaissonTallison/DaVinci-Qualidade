@@ -132,7 +132,7 @@ export default async function ListaDeFuncionarios({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Matrícula</th>
                   <th className="px-4 py-2 font-semibold">Nome</th>
@@ -144,7 +144,7 @@ export default async function ListaDeFuncionarios({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.itens.map((f) => (
-                  <tr key={f.id} className="hover:bg-superficie-2">
+                  <tr key={f.id} className="">
                     <td className="px-4 py-2 font-mono text-sm whitespace-nowrap">
                       {f.matricula}
                     </td>

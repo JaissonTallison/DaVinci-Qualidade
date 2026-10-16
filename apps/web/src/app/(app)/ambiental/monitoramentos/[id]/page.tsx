@@ -1,8 +1,8 @@
+import { Alerta } from "@/components/alerta";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { CircleAlert } from "lucide-react";
 import {
   TIPOS_MONITORAMENTO,
   type DadosDoUsuario,
@@ -109,7 +109,7 @@ export default async function DetalheDoMonitoramento({
             )}
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-xs text-texto-2">
+                <thead className="bg-superficie-2 text-sm text-texto-2">
                   <tr>
                     <th className="px-5 py-2 font-semibold">Data</th>
                     <th className="px-4 py-2 text-right font-semibold">
@@ -131,21 +131,10 @@ export default async function DetalheDoMonitoramento({
                       <td className="px-4 py-2.5">
                         {x.conforme ? (
                           <span className="inline-flex items-center gap-1.5 text-texto">
-                            <span
-                              aria-hidden
-                              className="size-2 rounded-full bg-conforme"
-                            />
                             Dentro do limite
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-xs bg-nao-conforme/10 px-1.5 text-nao-conforme">
-                            <CircleAlert
-                              aria-hidden
-                              size={14}
-                              strokeWidth={2}
-                            />
-                            Fora do limite
-                          </span>
+                          <Alerta texto="Fora do limite" />
                         )}
                       </td>
                       <td className="px-4 py-2.5 text-texto-2">
