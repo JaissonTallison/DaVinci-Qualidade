@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { botaoLink } from "@/lib/estilos";
+import { CabecalhoDeAcesso } from "../campo-de-acesso";
 import { FormularioNovaSenha } from "./formulario-nova-senha";
 
 export const metadata: Metadata = { title: "Criar nova senha" };
@@ -12,28 +12,17 @@ export default async function RedefinirSenha({
   const { token } = (await searchParams) as { token?: string };
   return (
     <section>
-      <h1 className="text-2xl text-texto">Criar nova senha</h1>
+      <CabecalhoDeAcesso titulo="Criar nova senha">
+        {token
+          ? "Ao salvar, todas as sessões abertas com a senha antiga são encerradas."
+          : "Este endereço está incompleto. Abra o link do e-mail de novo ou peça outro."}
+      </CabecalhoDeAcesso>
       {token ? (
-        <>
-          <p className="mt-1 text-base text-texto-2">
-            Ao salvar, todas as sessões abertas com a senha antiga são
-            encerradas.
-          </p>
-          <FormularioNovaSenha token={token} />
-        </>
+        <FormularioNovaSenha token={token} />
       ) : (
-        <>
-          <p className="mt-2 text-base text-texto-2">
-            Este endereço está incompleto. Abra o link do e-mail de novo ou peça
-            outro.
-          </p>
-          <Link
-            href="/esqueci-a-senha"
-            className={`${botaoLink} mt-4 inline-block`}
-          >
-            Pedir outro link
-          </Link>
-        </>
+        <Link href="/esqueci-a-senha" className="dv-acesso-botao mt-5">
+          Pedir outro link
+        </Link>
       )}
     </section>
   );

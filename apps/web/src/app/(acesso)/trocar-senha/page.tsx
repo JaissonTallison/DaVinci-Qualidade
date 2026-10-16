@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CabecalhoDeAcesso } from "../campo-de-acesso";
 import { FormularioSenha } from "./formulario-senha";
 
 export const metadata: Metadata = { title: "Trocar a senha" };
@@ -9,12 +10,11 @@ export default async function TrocarSenha({
   const { origem } = (await searchParams) as { origem?: string };
   return (
     <section>
-      <h1 className="text-2xl text-texto">Trocar a senha</h1>
-      <p className="mt-2 text-base text-texto-2">
+      <CabecalhoDeAcesso titulo="Trocar a senha">
         {origem === "conta"
           ? "Informe a senha atual e escolha a nova."
           : "Antes de continuar, troque a senha provisória por uma só sua."}
-      </p>
+      </CabecalhoDeAcesso>
       <FormularioSenha />
     </section>
   );
