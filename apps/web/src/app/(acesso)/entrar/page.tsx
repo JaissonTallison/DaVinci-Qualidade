@@ -26,8 +26,8 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
   const recusa = await lerCookie(COOKIE_RECUSA);
   return (
     <section>
-      <h1 className="text-3xl">Bem-vindo(a)</h1>
-      <p className="mt-2 text-lg text-texto-2">
+      <h1 className="text-2xl">Bem-vindo(a)</h1>
+      <p className="mt-1 text-md text-texto-2">
         Acesse seu ambiente de trabalho.
       </p>
       {aviso && AVISOS[aviso] && (
@@ -43,20 +43,19 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
         recusa={recusa}
         lembrar={Boolean(await lerCookie(COOKIE_LEMBRAR))}
       />
-      <p className="mt-7 text-center text-base text-texto-2">
+      <p className="mt-5 text-center text-sm text-texto-2 tela-curta:mt-3">
         Ainda não tem uma conta?
-        <br />
-        <span className="font-semibold text-texto">
+        <span className="block font-semibold text-texto">
           Fale com o administrador da sua empresa
         </span>
       </p>
-      <ul className="mt-8 grid grid-cols-3 divide-x divide-borda">
+      <ul className="mt-6 grid grid-cols-3 divide-x divide-borda tela-baixa:hidden">
         {DESTAQUES.map(({ icone: Icone, texto }) => (
           <li
             key={texto}
-            className="flex flex-col items-center gap-2 px-2 text-center text-sm text-texto"
+            className="flex flex-col items-center gap-1.5 px-2 text-center text-xs text-texto"
           >
-            <Icone aria-hidden size={30} strokeWidth={1.5} />
+            <Icone aria-hidden size={24} strokeWidth={1.5} />
             {texto}
           </li>
         ))}

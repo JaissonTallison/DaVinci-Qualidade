@@ -2,6 +2,11 @@
 /* Sistema visual da DaVinci Qualidade (docs/04-design/interface.md) */
 @import "@davinci/tokens/tema.css";
 
+/* Altura da janela (telas de acesso): o que é secundário sai antes de aparecer barra de rolagem */
+@custom-variant tela-media (@media (max-height: 60rem));
+@custom-variant tela-baixa (@media (max-height: 50rem));
+@custom-variant tela-curta (@media (max-height: 43rem));
+
 /*
  * Animações permitidas (interface.md, decisão Q13): uma vez, curtas, só na entrada e no passar do mouse.
  * Quem pediu "reduzir movimento" no sistema operacional não vê nenhuma.
@@ -117,7 +122,7 @@
 .dv-acesso-titulo {
   font-family: var(--font-sans);
   font-weight: 700;
-  font-size: clamp(2.25rem, 2.4vw, 2.75rem);
+  font-size: clamp(1.875rem, min(2.4vw, 5vh), 2.75rem);
   line-height: 1.12;
   letter-spacing: -0.01em;
 }
@@ -130,8 +135,8 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 3.25rem;
-  height: 3.25rem;
+  width: clamp(2.5rem, 5.5vh, 3.25rem);
+  height: clamp(2.5rem, 5.5vh, 3.25rem);
   border-radius: 12px;
   color: var(--cor);
   background: color-mix(in srgb, var(--cor) 20%, rgb(var(--acesso-marinho)));
@@ -148,7 +153,7 @@
   border: 1px solid rgb(255 255 255 / 0.3);
 }
 .dv-acesso-cartao {
-  border-radius: 24px;
+  border-radius: 20px;
   background: var(--color-white);
   color: var(--acesso-tinta);
   box-shadow: 0 30px 80px rgb(var(--acesso-marinho) / 0.35);
@@ -159,7 +164,7 @@
   color: var(--acesso-tinta);
 }
 .dv-acesso-campo {
-  height: 3rem;
+  height: 2.75rem;
   width: 100%;
   border-radius: 8px;
   border: 1px solid #dfe5ee;
@@ -180,7 +185,7 @@
 }
 .dv-acesso-botao {
   display: inline-flex;
-  height: 3rem;
+  height: 2.75rem;
   width: 100%;
   align-items: center;
   justify-content: center;
@@ -200,7 +205,7 @@
 }
 .dv-acesso-provedor {
   display: inline-flex;
-  height: 3rem;
+  height: 2.75rem;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;

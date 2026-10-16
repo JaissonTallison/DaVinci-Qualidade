@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { PROVEDORES_EXTERNOS, type ProvedorExterno } from "@davinci/types";
-import { AvisoDeErro } from "@/components/aviso-de-erro";
+import type { ProvedorExterno } from "@davinci/types";
 import { entrar, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import { erroDoCampo } from "@/lib/estilos";
+import { ErroDeAcesso } from "../erro-de-acesso";
 import { errosPorCampo } from "@/lib/formularios";
 import { comRetentativa } from "@/lib/retentativa";
 
 const entrarComRetentativa = comRetentativa(entrar);
 const icone =
   "pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-texto-2";
-const PROVEDORES = Object.keys(PROVEDORES_EXTERNOS) as ProvedorExterno[];
 
 export function FormularioEntrar({
   volta,
@@ -21,7 +20,7 @@ export function FormularioEntrar({
   lembrar: lembrarAntes,
 }: {
   volta?: string;
-  /** Recusa do login com Microsoft/Google. */
+  /** Recusa do login com conta Google. */
   recusa?: string;
   lembrar: boolean;
 }) {
@@ -30,7 +29,7 @@ export function FormularioEntrar({
     {},
   );
   const [verSenha, setVerSenha] = useState(false);
-  // O botão da Microsoft/Google é um link: leva a escolha junto
+  // O botão do Google é um link: leva a escolha junto
   const [lembrar, setLembrar] = useState(lembrarAntes);
   const erros = errosPorCampo(estado.erro?.detalhes);
   const erroGeral =
@@ -39,6 +38,8 @@ export function FormularioEntrar({
       : !estado.erro && recusa
         ? { codigo: "NAO_AUTENTICADO" as const, mensagem: recusa }
         : undefined;
+  // E-mail ou senha errados: os dois campos ficam marcados (a mensagem não diz qual dos dois)
+  const credenciais = erroGeral?.codigo === "NAO_AUTENTICADO" && !recusa;
   const ida = (p: ProvedorExterno) =>
     `/entrar/externo/${p}?${new URLSearchParams({
       lembrar: lembrar ? "1" : "0",
@@ -47,8 +48,11 @@ export function FormularioEntrar({
 
   return (
     <>
-      <form action={acao} noValidate className="mt-8 flex flex-col gap-4">
-        {erroGeral && <AvisoDeErro erro={erroGeral} />}
+      <form
+        action={acao}
+        noValidate
+        className="mt-5 flex flex-col gap-3 tela-curta:mt-3"
+      >
         {volta && <input type="hidden" name="volta" value={volta} />}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="email" className="sr-only">
@@ -66,8 +70,14 @@ export function FormularioEntrar({
               autoComplete="username"
               autoFocus
               required
-              aria-invalid={Boolean(erros.email)}
-              aria-describedby={erros.email ? "erro-email" : undefined}
+              aria-invalid={Boolean(erros.email) || credenciais}
+              aria-describedby={
+                erros.email
+                  ? "erro-email"
+                  : erroGeral
+                    ? "erro-geral"
+                    : undefined
+              }
             />
           </div>
           {erros.email && (
@@ -90,8 +100,14 @@ export function FormularioEntrar({
               className="dv-acesso-campo pr-12 pl-12"
               autoComplete="current-password"
               required
-              aria-invalid={Boolean(erros.senha)}
-              aria-describedby={erros.senha ? "erro-senha" : undefined}
+              aria-invalid={Boolean(erros.senha) || credenciais}
+              aria-describedby={
+                erros.senha
+                  ? "erro-senha"
+                  : erroGeral
+                    ? "erro-geral"
+                    : undefined
+              }
             />
             <button
               type="button"
@@ -113,14 +129,15 @@ export function FormularioEntrar({
             </p>
           )}
         </div>
-        <div className="mt-1 flex flex-wrap items-center justify-between gap-2">
-          <label className="flex items-center gap-2.5 text-base text-texto">
+        {erroGeral && <ErroDeAcesso erro={erroGeral} />}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <label className="flex items-center gap-2 text-base text-texto">
             <input
               type="checkbox"
               name="lembrar"
               checked={lembrar}
               onChange={(e) => setLembrar(e.target.checked)}
-              className="size-4.5 rounded-xs"
+              className="size-4 rounded-xs"
             />
             Lembrar de mim
           </label>
@@ -130,7 +147,7 @@ export function FormularioEntrar({
         </div>
         <button
           type="submit"
-          className="dv-acesso-botao mt-3"
+          className="dv-acesso-botao mt-1"
           disabled={entrando}
         >
           {entrando ? (
@@ -144,33 +161,18 @@ export function FormularioEntrar({
         </button>
       </form>
 
-      <p className="mt-6 flex items-center gap-4 text-base text-texto-2 before:h-px before:flex-1 before:bg-borda after:h-px after:flex-1 after:bg-borda">
+      <p className="mt-4 flex items-center gap-4 text-sm text-texto-2 tela-curta:mt-3 before:h-px before:flex-1 before:bg-borda after:h-px after:flex-1 after:bg-borda">
         ou continue com
       </p>
-      <div className="mt-5 grid grid-cols-2 gap-4">
-        {PROVEDORES.map((p) => (
-          <a key={p} href={ida(p)} className="dv-acesso-provedor">
-            {p === "microsoft" ? <MarcaMicrosoft /> : <MarcaGoogle />}
-            {PROVEDORES_EXTERNOS[p]}
-          </a>
-        ))}
-      </div>
+      <a href={ida("google")} className="dv-acesso-provedor mt-3 w-full">
+        <MarcaGoogle />
+        Continuar com Google
+      </a>
     </>
   );
 }
 
-/* Marcas dos provedores nas cores oficiais (exigência das diretrizes de cada um; não são ícones da interface). */
-function MarcaMicrosoft() {
-  return (
-    <svg aria-hidden width="20" height="20" viewBox="0 0 21 21">
-      <path fill="#f25022" d="M1 1h9v9H1z" />
-      <path fill="#7fba00" d="M11 1h9v9h-9z" />
-      <path fill="#00a4ef" d="M1 11h9v9H1z" />
-      <path fill="#ffb900" d="M11 11h9v9h-9z" />
-    </svg>
-  );
-}
-
+/* Marca do Google nas cores oficiais (exigência das diretrizes dele; não é ícone da interface). */
 function MarcaGoogle() {
   return (
     <svg aria-hidden width="20" height="20" viewBox="0 0 48 48">

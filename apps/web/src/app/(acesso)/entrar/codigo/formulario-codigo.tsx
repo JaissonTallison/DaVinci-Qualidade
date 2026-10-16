@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { ErroDeAcesso } from "../../erro-de-acesso";
 import { verificarCodigo, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import {
   botaoLink,
@@ -25,7 +25,7 @@ export function FormularioCodigo({ volta }: { volta?: string }) {
   if (estado.expirou)
     return (
       <div className="mt-6 flex flex-col gap-4">
-        {erroGeral && <AvisoDeErro erro={erroGeral} />}
+        {erroGeral && <ErroDeAcesso erro={erroGeral} />}
         <Link href="/entrar" className={botaoLink}>
           Entrar de novo
         </Link>
@@ -34,7 +34,7 @@ export function FormularioCodigo({ volta }: { volta?: string }) {
 
   return (
     <form action={acao} noValidate className="mt-6 flex flex-col gap-4">
-      {erroGeral && <AvisoDeErro erro={erroGeral} />}
+      {erroGeral && <ErroDeAcesso erro={erroGeral} />}
       {volta && <input type="hidden" name="volta" value={volta} />}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="codigo" className={rotulo}>
