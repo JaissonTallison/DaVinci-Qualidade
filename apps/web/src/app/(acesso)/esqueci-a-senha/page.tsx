@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CabecalhoDeAcesso } from "../campo-de-acesso";
 import { FormularioPedido } from "./formulario-pedido";
 
 export const metadata: Metadata = { title: "Esqueci a senha" };
@@ -6,10 +7,9 @@ export const metadata: Metadata = { title: "Esqueci a senha" };
 export default function EsqueciASenha() {
   return (
     <section>
-      <h1 className="text-2xl text-texto">Esqueci a senha</h1>
-      <p className="mt-1 text-base text-texto-2">
+      <CabecalhoDeAcesso titulo="Esqueci a senha">
         Informe o e-mail de acesso. Enviamos um link para criar uma senha nova.
-      </p>
+      </CabecalhoDeAcesso>
       <FormularioPedido />
     </section>
   );

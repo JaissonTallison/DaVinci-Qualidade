@@ -1,17 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
+import { Lock } from "lucide-react";
 import { SENHA_MINIMO } from "@davinci/types";
-import { ErroDeAcesso } from "../erro-de-acesso";
 import { trocarSenha, type EstadoDoFormulario } from "@/lib/acoes-sessao";
-import {
-  ajudaDoCampo,
-  botaoPrimario,
-  campo,
-  erroDoCampo,
-  rotulo,
-} from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { CampoDeAcesso } from "../campo-de-acesso";
+import { ErroDeAcesso } from "../erro-de-acesso";
 
 const CAMPOS = [
   {
@@ -42,32 +37,25 @@ export function FormularioSenha() {
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
 
   return (
-    <form action={acao} noValidate className="mt-6 flex flex-col gap-4">
-      {erroGeral && <ErroDeAcesso erro={erroGeral} />}
-      {CAMPOS.map((c) => (
-        <div key={c.nome} className="flex flex-col gap-1.5">
-          <label htmlFor={c.nome} className={rotulo}>
-            {c.rotulo}
-          </label>
-          <input
-            id={c.nome}
-            name={c.nome}
-            type="password"
-            className={campo}
-            autoComplete={c.autoComplete}
-            required
-            aria-invalid={Boolean(erros[c.nome])}
-          />
-          {erros[c.nome] ? (
-            <p className={erroDoCampo}>{erros[c.nome]}</p>
-          ) : (
-            "ajuda" in c && <p className={ajudaDoCampo}>{c.ajuda}</p>
-          )}
-        </div>
+    <form action={acao} noValidate className="mt-5 flex flex-col gap-3">
+      {CAMPOS.map((c, i) => (
+        <CampoDeAcesso
+          key={c.nome}
+          id={c.nome}
+          rotulo={c.rotulo}
+          icone={Lock}
+          type="password"
+          autoComplete={c.autoComplete}
+          autoFocus={i === 0}
+          required
+          erro={erros[c.nome]}
+          ajuda={"ajuda" in c ? c.ajuda : undefined}
+        />
       ))}
+      {erroGeral && <ErroDeAcesso erro={erroGeral} />}
       <button
         type="submit"
-        className={`${botaoPrimario} mt-2 w-full`}
+        className="dv-acesso-botao mt-1"
         disabled={salvando}
       >
         {salvando ? "Salvando…" : "Salvar nova senha"}
