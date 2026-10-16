@@ -41,7 +41,9 @@ Variáveis: no **web**, `APP_URL`, `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECR
 
 ## 4. Tela de entrar
 
-Duas colunas no computador (a partir de 1024 px): à esquerda, o painel da marca com as cinco áreas, as fotos (a partir de 1280 px) e a faixa das normas; à direita, o formulário. No tablet e no celular, só o formulário com a logo. A contagem de normas da faixa vem de `NORMAS` (`@davinci/types`): edições da mesma norma contam uma vez e o "SGI integrado" não entra.
+Foto de fundo (`public/acesso/fundo.webp`) com véu marinho e o cartão branco por cima, em todas as larguras. No computador (a partir de 1024 px), o painel da marca à esquerda: título, as cinco áreas e a faixa das normas. Visual próprio, exceção registrada em docs/04-design/interface.md e escopado em `.dv-acesso` (`globals.css`). A contagem de normas vem de `NORMAS` (`@davinci/types`): edições da mesma norma contam uma vez e o "SGI integrado" não entra. A tela mostra só "Continuar com Google" (decisão de 16/10/2026: um provedor, sem poluir o cartão); o fluxo da Microsoft continua pronto no código e volta à tela quando um cliente pedir. Sem o aplicativo configurado, o clique volta com o aviso de que ainda não está disponível.
+
+A tela cabe na janela sem barra de rolagem, de 360×640 a 2560×1440. No desktop nada some: em janela baixa (notebook), o painel e o cartão diminuem juntos (`.dv-acesso-escala`, zoom por altura em `globals.css`). No celular, os destaques do cartão saem em tela baixa. O erro de login é uma linha discreta abaixo dos campos (`erro-de-acesso.tsx`); a referência para o suporte só aparece em falha do sistema, nunca em senha errada.
 
 ## 5. Ainda não feito
 

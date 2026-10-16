@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { ErroDeAcesso } from "../erro-de-acesso";
 import { pedirLinkDeSenha, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import {
   botaoLink,
@@ -43,7 +43,7 @@ export function FormularioPedido() {
 
   return (
     <form action={acao} noValidate className="mt-6 flex flex-col gap-4">
-      {erroGeral && <AvisoDeErro erro={erroGeral} />}
+      {erroGeral && <ErroDeAcesso erro={erroGeral} />}
       <div className="flex flex-col gap-1.5">
         <label htmlFor="email" className={rotulo}>
           E-mail

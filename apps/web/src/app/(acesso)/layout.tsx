@@ -1,41 +1,49 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import {
+  Globe,
   HardHat,
-  Headset,
   Leaf,
   ShieldCheck,
   Sprout,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import { NORMAS } from "@davinci/types";
 
-const AREAS: { icone: LucideIcon; nome: string; texto: string }[] = [
-  {
-    icone: ShieldCheck,
-    nome: "Qualidade",
-    texto: "Não conformidades, auditorias, inspeções e calibração.",
-  },
-  {
-    icone: Headset,
-    nome: "Serviços",
-    texto: "Ordens de serviço, contratos, reclamações e satisfação.",
-  },
-  {
-    icone: HardHat,
-    nome: "Segurança",
-    texto: "PGR, permissões de trabalho, EPIs, ASO e eSocial SST.",
-  },
-  {
-    icone: Leaf,
-    nome: "Meio Ambiente",
-    texto: "Aspectos, licenças, resíduos e obrigações legais.",
-  },
-  {
-    icone: Sprout,
-    nome: "Agenda ESG",
-    texto: "Indicadores, inventário de emissões e ODS.",
-  },
-];
+const AREAS: { icone: LucideIcon; cor: string; nome: string; texto: string }[] =
+  [
+    {
+      icone: ShieldCheck,
+      cor: "#3b82f6",
+      nome: "Qualidade",
+      texto: "Processos padronizados e melhores resultados.",
+    },
+    {
+      icone: Users,
+      cor: "#8b6cf6",
+      nome: "Serviços",
+      texto: "Atendimento e operação integrada e eficiente.",
+    },
+    {
+      icone: HardHat,
+      cor: "#f59331",
+      nome: "Segurança",
+      texto: "Ambientes mais seguros e pessoas protegidas.",
+    },
+    {
+      icone: Leaf,
+      cor: "#2fbf71",
+      nome: "Meio Ambiente",
+      texto: "Operações responsáveis com o planeta.",
+    },
+    {
+      icone: Sprout,
+      cor: "#22c3b0",
+      nome: "Agenda ESG",
+      texto: "Sustentabilidade que gera valor para o negócio.",
+    },
+  ];
 
 /** Referenciais que o sistema audita, uma vez cada (as edições da mesma norma contam como uma). */
 const REFERENCIAIS = [
@@ -45,128 +53,126 @@ const REFERENCIAIS = [
       .map((n) => n.split(":")[0] ?? n),
   ),
 ];
-const NA_FAIXA = 5;
+const NA_FAIXA = 4;
+/** "ISO/IEC 27001" → ["ISO", "27001"]: sigla em cima, número embaixo. */
+const partes = (n: string) => {
+  const i = n.lastIndexOf(" ");
+  return [n.slice(0, i).replace("/IEC", ""), n.slice(i + 1)];
+};
 
 /**
- * Telas de acesso (entrar, código do 2FA, senha). No computador, o painel da marca à esquerda;
- * no tablet e no celular, só o formulário com a logo.
+ * Telas de acesso (entrar, código do 2FA, senha). Foto de fundo com véu marinho e o cartão branco por cima;
+ * no computador, o painel da marca à esquerda. Visual próprio, escopado em .dv-acesso (globals.css).
  */
 export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
   return (
-    <main id="conteudo" className="flex flex-1 bg-fundo">
-      <aside className="hidden flex-col bg-marinho px-10 py-10 text-white lg:flex lg:w-[54%] xl:px-14 xl:py-8">
-        <Image
-          className="h-auto w-[200px]"
-          src="/brand/logo-fundo-escuro.svg"
-          alt="DaVinci Qualidade e Certificações"
-          width={573}
-          height={215}
-          priority
-        />
-        <div className="mt-10 grid flex-1 content-start gap-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,17rem)]">
-          <div>
-            <p className="font-serif text-3xl text-white">
-              Conformidade hoje.
-              <br />
-              Um futuro mais{" "}
-              <span className="text-ouro-claro">seguro e sustentável.</span>
-            </p>
-            <p className="mt-4 max-w-md text-md text-white/75">
-              Qualidade, Serviços, Segurança, Meio Ambiente e Agenda ESG em um
-              único sistema.
-            </p>
-            <ul className="mt-8 flex flex-col gap-5">
-              {AREAS.map(({ icone: Icone, nome, texto }) => (
-                <li key={nome} className="flex gap-3">
-                  <Icone
-                    aria-hidden
-                    size={18}
-                    strokeWidth={1.75}
-                    className="mt-0.5 shrink-0 text-ouro-claro"
-                  />
-                  <div>
-                    <p className="text-md font-semibold text-white">{nome}</p>
-                    <p className="text-base text-white/70">{texto}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="hidden flex-col gap-3 xl:flex">
-            <Image
-              src="/acesso/tecnico.webp"
-              alt=""
-              width={366}
-              height={280}
-              className="h-auto w-full rounded-sm"
-              priority
-            />
-            <div className="grid grid-cols-2 gap-3">
-              <Image
-                src="/acesso/folha.webp"
-                alt=""
-                width={192}
-                height={112}
-                className="aspect-[4/3] h-auto w-full rounded-sm object-cover"
-              />
-              <Image
-                src="/acesso/cidade.webp"
-                alt=""
-                width={256}
-                height={116}
-                className="aspect-[4/3] h-auto w-full rounded-sm object-cover"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/15 pt-6">
-          <p className="text-base text-white/80">
-            <span className="font-semibold text-white">
-              {REFERENCIAIS.length} normas
-            </span>{" "}
-            auditáveis em uma única plataforma
-          </p>
-          <ul className="flex flex-wrap gap-2" aria-label="Normas">
-            {REFERENCIAIS.slice(0, NA_FAIXA).map((n) => (
-              <li
-                key={n}
-                title={n}
-                className="rounded-sm border border-white/25 px-2.5 py-1 text-sm text-white/90"
-              >
-                {n}
-              </li>
-            ))}
-            {REFERENCIAIS.length > NA_FAIXA && (
-              <li
-                title={REFERENCIAIS.slice(NA_FAIXA).join(", ")}
-                className="rounded-sm border border-white/25 px-2.5 py-1 text-sm text-white/90"
-              >
-                +{REFERENCIAIS.length - NA_FAIXA}
-              </li>
-            )}
-          </ul>
-        </div>
-        <p className="mt-5 text-xs tracking-[0.2em] text-white/50 uppercase">
-          Pessoas · Processos · Conformidade · Sustentabilidade
-        </p>
-      </aside>
+    <main
+      id="conteudo"
+      className="dv-acesso relative isolate flex flex-1 overflow-hidden bg-marinho"
+    >
+      <Image
+        src="/acesso/fundo.webp"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="-z-10 object-cover object-[35%_center]"
+      />
+      <div aria-hidden className="dv-acesso-veu absolute inset-0 -z-10" />
 
-      <div className="flex flex-1 flex-col items-center px-4 py-10 sm:justify-center sm:px-8">
-        <div className="w-full max-w-[26rem] rounded-md border border-borda bg-superficie p-6 sm:p-8">
+      <div className="grid w-full lg:grid-cols-[minmax(0,1fr)_minmax(0,31rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
+        <aside className="dv-acesso-escala hidden flex-col px-12 py-8 text-white lg:flex xl:px-20 *:shrink-0">
           <Image
-            className="h-auto w-[180px]"
-            src="/brand/logo.svg"
+            className="h-auto w-[200px]"
+            src="/brand/logo-fundo-escuro.svg"
             alt="DaVinci Qualidade e Certificações"
             width={573}
             height={215}
             priority
           />
-          <div className="mt-8">{children}</div>
+          <p className="dv-acesso-titulo mt-10 max-w-xl text-white tela-baixa:mt-6">
+            Conformidade hoje.
+            <br />
+            Um futuro mais
+            <br />
+            <em>seguro e sustentável.</em>
+          </p>
+          <p className="mt-4 max-w-md text-lg text-white/85">
+            Qualidade, Serviços, Segurança, Meio Ambiente e Agenda ESG em um
+            único sistema, com {REFERENCIAIS.length} normas auditáveis para a
+            sua empresa.
+          </p>
+          <ul className="my-7 flex flex-col gap-3.5 tela-baixa:my-5 tela-baixa:grid tela-baixa:max-w-3xl tela-baixa:grid-cols-2 tela-baixa:gap-x-8 tela-baixa:gap-y-4">
+            {AREAS.map(({ icone: Icone, cor, nome, texto }) => (
+              <li key={nome} className="flex items-center gap-5">
+                <span
+                  className="dv-acesso-icone"
+                  style={{ "--cor": cor } as CSSProperties}
+                >
+                  <Icone aria-hidden size={26} strokeWidth={1.75} />
+                </span>
+                <div>
+                  <p className="text-lg font-semibold text-white">{nome}</p>
+                  <p className="max-w-80 text-base text-white/80">{texto}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="dv-acesso-vidro mt-auto flex max-w-[45rem] flex-wrap items-center gap-x-6 gap-y-3 px-6 py-5 tela-baixa:gap-x-4 tela-baixa:px-5 tela-baixa:py-4">
+            <div className="flex items-center gap-4">
+              <Globe aria-hidden size={40} strokeWidth={1.5} />
+              <p className="text-md text-white/90">
+                <span className="font-semibold text-white">
+                  {REFERENCIAIS.length} normas
+                </span>{" "}
+                ISO e IATF
+                <br />
+                em uma única plataforma.
+              </p>
+            </div>
+            <ul className="flex flex-wrap gap-2.5" aria-label="Normas">
+              {REFERENCIAIS.slice(0, NA_FAIXA).map((n) => {
+                const [sigla, numero] = partes(n);
+                return (
+                  <li
+                    key={n}
+                    title={n}
+                    className="dv-acesso-norma flex w-16 flex-col tela-baixa:w-14 items-center py-1.5 text-base leading-tight text-white"
+                  >
+                    <span>{sigla}</span>
+                    <span>{numero}</span>
+                  </li>
+                );
+              })}
+              {REFERENCIAIS.length > NA_FAIXA && (
+                <li
+                  title={REFERENCIAIS.slice(NA_FAIXA).join(", ")}
+                  className="dv-acesso-norma flex w-16 flex-col tela-baixa:w-14 items-center py-1.5 text-base leading-tight text-white"
+                >
+                  <span>+{REFERENCIAIS.length - NA_FAIXA}</span>
+                  <span className="text-sm">normas</span>
+                </li>
+              )}
+            </ul>
+          </div>
+          <p className="mt-5 text-sm tracking-[0.3em] text-white/55 uppercase">
+            Pessoas · Processos · Conformidade · Sustentabilidade
+          </p>
+        </aside>
+
+        <div className="flex items-center justify-center px-4 py-6 sm:px-8 lg:pr-12 lg:pl-0 xl:pr-20">
+          <div className="dv-acesso-cartao dv-acesso-escala w-full max-w-[26rem] px-6 py-7 sm:px-9 sm:py-8">
+            <Image
+              className="mx-auto h-auto w-[160px]"
+              src="/brand/logo.svg"
+              alt="DaVinci Qualidade e Certificações"
+              width={573}
+              height={215}
+              priority
+            />
+            <div className="mt-6">{children}</div>
+          </div>
         </div>
-        <p className="mt-6 max-w-[26rem] text-center text-sm text-texto-3 lg:hidden">
-          Qualidade, Serviços, Segurança, Meio Ambiente e Agenda ESG ·{" "}
-          {REFERENCIAIS.slice(0, 3).join(", ")} e mais {REFERENCIAIS.length - 3}
-        </p>
       </div>
     </main>
   );

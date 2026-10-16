@@ -3,33 +3,24 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { PROVEDORES_EXTERNOS, type ProvedorExterno } from "@davinci/types";
-import { AvisoDeErro } from "@/components/aviso-de-erro";
+import type { ProvedorExterno } from "@davinci/types";
 import { entrar, type EstadoDoFormulario } from "@/lib/acoes-sessao";
-import {
-  botaoLink,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-  erroDoCampo,
-  rotulo,
-} from "@/lib/estilos";
+import { erroDoCampo } from "@/lib/estilos";
+import { ErroDeAcesso } from "../erro-de-acesso";
 import { errosPorCampo } from "@/lib/formularios";
 import { comRetentativa } from "@/lib/retentativa";
 
 const entrarComRetentativa = comRetentativa(entrar);
 const icone =
-  "pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-texto-3";
+  "pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-texto-2";
 
 export function FormularioEntrar({
   volta,
-  provedores,
   recusa,
   lembrar: lembrarAntes,
 }: {
   volta?: string;
-  provedores: ProvedorExterno[];
-  /** Recusa do login com Microsoft/Google. */
+  /** Recusa do login com conta Google. */
   recusa?: string;
   lembrar: boolean;
 }) {
@@ -38,7 +29,7 @@ export function FormularioEntrar({
     {},
   );
   const [verSenha, setVerSenha] = useState(false);
-  // O botão da Microsoft/Google é um link: leva a escolha junto
+  // O botão do Google é um link: leva a escolha junto
   const [lembrar, setLembrar] = useState(lembrarAntes);
   const erros = errosPorCampo(estado.erro?.detalhes);
   const erroGeral =
@@ -47,6 +38,8 @@ export function FormularioEntrar({
       : !estado.erro && recusa
         ? { codigo: "NAO_AUTENTICADO" as const, mensagem: recusa }
         : undefined;
+  // E-mail ou senha errados: os dois campos ficam marcados (a mensagem não diz qual dos dois)
+  const credenciais = erroGeral?.codigo === "NAO_AUTENTICADO" && !recusa;
   const ida = (p: ProvedorExterno) =>
     `/entrar/externo/${p}?${new URLSearchParams({
       lembrar: lembrar ? "1" : "0",
@@ -55,26 +48,36 @@ export function FormularioEntrar({
 
   return (
     <>
-      <form action={acao} noValidate className="mt-6 flex flex-col gap-4">
-        {erroGeral && <AvisoDeErro erro={erroGeral} />}
+      <form
+        action={acao}
+        noValidate
+        className="mt-5 flex flex-col gap-3 tela-curta:mt-3"
+      >
         {volta && <input type="hidden" name="volta" value={volta} />}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className={rotulo}>
+          <label htmlFor="email" className="sr-only">
             E-mail
           </label>
           <div className="relative">
-            <Mail aria-hidden size={16} strokeWidth={1.75} className={icone} />
+            <Mail aria-hidden size={18} strokeWidth={1.75} className={icone} />
             <input
               id="email"
               name="email"
               type="email"
-              className={`${campo} h-10 pl-9`}
+              placeholder="E-mail"
+              className="dv-acesso-campo pr-4 pl-12"
               defaultValue={estado.email}
               autoComplete="username"
               autoFocus
               required
-              aria-invalid={Boolean(erros.email)}
-              aria-describedby={erros.email ? "erro-email" : undefined}
+              aria-invalid={Boolean(erros.email) || credenciais}
+              aria-describedby={
+                erros.email
+                  ? "erro-email"
+                  : erroGeral
+                    ? "erro-geral"
+                    : undefined
+              }
             />
           </div>
           {erros.email && (
@@ -84,32 +87,39 @@ export function FormularioEntrar({
           )}
         </div>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="senha" className={rotulo}>
+          <label htmlFor="senha" className="sr-only">
             Senha
           </label>
           <div className="relative">
-            <Lock aria-hidden size={16} strokeWidth={1.75} className={icone} />
+            <Lock aria-hidden size={18} strokeWidth={1.75} className={icone} />
             <input
               id="senha"
               name="senha"
               type={verSenha ? "text" : "password"}
-              className={`${campo} h-10 pr-10 pl-9`}
+              placeholder="Senha"
+              className="dv-acesso-campo pr-12 pl-12"
               autoComplete="current-password"
               required
-              aria-invalid={Boolean(erros.senha)}
-              aria-describedby={erros.senha ? "erro-senha" : undefined}
+              aria-invalid={Boolean(erros.senha) || credenciais}
+              aria-describedby={
+                erros.senha
+                  ? "erro-senha"
+                  : erroGeral
+                    ? "erro-geral"
+                    : undefined
+              }
             />
             <button
               type="button"
               onClick={() => setVerSenha((v) => !v)}
               aria-label={verSenha ? "Esconder a senha" : "Mostrar a senha"}
               aria-pressed={verSenha}
-              className="absolute top-1/2 right-1 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-sm text-texto-3 hover:text-texto"
+              className="absolute top-1/2 right-2 inline-flex size-9 -translate-y-1/2 items-center justify-center rounded-sm text-texto-2 hover:text-texto"
             >
               {verSenha ? (
-                <EyeOff aria-hidden size={16} strokeWidth={1.75} />
+                <EyeOff aria-hidden size={18} strokeWidth={1.75} />
               ) : (
-                <Eye aria-hidden size={16} strokeWidth={1.75} />
+                <Eye aria-hidden size={18} strokeWidth={1.75} />
               )}
             </button>
           </div>
@@ -119,8 +129,9 @@ export function FormularioEntrar({
             </p>
           )}
         </div>
+        {erroGeral && <ErroDeAcesso erro={erroGeral} />}
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <label className="flex items-center gap-2 text-base text-texto-2">
+          <label className="flex items-center gap-2 text-base text-texto">
             <input
               type="checkbox"
               name="lembrar"
@@ -130,13 +141,13 @@ export function FormularioEntrar({
             />
             Lembrar de mim
           </label>
-          <Link href="/esqueci-a-senha" className={botaoLink}>
+          <Link href="/esqueci-a-senha" className="dv-acesso-link text-base">
             Esqueceu a senha?
           </Link>
         </div>
         <button
           type="submit"
-          className={`${botaoPrimario} mt-1 h-10 w-full`}
+          className="dv-acesso-botao mt-1"
           disabled={entrando}
         >
           {entrando ? (
@@ -144,50 +155,27 @@ export function FormularioEntrar({
           ) : (
             <>
               Entrar
-              <ArrowRight aria-hidden size={16} strokeWidth={1.75} />
+              <ArrowRight aria-hidden size={18} strokeWidth={1.75} />
             </>
           )}
         </button>
       </form>
 
-      {provedores.length > 0 && (
-        <>
-          <p className="mt-6 flex items-center gap-3 text-sm text-texto-3 before:h-px before:flex-1 before:bg-borda after:h-px after:flex-1 after:bg-borda">
-            ou entre com
-          </p>
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            {provedores.map((p) => (
-              <a
-                key={p}
-                href={ida(p)}
-                className={`${botaoSecundario} h-10 ${provedores.length === 1 ? "col-span-2" : ""}`}
-              >
-                {p === "microsoft" ? <MarcaMicrosoft /> : <MarcaGoogle />}
-                {PROVEDORES_EXTERNOS[p]}
-              </a>
-            ))}
-          </div>
-        </>
-      )}
+      <p className="mt-4 flex items-center gap-4 text-sm text-texto-2 tela-curta:mt-3 before:h-px before:flex-1 before:bg-borda after:h-px after:flex-1 after:bg-borda">
+        ou continue com
+      </p>
+      <a href={ida("google")} className="dv-acesso-provedor mt-3 w-full">
+        <MarcaGoogle />
+        Continuar com Google
+      </a>
     </>
   );
 }
 
-/* Marcas dos provedores nas cores oficiais (exigência das diretrizes de cada um; não são ícones da interface). */
-function MarcaMicrosoft() {
-  return (
-    <svg aria-hidden width="16" height="16" viewBox="0 0 21 21">
-      <path fill="#f25022" d="M1 1h9v9H1z" />
-      <path fill="#7fba00" d="M11 1h9v9h-9z" />
-      <path fill="#00a4ef" d="M1 11h9v9H1z" />
-      <path fill="#ffb900" d="M11 11h9v9h-9z" />
-    </svg>
-  );
-}
-
+/* Marca do Google nas cores oficiais (exigência das diretrizes dele; não é ícone da interface). */
 function MarcaGoogle() {
   return (
-    <svg aria-hidden width="16" height="16" viewBox="0 0 48 48">
+    <svg aria-hidden width="20" height="20" viewBox="0 0 48 48">
       <path
         fill="#ea4335"
         d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"

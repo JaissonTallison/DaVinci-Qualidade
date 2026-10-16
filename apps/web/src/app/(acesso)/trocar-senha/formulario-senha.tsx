@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { SENHA_MINIMO } from "@davinci/types";
-import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { ErroDeAcesso } from "../erro-de-acesso";
 import { trocarSenha, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import {
   ajudaDoCampo,
@@ -43,7 +43,7 @@ export function FormularioSenha() {
 
   return (
     <form action={acao} noValidate className="mt-6 flex flex-col gap-4">
-      {erroGeral && <AvisoDeErro erro={erroGeral} />}
+      {erroGeral && <ErroDeAcesso erro={erroGeral} />}
       {CAMPOS.map((c) => (
         <div key={c.nome} className="flex flex-col gap-1.5">
           <label htmlFor={c.nome} className={rotulo}>

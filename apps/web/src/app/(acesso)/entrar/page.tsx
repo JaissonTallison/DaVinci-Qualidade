@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { ChartColumn, Leaf, Settings } from "lucide-react";
 import { lerCookie } from "@/lib/cookie";
-import { provedoresAtivos } from "@/lib/provedores-externos";
 import { COOKIE_LEMBRAR, COOKIE_RECUSA } from "@/lib/sessao";
 import { FormularioEntrar } from "./formulario-entrar";
 
@@ -15,7 +14,7 @@ const AVISOS: Record<string, string> = {
 const DESTAQUES = [
   { icone: Settings, texto: "Conformidade e auditorias" },
   { icone: ChartColumn, texto: "Indicadores e relatórios" },
-  { icone: Leaf, texto: "Menos riscos, mais eficiência" },
+  { icone: Leaf, texto: "Mais eficiência e menos riscos" },
 ];
 
 export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
@@ -27,9 +26,9 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
   const recusa = await lerCookie(COOKIE_RECUSA);
   return (
     <section>
-      <h1 className="text-2xl text-texto">Entrar</h1>
-      <p className="mt-1 text-base text-texto-2">
-        Acesse o ambiente da sua empresa.
+      <h1 className="text-center text-2xl">Bem-vindo(a)</h1>
+      <p className="mt-1 text-center text-md text-texto-2">
+        Acesse seu ambiente de trabalho.
       </p>
       {aviso && AVISOS[aviso] && (
         <p
@@ -41,20 +40,22 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
       )}
       <FormularioEntrar
         volta={volta}
-        provedores={provedoresAtivos()}
         recusa={recusa}
         lembrar={Boolean(await lerCookie(COOKIE_LEMBRAR))}
       />
-      <p className="mt-6 text-center text-sm text-texto-3">
-        Ainda não tem acesso? Fale com o administrador da sua empresa.
+      <p className="mt-5 text-center text-sm text-texto-2 tela-curta:mt-3">
+        Ainda não tem uma conta?
+        <span className="block font-semibold text-texto">
+          Fale com o administrador da sua empresa
+        </span>
       </p>
-      <ul className="mt-6 grid grid-cols-3 divide-x divide-borda border-t border-borda pt-5">
+      <ul className="mt-6 grid grid-cols-3 divide-x divide-borda max-lg:tela-baixa:hidden">
         {DESTAQUES.map(({ icone: Icone, texto }) => (
           <li
             key={texto}
-            className="flex flex-col items-center gap-1.5 px-2 text-center text-sm text-texto-2"
+            className="flex flex-col items-center gap-1.5 px-2 text-center text-xs text-texto"
           >
-            <Icone aria-hidden size={18} strokeWidth={1.75} />
+            <Icone aria-hidden size={24} strokeWidth={1.5} />
             {texto}
           </li>
         ))}
