@@ -4,18 +4,21 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
   NORMAS,
-  TIPOS_AUDITORIA,
   TIPOS_CONSTATACAO,
+  indiceDeConformidade,
+  proximoPasso,
   type Auditoria,
   type DadosDoUsuario,
+  type KitPreAuditoria,
+  type RoteiroDaAuditoria,
   type TipoConstatacao,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
-import { StatusDaAuditoria, TipoDaConstatacao } from "@/components/marcadores";
+import { TipoDaConstatacao } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import { botaoPrimario, painel, tituloDaSecao } from "@/lib/estilos";
 import { FormularioDeAuditoria } from "../formulario";
 import {
   CancelarAuditoria,
@@ -25,6 +28,7 @@ import {
   RegistrarConstatacao,
 } from "./acoes";
 import { Anexos } from "@/components/anexos";
+import { CabecalhoDaAuditoria } from "./cabecalho";
 
 export const metadata: Metadata = { title: "Auditoria" };
 
@@ -46,9 +50,11 @@ export default async function DetalheDaAuditoria({
 }: PageProps<"/auditorias/[id]">) {
   const { id } = await params;
   const { aviso, nc } = (await searchParams) as { aviso?: string; nc?: string };
-  const [r, eu] = await Promise.all([
+  const [r, eu, rot, k] = await Promise.all([
     chamarApi<Auditoria>(`/auditorias/${id}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<RoteiroDaAuditoria>(`/auditorias/${id}/roteiro`),
+    chamarApi<KitPreAuditoria>(`/auditorias/${id}/kit`),
   ]);
   if (!r.ok && r.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
@@ -66,20 +72,52 @@ export default async function DetalheDaAuditoria({
   const contagem = (Object.keys(TIPOS_CONSTATACAO) as TipoConstatacao[]).filter(
     (t) => a.contagem[t] > 0,
   );
+  const roteiro = rot.ok
+    ? rot.dados
+    : {
+        perguntas: [],
+        contagem: { pendente: 0, conforme: 0, parcial: 0, nao_conforme: 0 },
+      };
+  const kit = k.ok ? k.dados : null;
+  const passo = proximoPasso(a, roteiro, kit);
+  const destinoDoPasso =
+    passo.destino === "resumo"
+      ? `/auditorias/${id}#iniciar`
+      : `/auditorias/${id}/${passo.destino}`;
+  const respondidas = roteiro.perguntas.length - roteiro.contagem.pendente;
+  const indice = indiceDeConformidade(roteiro.contagem);
+  const ncs = a.contagem.nc_maior + a.contagem.nc_menor;
+  const trilha: [string, string, string][] = [
+    [
+      "Planejar",
+      `Kit ${kit ? `${kit.prontidao}%` : "—"} · ${roteiro.perguntas.length} pergunta(s) no roteiro`,
+      `/auditorias/${id}/kit`,
+    ],
+    [
+      "Auditar",
+      `${respondidas} de ${roteiro.perguntas.length} respondida(s)${indice === null ? "" : ` · ${indice}% conforme`}`,
+      `/auditorias/${id}/execucao`,
+    ],
+    [
+      "Registrar",
+      `${a.constatacoes.length} constatação(ões) · ${a.ncsPendentes} NC a formalizar`,
+      `/auditorias/${id}/achados`,
+    ],
+    [
+      "Tratar",
+      `${ncs - a.ncsPendentes} de ${ncs} NC aberta(s) na Qualidade`,
+      `/auditorias/${id}/tratar`,
+    ],
+    [
+      "Entregar",
+      a.status === "concluida" ? "Concluída" : "Relatório em aberto",
+      `/auditorias/${id}/relatorio`,
+    ],
+  ];
 
   return (
     <article className="max-w-6xl">
-      <Link href="/auditorias" className="text-sm text-texto-2 hover:underline">
-        Auditorias
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{a.numero}</span>
-        <StatusDaAuditoria status={a.status} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        Auditoria {TIPOS_AUDITORIA[a.tipo].toLowerCase()} ·{" "}
-        {a.normas.map((n) => NORMAS[n]).join(", ")}
-      </h1>
+      <CabecalhoDaAuditoria auditoria={a} etapa="resumo" />
       {textoDoAviso && (
         <p
           role="status"
@@ -88,6 +126,45 @@ export default async function DetalheDaAuditoria({
           {textoDoAviso}
         </p>
       )}
+
+      <section
+        className={`${painel} mt-6 grid gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-center`}
+        aria-label="Próximo passo"
+      >
+        <div>
+          <p className="text-xs font-semibold tracking-[0.06em] text-texto-2 uppercase">
+            Próximo passo
+          </p>
+          <p className="mt-1 text-lg font-semibold">{passo.titulo}</p>
+          <p className="text-base text-texto-2">{passo.descricao}</p>
+        </div>
+        {a.status !== "cancelada" && (
+          <Link
+            href={destinoDoPasso}
+            className={`${botaoPrimario} justify-self-start lg:justify-self-end`}
+          >
+            {passo.titulo}
+          </Link>
+        )}
+      </section>
+
+      <ol
+        aria-label="Trilha da auditoria"
+        className="mt-4 grid gap-px overflow-hidden rounded-md border border-borda bg-borda sm:grid-cols-5"
+      >
+        {trilha.map(([etapa, resumo, href], i) => (
+          <li key={etapa} className="bg-superficie">
+            <Link
+              href={href}
+              className="block h-full px-4 py-3 hover:bg-superficie-2"
+            >
+              <span className="text-sm text-texto-2 tabular-nums">{i + 1}</span>{" "}
+              <span className="font-semibold">{etapa}</span>
+              <span className="mt-1 block text-sm text-texto-2">{resumo}</span>
+            </Link>
+          </li>
+        ))}
+      </ol>
 
       <section className={`${painel} mt-6 p-5`}>
         <p className="max-w-[72ch] text-md whitespace-pre-line">{a.escopo}</p>
@@ -107,7 +184,9 @@ export default async function DetalheDaAuditoria({
       </section>
 
       {a.status === "planejada" && podeEditar && (
-        <IniciarAuditoria auditoria={a} />
+        <div id="iniciar">
+          <IniciarAuditoria auditoria={a} />
+        </div>
       )}
 
       {(a.status !== "planejada" || a.constatacoes.length > 0) && (
@@ -180,10 +259,14 @@ export default async function DetalheDaAuditoria({
       )}
 
       {emAndamento && podeEditar && <RegistrarConstatacao auditoria={a} />}
-      {emAndamento && podeEditar && <ConcluirAuditoria auditoria={a} />}
+      {emAndamento && podeEditar && (
+        <div id="conclusao">
+          <ConcluirAuditoria auditoria={a} />
+        </div>
+      )}
 
       {a.status === "concluida" && a.conclusao && (
-        <section className={`${painel} mt-6 p-5`}>
+        <section id="conclusao" className={`${painel} mt-6 p-5`}>
           <h2 className={tituloDaSecao}>Conclusão</h2>
           {a.concluidaEm && (
             <p className="mt-1 text-sm text-texto-2">

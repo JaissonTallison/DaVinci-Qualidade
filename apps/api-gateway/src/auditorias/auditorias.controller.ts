@@ -1,5 +1,6 @@
 import {
   Body,
+  Delete,
   Controller,
   Get,
   HttpCode,
@@ -20,6 +21,27 @@ import {
   PATTERNS,
   registrarConstatacaoSchema,
   SERVICES,
+  marcarItemDoKitSchema,
+  filtroPerguntasSchema,
+  filtroEvidenciasSchema,
+  filtroModelosNcSchema,
+  filtroLogDoAuditorSchema,
+  planoDaAuditoriaSchema,
+  type LogDoAuditor,
+  filtroPromptsSchema,
+  novoCriterioSchema,
+  type CriterioProprio,
+  novoModeloNcSchema,
+  type ModeloDeNc,
+  type PromptDeIa,
+  novaEvidenciaPropriaSchema,
+  type EvidenciaDaBiblioteca,
+  novaPerguntaPropriaSchema,
+  responderPerguntaSchema,
+  selecionarPerguntasSchema,
+  type PerguntaDeRoteiro,
+  type RoteiroDaAuditoria,
+  type KitPreAuditoria,
   type Auditoria,
   type AuditoriaResumo,
   type Contexto,
@@ -192,6 +214,95 @@ export class AuditoriasController {
     return this.acao(ctx, cancelarAuditoriaSchema, P.cancelar, id, alteracoes);
   }
 
+  @Get(':id/kit')
+  @Permissao('auditorias.ver')
+  obterKit(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar<KitPreAuditoria>(
+      SERVICES.AUDITORIAS,
+      P.obterKit,
+      { id },
+      ctx,
+    );
+  }
+
+  @Post(':id/kit')
+  @Permissao('auditorias.editar')
+  @HttpCode(200)
+  marcarItemDoKit(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    return this.acao(
+      ctx,
+      marcarItemDoKitSchema,
+      P.marcarItemDoKit,
+      id,
+      alteracoes,
+    );
+  }
+
+  @Put(':id/plano')
+  @Permissao('auditorias.editar')
+  salvarPlano(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    return this.acao(
+      ctx,
+      planoDaAuditoriaSchema,
+      P.salvarPlano,
+      id,
+      alteracoes,
+    );
+  }
+
+  @Get(':id/roteiro')
+  @Permissao('auditorias.ver')
+  obterRoteiro(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar<RoteiroDaAuditoria>(
+      SERVICES.AUDITORIAS,
+      P.obterRoteiro,
+      { id },
+      ctx,
+    );
+  }
+
+  @Post(':id/roteiro')
+  @Permissao('auditorias.editar')
+  @HttpCode(200)
+  selecionarPerguntas(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    return this.acao(
+      ctx,
+      selecionarPerguntasSchema,
+      P.selecionarPerguntas,
+      id,
+      alteracoes,
+    );
+  }
+
+  @Post(':id/roteiro/resposta')
+  @Permissao('auditorias.editar')
+  @HttpCode(200)
+  responderPergunta(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    return this.acao(
+      ctx,
+      responderPerguntaSchema,
+      P.responderPergunta,
+      id,
+      alteracoes,
+    );
+  }
+
   private acao(
     ctx: Contexto,
     schema: z.ZodType,
@@ -207,6 +318,220 @@ export class AuditoriasController {
       { id, alteracoes },
       ctx,
       prazoMs,
+    );
+  }
+}
+
+/** Banco de perguntas dos roteiros (do sistema e próprias da empresa). docs/05-modulos/auditorias.md */
+@Controller('perguntas-de-auditoria')
+export class PerguntasDeAuditoriaController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('auditorias.ver')
+  listar(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroPerguntasSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<PerguntaDeRoteiro[]>(
+      SERVICES.AUDITORIAS,
+      P.listarPerguntas,
+      filtro,
+      ctx,
+    );
+  }
+
+  @Post()
+  @Permissao('auditorias.editar')
+  criar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novaPerguntaPropriaSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<PerguntaDeRoteiro>(
+      SERVICES.AUDITORIAS,
+      P.criarPerguntaPropria,
+      dados,
+      ctx,
+    );
+  }
+
+  @Delete(':id')
+  @Permissao('auditorias.editar')
+  excluir(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(
+      SERVICES.AUDITORIAS,
+      P.excluirPerguntaPropria,
+      { id },
+      ctx,
+    );
+  }
+}
+
+/** Biblioteca de evidências por cláusula (do sistema e próprias da empresa). */
+@Controller('evidencias-de-auditoria')
+export class EvidenciasDeAuditoriaController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('auditorias.ver')
+  listar(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroEvidenciasSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<EvidenciaDaBiblioteca[]>(
+      SERVICES.AUDITORIAS,
+      P.listarEvidencias,
+      filtro,
+      ctx,
+    );
+  }
+
+  @Post()
+  @Permissao('auditorias.editar')
+  criar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novaEvidenciaPropriaSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<EvidenciaDaBiblioteca>(
+      SERVICES.AUDITORIAS,
+      P.criarEvidenciaPropria,
+      dados,
+      ctx,
+    );
+  }
+
+  @Delete(':id')
+  @Permissao('auditorias.editar')
+  excluir(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(
+      SERVICES.AUDITORIAS,
+      P.excluirEvidenciaPropria,
+      { id },
+      ctx,
+    );
+  }
+}
+
+/** Banco de NCs: modelos de redação com causa raiz, ação corretiva e evidência de fechamento. */
+@Controller('modelos-de-nc')
+export class ModelosDeNcController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('auditorias.ver')
+  listar(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroModelosNcSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<ModeloDeNc[]>(
+      SERVICES.AUDITORIAS,
+      P.listarModelosNc,
+      filtro,
+      ctx,
+    );
+  }
+
+  @Post()
+  @Permissao('auditorias.editar')
+  criar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novoModeloNcSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<ModeloDeNc>(
+      SERVICES.AUDITORIAS,
+      P.criarModeloNcProprio,
+      dados,
+      ctx,
+    );
+  }
+
+  @Delete(':id')
+  @Permissao('auditorias.editar')
+  excluir(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(
+      SERVICES.AUDITORIAS,
+      P.excluirModeloNcProprio,
+      { id },
+      ctx,
+    );
+  }
+}
+
+/** Prompts de IA prontos por norma, cláusula e categoria. */
+@Controller('prompts-de-ia')
+export class PromptsDeIaController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('auditorias.ver')
+  listar(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroPromptsSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<PromptDeIa[]>(
+      SERVICES.AUDITORIAS,
+      P.listarPrompts,
+      filtro,
+      ctx,
+    );
+  }
+}
+
+/** Log do auditor: histórico consolidado para a declaração de experiência. */
+@Controller('log-do-auditor')
+export class LogDoAuditorController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('auditorias.ver')
+  obter(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroLogDoAuditorSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<LogDoAuditor>(
+      SERVICES.AUDITORIAS,
+      P.logDoAuditor,
+      filtro,
+      ctx,
+    );
+  }
+}
+
+/** Critérios próprios de auditoria (Minha biblioteca): legislação, norma interna, contrato. */
+@Controller('criterios-de-auditoria')
+export class CriteriosDeAuditoriaController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('auditorias.ver')
+  listar(@ContextoHttp() ctx: Contexto) {
+    return this.mensageria.enviar<CriterioProprio[]>(
+      SERVICES.AUDITORIAS,
+      P.listarCriterios,
+      {},
+      ctx,
+    );
+  }
+
+  @Post()
+  @Permissao('auditorias.editar')
+  criar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novoCriterioSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<CriterioProprio>(
+      SERVICES.AUDITORIAS,
+      P.criarCriterio,
+      dados,
+      ctx,
+    );
+  }
+
+  @Delete(':id')
+  @Permissao('auditorias.editar')
+  excluir(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(
+      SERVICES.AUDITORIAS,
+      P.excluirCriterio,
+      { id },
+      ctx,
     );
   }
 }

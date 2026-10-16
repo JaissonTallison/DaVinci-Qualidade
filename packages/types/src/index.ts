@@ -20,6 +20,7 @@ export * from './planos-de-acao.js';
 export * from './inspecoes.js';
 export * from './calibracao.js';
 export * from './auditorias.js';
+export * from './relatorio-de-auditoria.js';
 export * from './acidentes.js';
 export * from './funcionarios.js';
 export * from './epis.js';

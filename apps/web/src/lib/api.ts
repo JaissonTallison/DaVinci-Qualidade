@@ -21,7 +21,7 @@ const TROQUE_A_SENHA = "Troque a senha inicial para continuar.";
 export async function chamarApi<T>(
   caminho: string,
   opcoes: {
-    metodo?: "GET" | "POST" | "PUT";
+    metodo?: "GET" | "POST" | "PUT" | "DELETE";
     corpo?: unknown;
     publica?: boolean;
     cabecalhos?: Record<string, string>;
