@@ -1,6 +1,8 @@
+import { of, throwError, type Observable } from 'rxjs';
 import { ErroDeNegocio } from '@davinci/shared';
 import {
   uuidv7,
+  type Parceiro,
   type Contexto,
   type ErroPadrao,
   type Inspecao,
@@ -47,6 +49,35 @@ const nova = (extra: Partial<NovaInspecao> = {}): NovaInspecao => ({
   ...extra,
 });
 
+/** Codex falso: um fornecedor ativo, um cliente e um inativo. */
+const fornecedor = {
+  id: uuidv7(),
+  nome: 'Usinagem Paulista Ltda.',
+  ativo: true,
+  papeis: ['fornecedor'],
+};
+const cliente = {
+  id: uuidv7(),
+  nome: 'Metalúrgica Beta',
+  ativo: true,
+  papeis: ['cliente'],
+};
+const codex = {
+  send<R>(_padrao: string, mensagem: unknown): Observable<R> {
+    const id = (mensagem as { dados: { id: string } }).dados.id;
+    const p = [fornecedor, cliente].find((x) => x.id === id) as
+      Partial<Parceiro> | undefined;
+    return (
+      p
+        ? of(p)
+        : throwError(() => ({
+            codigo: 'NAO_ENCONTRADO',
+            mensagem: 'Não encontrado.',
+          }))
+    ) as Observable<R>;
+  },
+};
+
 async function recusa(promessa: Promise<unknown>): Promise<ErroPadrao> {
   try {
     await promessa;
@@ -77,7 +108,7 @@ const responder = (
 
 beforeAll(async () => {
   banco = await criarBancoDeTeste(schema);
-  inspecoes = new InspecoesService(banco.db);
+  inspecoes = new InspecoesService(banco.db, codex);
   modelos = new ModelosDeInspecaoService(banco.db);
 });
 afterAll(() => banco.encerrar());
@@ -298,5 +329,128 @@ describe('inspeção', () => {
       reprovadas30Dias: 1,
       taxaDeAprovacao30Dias: 75,
     });
+  });
+});
+
+describe('amostragem (NBR 5426) e fornecedor', () => {
+  it('com NQA, o plano sai do tamanho do lote e os defeituosos decidem', async () => {
+    expect(
+      (
+        await recusa(
+          inspecoes.criar(
+            empresaA,
+            nova({ itens: recebimento.itens, nqa: '2.5' }),
+          ),
+        )
+      ).detalhes,
+    ).toEqual([
+      {
+        campo: 'quantidade',
+        mensagem: 'Com amostragem, informe o tamanho do lote.',
+      },
+    ]);
+
+    let i = await inspecoes.criar(
+      empresaA,
+      nova({
+        itens: recebimento.itens,
+        nqa: '2.5',
+        quantidade: 1000,
+        fornecedorId: fornecedor.id,
+      }),
+    );
+    expect(i.plano).toMatchObject({
+      nivel: 'II',
+      letra: 'J',
+      amostra: 80,
+      aceita: 5,
+      rejeita: 6,
+    });
+    expect(i.fornecedorNome).toBe('Usinagem Paulista Ltda.');
+    i = await responder(i, [
+      [0, 'ok'],
+      [1, 'nok', 'Riscos em 4 peças da amostra.'],
+      [2, 'ok'],
+    ]);
+    const sem = await recusa(
+      inspecoes.concluir(empresaA, {
+        id: i.id,
+        alteracoes: { versao: i.versao },
+      }),
+    );
+    expect(sem.detalhes?.[0]).toEqual({
+      campo: 'defeituosos',
+      mensagem: 'Informe quantos defeituosos havia na amostra de 80.',
+    });
+    expect(
+      (
+        await recusa(
+          inspecoes.concluir(empresaA, {
+            id: i.id,
+            alteracoes: { versao: i.versao, defeituosos: 81 },
+          }),
+        )
+      ).detalhes?.[0]?.campo,
+    ).toBe('defeituosos');
+    // 4 defeituosos ≤ Ac 5: lote aceito, mesmo com item NOK
+    i = await inspecoes.concluir(empresaA, {
+      id: i.id,
+      alteracoes: { versao: i.versao, defeituosos: 4 },
+    });
+    expect(i).toMatchObject({ status: 'aprovada', defeituosos: 4 });
+
+    let r = await inspecoes.criar(
+      empresaA,
+      nova({
+        itens: recebimento.itens,
+        nqa: '2.5',
+        quantidade: 1000,
+        fornecedorId: fornecedor.id,
+      }),
+    );
+    r = await responder(r, [
+      [0, 'ok'],
+      [1, 'nok', 'Riscos em 6 peças.'],
+      [2, 'ok'],
+    ]);
+    r = await inspecoes.concluir(empresaA, {
+      id: r.id,
+      alteracoes: { versao: r.versao, defeituosos: 6 },
+    });
+    expect(r.status).toBe('reprovada');
+
+    const rec = await inspecoes.recebimentoDoFornecedor(empresaA, {
+      fornecedorId: fornecedor.id,
+    });
+    expect(rec).toMatchObject({
+      inspecoes: 2,
+      aprovadas: 1,
+      reprovadas: 1,
+      indiceDeAprovacao: 50,
+    });
+    expect(rec.ultimas).toHaveLength(2);
+  });
+
+  it('fornecedor precisa existir e ter o papel de fornecedor', async () => {
+    expect(
+      (
+        await recusa(
+          inspecoes.criar(
+            empresaA,
+            nova({ itens: recebimento.itens, fornecedorId: cliente.id }),
+          ),
+        )
+      ).detalhes?.[0]?.mensagem,
+    ).toBe('Metalúrgica Beta não está cadastrado como fornecedor.');
+    expect(
+      (
+        await recusa(
+          inspecoes.criar(
+            empresaA,
+            nova({ itens: recebimento.itens, fornecedorId: uuidv7() }),
+          ),
+        )
+      ).detalhes?.[0]?.mensagem,
+    ).toBe('Fornecedor não encontrado.');
   });
 });

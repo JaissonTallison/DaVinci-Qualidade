@@ -1,0 +1,1852 @@
+{
+  "id": "0e8c24aa-8be6-477d-91fa-0cb2b9bcbc4a",
+  "prevId": "e719da3c-d8f3-4693-9d93-0a3f3e9eb6d3",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.asos": {
+      "name": "asos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "funcionario_id": {
+          "name": "funcionario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(25)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resultado": {
+          "name": "resultado",
+          "type": "varchar(25)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "proximo_exame": {
+          "name": "proximo_exame",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "medico": {
+          "name": "medico",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crm": {
+          "name": "crm",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observacao": {
+          "name": "observacao",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_anulacao": {
+          "name": "motivo_anulacao",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "asos_funcionario_idx": {
+          "name": "asos_funcionario_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "funcionario_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "data",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "asos_funcionario_id_funcionarios_id_fk": {
+          "name": "asos_funcionario_id_funcionarios_id_fk",
+          "tableFrom": "asos",
+          "tableTo": "funcionarios",
+          "columnsFrom": [
+            "funcionario_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.bancos": {
+      "name": "bancos",
+      "schema": "",
+      "columns": {
+        "codigo": {
+          "name": "codigo",
+          "type": "char(3)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "ispb": {
+          "name": "ispb",
+          "type": "char(8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome_curto": {
+          "name": "nome_curto",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cnaes": {
+      "name": "cnaes",
+      "schema": "",
+      "columns": {
+        "codigo": {
+          "name": "codigo",
+          "type": "char(7)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "descricao": {
+          "name": "descricao",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "setor": {
+          "name": "setor",
+          "type": "char(1)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "palavras": {
+          "name": "palavras",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        }
+      },
+      "indexes": {
+        "cnaes_setor_idx": {
+          "name": "cnaes_setor_idx",
+          "columns": [
+            {
+              "expression": "setor",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cnaes_setor_setores_id_fk": {
+          "name": "cnaes_setor_setores_id_fk",
+          "tableFrom": "cnaes",
+          "tableTo": "setores",
+          "columnsFrom": [
+            "setor"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.funcao_treinamentos": {
+      "name": "funcao_treinamentos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "funcao_id": {
+          "name": "funcao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "treinamento_id": {
+          "name": "treinamento_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "funcao_treinamentos_funcao_id_funcoes_id_fk": {
+          "name": "funcao_treinamentos_funcao_id_funcoes_id_fk",
+          "tableFrom": "funcao_treinamentos",
+          "tableTo": "funcoes",
+          "columnsFrom": [
+            "funcao_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "funcao_treinamentos_treinamento_id_treinamentos_id_fk": {
+          "name": "funcao_treinamentos_treinamento_id_treinamentos_id_fk",
+          "tableFrom": "funcao_treinamentos",
+          "tableTo": "treinamentos",
+          "columnsFrom": [
+            "treinamento_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "funcao_treinamentos_unico": {
+          "name": "funcao_treinamentos_unico",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "funcao_id",
+            "treinamento_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.funcionarios": {
+      "name": "funcionarios",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "matricula": {
+          "name": "matricula",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cpf": {
+          "name": "cpf",
+          "type": "char(11)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "setor_id": {
+          "name": "setor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "funcao_id": {
+          "name": "funcao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "admissao": {
+          "name": "admissao",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telefone": {
+          "name": "telefone",
+          "type": "varchar(11)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ativo": {
+          "name": "ativo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "desligamento": {
+          "name": "desligamento",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_desligamento": {
+          "name": "motivo_desligamento",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "funcionarios_empresa_nome_idx": {
+          "name": "funcionarios_empresa_nome_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "nome",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "funcionarios_setor_id_setores_empresa_id_fk": {
+          "name": "funcionarios_setor_id_setores_empresa_id_fk",
+          "tableFrom": "funcionarios",
+          "tableTo": "setores_empresa",
+          "columnsFrom": [
+            "setor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "funcionarios_funcao_id_funcoes_id_fk": {
+          "name": "funcionarios_funcao_id_funcoes_id_fk",
+          "tableFrom": "funcionarios",
+          "tableTo": "funcoes",
+          "columnsFrom": [
+            "funcao_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "funcionarios_matricula_por_empresa": {
+          "name": "funcionarios_matricula_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "matricula"
+          ]
+        },
+        "funcionarios_cpf_por_empresa": {
+          "name": "funcionarios_cpf_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "cpf"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "funcionarios_desligamento": {
+          "name": "funcionarios_desligamento",
+          "value": "\"funcionarios\".\"desligamento\" IS NULL OR \"funcionarios\".\"desligamento\" >= \"funcionarios\".\"admissao\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.funcoes": {
+      "name": "funcoes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cbo": {
+          "name": "cbo",
+          "type": "char(6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ativo": {
+          "name": "ativo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "funcoes_nome_por_empresa": {
+          "name": "funcoes_nome_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "nome"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.parceiro_chaves_pix": {
+      "name": "parceiro_chaves_pix",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parceiro_id": {
+          "name": "parceiro_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordem": {
+          "name": "ordem",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chave": {
+          "name": "chave",
+          "type": "varchar(77)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "parceiro_chaves_pix_parceiro_idx": {
+          "name": "parceiro_chaves_pix_parceiro_idx",
+          "columns": [
+            {
+              "expression": "parceiro_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "parceiro_chaves_pix_parceiro_id_parceiros_id_fk": {
+          "name": "parceiro_chaves_pix_parceiro_id_parceiros_id_fk",
+          "tableFrom": "parceiro_chaves_pix",
+          "tableTo": "parceiros",
+          "columnsFrom": [
+            "parceiro_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.parceiro_contas_bancarias": {
+      "name": "parceiro_contas_bancarias",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parceiro_id": {
+          "name": "parceiro_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordem": {
+          "name": "ordem",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "banco": {
+          "name": "banco",
+          "type": "char(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "agencia": {
+          "name": "agencia",
+          "type": "varchar(7)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conta": {
+          "name": "conta",
+          "type": "varchar(22)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "titular": {
+          "name": "titular",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "documento_titular": {
+          "name": "documento_titular",
+          "type": "varchar(14)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "parceiro_contas_parceiro_idx": {
+          "name": "parceiro_contas_parceiro_idx",
+          "columns": [
+            {
+              "expression": "parceiro_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "parceiro_contas_bancarias_parceiro_id_parceiros_id_fk": {
+          "name": "parceiro_contas_bancarias_parceiro_id_parceiros_id_fk",
+          "tableFrom": "parceiro_contas_bancarias",
+          "tableTo": "parceiros",
+          "columnsFrom": [
+            "parceiro_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.parceiro_contatos": {
+      "name": "parceiro_contatos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parceiro_id": {
+          "name": "parceiro_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordem": {
+          "name": "ordem",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cargo": {
+          "name": "cargo",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telefone": {
+          "name": "telefone",
+          "type": "varchar(11)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "whatsapp": {
+          "name": "whatsapp",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {
+        "parceiro_contatos_parceiro_idx": {
+          "name": "parceiro_contatos_parceiro_idx",
+          "columns": [
+            {
+              "expression": "parceiro_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "parceiro_contatos_parceiro_id_parceiros_id_fk": {
+          "name": "parceiro_contatos_parceiro_id_parceiros_id_fk",
+          "tableFrom": "parceiro_contatos",
+          "tableTo": "parceiros",
+          "columnsFrom": [
+            "parceiro_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.parceiro_enderecos": {
+      "name": "parceiro_enderecos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parceiro_id": {
+          "name": "parceiro_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ordem": {
+          "name": "ordem",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cep": {
+          "name": "cep",
+          "type": "char(8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "logradouro": {
+          "name": "logradouro",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero": {
+          "name": "numero",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "complemento": {
+          "name": "complemento",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bairro": {
+          "name": "bairro",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cidade": {
+          "name": "cidade",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "uf": {
+          "name": "uf",
+          "type": "char(2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "codigo_municipio": {
+          "name": "codigo_municipio",
+          "type": "char(7)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "parceiro_enderecos_parceiro_idx": {
+          "name": "parceiro_enderecos_parceiro_idx",
+          "columns": [
+            {
+              "expression": "parceiro_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "parceiro_enderecos_cidade_idx": {
+          "name": "parceiro_enderecos_cidade_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "uf",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "cidade",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "parceiro_enderecos_parceiro_id_parceiros_id_fk": {
+          "name": "parceiro_enderecos_parceiro_id_parceiros_id_fk",
+          "tableFrom": "parceiro_enderecos",
+          "tableTo": "parceiros",
+          "columnsFrom": [
+            "parceiro_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.parceiros": {
+      "name": "parceiros",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "codigo": {
+          "name": "codigo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo_pessoa": {
+          "name": "tipo_pessoa",
+          "type": "varchar(2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "documento": {
+          "name": "documento",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome_fantasia": {
+          "name": "nome_fantasia",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telefone": {
+          "name": "telefone",
+          "type": "varchar(11)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "papeis": {
+          "name": "papeis",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "rg": {
+          "name": "rg",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rg_orgao": {
+          "name": "rg_orgao",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nascimento": {
+          "name": "nascimento",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pais": {
+          "name": "pais",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cnae_principal": {
+          "name": "cnae_principal",
+          "type": "char(7)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cnaes_secundarios": {
+          "name": "cnaes_secundarios",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "situacao_cadastral": {
+          "name": "situacao_cadastral",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_abertura": {
+          "name": "data_abertura",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "natureza_juridica": {
+          "name": "natureza_juridica",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "porte": {
+          "name": "porte",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "indicador_ie": {
+          "name": "indicador_ie",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'nao_contribuinte'"
+        },
+        "inscricao_estadual": {
+          "name": "inscricao_estadual",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inscricao_municipal": {
+          "name": "inscricao_municipal",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suframa": {
+          "name": "suframa",
+          "type": "varchar(9)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "regime_tributario": {
+          "name": "regime_tributario",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consumidor_final": {
+          "name": "consumidor_final",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "retem_iss": {
+          "name": "retem_iss",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "retem_ir": {
+          "name": "retem_ir",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "retem_pis": {
+          "name": "retem_pis",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "retem_cofins": {
+          "name": "retem_cofins",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "retem_csll": {
+          "name": "retem_csll",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "retem_inss": {
+          "name": "retem_inss",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "site": {
+          "name": "site",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email_cobranca": {
+          "name": "email_cobranca",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email_nfe": {
+          "name": "email_nfe",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "limite_credito": {
+          "name": "limite_credito",
+          "type": "numeric(15, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bloqueado": {
+          "name": "bloqueado",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "motivo_bloqueio": {
+          "name": "motivo_bloqueio",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "forma_pagamento": {
+          "name": "forma_pagamento",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "condicao_pagamento_id": {
+          "name": "condicao_pagamento_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conta_receita_id": {
+          "name": "conta_receita_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conta_despesa_id": {
+          "name": "conta_despesa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "etiquetas": {
+          "name": "etiquetas",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::text[]"
+        },
+        "origem": {
+          "name": "origem",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observacoes": {
+          "name": "observacoes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ativo": {
+          "name": "ativo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "inativado_em": {
+          "name": "inativado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "inativado_por": {
+          "name": "inativado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_inativacao": {
+          "name": "motivo_inativacao",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "parceiros_empresa_nome_idx": {
+          "name": "parceiros_empresa_nome_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "nome",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "parceiros_empresa_cnae_idx": {
+          "name": "parceiros_empresa_cnae_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "cnae_principal",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "parceiros_documento_por_empresa": {
+          "name": "parceiros_documento_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "documento"
+          ]
+        },
+        "parceiros_codigo_por_empresa": {
+          "name": "parceiros_codigo_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "codigo"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "parceiros_ao_menos_um_papel": {
+          "name": "parceiros_ao_menos_um_papel",
+          "value": "cardinality(\"parceiros\".\"papeis\") > 0"
+        },
+        "parceiros_tipo_pessoa": {
+          "name": "parceiros_tipo_pessoa",
+          "value": "\"parceiros\".\"tipo_pessoa\" IN ('PJ', 'PF', 'EX')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sequencias": {
+      "name": "sequencias",
+      "schema": "",
+      "columns": {
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ultimo": {
+          "name": "ultimo",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "sequencias_empresa_id_nome_pk": {
+          "name": "sequencias_empresa_id_nome_pk",
+          "columns": [
+            "empresa_id",
+            "nome"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.setores": {
+      "name": "setores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "char(1)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.setores_empresa": {
+      "name": "setores_empresa",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ativo": {
+          "name": "ativo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "setores_empresa_nome_por_empresa": {
+          "name": "setores_empresa_nome_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "nome"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.treinamentos": {
+      "name": "treinamentos",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nome": {
+          "name": "nome",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "norma": {
+          "name": "norma",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "carga_horaria": {
+          "name": "carga_horaria",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "validade_meses": {
+          "name": "validade_meses",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ativo": {
+          "name": "ativo",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "treinamentos_nome_por_empresa": {
+          "name": "treinamentos_nome_por_empresa",
+          "nullsNotDistinct": false,
+          "columns": [
+            "empresa_id",
+            "nome"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.treinamentos_realizados": {
+      "name": "treinamentos_realizados",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "empresa_id": {
+          "name": "empresa_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizado_em": {
+          "name": "atualizado_em",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "criado_por": {
+          "name": "criado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atualizado_por": {
+          "name": "atualizado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "funcionario_id": {
+          "name": "funcionario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "treinamento_id": {
+          "name": "treinamento_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "validade": {
+          "name": "validade",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instrutor": {
+          "name": "instrutor",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_anulacao": {
+          "name": "motivo_anulacao",
+          "type": "varchar(300)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "treinamentos_realizados_funcionario_idx": {
+          "name": "treinamentos_realizados_funcionario_idx",
+          "columns": [
+            {
+              "expression": "empresa_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "funcionario_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "data",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "treinamentos_realizados_funcionario_id_funcionarios_id_fk": {
+          "name": "treinamentos_realizados_funcionario_id_funcionarios_id_fk",
+          "tableFrom": "treinamentos_realizados",
+          "tableTo": "funcionarios",
+          "columnsFrom": [
+            "funcionario_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "treinamentos_realizados_treinamento_id_treinamentos_id_fk": {
+          "name": "treinamentos_realizados_treinamento_id_treinamentos_id_fk",
+          "tableFrom": "treinamentos_realizados",
+          "tableTo": "treinamentos",
+          "columnsFrom": [
+            "treinamento_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

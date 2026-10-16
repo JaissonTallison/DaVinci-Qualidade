@@ -21,6 +21,7 @@ export const ORIGENS_NC = {
   fornecedor: 'Fornecedor',
   processo: 'Processo interno',
   acidente: 'Acidente ou incidente',
+  ambiental: 'Ocorrência ambiental',
   outra: 'Outra',
 } as const;
 export type OrigemNc = keyof typeof ORIGENS_NC;

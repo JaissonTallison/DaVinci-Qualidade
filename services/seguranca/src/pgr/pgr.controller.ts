@@ -12,6 +12,14 @@ type ComId = { id?: unknown; alteracoes?: unknown };
 export class PgrController {
   constructor(private readonly pgr: PgrService) {}
 
+  @MessagePattern(PATTERNS.riscos.definirEsocial)
+  definirEsocial(
+    @Contexto() ctx: Ctx,
+    @Dados() d: { id?: unknown; alteracoes?: unknown },
+  ) {
+    return this.pgr.definirEsocial(ctx, d);
+  }
+
   @MessagePattern(P.listar)
   listar(@Contexto() ctx: Ctx, @Dados() d: unknown) {
     return this.pgr.listar(ctx, d);

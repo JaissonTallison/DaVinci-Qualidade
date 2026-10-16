@@ -9,6 +9,8 @@ import { chaves, textoOpcional } from './validadores.js';
 export const REGISTROS_COM_ANEXO = {
   nao_conformidade: { rotulo: 'Não conformidade', modulo: 'qualidade' },
   plano_de_acao: { rotulo: 'Plano de ação', modulo: 'qualidade' },
+  tarefa_do_plano: { rotulo: 'Tarefa do plano de ação', modulo: 'qualidade' },
+  item_da_inspecao: { rotulo: 'Item da inspeção', modulo: 'qualidade' },
   inspecao: { rotulo: 'Inspeção', modulo: 'qualidade' },
   instrumento: { rotulo: 'Instrumento', modulo: 'qualidade' },
   auditoria: { rotulo: 'Auditoria', modulo: 'auditorias' },
@@ -22,10 +24,14 @@ export const REGISTROS_COM_ANEXO = {
   analise_critica: { rotulo: 'Análise crítica', modulo: 'sgi' },
   mudanca: { rotulo: 'Mudança', modulo: 'sgi' },
   ordem_de_servico: { rotulo: 'Ordem de serviço', modulo: 'servicos' },
+  reclamacao: { rotulo: 'Reclamação de cliente', modulo: 'servicos' },
+  contrato: { rotulo: 'Contrato', modulo: 'servicos' },
   licenca: { rotulo: 'Licença', modulo: 'ambiental' },
   requisito_legal: { rotulo: 'Requisito legal', modulo: 'ambiental' },
   produto_quimico: { rotulo: 'Produto químico (FDS)', modulo: 'ambiental' },
   monitoramento: { rotulo: 'Monitoramento ambiental', modulo: 'ambiental' },
+  ocorrencia_ambiental: { rotulo: 'Ocorrência ambiental', modulo: 'ambiental' },
+  obrigacao_legal: { rotulo: 'Obrigação legal', modulo: 'ambiental' },
   tema_esg: { rotulo: 'Tema ESG', modulo: 'esg' },
   saida_de_residuo: {
     rotulo: 'Saída de resíduo (MTR/CDF)',

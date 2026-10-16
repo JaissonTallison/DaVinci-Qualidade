@@ -216,9 +216,17 @@ export async function registrarSaida(
   form: FormData,
 ): Promise<EstadoDaAcao> {
   const v = textos(form);
+  const dados = {
+    ...v,
+    transportadorId: v.transportadorId || undefined,
+    destinadorId: v.destinadorId || undefined,
+    transportador: v.transportadorId ? undefined : v.transportador || undefined,
+    destinador: v.destinadorId ? undefined : v.destinador || undefined,
+    custo: v.custo ? v.custo.replace(",", ".") : undefined,
+  };
   const r = await chamar(
     registrarSaidaSchema,
-    v,
+    dados,
     "/residuos/saidas",
     "POST",
     v,

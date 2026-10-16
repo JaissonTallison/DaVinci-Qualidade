@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { ClientProxy } from '@nestjs/microservices';
 import {
   and,
   count,
@@ -12,9 +13,14 @@ import {
   type SQL,
 } from 'drizzle-orm';
 import { DATABASE, type Database } from '@davinci/database';
-import { ErroDeNegocio, hojeEmBrasilia, validar } from '@davinci/shared';
+import { ErroDeNegocio, hojeEmBrasilia, pedir, validar } from '@davinci/shared';
 import {
   atualizarAcidenteSchema,
+  dadosDaCatSchema,
+  PATTERNS,
+  registrarInvestigacaoSchema,
+  SERVICES,
+  type Funcionario,
   cancelarAcidenteSchema,
   concluirInvestigacaoSchema,
   ehAcidenteComLesao,
@@ -56,7 +62,11 @@ const ALTERADO_POR_OUTRA_PESSOA =
 
 @Injectable()
 export class AcidentesService {
-  constructor(@Inject(DATABASE) private readonly db: Db) {}
+  constructor(
+    @Inject(DATABASE) private readonly db: Db,
+    /** Cadastro de funcionários: o acidentado do S-2210 vem de lá. */
+    @Inject(SERVICES.CODEX) private readonly codex: Pick<ClientProxy, 'send'>,
+  ) {}
 
   async listar(ctx: Contexto, dados: unknown): Promise<Pagina<AcidenteResumo>> {
     const f = validar(filtroAcidentesSchema, dados ?? {});
@@ -214,6 +224,60 @@ export class AcidentesService {
         .set({ status: 'em_investigacao' })
         .where(eq(acidentes.id, l.id)),
     );
+  }
+
+  /** Testemunhas, 5 porquês e árvore de causas, enquanto a investigação está aberta. */
+  async registrarInvestigacao(ctx: Contexto, dados: ComId): Promise<Acidente> {
+    const { versao, ...investigacao } = validar(
+      registrarInvestigacaoSchema,
+      dados?.alteracoes,
+    );
+    return this.alterar(ctx, dados?.id, versao, 'investigar', (tx, l) =>
+      tx.update(acidentes).set({ investigacao }).where(eq(acidentes.id, l.id)),
+    );
+  }
+
+  /** Complemento do S-2210: só acidente com lesão; o acidentado é conferido no cadastro (ativo ou não). */
+  async registrarDadosCat(ctx: Contexto, dados: ComId): Promise<Acidente> {
+    const alteracoes = (dados?.alteracoes ?? {}) as { versao?: unknown };
+    const versao = String(alteracoes.versao ?? '');
+    const cat = validar(dadosDaCatSchema, dados?.alteracoes);
+    const pessoa = await pedir<Funcionario>(
+      this.codex,
+      PATTERNS.funcionarios.obter,
+      { id: cat.acidentadoId },
+      ctx,
+      'Cadastros',
+    ).catch((erro: unknown) => {
+      if (
+        erro instanceof ErroDeNegocio &&
+        (erro.getError() as { codigo?: string }).codigo === 'NAO_ENCONTRADO'
+      )
+        throw invalido('acidentadoId', 'Funcionário não encontrado.');
+      throw erro;
+    });
+    return this.alterar(ctx, dados?.id, versao, 'cat', async (tx, l) => {
+      if (!ehAcidenteComLesao(l.tipo as TipoAcidente))
+        throw new ErroDeNegocio(
+          'REGRA_DE_NEGOCIO',
+          'Só acidente com lesão gera CAT no eSocial.',
+        );
+      if (cat.indCatObito === 'S' && !cat.dtObito)
+        throw invalido('dtObito', 'Informe a data do óbito.');
+      if (cat.dtAtendimento < l.data)
+        throw invalido(
+          'dtAtendimento',
+          'O atendimento não pode ser anterior ao acidente.',
+        );
+      await tx
+        .update(acidentes)
+        .set({
+          dadosCat: cat,
+          acidentado: pessoa.nome,
+          funcao: pessoa.funcaoNome,
+        })
+        .where(eq(acidentes.id, l.id));
+    });
   }
 
   async concluirInvestigacao(ctx: Contexto, dados: ComId): Promise<Acidente> {
@@ -456,6 +520,8 @@ function montar(l: Linha, hoje: string): Acidente {
     causas: l.causas,
     medidas: l.medidas,
     motivoCancelamento: l.motivoCancelamento,
+    investigacao: l.investigacao as Acidente['investigacao'],
+    dadosCat: (l.dadosCat as Acidente['dadosCat']) ?? null,
     versao: l.atualizadoEm.toISOString(),
   };
 }

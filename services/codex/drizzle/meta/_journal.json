@@ -29,6 +29,20 @@
       "when": 1792047748750,
       "tag": "0003_exames_e_treinamentos",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792153313529,
+      "tag": "0004_competencias",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792157014580,
+      "tag": "0005_aso_exames",
+      "breakpoints": true
     }
   ]
 }

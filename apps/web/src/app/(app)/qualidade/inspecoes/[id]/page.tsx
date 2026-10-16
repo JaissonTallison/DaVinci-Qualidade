@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
+  NQAS,
   RESPOSTAS_ITEM,
   TIPOS_INSPECAO,
   type DadosDoUsuario,
@@ -21,6 +22,7 @@ import {
   tituloDaSecao,
 } from "@/lib/estilos";
 import { CancelarInspecao } from "./cancelar";
+import { AnexosDoItem } from "@/components/anexos-do-item";
 import { RespostasDaInspecao } from "./respostas";
 import { Anexos } from "@/components/anexos";
 
@@ -103,6 +105,28 @@ export default async function DetalheDaInspecao({
           )}
           {i.local && <Dado rotulo="Local">{i.local}</Dado>}
           {i.modeloNome && <Dado rotulo="Modelo">{i.modeloNome}</Dado>}
+          {i.fornecedorNome && i.fornecedorId && (
+            <Dado rotulo="Fornecedor">
+              <Link
+                href={`/cadastros/clientes-e-fornecedores/${i.fornecedorId}`}
+                className="text-info hover:underline"
+              >
+                {i.fornecedorNome}
+              </Link>
+            </Dado>
+          )}
+          {i.plano && (
+            <Dado rotulo="Amostragem">
+              NQA {NQAS[i.plano.nqa]} · nível {i.plano.nivel} · amostra{" "}
+              {i.plano.amostra} · Ac {i.plano.aceita} / Re {i.plano.rejeita}
+              {i.defeituosos !== null && (
+                <span className="block text-sm text-texto-2">
+                  {i.defeituosos} defeituoso{i.defeituosos === 1 ? "" : "s"} na
+                  amostra
+                </span>
+              )}
+            </Dado>
+          )}
           {i.concluidaEm && (
             <Dado rotulo="Concluída em">{formatarMomento(i.concluidaEm)}</Dado>
           )}
@@ -155,6 +179,47 @@ export default async function DetalheDaInspecao({
           )}
         </section>
       )}
+
+      <section className={`${painel} mt-6`}>
+        <h2 className={`${tituloDaSecao} px-5 pt-5`}>
+          Fotos e evidências por item
+        </h2>
+        <p className="px-5 text-base text-texto-2">
+          Foto do defeito, leitura do instrumento, etiqueta do lote. Item NOK
+          com foto vira evidência pronta da NC.
+        </p>
+        <ol className="mt-3 divide-y divide-borda border-t border-borda">
+          {i.itens.map((item) => (
+            <li
+              key={item.id}
+              className="grid gap-2 px-5 py-3 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
+            >
+              <p className="text-base">
+                <span className="mr-2 text-texto-3 tabular-nums">
+                  {item.ordem + 1}.
+                </span>
+                {item.verificar}
+                {item.resposta && (
+                  <span
+                    className={`ml-2 text-sm font-semibold ${COR_DA_RESPOSTA[item.resposta]}`}
+                  >
+                    {RESPOSTAS_ITEM[item.resposta]}
+                  </span>
+                )}
+              </p>
+              <AnexosDoItem
+                registro="item_da_inspecao"
+                registroId={item.id}
+                voltar={`/qualidade/inspecoes/${i.id}`}
+                podeEditar={
+                  permissoes.includes("qualidade.editar") &&
+                  i.status !== "cancelada"
+                }
+              />
+            </li>
+          ))}
+        </ol>
+      </section>
 
       {i.status === "reprovada" && (
         <section className={`${painel} mt-6 p-5`}>

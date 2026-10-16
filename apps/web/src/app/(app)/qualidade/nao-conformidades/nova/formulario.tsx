@@ -136,6 +136,7 @@ export function FormularioNovaNc({
             <input
               id="responsavel"
               name="responsavel"
+              list="pessoas"
               defaultValue={v.responsavel}
               maxLength={120}
               className={campo}

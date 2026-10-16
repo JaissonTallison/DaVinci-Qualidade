@@ -25,6 +25,8 @@ export async function proxy(req: NextRequest) {
   const naTelaDeEntrar = caminho === ENTRAR || caminho.startsWith(`${ENTRAR}/`);
   // Encerrar a sessão apaga os cookies: não pode depender de sessão válida
   if (caminho === "/sessao-encerrada") return NextResponse.next();
+  // Pesquisa de satisfação: o cliente responde por link, sem login (o token é a credencial)
+  if (caminho.startsWith("/pesquisa/")) return NextResponse.next();
   // Server Actions (POST com o cabeçalho next-action) nunca recebem redirecionamento daqui: o Next espera a resposta
   // da ação e, com um 307, mostra "An unexpected response was received from the server" (ex.: tela de entrar aberta
   // enquanto a sessão foi renovada em outra aba ou o gateway voltou). A própria ação confere a sessão no gateway.

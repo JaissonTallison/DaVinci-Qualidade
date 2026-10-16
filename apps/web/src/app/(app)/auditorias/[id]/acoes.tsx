@@ -195,6 +195,7 @@ export function FormalizarNc({
           Responsável pela NC
           <input
             name="responsavel"
+            list="pessoas"
             defaultValue={
               estado.valores?.responsavel ?? auditoria.representante ?? ""
             }

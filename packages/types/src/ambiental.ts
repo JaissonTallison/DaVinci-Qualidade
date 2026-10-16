@@ -344,14 +344,28 @@ export const novoResiduoSchema = z.object(camposResiduo);
 export type NovoResiduo = z.input<typeof novoResiduoSchema>;
 export const atualizarResiduoSchema = z.object({ ...camposResiduo, versao });
 
-export const registrarSaidaSchema = z.object({
-  residuoId: z.uuid('Escolha o resíduo.'),
-  data: data('a data da saída'),
-  quantidade: numero('a quantidade'),
-  mtr: texto('o número do MTR', 40, 3),
-  transportador: texto('o transportador', 150, 2),
-  destinador: texto('o destinador', 150, 2),
-});
+export const registrarSaidaSchema = z
+  .object({
+    residuoId: z.uuid('Escolha o resíduo.'),
+    data: data('a data da saída'),
+    quantidade: numero('a quantidade'),
+    mtr: texto('o número do MTR', 40, 3),
+    /** Do cadastro (licença conferida) ou digitado. */
+    transportadorId: opcional(z.uuid('Transportador inválido.')),
+    destinadorId: opcional(z.uuid('Destinador inválido.')),
+    transportador: textoOpcional(150),
+    destinador: textoOpcional(150),
+    /** Custo da destinação, em reais. */
+    custo: opcional(z.coerce.number().min(0, 'O custo não pode ser negativo.')),
+  })
+  .refine((s) => s.transportadorId || s.transportador, {
+    path: ['transportador'],
+    message: 'Escolha ou informe o transportador.',
+  })
+  .refine((s) => s.destinadorId || s.destinador, {
+    path: ['destinador'],
+    message: 'Escolha ou informe o destinador.',
+  });
 export type RegistrarSaida = z.input<typeof registrarSaidaSchema>;
 export const registrarCdfSchema = z.object({
   numero: texto('o número do CDF', 40, 2),
@@ -387,6 +401,9 @@ export interface SaidaDeResiduo {
   mtr: string;
   transportador: string;
   destinador: string;
+  transportadorId: string | null;
+  destinadorId: string | null;
+  custo: number | null;
   cdfNumero: string | null;
   cdfData: string | null;
   /** Mais de 30 dias sem CDF. */

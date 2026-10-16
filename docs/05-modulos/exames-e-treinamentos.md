@@ -24,6 +24,6 @@
 
 ## 3. Ainda não feito
 
-- [ ] Treinamentos e exames obrigatórios por função (ligado ao PGR) e a conformidade de cada pessoa
-- [ ] Certificado da turma em PDF e lista de presença
+- [x] Treinamentos e exames obrigatórios por função (ligado ao PGR) e a conformidade de cada pessoa ([competências](competencias.md))
+- [x] Certificado da turma e lista de presença; ASO com exames (tabela 27) e UF do CRM para o S-2220
 - [ ] Aviso por e-mail dos vencimentos

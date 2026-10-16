@@ -290,6 +290,9 @@ export const asos = pgTable(
     proximoExame: date({ mode: 'string' }),
     medico: varchar({ length: 120 }),
     crm: varchar({ length: 20 }),
+    ufCrm: char({ length: 2 }),
+    /** Exames realizados com o procedimento da tabela 27 do eSocial. */
+    exames: jsonb().notNull().default([]),
     observacao: varchar({ length: 300 }),
     motivoAnulacao: varchar({ length: 300 }),
   },
@@ -333,6 +336,27 @@ export const treinamentosRealizados = pgTable(
       t.empresaId,
       t.funcionarioId,
       t.data,
+    ),
+  ],
+);
+
+/** Treinamentos obrigatórios de cada função (competências por função). */
+export const funcaoTreinamentos = pgTable(
+  'funcao_treinamentos',
+  {
+    ...colunasPadrao(),
+    funcaoId: uuid()
+      .notNull()
+      .references(() => funcoes.id),
+    treinamentoId: uuid()
+      .notNull()
+      .references(() => treinamentos.id),
+  },
+  (t) => [
+    unique('funcao_treinamentos_unico').on(
+      t.empresaId,
+      t.funcaoId,
+      t.treinamentoId,
     ),
   ],
 );

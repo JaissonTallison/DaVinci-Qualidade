@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import {
+  NQAS,
   RESPOSTAS_ITEM,
   type Inspecao,
   type RespostaItem,
@@ -68,7 +69,7 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
         <h2 className="text-xl text-texto">Itens</h2>
         <p className="text-sm text-texto-2">
           {respondidos} de {inspecao.itens.length} respondidos
-          {nok > 0 && (
+          {nok > 0 && !inspecao.plano && (
             <span className="text-nao-conforme">
               {" "}
               · {nok} NOK: a inspeção será reprovada
@@ -176,6 +177,30 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
           className={`${areaDeTexto} mt-1.5`}
         />
       </div>
+      {inspecao.plano && (
+        <div className="flex flex-wrap items-end gap-4 border-t border-borda px-5 py-4">
+          <label className="flex flex-col gap-1.5">
+            <span className="text-sm font-semibold text-texto-2">
+              Defeituosos na amostra de {inspecao.plano.amostra}
+            </span>
+            <input
+              name="defeituosos"
+              inputMode="numeric"
+              defaultValue={estado.valores?.defeituosos}
+              aria-invalid={Boolean(erros.defeituosos)}
+              className={`${campoCompacto} w-32`}
+            />
+          </label>
+          <p className="text-sm text-texto-2">
+            Aceita com até {inspecao.plano.aceita}; rejeita com{" "}
+            {inspecao.plano.rejeita} ou mais (NQA {NQAS[inspecao.plano.nqa]},
+            nível {inspecao.plano.nivel}).
+          </p>
+          {erros.defeituosos && (
+            <span className={erroDoCampo}>{erros.defeituosos}</span>
+          )}
+        </div>
+      )}
       <div className="flex flex-wrap items-center justify-end gap-3 border-t border-borda px-5 py-3">
         <p className="mr-auto text-sm text-texto-3">
           Concluída, a inspeção vira registro e não muda mais.

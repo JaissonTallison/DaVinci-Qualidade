@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { NaoConformidade } from "@davinci/types";
+import type { Acidente, NaoConformidade } from "@davinci/types";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { tituloDaPagina } from "@/lib/estilos";
@@ -11,10 +11,17 @@ export const metadata: Metadata = { title: "Criar plano de ação" };
 export default async function NovoPlano({
   searchParams,
 }: PageProps<"/qualidade/planos-de-acao/novo">) {
-  const { nc: ncId } = (await searchParams) as { nc?: string };
+  const { nc: ncId, acidente: acidenteId } = (await searchParams) as {
+    nc?: string;
+    acidente?: string;
+  };
   const nc = ncId
     ? await chamarApi<NaoConformidade>(`/nao-conformidades/${ncId}`)
     : null;
+  const acidente =
+    !ncId && acidenteId
+      ? await chamarApi<Acidente>(`/acidentes/${acidenteId}`)
+      : null;
   // Vindo de uma NC: origem, vínculo, responsável e a ação corretiva dela como primeira tarefa
   const inicial: Inicial | undefined = nc?.ok
     ? {
@@ -36,18 +43,39 @@ export default async function NovoPlano({
             ]
           : undefined,
       }
-    : undefined;
+    : acidente?.ok
+      ? {
+          // Vindo de um acidente: origem, referência e as causas da árvore como base das tarefas
+          valores: {
+            origem: "acidente",
+            origemRef: acidente.dados.numero,
+            tipo: "corretiva",
+            titulo: `Ações do acidente ${acidente.dados.numero}`,
+            objetivo: acidente.dados.medidas ?? "",
+          },
+          tarefas: acidente.dados.investigacao.fatos
+            .filter((f) => f.componente !== "individuo")
+            .slice(0, 5)
+            .map((f) => ({ oQue: `Eliminar: ${f.fato}`.slice(0, 300) })),
+        }
+      : undefined;
   return (
     <>
       <Link
         href={
           nc?.ok
             ? `/qualidade/nao-conformidades/${nc.dados.id}`
-            : "/qualidade/planos-de-acao"
+            : acidente?.ok
+              ? `/seguranca/acidentes/${acidente.dados.id}`
+              : "/qualidade/planos-de-acao"
         }
         className="text-sm text-texto-2 hover:underline"
       >
-        {nc?.ok ? nc.dados.numero : "Planos de ação"}
+        {nc?.ok
+          ? nc.dados.numero
+          : acidente?.ok
+            ? acidente.dados.numero
+            : "Planos de ação"}
       </Link>
       <h1 className={`${tituloDaPagina} mt-1`}>Criar plano de ação</h1>
       <p className="mt-1 max-w-2xl text-base text-texto-2">

@@ -1,6 +1,7 @@
 // Tabelas do serviço seguranca. Cada tabela exportada aqui entra nas migrações (pnpm db:generate).
 import { sql } from 'drizzle-orm';
 import {
+  jsonb,
   boolean,
   check,
   date,
@@ -56,6 +57,12 @@ export const acidentes = pgTable(
     causas: text(),
     medidas: text(),
     motivoCancelamento: varchar({ length: 500 }),
+    /** Investigação estruturada: testemunhas, 5 porquês e árvore de causas. */
+    investigacao: jsonb()
+      .notNull()
+      .default({ testemunhas: [], porques: [], fatos: [] }),
+    /** Complemento do S-2210 (eSocial). */
+    dadosCat: jsonb(),
   },
   (t) => [
     unique('acidentes_numero_por_empresa').on(t.empresaId, t.numero),
@@ -159,6 +166,8 @@ export const riscos = pgTable(
     responsavel: varchar({ length: 120 }),
     prazo: date({ mode: 'string' }),
     ativo: boolean().notNull().default(true),
+    /** Agente nocivo e avaliação para o S-2240 (eSocial). */
+    dadosEsocial: jsonb(),
   },
   (t) => [
     index('riscos_empresa_idx').on(t.empresaId, t.ativo),
@@ -241,4 +250,126 @@ export const documentosTerceiros = pgTable(
     validade: date({ mode: 'string' }).notNull(),
   },
   (t) => [index('documentos_terceiros_idx').on(t.empresaId, t.terceiroId)],
+);
+
+/** EPIs obrigatórios de cada função, com o risco do PGR que justifica (competências por função). */
+export const funcaoEpis = pgTable(
+  'funcao_epis',
+  {
+    ...colunasPadrao(),
+    /** Função no serviço codex (outro banco: sem chave estrangeira). */
+    funcaoId: uuid().notNull(),
+    epiId: uuid()
+      .notNull()
+      .references(() => epis.id),
+    riscoId: uuid().references(() => riscos.id),
+  },
+  (t) => [unique('funcao_epis_unico').on(t.empresaId, t.funcaoId, t.epiId)],
+);
+
+/** Riscos do PGR a que cada função se expõe (S-2240 e ordem de serviço de segurança). */
+export const funcaoRiscos = pgTable(
+  'funcao_riscos',
+  {
+    ...colunasPadrao(),
+    funcaoId: uuid().notNull(),
+    riscoId: uuid()
+      .notNull()
+      .references(() => riscos.id),
+  },
+  (t) => [unique('funcao_riscos_unico').on(t.empresaId, t.funcaoId, t.riscoId)],
+);
+
+/** Configuração do eSocial SST da empresa (uma por empresa). */
+export const configuracaoEsocial = pgTable(
+  'configuracao_esocial',
+  {
+    ...colunasPadrao(),
+    dados: jsonb().notNull(),
+  },
+  (t) => [unique('configuracao_esocial_por_empresa').on(t.empresaId)],
+);
+
+/** Eventos do eSocial gerados: o XML do dia e, depois, o recibo do envio. */
+export const eventosEsocial = pgTable(
+  'eventos_esocial',
+  {
+    ...colunasPadrao(),
+    evento: varchar({ length: 6 }).notNull(),
+    referenciaId: uuid().notNull(),
+    descricao: varchar({ length: 200 }).notNull(),
+    funcionarioNome: varchar({ length: 120 }),
+    idDoEvento: varchar({ length: 36 }).notNull(),
+    xml: text().notNull(),
+    recibo: varchar({ length: 40 }),
+    enviadoEm: timestamp({ withTimezone: true, precision: 3 }),
+  },
+  (t) => [
+    index('eventos_esocial_ref_idx').on(t.empresaId, t.evento, t.referenciaId),
+  ],
+);
+
+/** Equipamentos de emergência e máquinas, com as datas de inspeção, recarga e teste. */
+export const equipamentos = pgTable(
+  'equipamentos',
+  {
+    ...colunasPadrao(),
+    categoria: varchar({ length: 20 }).notNull(),
+    identificacao: varchar({ length: 60 }).notNull(),
+    local: varchar({ length: 150 }).notNull(),
+    detalhes: varchar({ length: 300 }),
+    inspecaoDias: smallint().notNull(),
+    ultimaInspecao: date({ mode: 'string' }),
+    ultimaRecarga: date({ mode: 'string' }),
+    ultimoTeste: date({ mode: 'string' }),
+    pendencia: varchar({ length: 500 }),
+    inspecoes: jsonb().notNull().default([]),
+    ativo: boolean().notNull().default(true),
+  },
+  (t) => [
+    unique('equipamentos_identificacao').on(
+      t.empresaId,
+      t.categoria,
+      t.identificacao,
+    ),
+  ],
+);
+
+/** Brigada de emergência: quem é, o papel e a validade do treinamento. */
+export const brigadistas = pgTable(
+  'brigadistas',
+  {
+    ...colunasPadrao(),
+    funcionarioId: uuid().notNull(),
+    nome: varchar({ length: 120 }).notNull(),
+    setor: varchar({ length: 100 }).notNull(),
+    papel: varchar({ length: 15 }).notNull(),
+    turno: varchar({ length: 40 }),
+    treinadoEm: date({ mode: 'string' }).notNull(),
+  },
+  (t) => [unique('brigadistas_funcionario').on(t.empresaId, t.funcionarioId)],
+);
+
+/** Plano de emergência da empresa (um documento, revisado inteiro). */
+export const planosDeEmergencia = pgTable(
+  'planos_de_emergencia',
+  {
+    ...colunasPadrao(),
+    dados: jsonb().notNull(),
+  },
+  (t) => [unique('planos_de_emergencia_por_empresa').on(t.empresaId)],
+);
+
+/** Ordem de serviço de segurança por função (NR-1, 1.4.1 c). */
+export const ordensSst = pgTable(
+  'ordens_sst',
+  {
+    ...colunasPadrao(),
+    funcaoId: uuid().notNull(),
+    atividades: text().notNull(),
+    procedimentos: text().notNull(),
+    proibicoes: text().notNull(),
+    emergencia: text(),
+  },
+  (t) => [unique('ordens_sst_por_funcao').on(t.empresaId, t.funcaoId)],
 );

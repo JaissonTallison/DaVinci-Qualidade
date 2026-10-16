@@ -38,16 +38,32 @@ export function ConcluirOs({ os }: { os: OrdemDeServico }) {
         rotuloDoBotao="Concluir OS"
       >
         {(erros, v) => (
-          <Campo id="relatorio" rotulo="Relatório" erro={erros.relatorio}>
-            <textarea
-              id="relatorio"
-              name="relatorio"
-              rows={4}
-              maxLength={2000}
-              defaultValue={v.relatorio}
-              className={areaDeTexto}
-            />
-          </Campo>
+          <>
+            <Campo id="relatorio" rotulo="Relatório" erro={erros.relatorio}>
+              <textarea
+                id="relatorio"
+                name="relatorio"
+                rows={4}
+                maxLength={2000}
+                defaultValue={v.relatorio}
+                className={areaDeTexto}
+              />
+            </Campo>
+            <Campo
+              id="recebidoPor"
+              rotulo="Recebido por (cliente)"
+              erro={erros.recebidoPor}
+              ajuda="Quem aceitou o serviço do lado do cliente."
+            >
+              <input
+                id="recebidoPor"
+                name="recebidoPor"
+                maxLength={120}
+                defaultValue={v.recebidoPor}
+                className={campo}
+              />
+            </Campo>
+          </>
         )}
       </Formulario>
     </Bloco>

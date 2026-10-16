@@ -5,6 +5,7 @@ import {
   agoraEmBrasilia,
   hojeEmBrasilia,
   somarDias,
+  somarMeses,
   validar,
 } from '@davinci/shared';
 import {
@@ -12,6 +13,9 @@ import {
   DIAS_DO_PAINEL,
   prazo,
   TIPOS_DOC_TERCEIRO,
+  CATEGORIAS_DE_EQUIPAMENTO,
+  MESES_DE_VALIDADE_DA_BRIGADA,
+  type CategoriaDeEquipamento,
   type Contexto,
   type Prazo,
   type TipoDocTerceiro,
@@ -20,7 +24,9 @@ import { proximoDiaUtil } from '../acidentes/regras.js';
 import * as schema from '../db/schema.js';
 import {
   acidentes,
+  brigadistas,
   documentosTerceiros,
+  equipamentos,
   entregasEpi,
   epis,
   permissoesDeTrabalho as pts,
@@ -29,6 +35,7 @@ import {
 } from '../db/schema.js';
 import { PgrService } from '../pgr/pgr.service.js';
 import { vigentes } from '../terceiros/regras.js';
+import { vencimentosDoEquipamento } from '../emergencia/regras.js';
 
 type Db = Database<typeof schema>;
 
@@ -217,6 +224,48 @@ export class PrazosService {
               hoje,
             ),
           );
+    }
+    const [equips, brigada] = await Promise.all([
+      this.db
+        .select()
+        .from(equipamentos)
+        .where(
+          and(eq(equipamentos.empresaId, emp), eq(equipamentos.ativo, true)),
+        ),
+      this.db.select().from(brigadistas).where(eq(brigadistas.empresaId, emp)),
+    ]);
+    for (const e of equips) {
+      const categoria = e.categoria as CategoriaDeEquipamento;
+      const v = vencimentosDoEquipamento({ ...e, categoria }, hoje);
+      if (v.proximoVencimento && v.proximoVencimento.data <= limite)
+        lista.push(
+          prazo(
+            {
+              modulo: 'seguranca',
+              tipo: `${v.proximoVencimento.o} de equipamento`,
+              descricao: `${CATEGORIAS_DE_EQUIPAMENTO[categoria].nome} ${e.identificacao} · ${e.local}`,
+              data: v.proximoVencimento.data,
+              href: `/seguranca/equipamentos/${e.id}`,
+            },
+            hoje,
+          ),
+        );
+    }
+    for (const b of brigada) {
+      const validade = somarMeses(b.treinadoEm, MESES_DE_VALIDADE_DA_BRIGADA);
+      if (validade <= limite)
+        lista.push(
+          prazo(
+            {
+              modulo: 'seguranca',
+              tipo: 'Treinamento de brigada',
+              descricao: `${b.nome} · reciclagem`,
+              data: validade,
+              href: '/seguranca/emergencia',
+            },
+            hoje,
+          ),
+        );
     }
     return lista;
   }

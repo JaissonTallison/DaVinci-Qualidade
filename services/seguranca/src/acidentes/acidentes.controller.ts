@@ -8,9 +8,21 @@ const P = PATTERNS.acidentes;
 type ComId = { id?: unknown; alteracoes?: unknown };
 
 /** Mensagens de acidentes e indicadores recebidas pela fila davinci.seguranca. Toda regra está no service. */
+type ComIdAcidente = { id?: unknown; alteracoes?: unknown };
+
 @Controller()
 export class AcidentesController {
   constructor(private readonly acidentes: AcidentesService) {}
+
+  @MessagePattern(PATTERNS.acidentes.registrarInvestigacao)
+  registrarInvestigacao(@Contexto() ctx: Ctx, @Dados() d: ComIdAcidente) {
+    return this.acidentes.registrarInvestigacao(ctx, d);
+  }
+
+  @MessagePattern(PATTERNS.acidentes.registrarDadosCat)
+  registrarDadosCat(@Contexto() ctx: Ctx, @Dados() d: ComIdAcidente) {
+    return this.acidentes.registrarDadosCat(ctx, d);
+  }
 
   @MessagePattern(P.listar)
   listar(@Contexto() ctx: Ctx, @Dados() dados: unknown) {

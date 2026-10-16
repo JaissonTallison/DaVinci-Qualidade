@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { DadosDoUsuario, ModeloDeInspecao } from "@davinci/types";
+import type {
+  DadosDoUsuario,
+  ModeloDeInspecao,
+  Pagina,
+  ParceiroResumo,
+} from "@davinci/types";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { tituloDaPagina } from "@/lib/estilos";
@@ -13,6 +18,12 @@ export default async function NovaInspecao() {
     chamarApi<ModeloDeInspecao[]>("/modelos-de-inspecao"),
     chamarApi<DadosDoUsuario>("/auth/eu"),
   ]);
+  const fornecedores =
+    eu.ok && eu.dados.permissoes.includes("parceiros.ver")
+      ? await chamarApi<Pagina<ParceiroResumo>>(
+          "/parceiros?papel=fornecedor&porPagina=100",
+        )
+      : null;
   return (
     <>
       <Link
@@ -30,6 +41,7 @@ export default async function NovaInspecao() {
         modelos={modelos.ok ? modelos.dados : []}
         hoje={hojeEmBrasilia()}
         inspetor={eu.ok ? eu.dados.usuario.nome : ""}
+        fornecedores={fornecedores?.ok ? fornecedores.dados.itens : []}
       />
     </>
   );

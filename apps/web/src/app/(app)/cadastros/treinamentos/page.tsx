@@ -34,7 +34,15 @@ export default async function Treinamentos({
     <>
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className={tituloDaPagina}>Treinamentos</h1>
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <h1 className={tituloDaPagina}>Treinamentos</h1>
+            <Link
+              href="/cadastros/treinamentos/turmas"
+              className="text-sm text-info hover:underline"
+            >
+              Turmas: lista de presença e certificados
+            </Link>
+          </div>
           <p className="mt-1 max-w-2xl text-base text-texto-2">
             Catálogo com carga horária e validade. A turma registra o
             treinamento na ficha de cada participante e calcula quando vence.

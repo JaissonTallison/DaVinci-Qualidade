@@ -16,6 +16,7 @@ import {
   ErroDeNegocio,
   hojeEmBrasilia,
   pedir,
+  somarDias,
   somarMeses,
   validar,
 } from '@davinci/shared';
@@ -32,6 +33,8 @@ import {
   isUuid,
   novaOsSchema,
   PATTERNS,
+  registrarExecucaoSchema,
+  type StatusDoPasso,
   registrarRespostaNpsSchema,
   SERVICES,
   type AvaliacaoDeFornecedor,
@@ -47,6 +50,8 @@ import {
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
 import {
+  catalogoServicos,
+  contratos,
   avaliacoesFornecedores as avs,
   ordensServico as os,
   respostasNps as nps,
@@ -103,14 +108,56 @@ export class ServicosService {
   }
 
   async criarOs(ctx: Contexto, dados: unknown): Promise<OrdemDeServico> {
-    const n = validar(novaOsSchema, dados);
+    const { contratoId, servicoId, ...n } = validar(novaOsSchema, dados);
     const cliente = await this.parceiro(
       ctx,
       n.clienteId,
       'cliente',
       'clienteId',
     );
-    const ano = hojeEmBrasilia().slice(0, 4);
+    const hoje = hojeEmBrasilia();
+    // Contrato: do mesmo cliente, vigente hoje; sem prazo informado, o prazo é o SLA do contrato
+    let contrato: typeof contratos.$inferSelect | undefined;
+    if (contratoId) {
+      [contrato] = await this.db
+        .select()
+        .from(contratos)
+        .where(
+          and(
+            eq(contratos.id, contratoId),
+            eq(contratos.empresaId, ctx.empresaId),
+          ),
+        );
+      if (!contrato || contrato.clienteId !== n.clienteId)
+        throw invalido(
+          'contratoId',
+          'Contrato não encontrado para este cliente.',
+        );
+      if (contrato.encerradoEm || hoje < contrato.inicio || hoje > contrato.fim)
+        throw invalido(
+          'contratoId',
+          `O contrato ${contrato.numero} não está vigente.`,
+        );
+    }
+    let servico: typeof catalogoServicos.$inferSelect | undefined;
+    if (servicoId) {
+      [servico] = await this.db
+        .select()
+        .from(catalogoServicos)
+        .where(
+          and(
+            eq(catalogoServicos.id, servicoId),
+            eq(catalogoServicos.empresaId, ctx.empresaId),
+          ),
+        );
+      if (!servico || !servico.ativo)
+        throw invalido(
+          'servicoId',
+          'Serviço do catálogo não encontrado ou inativo.',
+        );
+    }
+    const prazo = n.prazo ?? somarDias(hoje, contrato!.prazoAtendimentoDias);
+    const ano = hoje.slice(0, 4);
     return this.db.transaction(async (tx) => {
       const [{ ultimo }] = await tx
         .insert(sequencias)
@@ -124,6 +171,16 @@ export class ServicosService {
         .insert(os)
         .values({
           ...n,
+          prazo,
+          contratoId: contrato?.id ?? null,
+          contratoNumero: contrato?.numero ?? null,
+          servicoId: servico?.id ?? null,
+          servicoNome: servico?.nome ?? null,
+          checklist: ((servico?.checklist ?? []) as string[]).map((item) => ({
+            item,
+            status: 'pendente',
+            observacao: '',
+          })),
           clienteNome: cliente.nomeFantasia ?? cliente.nome,
           numero: `OS-${ano}-${String(ultimo).padStart(3, '0')}`,
           ...autoria(ctx),
@@ -144,14 +201,51 @@ export class ServicosService {
   }
 
   async concluirOs(ctx: Contexto, dados: ComId): Promise<OrdemDeServico> {
-    const { versao, relatorio } = validar(concluirOsSchema, dados?.alteracoes);
+    const { versao, relatorio, recebidoPor } = validar(
+      concluirOsSchema,
+      dados?.alteracoes,
+    );
     const atual = await this.os(ctx, dados?.id);
     if (atual.status !== 'em_execucao')
       throw regra('Só OS em execução é concluída: inicie antes.');
+    const pendentes = (atual.checklist as { status: StatusDoPasso }[]).filter(
+      (p) => p.status === 'pendente',
+    ).length;
+    if (pendentes)
+      throw regra(
+        `Faltam ${pendentes} passo(s) do checklist: marque como feito ou "não se aplica".`,
+      );
     return this.gravarOs(ctx, atual.id, versao, {
       status: 'concluida',
       concluidaEm: new Date(),
       relatorio,
+      recebidoPor,
+    });
+  }
+
+  /** Checklist, horas e materiais: só com a OS em execução. */
+  async registrarExecucao(
+    ctx: Contexto,
+    dados: ComId,
+  ): Promise<OrdemDeServico> {
+    const { versao, checklist, apontamentos, materiais } = validar(
+      registrarExecucaoSchema,
+      dados?.alteracoes,
+    );
+    const atual = await this.os(ctx, dados?.id);
+    if (atual.status !== 'em_execucao')
+      throw regra('A execução é registrada com a OS em execução.');
+    const hoje = hojeEmBrasilia();
+    const futuro = apontamentos.findIndex((a) => a.data > hoje);
+    if (futuro >= 0)
+      throw invalido(
+        `apontamentos.${futuro}.data`,
+        'Apontamento não pode ser de data futura.',
+      );
+    return this.gravarOs(ctx, atual.id, versao, {
+      checklist,
+      apontamentos,
+      materiais,
     });
   }
 
@@ -321,7 +415,7 @@ export class ServicosService {
   // ---------------------------------------------------------------- apoio
 
   /** Confere no codex: existe, está ativo e tem o papel (cliente ou fornecedor). */
-  private async parceiro(
+  async parceiro(
     ctx: Contexto,
     id: string,
     papel: Papel,
@@ -347,7 +441,7 @@ export class ServicosService {
     return p;
   }
 
-  private async os(ctx: Contexto, id: unknown) {
+  async os(ctx: Contexto, id: unknown) {
     const [l] = isUuid(id)
       ? await this.db
           .select()
@@ -409,8 +503,37 @@ function montarOs(l: typeof os.$inferSelect, hoje: string): OrdemDeServico {
     motivoCancelamento: l.motivoCancelamento,
     nota: l.nota,
     comentario: l.comentario,
+    contratoId: l.contratoId,
+    contratoNumero: l.contratoNumero,
+    servicoId: l.servicoId,
+    servicoNome: l.servicoNome,
+    checklist: l.checklist as OrdemDeServico['checklist'],
+    apontamentos: l.apontamentos as OrdemDeServico['apontamentos'],
+    materiais: l.materiais as OrdemDeServico['materiais'],
+    horasTotais:
+      Math.round(
+        (l.apontamentos as { horas: number }[]).reduce(
+          (t, a) => t + a.horas,
+          0,
+        ) * 100,
+      ) / 100,
+    recebidoPor: l.recebidoPor,
+    noPrazo: noPrazo(l),
     versao: l.atualizadoEm.toISOString(),
   };
+}
+
+/** Concluída até o fim do dia do prazo (horário de Brasília). */
+export function noPrazo(l: {
+  status: string;
+  concluidaEm: Date | null;
+  prazo: string;
+}): boolean | null {
+  if (l.status !== 'concluida' || !l.concluidaEm) return null;
+  const dia = new Date(l.concluidaEm.getTime() - 3 * 3600_000)
+    .toISOString()
+    .slice(0, 10);
+  return dia <= l.prazo;
 }
 
 function montarAvaliacao(

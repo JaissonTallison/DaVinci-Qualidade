@@ -6,6 +6,7 @@ import {
   type DadosDoUsuario,
   type Pagina,
   type ParceiroResumo,
+  type RecebimentoDoFornecedor,
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -41,6 +42,26 @@ export default async function Fornecedores({
   ]);
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   const vigentes = r.ok ? r.dados.filter((a) => a.vigente) : [];
+  // Recebimento (inspeções da Qualidade nos últimos 12 meses): base para a nota de qualidade
+  const veRecebimento =
+    eu.ok &&
+    eu.dados.recursos.includes("qualidade") &&
+    eu.dados.permissoes.includes("qualidade.ver");
+  const recebimentos = new Map(
+    veRecebimento
+      ? (
+          await Promise.all(
+            vigentes.map((a) =>
+              chamarApi<RecebimentoDoFornecedor>(
+                `/inspecoes/fornecedor/${a.fornecedorId}`,
+              ),
+            ),
+          )
+        ).flatMap((x) =>
+          x.ok ? [[x.dados.fornecedorId, x.dados] as const] : [],
+        )
+      : [],
+  );
   const historico = r.ok ? r.dados.filter((a) => !a.vigente) : [];
   return (
     <>
@@ -90,6 +111,11 @@ export default async function Fornecedores({
                     <th className="px-4 py-2 font-semibold">Q · P · A · D</th>
                     <th className="px-4 py-2 font-semibold">Média</th>
                     <th className="px-4 py-2 font-semibold">Classificação</th>
+                    {veRecebimento && (
+                      <th className="px-4 py-2 font-semibold">
+                        Recebimento (12 meses)
+                      </th>
+                    )}
                     <th className="px-4 py-2 font-semibold">
                       Próxima avaliação
                     </th>
@@ -121,6 +147,34 @@ export default async function Fornecedores({
                       >
                         {CLASSIFICACOES_FORNECEDOR[a.classificacao]}
                       </td>
+                      {veRecebimento && (
+                        <td className="px-4 py-2.5 text-sm">
+                          {(() => {
+                            const x = recebimentos.get(a.fornecedorId);
+                            if (!x || x.inspecoes === 0)
+                              return (
+                                <span className="text-texto-3">
+                                  Sem inspeção
+                                </span>
+                              );
+                            return (
+                              <Link
+                                href={`/qualidade/inspecoes?busca=${encodeURIComponent(a.fornecedorNome)}`}
+                                className="hover:underline"
+                              >
+                                <span
+                                  className={`font-semibold tabular-nums ${x.reprovadas ? "text-nao-conforme" : "text-texto"}`}
+                                >
+                                  {x.indiceDeAprovacao ?? "—"}%
+                                </span>{" "}
+                                <span className="text-texto-2">
+                                  aprovado em {x.aprovadas + x.reprovadas}
+                                </span>
+                              </Link>
+                            );
+                          })()}
+                        </td>
+                      )}
                       <td className="px-4 py-2.5">
                         <Validade validade={a.proximaAvaliacao} />
                       </td>

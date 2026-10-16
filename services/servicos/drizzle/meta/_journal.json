@@ -15,6 +15,13 @@
       "when": 1792054057037,
       "tag": "0001_servicos",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792156009427,
+      "tag": "0002_gestao_de_servicos",
+      "breakpoints": true
     }
   ]
 }

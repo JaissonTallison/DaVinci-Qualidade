@@ -65,6 +65,7 @@ import { QuimicosService } from '../quimicos/quimicos.service.js';
 import {
   aspectos,
   condicionantes,
+  destinadores,
   licencas,
   requisitos,
   residuos,
@@ -493,7 +494,44 @@ export class AmbientalService {
         ),
       );
     if (!r) throw invalido('residuoId', 'Resíduo não encontrado.');
-    await this.db.insert(saidas).values({ ...n, ...autoria(ctx) });
+    // Do cadastro: a licença precisa valer na data da saída (transportar ou destinar sem licença é infração)
+    const doCadastro = async (
+      id: string | null,
+      campo: string,
+      papel: 'transportador' | 'destinador',
+    ) => {
+      if (!id) return null;
+      const [d] = await this.db
+        .select()
+        .from(destinadores)
+        .where(
+          and(
+            eq(destinadores.id, id),
+            eq(destinadores.empresaId, ctx.empresaId),
+          ),
+        );
+      if (!d) throw invalido(campo, 'Cadastro não encontrado.');
+      if (d.tipo !== papel && d.tipo !== 'ambos')
+        throw invalido(campo, `${d.nome} não está cadastrado como ${papel}.`);
+      if (d.licencaValidade < n.data)
+        throw invalido(
+          campo,
+          `A licença de ${d.nome} venceu em ${d.licencaValidade.split('-').reverse().join('/')}.`,
+        );
+      return d;
+    };
+    const t = await doCadastro(
+      n.transportadorId,
+      'transportadorId',
+      'transportador',
+    );
+    const d = await doCadastro(n.destinadorId, 'destinadorId', 'destinador');
+    await this.db.insert(saidas).values({
+      ...n,
+      transportador: t?.nome ?? n.transportador!,
+      destinador: d?.nome ?? n.destinador!,
+      ...autoria(ctx),
+    });
     return this.listarSaidas(ctx, {});
   }
 
@@ -745,6 +783,9 @@ function montarSaida(
     mtr: l.s.mtr,
     transportador: l.s.transportador,
     destinador: l.s.destinador,
+    transportadorId: l.s.transportadorId,
+    destinadorId: l.s.destinadorId,
+    custo: l.s.custo,
     cdfNumero: l.s.cdfNumero,
     cdfData: l.s.cdfData,
     cdfAtrasado: !l.s.cdfNumero && somarDias(l.s.data, DIAS_PARA_CDF) < hoje,

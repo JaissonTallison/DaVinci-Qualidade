@@ -3,6 +3,7 @@ import { DatabaseModule } from '@davinci/database';
 import { requireEnv } from '@davinci/shared';
 import * as schema from './db/schema.js';
 import { AmbientalModule } from './ambiental/ambiental.module.js';
+import { GestaoAmbientalModule } from './gestao/gestao.module.js';
 import { BuscaModule } from './busca/busca.module.js';
 import { HealthController } from './health.controller.js';
 import { PrazosModule } from './prazos/prazos.module.js';
@@ -11,6 +12,7 @@ import { PrazosModule } from './prazos/prazos.module.js';
   imports: [
     DatabaseModule.forRoot({ url: requireEnv('DATABASE_URL'), schema }),
     AmbientalModule,
+    GestaoAmbientalModule,
     PrazosModule,
     BuscaModule,
   ],

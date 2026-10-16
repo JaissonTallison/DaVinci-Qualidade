@@ -57,6 +57,21 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/qualidade/modelos-de-inspecao",
         permissao: "qualidade.ver",
       },
+      {
+        rotulo: "FMEA de processo",
+        href: "/qualidade/fmea",
+        permissao: "qualidade.ver",
+      },
+      {
+        rotulo: "Planos de controle",
+        href: "/qualidade/planos-de-controle",
+        permissao: "qualidade.ver",
+      },
+      {
+        rotulo: "PPAP",
+        href: "/qualidade/ppap",
+        permissao: "qualidade.ver",
+      },
     ],
   },
   {
@@ -145,6 +160,21 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/servicos/fornecedores",
         permissao: "servicos.ver",
       },
+      {
+        rotulo: "Reclamações de clientes",
+        href: "/servicos/reclamacoes",
+        permissao: "servicos.ver",
+      },
+      {
+        rotulo: "Contratos e SLA",
+        href: "/servicos/contratos",
+        permissao: "servicos.ver",
+      },
+      {
+        rotulo: "Catálogo de serviços",
+        href: "/servicos/catalogo",
+        permissao: "servicos.ver",
+      },
     ],
   },
   {
@@ -196,6 +226,21 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/seguranca/epis",
         permissao: "seguranca.ver",
       },
+      {
+        rotulo: "eSocial SST",
+        href: "/seguranca/esocial",
+        permissao: "seguranca.ver",
+      },
+      {
+        rotulo: "Equipamentos de emergência",
+        href: "/seguranca/equipamentos",
+        permissao: "seguranca.ver",
+      },
+      {
+        rotulo: "Brigada e plano de emergência",
+        href: "/seguranca/emergencia",
+        permissao: "seguranca.ver",
+      },
     ],
   },
   {
@@ -242,6 +287,31 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/ambiental/monitoramentos",
         permissao: "ambiental.ver",
       },
+      {
+        rotulo: "Ocorrências ambientais",
+        href: "/ambiental/ocorrencias",
+        permissao: "ambiental.ver",
+      },
+      {
+        rotulo: "Obrigações legais",
+        href: "/ambiental/obrigacoes",
+        permissao: "ambiental.ver",
+      },
+      {
+        rotulo: "Transportadores e destinadores",
+        href: "/ambiental/destinadores",
+        permissao: "ambiental.ver",
+      },
+      {
+        rotulo: "Ecoeficiência",
+        href: "/ambiental/ecoeficiencia",
+        permissao: "ambiental.ver",
+      },
+      {
+        rotulo: "Programas e metas",
+        href: "/ambiental/programas",
+        permissao: "ambiental.ver",
+      },
     ],
   },
   {
@@ -279,6 +349,11 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
       {
         rotulo: "Setores e funções",
         href: "/cadastros/setores-e-funcoes",
+        permissao: "funcionarios.ver",
+      },
+      {
+        rotulo: "Competências por função",
+        href: "/cadastros/competencias",
         permissao: "funcionarios.ver",
       },
     ],
@@ -353,6 +428,18 @@ export const ATALHOS_DE_CRIACAO: AtalhoDeCriacao[] = [
     href: "/auditorias/nova",
     permissao: "auditorias.editar",
     recurso: "auditorias",
+  },
+  {
+    rotulo: "Reclamação de cliente",
+    href: "/servicos/reclamacoes",
+    permissao: "servicos.editar",
+    recurso: "servicos",
+  },
+  {
+    rotulo: "Ocorrência ambiental",
+    href: "/ambiental/ocorrencias",
+    permissao: "ambiental.editar",
+    recurso: "ambiental",
   },
   {
     rotulo: "Risco ou oportunidade",

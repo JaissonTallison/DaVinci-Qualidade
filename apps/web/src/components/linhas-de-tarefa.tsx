@@ -54,6 +54,7 @@ export function LinhasDeTarefa({
                   type={"tipo" in c ? c.tipo : "text"}
                   min={"tipo" in c ? hoje : undefined}
                   maxLength={"max" in c ? c.max : undefined}
+                  list={c.nome === "responsavel" ? "pessoas" : undefined}
                   defaultValue={valores?.[i]?.[c.nome]}
                   aria-invalid={Boolean(erro(c.nome))}
                   className={`${campoCompacto} w-full`}

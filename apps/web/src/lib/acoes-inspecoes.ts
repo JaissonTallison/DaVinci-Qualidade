@@ -80,6 +80,9 @@ export async function criarInspecao(
   const itens = itensDoFormulario(form);
   const dados = {
     ...valores,
+    nqa: valores.nqa || undefined,
+    nivelInspecao: valores.nqa ? valores.nivelInspecao : undefined,
+    fornecedorId: valores.fornecedorId || undefined,
     modeloId: valores.modeloId || undefined,
     itens: valores.modeloId ? undefined : itens,
   };
@@ -123,7 +126,13 @@ export async function salvarRespostas(
     redirect(`${BASE}/${inspecao.id}?aviso=salva`);
   const concluida = await chamarApi<Inspecao>(
     `/inspecoes/${inspecao.id}/concluir`,
-    { metodo: "POST", corpo: { versao: salvo.dados.versao } },
+    {
+      metodo: "POST",
+      corpo: {
+        versao: salvo.dados.versao,
+        defeituosos: valores.defeituosos || undefined,
+      },
+    },
   );
   // As respostas já ficaram salvas: o erro de conclusão (ex.: NOK sem observação) aparece com a tela atualizada
   if (!concluida.ok)

@@ -33,6 +33,6 @@ O catálogo guarda cada EPI com o seu **Certificado de Aprovação (CA)**. A ent
 
 ## 4. Ainda não feito
 
-- [ ] Termo de entrega em PDF para assinatura
-- [ ] EPIs obrigatórios por função (ligado ao PGR) e a conformidade do funcionário
+- [x] Ficha de EPI com o termo para assinar ([emergência e documentos](emergencia.md))
+- [x] EPIs obrigatórios por função (ligado ao PGR) e a conformidade do funcionário ([competências](competencias.md))
 - [ ] Baixa no estoque do almoxarifado

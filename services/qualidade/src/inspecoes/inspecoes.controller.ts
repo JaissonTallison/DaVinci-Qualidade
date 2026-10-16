@@ -22,6 +22,11 @@ export class InspecoesController {
     return this.inspecoes.listar(ctx, dados);
   }
 
+  @MessagePattern(I.recebimentoDoFornecedor)
+  recebimentoDoFornecedor(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.inspecoes.recebimentoDoFornecedor(ctx, dados);
+  }
+
   @MessagePattern(I.resumo)
   resumo(@Contexto() ctx: Ctx) {
     return this.inspecoes.resumo(ctx);

@@ -29,4 +29,4 @@ Quem trabalha na empresa, em qual setor e em qual função. É a base da Seguran
 
 - [ ] Importar funcionários por planilha
 - [ ] Integração com um RH externo (adaptador no `integracoes`)
-- [ ] Exames (ASO) e treinamentos, no serviço `seguranca`
+- [x] Exames (ASO) e treinamentos ([módulo](exames-e-treinamentos.md)) e competências por função ([módulo](competencias.md))

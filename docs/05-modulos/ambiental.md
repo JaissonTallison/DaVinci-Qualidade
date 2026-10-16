@@ -1,6 +1,6 @@
 # Meio Ambiente
 
-> **Status:** em uso · **Serviço:** `ambiental` · **Atualizado em:** 15/10/2026
+> **Status:** em uso · **Serviço:** `ambiental` · **Atualizado em:** 16/10/2026
 > Referência: ISO 14001 (6.1.2 aspectos, 6.1.3 requisitos legais, 8.1 controle operacional, 9.1.1 monitoramento, 9.1.2 avaliação do atendimento), Resolução CONAMA 237/1997, NBR 10004, NBR 14725 (FDS e GHS), MTR/CDF do SINIR, GHG Protocol (escopos 1 e 2). Regras decididas por nós (decisão Q9).
 
 | Função                  | Regras                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -15,6 +15,15 @@
 | **Inventário de GEE**   | Escopo 1 (combustíveis queimados na empresa) e escopo 2 (energia elétrica comprada). Emissão (t CO₂e) = consumo do ano × fator ÷ 1000. **O fator é informado pela empresa**, por fonte e ano, com a referência (GHG Protocol, fator do SIN/MCTI): o sistema não traz fatores prontos para não usar número desatualizado. Fonte com consumo e sem fator deixa o total marcado como incompleto |
 | **Monitoramentos**      | Tipo, ponto, parâmetro, unidade, limite mínimo e/ou máximo (ao menos um; mínimo ≤ máximo), referência e periodicidade em meses. Cada resultado (data não futura, laudo opcional) é comparado com o limite. Próxima coleta = última coleta + periodicidade (sem coleta: já). Anexos (laudos)                                                                                                  |
 
+| **Ocorrências ambientais** | `OCA-AAAA-NNN`. Tipo, data e hora, local, substância e quantidade, meios atingidos, severidade, descrição e contenção. **Comunicação ao órgão obrigatória** com severidade alta ou crítica, ou água atingida, até o dia seguinte; comunicada depois disso fica marcada fora do prazo. NC na Qualidade (origem Ocorrência ambiental, prazo de 30 dias). **Encerrar exige causas, ações e, quando obrigatória, a comunicação registrada**. Anexos |
+| **Obrigações legais** | Calendário de entregas aos órgãos (RAPP, TCFA, certificado do CTF, inventário de resíduos, automonitoramento, outorga...) com modelos prontos. Periodicidade mensal a bienal ou única. **A entrega guarda o comprovante e agenda a próxima a partir do vencimento atendido** (entregar atrasado não empurra o calendário); única fecha. Com entregas registradas não se exclui |
+| **Transportadores e destinadores** | Nome, CNPJ, papel e a licença (número, órgão, validade). **A saída de resíduo recusa transportador ou destinador com a licença vencida na data** ou sem o papel; o nome do dia fica na saída. Custo da destinação na saída |
+| **Inventário de resíduos** | Por resíduo e ano: saídas, quantidade, custo e CDFs pendentes; planilhas do inventário e das saídas com MTR (para o inventário estadual e o SINIR) e versão para imprimir |
+| **Ecoeficiência** | Produção mensal (um registro por mês). Água e energia (Consumo), resíduos em kg (saídas em kg ou t) e emissões em kg CO₂e (consumo × fator do ano) por mês e, no ano, por unidade produzida |
+| **Programas e metas** | Objetivo ambiental (ISO 14001, 6.2) com indicador, linha de base, meta e prazo, responsável e ações. Indicadores de água, energia, resíduos e emissões (total ou por unidade) são calculados no ano corrente; o indicador próprio é medido mês a mês. Progresso = caminho percorrido da linha de base até a meta |
+
 Painel de vencimentos: renovação de licença (ou validade, se já protocolada), condicionante, avaliação de requisito, ação de aspecto significativo, CDF, revisão de FDS e coleta de monitoramento. Pesquisa geral: licença por número, órgão ou descrição; requisito por norma ou tema; aspecto por atividade ou aspecto; resíduo por nome; produto por nome, fabricante ou CAS; monitoramento por ponto ou parâmetro. Início: aba Meio Ambiente (aspectos significativos, licenças, condicionantes e CDFs, requisitos, monitoramentos fora do limite, FDS para revisar) e "Licenças vigentes" na saúde do sistema de gestão.
 
-Ainda não feito: escopo 3 do GEE, metas de consumo e resultado fora do limite abrindo NC na Qualidade.
+Painel de vencimentos também: obrigação legal, comunicação de ocorrência e licença de transportador ou destinador.
+
+Ainda não feito: escopo 3 do GEE; resultado de monitoramento fora do limite abrindo NC na Qualidade; integração direta com o SINIR (hoje a planilha).

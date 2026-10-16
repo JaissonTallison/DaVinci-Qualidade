@@ -3,7 +3,16 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
-import { TIPOS_INSPECAO, type ModeloDeInspecao } from "@davinci/types";
+import {
+  NIVEIS_DE_INSPECAO,
+  NQAS,
+  TIPOS_INSPECAO,
+  planoDeAmostragem,
+  type ModeloDeInspecao,
+  type NivelDeInspecao,
+  type Nqa,
+  type ParceiroResumo,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { LinhasDeItem } from "@/components/linhas-de-item";
@@ -22,10 +31,12 @@ export function FormularioNovaInspecao({
   modelos,
   hoje,
   inspetor,
+  fornecedores,
 }: {
   modelos: ModeloDeInspecao[];
   hoje: string;
   inspetor: string;
+  fornecedores: ParceiroResumo[];
 }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     criarInspecao,
@@ -37,6 +48,14 @@ export function FormularioNovaInspecao({
     v.modeloId ?? (modelos.length ? modelos[0]!.id : ""),
   );
   const modelo = modelos.find((m) => m.id === modeloId);
+  const [nqa, setNqa] = useState(v.nqa ?? "");
+  const [nivel, setNivel] = useState(v.nivelInspecao ?? "II");
+  const [lote, setLote] = useState(v.quantidade ?? "");
+  const tamanho = Number(lote);
+  const plano =
+    nqa && Number.isInteger(tamanho) && tamanho > 0
+      ? planoDeAmostragem(tamanho, nivel as NivelDeInspecao, nqa as Nqa)
+      : null;
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
 
@@ -117,14 +136,15 @@ export function FormularioNovaInspecao({
           </Campo>
           <Campo
             id="quantidade"
-            rotulo="Quantidade inspecionada"
+            rotulo={nqa ? "Tamanho do lote" : "Quantidade inspecionada"}
             erro={erros.quantidade}
           >
             <input
               id="quantidade"
               name="quantidade"
               inputMode="numeric"
-              defaultValue={v.quantidade}
+              value={lote}
+              onChange={(e) => setLote(e.target.value)}
               className={campo}
               aria-invalid={Boolean(erros.quantidade)}
             />
@@ -144,12 +164,35 @@ export function FormularioNovaInspecao({
             <input
               id="inspetor"
               name="inspetor"
+              list="pessoas"
               defaultValue={v.inspetor ?? inspetor}
               maxLength={120}
               className={campo}
               aria-invalid={Boolean(erros.inspetor)}
             />
           </Campo>
+          {fornecedores.length > 0 && (
+            <Campo
+              id="fornecedorId"
+              rotulo="Fornecedor"
+              erro={erros.fornecedorId}
+              ajuda="No recebimento: entra no índice do fornecedor."
+            >
+              <Selecao
+                id="fornecedorId"
+                name="fornecedorId"
+                defaultValue={v.fornecedorId ?? ""}
+                className={campo}
+              >
+                <option value="">Sem fornecedor</option>
+                {fornecedores.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.nome}
+                  </option>
+                ))}
+              </Selecao>
+            </Campo>
+          )}
           <Campo id="data" rotulo="Data" erro={erros.data}>
             <input
               id="data"
@@ -163,6 +206,77 @@ export function FormularioNovaInspecao({
           </Campo>
         </div>
       </div>
+
+      <fieldset className="border-t border-borda p-5">
+        <legend className="sr-only">Amostragem</legend>
+        <h2 className={tituloDaSecao}>Amostragem (NBR 5426)</h2>
+        <p className="mt-1 text-base text-texto-2">
+          Opcional. Com o NQA, o sistema calcula o tamanho da amostra e quantos
+          defeituosos o lote aceita (amostragem simples, inspeção normal).
+        </p>
+        <div className="mt-3 grid gap-5 sm:grid-cols-3">
+          <Campo id="nqa" rotulo="NQA" erro={erros.nqa}>
+            <select
+              id="nqa"
+              name="nqa"
+              value={nqa}
+              onChange={(e) => setNqa(e.target.value)}
+              className={campo}
+            >
+              <option value="">Sem amostragem (100% dos itens)</option>
+              {Object.entries(NQAS).map(([k, n]) => (
+                <option key={k} value={k}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </Campo>
+          <Campo
+            id="nivelInspecao"
+            rotulo="Nível de inspeção"
+            erro={erros.nivelInspecao}
+          >
+            <select
+              id="nivelInspecao"
+              name="nivelInspecao"
+              value={nivel}
+              onChange={(e) => setNivel(e.target.value)}
+              disabled={!nqa}
+              className={campo}
+            >
+              {Object.entries(NIVEIS_DE_INSPECAO).map(([k, n]) => (
+                <option key={k} value={k}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </Campo>
+          <div aria-live="polite" className="self-end text-base">
+            {plano ? (
+              <p>
+                Letra <span className="font-mono">{plano.letraDoPlano}</span>:
+                amostra de{" "}
+                <span className="font-semibold tabular-nums">
+                  {plano.amostra}
+                </span>
+                {plano.cemPorCento && " (100% do lote)"}, aceita com até{" "}
+                <span className="font-semibold tabular-nums">
+                  {plano.aceita}
+                </span>{" "}
+                defeituoso{plano.aceita === 1 ? "" : "s"}, rejeita com{" "}
+                <span className="font-semibold tabular-nums">
+                  {plano.rejeita}
+                </span>
+                .
+              </p>
+            ) : nqa ? (
+              <p className="text-texto-2">
+                Informe o tamanho do lote para ver o plano.
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </fieldset>
 
       {!modeloId && (
         <div className="border-t border-borda p-5">
