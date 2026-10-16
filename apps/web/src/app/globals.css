@@ -88,6 +88,141 @@
     color-mix(in srgb, var(--color-primaria-texto) 12%, transparent);
 }
 
+/*
+ * Tela de acesso (entrar, senha, 2FA): segunda exceção visual do sistema, decidida com o dono do produto
+ * (docs/04-design/interface.md). Foto de fundo com véu marinho, cartão branco flutuante, ícones em quadrado colorido.
+ * Tudo escopado em .dv-acesso: nada disso vale dentro do sistema.
+ */
+.dv-acesso {
+  --acesso-marinho: 2 14 33;
+  --acesso-azul: #0b62e3;
+  --acesso-azul-escuro: #0950bb;
+  --acesso-destaque: #2fd3b4;
+  --acesso-tinta: #0b1f44;
+}
+.dv-acesso-veu {
+  background: rgb(var(--acesso-marinho) / 0.45);
+}
+@media (min-width: 1024px) {
+  .dv-acesso-veu {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--acesso-marinho) / 0.94) 0%,
+      rgb(var(--acesso-marinho) / 0.82) 30%,
+      rgb(var(--acesso-marinho) / 0.35) 52%,
+      rgb(var(--acesso-marinho) / 0) 68%
+    );
+  }
+}
+.dv-acesso-titulo {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 2.4vw, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+.dv-acesso-titulo em {
+  font-style: normal;
+  color: var(--acesso-destaque);
+}
+.dv-acesso-icone {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 12px;
+  color: var(--cor);
+  background: color-mix(in srgb, var(--cor) 20%, rgb(var(--acesso-marinho)));
+  border: 1px solid color-mix(in srgb, var(--cor) 35%, transparent);
+}
+.dv-acesso-vidro {
+  border-radius: 16px;
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  backdrop-filter: blur(6px);
+}
+.dv-acesso-norma {
+  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 0.3);
+}
+.dv-acesso-cartao {
+  border-radius: 24px;
+  background: var(--color-white);
+  color: var(--acesso-tinta);
+  box-shadow: 0 30px 80px rgb(var(--acesso-marinho) / 0.35);
+}
+.dv-acesso-cartao h1 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  color: var(--acesso-tinta);
+}
+.dv-acesso-campo {
+  height: 3rem;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #dfe5ee;
+  background: #f5f7fb;
+  color: var(--acesso-tinta);
+  font-size: 1rem;
+}
+.dv-acesso-campo::placeholder {
+  color: #6b7a90;
+}
+.dv-acesso-campo:focus {
+  outline: 2px solid var(--acesso-azul);
+  outline-offset: 1px;
+  background: var(--color-white);
+}
+.dv-acesso-campo[aria-invalid="true"] {
+  border-color: var(--color-nao-conforme);
+}
+.dv-acesso-botao {
+  display: inline-flex;
+  height: 3rem;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 8px;
+  background: var(--acesso-azul);
+  color: var(--color-white);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 150ms;
+}
+.dv-acesso-botao:hover {
+  background: var(--acesso-azul-escuro);
+}
+.dv-acesso-botao:disabled {
+  opacity: 0.6;
+}
+.dv-acesso-provedor {
+  display: inline-flex;
+  height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  border-radius: 8px;
+  border: 1px solid #dfe5ee;
+  background: var(--color-white);
+  color: var(--acesso-tinta);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 150ms;
+}
+.dv-acesso-provedor:hover {
+  background: #f5f7fb;
+}
+.dv-acesso-link {
+  color: var(--acesso-azul);
+  font-weight: 600;
+}
+.dv-acesso-link:hover {
+  text-decoration: underline;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dv-entrar,
   .dv-crescer,

@@ -32,7 +32,7 @@ const PROVEDORES: Record<ProvedorExterno, () => Provedor> = {
 export const ehProvedor = (p: string): p is ProvedorExterno =>
   p === "microsoft" || p === "google";
 
-/** Provedores com ID e segredo no ambiente: só estes ganham botão na tela de entrar. */
+/** Provedores com ID e segredo no ambiente: só estes levam ao provedor (os outros voltam com aviso). */
 export function provedoresAtivos(): ProvedorExterno[] {
   return (Object.keys(PROVEDORES) as ProvedorExterno[]).filter((p) => {
     const c = PROVEDORES[p]();

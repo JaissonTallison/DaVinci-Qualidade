@@ -318,4 +318,6 @@ SVG próprio em `components/graficos.tsx`: colunas empilhadas, colunas agrupadas
 | Texto nunca na cor da série                                 | Rótulos e valores nas cores de texto; a cor fica no quadradinho ao lado                                                                      |
 | Interação                                                   | Tooltip ao passar o mouse, realce da série pela legenda, clique abre a lista filtrada                                                        |
 
-O destaque do topo do início (`.dv-destaque` em `globals.css`) é a única área com degradê e canto de 12 px do sistema.
+O destaque do topo do início (`.dv-destaque` em `globals.css`) e as telas de acesso (`.dv-acesso`) são as únicas áreas com degradê e canto acima de 6 px do sistema.
+
+As telas de acesso (entrar, esqueci a senha, código do 2FA) seguem o visual aprovado pelo dono do produto em 16/10/2026: foto de fundo com véu marinho em degradê, cartão branco de canto 24 px com sombra, ícones das áreas em quadrado colorido, botão azul e o título "Bem-vindo(a)". É uma vitrine de quem ainda não entrou; dentro do sistema continuam valendo todas as regras desta página. Tudo fica escopado em `.dv-acesso` e não pode ser reaproveitado em outras telas.
