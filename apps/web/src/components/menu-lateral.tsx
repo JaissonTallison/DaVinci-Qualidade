@@ -41,10 +41,17 @@ export function MenuLateral({
   const compacto = permiteCompactar && estado.exibirCompacto;
   const [fechados, setFechados] = useState(() => new Set(fechadosIniciais));
 
-  const ativo = (href: string) =>
+  const casa = (href: string) =>
     href === "/"
       ? atual === "/"
       : atual === href || atual.startsWith(`${href}/`);
+  // Só o item mais específico fica marcado: em /auditorias/biblioteca, não também "Auditorias"
+  const maisEspecifico = grupos
+    .flatMap((g) => g.itens.map((i) => i.href))
+    .filter(casa)
+    .sort((a, b) => b.length - a.length)[0];
+  const ativo = (href: string) =>
+    href === "/" ? atual === "/" : href === maisEspecifico;
 
   function alternarGrupo(titulo: string) {
     const novo = new Set(fechados);

@@ -49,9 +49,23 @@ import {
   type StatusAuditoria,
   type TipoAuditoria,
   type TipoConstatacao,
+  METODOLOGIA_PADRAO,
+  planoDaAuditoriaSchema,
+  filtroLogDoAuditorSchema,
+  type LogDoAuditor,
+  type AuditoriaNoLog,
+  type PapelDoAuditor,
+  type PlanoDaAuditoria,
+  type ProcessoAuditado,
+  type TipoDeDesvio,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
-import { auditorias, constatacoes, sequencias } from '../db/schema.js';
+import {
+  auditorias,
+  constatacoes,
+  perguntasDaAuditoria,
+  sequencias,
+} from '../db/schema.js';
 import {
   contagemPorTipo,
   formatarNumeroAuditoria,
@@ -345,6 +359,13 @@ export class AuditoriasService {
           descricao: [
             c.descricao,
             c.evidencia ? `Evidência: ${c.evidencia}` : '',
+            c.causaRaiz ? `Causa raiz provável (modelo): ${c.causaRaiz}` : '',
+            c.acaoCorretiva
+              ? `Ação corretiva sugerida: ${c.acaoCorretiva}`
+              : '',
+            c.evidenciaFechamento
+              ? `Evidência de fechamento esperada: ${c.evidenciaFechamento}`
+              : '',
             `Requisito: ${requisito}. Constatação da auditoria ${linha.numero}.`,
           ]
             .filter(Boolean)
@@ -427,6 +448,119 @@ export class AuditoriasService {
   }
 
   /** Transação: confere empresa, status e versão (já avançando-a, o que trava gravação simultânea) e aplica a mudança. */
+  /**
+   * Dados do plano e do relatório. Cancelada não muda; concluída só aceita papel e horas (vão para o Log do
+   * Auditor e costumam ser lançados depois).
+   */
+  async salvarPlano(ctx: Contexto, dados: ComId): Promise<Auditoria> {
+    const { versao, ...plano } = validar(
+      planoDaAuditoriaSchema,
+      dados?.alteracoes,
+    );
+    const id = dados?.id;
+    const [linha] = isUuid(id)
+      ? await this.db
+          .select()
+          .from(auditorias)
+          .where(
+            and(eq(auditorias.id, id), eq(auditorias.empresaId, ctx.empresaId)),
+          )
+      : [];
+    if (!linha)
+      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Auditoria não encontrada.');
+    if (linha.status === 'cancelada')
+      throw new ErroDeNegocio(
+        'REGRA_DE_NEGOCIO',
+        'Auditoria cancelada não muda.',
+      );
+    const valores =
+      linha.status === 'concluida'
+        ? { papel: plano.papel, horas: plano.horas }
+        : plano;
+    const [gravada] = await this.db
+      .update(auditorias)
+      .set({ ...valores, atualizadoPor: ctx.usuarioId })
+      .where(
+        and(
+          eq(auditorias.id, linha.id),
+          eq(auditorias.atualizadoEm, new Date(versao)),
+        ),
+      )
+      .returning();
+    if (!gravada)
+      throw new ErroDeNegocio(
+        'CONFLITO',
+        'Esta auditoria foi alterada por outra pessoa. Recarregue a página.',
+      );
+    return this.obter(ctx, { id: gravada.id });
+  }
+
+  /** Auditorias em que a pessoa atuou (líder ou equipe), com horas, referenciais, processos e o que conduziu. */
+  async logDoAuditor(ctx: Contexto, dados: unknown): Promise<LogDoAuditor> {
+    const { auditor } = validar(filtroLogDoAuditorSchema, dados);
+    const nome = normalizarNome(auditor);
+    const linhas = (
+      await this.db
+        .select()
+        .from(auditorias)
+        .where(eq(auditorias.empresaId, ctx.empresaId))
+        .orderBy(desc(auditorias.dataInicio))
+    ).filter(
+      (l) =>
+        l.status !== 'cancelada' &&
+        (normalizarNome(l.auditorLider).includes(nome) ||
+          normalizarNome(l.equipe ?? '').includes(nome)),
+    );
+    const ids = linhas.map((l) => l.id);
+    const [respondidas, achados] = ids.length
+      ? await Promise.all([
+          this.db
+            .select({
+              auditoriaId: perguntasDaAuditoria.auditoriaId,
+              resposta: perguntasDaAuditoria.resposta,
+            })
+            .from(perguntasDaAuditoria)
+            .where(inArray(perguntasDaAuditoria.auditoriaId, ids)),
+          this.db
+            .select({
+              auditoriaId: constatacoes.auditoriaId,
+              tipo: constatacoes.tipo,
+            })
+            .from(constatacoes)
+            .where(inArray(constatacoes.auditoriaId, ids)),
+        ])
+      : [[], []];
+    const lista = linhas.map((l): AuditoriaNoLog => ({
+      id: l.id,
+      numero: l.numero,
+      organizacao: l.empresaAuditada ?? '',
+      dataInicio: l.dataInicio,
+      dataFim: l.dataFim,
+      normas: l.normas as Norma[],
+      processos: l.processos as ProcessoAuditado[],
+      papel: (normalizarNome(l.auditorLider).includes(nome)
+        ? l.papel
+        : 'auditor') as PapelDoAuditor,
+      horas: l.horas,
+      perguntasConduzidas: respondidas.filter(
+        (r) => r.auditoriaId === l.id && r.resposta !== 'pendente',
+      ).length,
+      achados: achados.filter(
+        (c) => c.auditoriaId === l.id && c.tipo !== 'conformidade',
+      ).length,
+      status: l.status as StatusAuditoria,
+    }));
+    return {
+      auditor,
+      auditorias: lista,
+      horas: lista.reduce((t, a) => t + (a.horas ?? 0), 0),
+      referenciais: [...new Set(lista.flatMap((a) => a.normas))],
+      processos: [...new Set(lista.flatMap((a) => a.processos))],
+      perguntasConduzidas: lista.reduce((t, a) => t + a.perguntasConduzidas, 0),
+      achados: lista.reduce((t, a) => t + a.achados, 0),
+    };
+  }
+
   private async alterar(
     ctx: Contexto,
     id: unknown,
@@ -533,6 +667,27 @@ function montar(l: Linha, lista: LinhaConstatacao[]): Auditoria {
     status: l.status as StatusAuditoria,
     conclusao: l.conclusao,
     motivoCancelamento: l.motivoCancelamento,
+    plano: {
+      empresaAuditada: l.empresaAuditada,
+      unidade: l.unidade,
+      objetivo: l.objetivo,
+      metodologia: l.metodologia ?? METODOLOGIA_PADRAO,
+      pontosFortes: l.pontosFortes,
+      processos: l.processos as ProcessoAuditado[],
+      criterios: l.criterios,
+      cronograma: l.cronograma as PlanoDaAuditoria['cronograma'],
+      auditados: l.auditados as PlanoDaAuditoria['auditados'],
+      logistica: {
+        sala: '',
+        epi: '',
+        acompanhante: '',
+        observacoes: '',
+        ...(l.logistica as Partial<PlanoDaAuditoria['logistica']>),
+      },
+      emissor: l.emissor,
+      papel: l.papel as PapelDoAuditor,
+      horas: l.horas,
+    },
     constatacoes: lista.map((c) => ({
       id: c.id,
       ordem: c.ordem,
@@ -542,6 +697,12 @@ function montar(l: Linha, lista: LinhaConstatacao[]): Auditoria {
       area: c.area,
       descricao: c.descricao,
       evidencia: c.evidencia,
+      perguntaCodigo: c.perguntaCodigo,
+      modeloCodigo: c.modeloCodigo,
+      tipoDesvio: c.tipoDesvio as TipoDeDesvio | null,
+      causaRaiz: c.causaRaiz,
+      acaoCorretiva: c.acaoCorretiva,
+      evidenciaFechamento: c.evidenciaFechamento,
       ncId: c.ncId,
       ncNumero: c.ncNumero,
     })),
@@ -551,3 +712,10 @@ function montar(l: Linha, lista: LinhaConstatacao[]): Auditoria {
     versao: l.atualizadoEm.toISOString(),
   };
 }
+
+const normalizarNome = (t: string) =>
+  t
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();

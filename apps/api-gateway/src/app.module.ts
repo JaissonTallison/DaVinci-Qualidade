@@ -29,7 +29,15 @@ import { ConsultasController } from './parceiros/consultas.controller.js';
 import { ParceirosController } from './parceiros/parceiros.controller.js';
 import { ReferenciasController } from './parceiros/referencias.controller.js';
 import { CalibracaoController } from './qualidade/calibracao.controller.js';
-import { AuditoriasController } from './auditorias/auditorias.controller.js';
+import {
+  AuditoriasController,
+  PerguntasDeAuditoriaController,
+  EvidenciasDeAuditoriaController,
+  ModelosDeNcController,
+  PromptsDeIaController,
+  LogDoAuditorController,
+  CriteriosDeAuditoriaController,
+} from './auditorias/auditorias.controller.js';
 import { AcidentesController } from './seguranca/acidentes.controller.js';
 import { EpisController } from './seguranca/epis.controller.js';
 import { RegistrosDeSegurancaController } from './seguranca/registros.controller.js';
@@ -112,6 +120,12 @@ export const observeEnabled = Boolean(
     ModelosDeInspecaoController,
     CalibracaoController,
     AuditoriasController,
+    PerguntasDeAuditoriaController,
+    EvidenciasDeAuditoriaController,
+    ModelosDeNcController,
+    PromptsDeIaController,
+    LogDoAuditorController,
+    CriteriosDeAuditoriaController,
     AcidentesController,
     EpisController,
     RegistrosDeSegurancaController,

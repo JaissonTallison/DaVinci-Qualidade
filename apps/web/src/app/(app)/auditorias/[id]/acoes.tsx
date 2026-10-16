@@ -159,9 +159,12 @@ export function RegistrarConstatacao({ auditoria }: { auditoria: Auditoria }) {
 export function FormalizarNc({
   auditoria,
   constatacaoId,
+  voltar,
 }: {
   auditoria: Auditoria;
   constatacaoId: string;
+  /** Tela da jornada para onde voltar (padrão: o resumo). */
+  voltar?: string;
 }) {
   const [estado, enviar, enviando] = useActionState<EstadoDaAcao, FormData>(
     formalizarNc.bind(null, auditoria.id),
@@ -187,6 +190,7 @@ export function FormalizarNc({
       >
         <input type="hidden" name="versao" value={auditoria.versao} />
         <input type="hidden" name="constatacaoId" value={constatacaoId} />
+        {voltar && <input type="hidden" name="voltar" value={voltar} />}
         <label className="flex flex-col gap-1 text-sm font-semibold text-texto-2">
           Responsável pela NC
           <input

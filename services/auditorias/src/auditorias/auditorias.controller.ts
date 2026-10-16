@@ -66,4 +66,14 @@ export class AuditoriasController {
   cancelar(@Contexto() ctx: Ctx, @Dados() dados: ComId) {
     return this.auditorias.cancelar(ctx, dados);
   }
+
+  @MessagePattern(PATTERNS.auditorias.salvarPlano)
+  salvarPlano(@Contexto() ctx: Ctx, @Dados() dados: ComId) {
+    return this.auditorias.salvarPlano(ctx, dados);
+  }
+
+  @MessagePattern(PATTERNS.auditorias.logDoAuditor)
+  logDoAuditor(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.auditorias.logDoAuditor(ctx, dados);
+  }
 }

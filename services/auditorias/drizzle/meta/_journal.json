@@ -15,6 +15,48 @@
       "when": 1792039768727,
       "tag": "0001_auditorias",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792096813181,
+      "tag": "0002_kit",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792097308414,
+      "tag": "0003_roteiro",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792098044766,
+      "tag": "0004_evidencias",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792100362763,
+      "tag": "0005_conteudo_completo",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792120185885,
+      "tag": "0006_plano_e_relatorio",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792120977696,
+      "tag": "0007_criterios_proprios",
+      "breakpoints": true
     }
   ]
 }

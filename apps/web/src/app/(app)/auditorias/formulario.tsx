@@ -129,8 +129,13 @@ export function FormularioDeAuditoria({
               </label>
             ))}
           </div>
-          {erros.normas && (
+          {erros.normas ? (
             <p className="text-sm text-nao-conforme">{erros.normas}</p>
+          ) : (
+            <p className="text-sm text-texto-3">
+              Uma edição por norma. As de 2026 são as vigentes; a ISO 9001:2015
+              e a ISO 14001:2015 ficam em transição até 2029.
+            </p>
           )}
         </fieldset>
         <div className="grid gap-5 sm:grid-cols-2">
