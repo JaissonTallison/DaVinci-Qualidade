@@ -52,7 +52,7 @@ export default async function DetalheDoPlano({
   const podeEditar = !terminado && permissoes.includes("qualidade.editar");
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link
         href="/qualidade/planos-de-acao"
         className="text-sm text-texto-2 hover:underline"

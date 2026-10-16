@@ -58,7 +58,7 @@ export default async function DetalheDaOs({
     ? convites.dados.find((c) => c.id === convite)
     : undefined;
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/servicos/ordens"
         className="text-sm text-texto-2 hover:underline"

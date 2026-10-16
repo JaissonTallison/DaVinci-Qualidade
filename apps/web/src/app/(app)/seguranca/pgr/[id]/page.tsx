@@ -45,7 +45,7 @@ export default async function DetalheDoRisco({
   const x = r.dados;
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/seguranca/pgr"
         className="text-sm text-texto-2 hover:underline"

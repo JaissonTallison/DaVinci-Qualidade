@@ -90,7 +90,7 @@ export function FormularioDeTema({
     <form
       action={enviar}
       noValidate
-      className={tema ? "" : `${painel} mt-6 max-w-4xl`}
+      className={tema ? "" : `${painel} mt-6`}
     >
       {tema && <input type="hidden" name="versao" value={tema.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${tema ? "" : "p-5"}`}>

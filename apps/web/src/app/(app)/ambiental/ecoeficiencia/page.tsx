@@ -91,7 +91,7 @@ export default async function Ecoeficiencia({
           </div>
         ))}
       </section>
-      <section className={`${painel} mt-6 overflow-x-auto`}>
+      <section className={`${painel} relative mt-6 overflow-x-auto`}>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-borda text-left text-texto-2">

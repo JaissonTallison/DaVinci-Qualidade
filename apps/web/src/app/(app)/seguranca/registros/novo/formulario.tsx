@@ -36,7 +36,7 @@ export function FormularioDeRegistro({
       ? TIPOS_REGISTRO_SST[tipo as TipoRegistroSst].conteudo
       : "Conteúdo";
   return (
-    <form action={acao} noValidate className={`${painel} mt-6 max-w-4xl`}>
+    <form action={acao} noValidate className={`${painel} mt-6`}>
       <div className="grid gap-5 p-5 sm:grid-cols-3">
         {estado.erro && !estado.erro.detalhes?.length && (
           <div className="sm:col-span-3">

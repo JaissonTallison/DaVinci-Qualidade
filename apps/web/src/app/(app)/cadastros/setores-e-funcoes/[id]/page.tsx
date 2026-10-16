@@ -108,7 +108,7 @@ export default async function CompetenciasDaFuncao({
   );
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link
         href="/cadastros/competencias"
         className="text-sm text-texto-2 hover:underline"
@@ -139,7 +139,7 @@ export default async function CompetenciasDaFuncao({
             Nenhum funcionário ativo nesta função.
           </p>
         ) : (
-          <div className="mt-3 overflow-x-auto border-t border-borda">
+          <div className="relative mt-3 overflow-x-auto border-t border-borda">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-borda text-left text-texto-2">

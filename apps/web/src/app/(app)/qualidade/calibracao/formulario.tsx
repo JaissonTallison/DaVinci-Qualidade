@@ -66,7 +66,7 @@ export function FormularioDeInstrumento({
     <form
       action={acao}
       noValidate
-      className={embutido ? "" : `${painel} mt-6 max-w-4xl`}
+      className={embutido ? "" : `${painel} mt-6`}
     >
       {instrumento && (
         <input type="hidden" name="versao" value={instrumento.versao} />

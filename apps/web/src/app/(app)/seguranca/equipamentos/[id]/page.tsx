@@ -39,7 +39,7 @@ export default async function DetalheDoEquipamento({
   const podeEditar = permissoes.includes("seguranca.editar");
   const hoje = hojeEmBrasilia();
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/seguranca/equipamentos"
         className="text-sm text-texto-2 hover:underline"

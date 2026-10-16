@@ -36,7 +36,7 @@ export default async function DetalheDoEpi({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("seguranca.editar");
 
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/seguranca/epis"
         className="text-sm text-texto-2 hover:underline"

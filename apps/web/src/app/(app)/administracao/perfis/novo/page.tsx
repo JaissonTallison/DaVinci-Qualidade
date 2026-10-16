@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Criar perfil" };
 
 export default function NovoPerfil() {
   return (
-    <div className="max-w-5xl">
+    <div className="w-full">
       <Link
         href="/administracao/perfis"
         className="text-sm text-texto-2 hover:underline"

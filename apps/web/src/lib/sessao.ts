@@ -10,6 +10,13 @@ export const COOKIE_RENOVACAO = "davinci_renovacao";
 export const COOKIE_DESAFIO = "davinci_desafio";
 /** "Confiar neste navegador por 30 dias". */
 export const COOKIE_CONFIAVEL = "davinci_confiavel";
+/** "Lembrar de mim": sem ele, a sessão vive só até o navegador fechar. */
+export const COOKIE_LEMBRAR = "davinci_lembrar";
+export const DIAS_LEMBRAR = 30;
+/** "Entrar com Microsoft/Google": state, nonce e PKCE da ida ao provedor (10 minutos). */
+export const COOKIE_EXTERNO = "davinci_externo";
+/** Recusa vinda da volta do provedor, mostrada na tela de entrar (1 minuto; não vai na URL). */
+export const COOKIE_RECUSA = "davinci_recusa";
 
 /** Renova quando faltar menos que isto para o token de acesso vencer. */
 export const MARGEM_DE_RENOVACAO_MS = 60_000;
@@ -19,36 +26,41 @@ type OpcoesDoCookie = {
   sameSite: "lax";
   secure: boolean;
   path: "/";
-  expires: Date;
+  expires?: Date;
 };
 
-export function opcoes(expira: string): OpcoesDoCookie {
+/** Sem `expira`: cookie de sessão do navegador (apagado ao fechar). */
+export function opcoes(expira?: string): OpcoesDoCookie {
   return {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    expires: new Date(expira),
+    ...(expira ? { expires: new Date(expira) } : {}),
   };
 }
 
-/** Os dois cookies de uma sessão, prontos para `cookies().set(...)` (ação) ou `response.cookies.set(...)` (proxy). */
+/**
+ * Os dois cookies de uma sessão, prontos para `cookies().set(...)` (ação) ou `response.cookies.set(...)` (proxy).
+ * `lembrar` falso: viram cookies de sessão do navegador; o token continua vencendo no prazo dele.
+ */
 export function cookiesDaSessao(
   sessao: Pick<
     Sessao,
     "tokenAcesso" | "acessoExpiraEm" | "tokenRenovacao" | "renovacaoExpiraEm"
   >,
+  lembrar: boolean,
 ) {
   return [
     {
       name: COOKIE_ACESSO,
       value: sessao.tokenAcesso,
-      ...opcoes(sessao.acessoExpiraEm),
+      ...opcoes(lembrar ? sessao.acessoExpiraEm : undefined),
     },
     {
       name: COOKIE_RENOVACAO,
       value: sessao.tokenRenovacao,
-      ...opcoes(sessao.renovacaoExpiraEm),
+      ...opcoes(lembrar ? sessao.renovacaoExpiraEm : undefined),
     },
   ];
 }

@@ -48,7 +48,7 @@ export default async function DetalheDaLicenca({
   const pendentes = l.condicionantes.filter((c) => !c.cumpridaEm);
   const cumpridas = l.condicionantes.filter((c) => c.cumpridaEm);
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/ambiental/licencas"
         className="text-sm text-texto-2 hover:underline"

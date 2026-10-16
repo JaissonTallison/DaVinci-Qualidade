@@ -45,7 +45,7 @@ export default async function DetalheDoTerceiro({
   const t = r.dados;
   const podeEditar = eu.ok && eu.dados.permissoes.includes("seguranca.editar");
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/seguranca/terceiros"
         className="text-sm text-texto-2 hover:underline"

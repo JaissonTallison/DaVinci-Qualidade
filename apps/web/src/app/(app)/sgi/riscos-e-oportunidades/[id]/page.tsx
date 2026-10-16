@@ -40,7 +40,7 @@ export default async function DetalheDoRo({
   const podeEditar =
     eu.ok && eu.dados.permissoes.includes("sgi.editar") && !x.encerradoEm;
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/sgi/riscos-e-oportunidades"
         className="text-sm text-texto-2 hover:underline"

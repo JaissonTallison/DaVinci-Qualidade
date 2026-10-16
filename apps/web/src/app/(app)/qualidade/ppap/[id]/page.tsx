@@ -44,7 +44,7 @@ export default async function DetalheDoPpap({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
   const editavel = p.status === "em_preparacao" || p.status === "rejeitado";
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link
         href="/qualidade/ppap"
         className="text-sm text-texto-2 hover:underline"

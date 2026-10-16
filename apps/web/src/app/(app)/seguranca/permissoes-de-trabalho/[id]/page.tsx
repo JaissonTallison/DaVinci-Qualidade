@@ -45,7 +45,7 @@ export default async function DetalheDaPt({
   const podeEditar = permissoes.includes("seguranca.editar");
   const aberta = pt.status === "solicitada" || pt.status === "liberada";
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/seguranca/permissoes-de-trabalho"
         className="text-sm text-texto-2 hover:underline"

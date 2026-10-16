@@ -207,7 +207,7 @@ const FAQ: [string, ReactNode][] = [
 /** Manual da jornada de auditoria: fluxo, guia por tela, glossário e perguntas frequentes. */
 export default function Manual() {
   return (
-    <article className="max-w-5xl">
+    <article>
       <h1 className={tituloDaPagina}>Manual de auditorias</h1>
       <p className="mt-1 max-w-3xl text-base text-texto-2">
         Cada etapa alimenta a seguinte: as perguntas do roteiro viram respostas,

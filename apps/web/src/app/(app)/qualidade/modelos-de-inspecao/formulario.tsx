@@ -38,7 +38,7 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
 
   return (
-    <form action={acao} noValidate className={`${painel} mt-6 max-w-4xl`}>
+    <form action={acao} noValidate className={`${painel} mt-6`}>
       {modelo && <input type="hidden" name="versao" value={modelo.versao} />}
       <div className="flex flex-col gap-5 p-5">
         {erroGeral && <AvisoDeErro erro={erroGeral} />}

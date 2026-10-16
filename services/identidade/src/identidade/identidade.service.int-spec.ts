@@ -1,5 +1,5 @@
 import { generateKeyPairSync } from 'node:crypto';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { jwtVerify } from 'jose';
 import { criarBancoDeTeste } from '@davinci/database/teste';
 import { ErroDeNegocio } from '@davinci/shared';
@@ -15,11 +15,24 @@ import {
   type Sessao,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
-import { empresas, perfis, sessoes, usuarios, vinculos } from '../db/schema.js';
+import {
+  acessos,
+  empresas,
+  perfis,
+  sessoes,
+  usuarios,
+  vinculos,
+} from '../db/schema.js';
 import { protegerSenha } from '../seguranca/senhas.js';
 import { CARENCIA_SEGUNDOS, hashDoToken } from '../seguranca/tokens.js';
 import { EmpresaService } from '../empresa/empresa.service.js';
 import { IdentidadeService, MAXIMO_DE_FALHAS } from './identidade.service.js';
+
+// Login externo: a conferência do id_token tem teste próprio (provedores.spec.ts); aqui o "token" já é o e-mail
+vi.mock('../seguranca/provedores.js', () => ({
+  conferirTokenExterno: (_: string, idToken: string) =>
+    Promise.resolve(idToken),
+}));
 
 let banco: Awaited<ReturnType<typeof criarBancoDeTeste<typeof schema>>>;
 let servico: IdentidadeService;
@@ -235,6 +248,40 @@ describe('login', () => {
         )
       ).mensagem,
     ).toContain('não tem acesso a nenhuma empresa');
+  });
+});
+
+describe('login com conta externa (Microsoft/Google)', () => {
+  const externo = (email: string) =>
+    servico.autenticarExterno({
+      provedor: 'google',
+      idToken: email,
+      nonce: 'nonce-de-teste-0123456789',
+    });
+
+  it('e-mail de usuário cadastrado → sessão, e o histórico registra o provedor', async () => {
+    const r = await externo('bruno@exemplo.com.br');
+    if (ehDesafio2fa(r)) throw new Error('era esperada uma sessão');
+    expect(r.usuario.id).toBe(ids.bruno);
+    const [ultimo] = await banco.db
+      .select({ resultado: acessos.resultado })
+      .from(acessos)
+      .where(eq(acessos.usuarioId, ids.bruno))
+      .orderBy(desc(acessos.momento))
+      .limit(1);
+    expect(ultimo?.resultado).toBe('externo_google');
+  });
+
+  it('e-mail sem cadastro não cria usuário: recusa e manda falar com o administrador', async () => {
+    expect(
+      (await recusa(externo('estranho@exemplo.com.br'))).mensagem,
+    ).toContain('Peça ao administrador');
+  });
+
+  it('usuário inativo continua barrado', async () => {
+    expect(
+      (await recusa(externo('inativo@exemplo.com.br'))).mensagem,
+    ).toContain('inativo');
   });
 });
 

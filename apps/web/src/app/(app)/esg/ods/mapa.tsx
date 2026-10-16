@@ -298,7 +298,7 @@ export function MapaDosOds({ temas }: { temas: TemaEsg[] }) {
       className={`${painel} mt-6 p-2 sm:p-4`}
       aria-label="Mapa dos ODS da Agenda ESG"
     >
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <svg
           viewBox="100 190 1400 610"
           className="h-auto w-full min-w-[56rem]"

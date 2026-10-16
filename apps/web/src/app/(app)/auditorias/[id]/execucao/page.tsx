@@ -65,7 +65,7 @@ export default async function Execucao({
   );
   const c = r.dados.contagem;
   return (
-    <article className="max-w-6xl">
+    <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="auditar" />
       {aud.status === "planejada" && (
         <p className="mt-6 rounded-sm border border-borda bg-superficie px-4 py-3 text-base">

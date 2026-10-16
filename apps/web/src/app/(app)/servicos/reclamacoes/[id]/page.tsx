@@ -45,7 +45,7 @@ export default async function DetalheDaReclamacao({
   const x = r.dados;
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/servicos/reclamacoes"
         className="text-sm text-texto-2 hover:underline"

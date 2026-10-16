@@ -116,7 +116,7 @@ export default async function DetalheDaAuditoria({
   ];
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <CabecalhoDaAuditoria auditoria={a} etapa="resumo" />
       {textoDoAviso && (
         <p

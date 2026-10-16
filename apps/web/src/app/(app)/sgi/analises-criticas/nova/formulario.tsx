@@ -33,7 +33,7 @@ export function FormularioDeAnalise({
   const erros = errosPorCampo(estado.erro?.detalhes);
   const v = estado.valores ?? {};
   return (
-    <form action={acao} noValidate className={`${painel} mt-6 max-w-4xl`}>
+    <form action={acao} noValidate className={`${painel} mt-6`}>
       <div className="grid gap-5 p-5 sm:grid-cols-3">
         {estado.erro && !estado.erro.detalhes?.length && (
           <div className="sm:col-span-3">

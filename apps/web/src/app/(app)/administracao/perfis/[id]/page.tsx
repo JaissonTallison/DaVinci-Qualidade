@@ -33,7 +33,7 @@ export default async function DetalheDoPerfil({
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const p = r.dados;
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/administracao/perfis"
         className="text-sm text-texto-2 hover:underline"

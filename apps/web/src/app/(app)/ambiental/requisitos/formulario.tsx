@@ -40,7 +40,7 @@ export function FormularioDeRequisito({
     <form
       action={enviar}
       noValidate
-      className={requisito ? "" : `${painel} mt-6 max-w-4xl`}
+      className={requisito ? "" : `${painel} mt-6`}
     >
       {requisito && (
         <input type="hidden" name="versao" value={requisito.versao} />

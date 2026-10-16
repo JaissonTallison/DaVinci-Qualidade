@@ -45,7 +45,7 @@ export default async function DetalheDoProduto({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const podeEditar = permissoes.includes("ambiental.editar");
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/ambiental/produtos-quimicos"
         className="text-sm text-texto-2 hover:underline"

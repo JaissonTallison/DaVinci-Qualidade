@@ -14,6 +14,11 @@ export class IdentidadeController {
     return this.identidade.autenticar(dados);
   }
 
+  @MessagePattern(PATTERNS.identidade.autenticarExterno)
+  autenticarExterno(@Dados() dados: unknown) {
+    return this.identidade.autenticarExterno(dados);
+  }
+
   @MessagePattern(PATTERNS.identidade.renovar)
   renovar(@Dados() dados: unknown) {
     return this.identidade.renovar(dados);

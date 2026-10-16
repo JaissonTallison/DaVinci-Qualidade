@@ -79,7 +79,7 @@ export default async function RoteiroDaAuditoriaPage({
     }))
     .filter((g) => g.perguntas.length);
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link href="/auditorias" className="text-sm text-texto-2 hover:underline">
         Auditorias
       </Link>

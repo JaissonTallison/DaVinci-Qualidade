@@ -95,7 +95,7 @@ export default async function Inventario({
       )
     : null;
   return (
-    <article className="max-w-6xl">
+    <article>
       <div className="print:hidden">
         <Link
           href="/ambiental/residuos"

@@ -47,7 +47,7 @@ export default async function DetalheDaOcorrencia({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   const aberta = o.status === "aberta";
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/ambiental/ocorrencias"
         className="text-sm text-texto-2 hover:underline"

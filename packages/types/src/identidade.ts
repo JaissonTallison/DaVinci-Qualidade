@@ -18,6 +18,24 @@ export const loginSchema = z.object({
   navegadorConfiavel: z.string().max(100).optional(),
 });
 
+/** Contas de fora aceitas no login ("Entrar com Microsoft/Google"): só entra quem já é usuário, pelo e-mail. */
+export const PROVEDORES_EXTERNOS = {
+  microsoft: 'Microsoft',
+  google: 'Google',
+} as const;
+export type ProvedorExterno = keyof typeof PROVEDORES_EXTERNOS;
+
+/**
+ * Login por conta externa: o web troca o código do provedor pelo id_token e o repassa; quem confere a assinatura,
+ * o destinatário e o nonce é o Identidade.
+ */
+export const loginExternoSchema = z.object({
+  provedor: z.enum(['microsoft', 'google'], { error: 'Provedor inválido.' }),
+  idToken: z.string().min(20, 'Resposta do provedor inválida.').max(8000),
+  nonce: z.string().min(16, 'Resposta do provedor inválida.').max(200),
+  navegadorConfiavel: z.string().max(100).optional(),
+});
+
 /** Segunda etapa do login (2FA): código do aplicativo (6 dígitos) ou de recuperação (XXXX-XXXX). */
 export const codigo2faSchema = z
   .string({ error: 'Informe o código.' })
@@ -195,6 +213,8 @@ export const RESULTADOS_ACESSO = {
   inativo: 'Usuário inativo',
   recuperacao_pedida: 'Pediu link para criar nova senha',
   senha_redefinida: 'Criou nova senha pelo link do e-mail',
+  externo_microsoft: 'Entrou com a conta Microsoft',
+  externo_google: 'Entrou com a conta Google',
 } as const;
 export type ResultadoAcesso = keyof typeof RESULTADOS_ACESSO;
 

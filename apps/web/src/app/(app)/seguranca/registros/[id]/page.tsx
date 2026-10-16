@@ -40,7 +40,7 @@ export default async function DetalheDoRegistro({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const t = TIPOS_REGISTRO_SST[x.tipo];
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/seguranca/registros"
         className="text-sm text-texto-2 hover:underline"

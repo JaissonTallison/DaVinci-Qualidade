@@ -35,7 +35,7 @@ export default async function Plano({
   const podeEditar =
     eu.ok && eu.dados.permissoes.includes("auditorias.editar") && aberta;
   return (
-    <article className="max-w-6xl">
+    <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="planejar" />
       <AbasDoPlanejar id={id} atual="plano" />
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">

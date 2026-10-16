@@ -46,7 +46,7 @@ export function FormularioDeParceiro({
     <form
       action={acao}
       noValidate
-      className={embutido ? "" : `${painel} mt-6 max-w-4xl`}
+      className={embutido ? "" : `${painel} mt-6`}
     >
       {parceiro && (
         <input type="hidden" name="versao" value={parceiro.versao} />

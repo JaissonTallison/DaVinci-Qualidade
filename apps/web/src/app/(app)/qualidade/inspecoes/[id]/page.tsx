@@ -67,7 +67,7 @@ export default async function DetalheDaInspecao({
       : null;
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link
         href="/qualidade/inspecoes"
         className="text-sm text-texto-2 hover:underline"

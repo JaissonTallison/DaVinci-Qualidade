@@ -38,7 +38,7 @@ export default async function DetalheDoUsuario({
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const u = r.dados;
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/administracao/usuarios"
         className="text-sm text-texto-2 hover:underline"

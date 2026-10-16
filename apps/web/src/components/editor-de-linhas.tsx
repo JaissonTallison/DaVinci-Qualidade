@@ -62,7 +62,7 @@ export function EditorDeLinhas({
   return (
     <div>
       <input type="hidden" name={`${prefixo}-total`} value={linhas.length} />
-      <div className="overflow-x-auto">
+      <div className="relative overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-texto-2">

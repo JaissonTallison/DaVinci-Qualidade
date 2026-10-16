@@ -7,6 +7,8 @@ import {
   ehDesafio2fa,
   login2faSchema,
   loginSchema,
+  recuperarSenhaSchema,
+  redefinirSenhaSchema,
   trocarSenhaSchema,
   type ErroPadrao,
   type RespostaLogin,
@@ -21,7 +23,7 @@ import {
   caminhoDeVolta,
   opcoes,
 } from "./sessao";
-import { gravarSessao, limparSessao } from "./sessao-servidor";
+import { gravarSessao, guardarLembrar, limparSessao } from "./sessao-servidor";
 
 export type EstadoDoFormulario = { erro?: ErroPadrao; email?: string };
 
@@ -51,6 +53,7 @@ export async function entrar(
     publica: true,
   });
   if (!r.ok) return { email, erro: r.erro };
+  await guardarLembrar(form.get("lembrar") === "on");
   const volta = caminhoDeVolta(form.get("volta"));
   if (ehDesafio2fa(r.dados)) {
     // Senha certa; falta o código. O desafio fica em cookie HttpOnly (5 min), nunca na URL.
@@ -170,6 +173,65 @@ export async function trocarSenha(
   }
   await gravarSessao(nova.dados);
   redirect("/?aviso=senha-alterada");
+}
+
+/** "Esqueceu a senha?": o Identidade responde sempre igual, exista ou não o e-mail. */
+export async function pedirLinkDeSenha(
+  _: EstadoDoFormulario & { enviado?: boolean },
+  form: FormData,
+): Promise<EstadoDoFormulario & { enviado?: boolean }> {
+  const email = String(form.get("email") ?? "");
+  const v = recuperarSenhaSchema.safeParse({ email });
+  if (!v.success)
+    return {
+      email,
+      erro: {
+        codigo: "DADOS_INVALIDOS",
+        mensagem: CONFIRA_OS_CAMPOS,
+        detalhes: detalhesDaValidacao(v.error.issues),
+      },
+    };
+  const r = await chamarApi<{ enviado: true }>("/auth/recuperar-senha", {
+    metodo: "POST",
+    corpo: v.data,
+    publica: true,
+  });
+  if (!r.ok) return { email, erro: r.erro };
+  return { email: v.data.email, enviado: true };
+}
+
+/** Nova senha pelo link do e-mail; depois, entra de novo com ela. */
+export async function redefinirSenha(
+  _: EstadoDoFormulario,
+  form: FormData,
+): Promise<EstadoDoFormulario> {
+  const dados = {
+    token: String(form.get("token") ?? ""),
+    novaSenha: String(form.get("novaSenha") ?? ""),
+  };
+  const v = redefinirSenhaSchema.safeParse(dados);
+  const detalhes = v.success ? [] : detalhesDaValidacao(v.error.issues);
+  if (String(form.get("confirmacao") ?? "") !== dados.novaSenha)
+    detalhes.push({
+      campo: "confirmacao",
+      mensagem: "A confirmação não confere com a nova senha.",
+    });
+  if (detalhes.length) {
+    // Link quebrado não é erro de campo: vira aviso geral
+    const doLink = detalhes.find((d) => d.campo === "token");
+    return {
+      erro: doLink
+        ? { codigo: "DADOS_INVALIDOS", mensagem: doLink.mensagem }
+        : { codigo: "DADOS_INVALIDOS", mensagem: CONFIRA_OS_CAMPOS, detalhes },
+    };
+  }
+  const r = await chamarApi<{ redefinida: true }>("/auth/redefinir-senha", {
+    metodo: "POST",
+    corpo: dados,
+    publica: true,
+  });
+  if (!r.ok) return { erro: r.erro };
+  redirect("/entrar?aviso=senha-redefinida");
 }
 
 /** Senha provisória primeiro; senão, para onde a pessoa ia. */

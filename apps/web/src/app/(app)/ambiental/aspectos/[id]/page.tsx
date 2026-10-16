@@ -42,7 +42,7 @@ export default async function DetalheDoAspecto({
   const a = r.dados;
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/ambiental/aspectos"
         className="text-sm text-texto-2 hover:underline"

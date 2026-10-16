@@ -10,6 +10,7 @@ import {
   TODAS_AS_PERMISSOES,
   isUuid,
   login2faSchema,
+  loginExternoSchema,
   loginSchema,
   renovarSchema,
   salvarPreferenciaSchema,
@@ -46,6 +47,7 @@ import {
 import { decifrar } from '../seguranca/cripto.js';
 import { anunciarRevogacao } from '../seguranca/revogacao.js';
 import { conferirCodigo } from '../seguranca/totp.js';
+import { conferirTokenExterno } from '../seguranca/provedores.js';
 import { conferirSenha, protegerSenha } from '../seguranca/senhas.js';
 import {
   CARENCIA_SEGUNDOS,
@@ -110,22 +112,81 @@ export class IdentidadeService {
       await conferirSenha(senha, await this.hashFicticio);
       throw new ErroDeNegocio('NAO_AUTENTICADO', CREDENCIAIS_INVALIDAS);
     }
-    const agora = new Date();
-    if (usuario.bloqueadoAte && usuario.bloqueadoAte > agora) {
-      const minutos = Math.ceil(
-        (usuario.bloqueadoAte.getTime() - agora.getTime()) / 60_000,
-      );
-      await this.registrarAcesso(usuario, email, null, 'bloqueado', origem);
-      throw new ErroDeNegocio(
-        'NAO_AUTENTICADO',
-        `Acesso bloqueado temporariamente por excesso de tentativas. Tente novamente em ${minutos} ${minutos === 1 ? 'minuto' : 'minutos'}.`,
-      );
-    }
+    await this.recusarSeBloqueado(usuario, email, origem);
     if (!(await conferirSenha(senha, usuario.senhaHash))) {
       await this.registrarFalha(usuario);
       await this.registrarAcesso(usuario, email, null, 'senha_errada', origem);
       throw new ErroDeNegocio('NAO_AUTENTICADO', CREDENCIAIS_INVALIDAS);
     }
+    return this.concluirLogin(usuario, {
+      email,
+      empresaId,
+      navegadorConfiavel,
+      origem,
+      resultado: 'sucesso',
+    });
+  }
+
+  /**
+   * "Entrar com Microsoft/Google": a conta externa só prova o e-mail; quem entra é o usuário já cadastrado
+   * com ele (não cria usuário). Daí em diante é igual ao login por senha, inclusive o 2FA.
+   */
+  async autenticarExterno(dados: unknown): Promise<RespostaLogin> {
+    const { provedor, idToken, nonce, navegadorConfiavel } = validar(
+      loginExternoSchema,
+      dados,
+    );
+    const origem = origemDe(dados);
+    const email = await conferirTokenExterno(provedor, idToken, nonce);
+    const [usuario] = await this.db
+      .select()
+      .from(usuarios)
+      .where(eq(usuarios.email, email));
+    if (!usuario)
+      throw new ErroDeNegocio(
+        'NAO_AUTENTICADO',
+        `O e-mail ${email} não tem acesso ao DaVinci Qualidade. Peça ao administrador da sua empresa para cadastrá-lo.`,
+      );
+    await this.recusarSeBloqueado(usuario, email, origem);
+    return this.concluirLogin(usuario, {
+      email,
+      navegadorConfiavel,
+      origem,
+      resultado: `externo_${provedor}`,
+    });
+  }
+
+  /** Bloqueio por senhas erradas vale para qualquer forma de entrar. */
+  private async recusarSeBloqueado(
+    usuario: Usuario,
+    email: string,
+    origem: OrigemDoAcesso,
+  ): Promise<void> {
+    const agora = new Date();
+    if (!usuario.bloqueadoAte || usuario.bloqueadoAte <= agora) return;
+    const minutos = Math.ceil(
+      (usuario.bloqueadoAte.getTime() - agora.getTime()) / 60_000,
+    );
+    await this.registrarAcesso(usuario, email, null, 'bloqueado', origem);
+    throw new ErroDeNegocio(
+      'NAO_AUTENTICADO',
+      `Acesso bloqueado temporariamente por excesso de tentativas. Tente novamente em ${minutos} ${minutos === 1 ? 'minuto' : 'minutos'}.`,
+    );
+  }
+
+  /** Identidade confirmada (senha ou conta externa): usuário ativo, empresa, 2FA e sessão. */
+  private async concluirLogin(
+    usuario: Usuario,
+    l: {
+      email: string;
+      empresaId?: string;
+      navegadorConfiavel?: string;
+      origem: OrigemDoAcesso;
+      resultado: ResultadoAcesso;
+    },
+  ): Promise<RespostaLogin> {
+    const { email, empresaId, navegadorConfiavel, origem } = l;
+    const agora = new Date();
     if (!usuario.ativo) {
       await this.registrarAcesso(usuario, email, null, 'inativo', origem);
       throw new ErroDeNegocio(
@@ -151,10 +212,11 @@ export class IdentidadeService {
       );
 
     // Senha certa: zera as falhas de senha (o 2FA tem as próprias tentativas)
-    await this.db
-      .update(usuarios)
-      .set({ falhasLogin: 0, bloqueadoAte: null })
-      .where(eq(usuarios.id, usuario.id));
+    if (l.resultado === 'sucesso')
+      await this.db
+        .update(usuarios)
+        .set({ falhasLogin: 0, bloqueadoAte: null })
+        .where(eq(usuarios.id, usuario.id));
 
     if (
       usuario.totpSegredo &&
@@ -166,7 +228,7 @@ export class IdentidadeService {
       .update(usuarios)
       .set({ ultimoAcessoEm: agora, ultimaEmpresaId: empresa.id })
       .where(eq(usuarios.id, usuario.id));
-    await this.registrarAcesso(usuario, email, empresa.id, 'sucesso', origem);
+    await this.registrarAcesso(usuario, email, empresa.id, l.resultado, origem);
     return this.abrirSessao(
       this.db,
       usuario,

@@ -57,7 +57,7 @@ export default async function DetalheDoInstrumento({
   const gestor = permissoes.includes("qualidade.excluir");
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link
         href="/qualidade/calibracao"
         className="text-sm text-texto-2 hover:underline"

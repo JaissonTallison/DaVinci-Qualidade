@@ -43,7 +43,7 @@ export default async function DetalheDoRequisito({
   const q = r.dados;
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/ambiental/requisitos"
         className="text-sm text-texto-2 hover:underline"

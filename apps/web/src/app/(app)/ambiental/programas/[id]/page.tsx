@@ -34,7 +34,7 @@ export default async function DetalheDoPrograma({
   const p = r.dados;
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/ambiental/programas"
         className="text-sm text-texto-2 hover:underline"

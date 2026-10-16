@@ -60,7 +60,7 @@ export function FormularioNovaInspecao({
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
 
   return (
-    <form action={acao} noValidate className={`${painel} mt-6 max-w-4xl`}>
+    <form action={acao} noValidate className={`${painel} mt-6`}>
       <div className="flex flex-col gap-5 p-5">
         {erroGeral && <AvisoDeErro erro={erroGeral} />}
         <div className="grid gap-5 sm:grid-cols-2">
