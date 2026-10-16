@@ -80,7 +80,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
       />
       <div aria-hidden className="dv-acesso-veu absolute inset-0 -z-10" />
 
-      <div className="grid w-full lg:grid-cols-[minmax(0,1fr)_minmax(0,36rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,40rem)]">
+      <div className="grid w-full lg:grid-cols-[minmax(0,1fr)_minmax(0,31rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
         <aside className="dv-acesso-escala hidden flex-col px-12 py-8 text-white lg:flex xl:px-20 *:shrink-0">
           <Image
             className="h-auto w-[200px]"
@@ -90,7 +90,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
             height={215}
             priority
           />
-          <p className="dv-acesso-titulo mt-10 max-w-xl text-white">
+          <p className="dv-acesso-titulo mt-10 max-w-xl text-white tela-baixa:mt-6">
             Conformidade hoje.
             <br />
             Um futuro mais
@@ -102,7 +102,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
             único sistema, com {REFERENCIAIS.length} normas auditáveis para a
             sua empresa.
           </p>
-          <ul className="my-7 flex flex-col gap-3.5">
+          <ul className="my-7 flex flex-col gap-3.5 tela-baixa:my-5 tela-baixa:grid tela-baixa:max-w-3xl tela-baixa:grid-cols-2 tela-baixa:gap-x-8 tela-baixa:gap-y-4">
             {AREAS.map(({ icone: Icone, cor, nome, texto }) => (
               <li key={nome} className="flex items-center gap-5">
                 <span
@@ -118,7 +118,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
               </li>
             ))}
           </ul>
-          <div className="dv-acesso-vidro mt-auto flex max-w-[45rem] flex-wrap items-center gap-x-6 gap-y-3 px-6 py-5">
+          <div className="dv-acesso-vidro mt-auto flex max-w-[45rem] flex-wrap items-center gap-x-6 gap-y-3 px-6 py-5 tela-baixa:gap-x-4 tela-baixa:px-5 tela-baixa:py-4">
             <div className="flex items-center gap-4">
               <Globe aria-hidden size={40} strokeWidth={1.5} />
               <p className="text-md text-white/90">
@@ -137,7 +137,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
                   <li
                     key={n}
                     title={n}
-                    className="dv-acesso-norma flex w-16 flex-col items-center py-1.5 text-base leading-tight text-white"
+                    className="dv-acesso-norma flex w-16 flex-col tela-baixa:w-14 items-center py-1.5 text-base leading-tight text-white"
                   >
                     <span>{sigla}</span>
                     <span>{numero}</span>
@@ -147,7 +147,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
               {REFERENCIAIS.length > NA_FAIXA && (
                 <li
                   title={REFERENCIAIS.slice(NA_FAIXA).join(", ")}
-                  className="dv-acesso-norma flex w-16 flex-col items-center py-1.5 text-base leading-tight text-white"
+                  className="dv-acesso-norma flex w-16 flex-col tela-baixa:w-14 items-center py-1.5 text-base leading-tight text-white"
                 >
                   <span>+{REFERENCIAIS.length - NA_FAIXA}</span>
                   <span className="text-sm">normas</span>
