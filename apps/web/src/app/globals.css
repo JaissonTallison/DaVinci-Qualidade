@@ -140,7 +140,9 @@
   border-radius: 12px;
   color: var(--cor);
   background: color-mix(in srgb, var(--cor) 20%, rgb(var(--acesso-marinho)));
-  border: 1px solid color-mix(in srgb, var(--cor) 35%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--cor) 30%, transparent),
+    0 6px 14px rgb(0 0 0 / 0.35);
 }
 .dv-acesso-vidro {
   border-radius: 16px;
