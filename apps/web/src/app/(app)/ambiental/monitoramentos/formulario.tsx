@@ -79,7 +79,7 @@ export function FormularioDeMonitoramento({
     <form
       action={enviar}
       noValidate
-      className={m ? "" : `${painel} mt-6 max-w-4xl`}
+      className={m ? "" : `${painel} mt-6`}
     >
       {m && <input type="hidden" name="versao" value={m.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${m ? "" : "p-5"}`}>

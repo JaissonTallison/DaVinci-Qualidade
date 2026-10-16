@@ -42,7 +42,7 @@ export default async function KitDaAuditoria({
     !k.somenteLeitura;
   const atrasados = k.itens.filter((i) => i.atrasado).length;
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link href="/auditorias" className="text-sm text-texto-2 hover:underline">
         Auditorias
       </Link>

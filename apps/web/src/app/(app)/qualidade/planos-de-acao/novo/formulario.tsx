@@ -45,7 +45,7 @@ export function FormularioNovoPlano({
   const invalido = (nome: string) => ({ "aria-invalid": Boolean(erros[nome]) });
 
   return (
-    <form action={acao} noValidate className={`${painel} mt-6 max-w-5xl`}>
+    <form action={acao} noValidate className={`${painel} mt-6`}>
       <div className="flex flex-col gap-5 p-5">
         {erroGeral && <AvisoDeErro erro={erroGeral} />}
         {v.ncId && <input type="hidden" name="ncId" value={v.ncId} />}

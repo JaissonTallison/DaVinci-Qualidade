@@ -50,7 +50,7 @@ export default async function DetalheDoMonitoramento({
   const resultados = m.resultados ?? [];
   const serie = [...resultados].reverse().slice(-12);
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/ambiental/monitoramentos"
         className="text-sm text-texto-2 hover:underline"

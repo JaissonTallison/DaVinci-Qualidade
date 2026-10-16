@@ -35,7 +35,7 @@ export function FormularioDeTerceiro({
     <form
       action={acao}
       noValidate
-      className={embutido ? "" : `${painel} mt-6 max-w-4xl`}
+      className={embutido ? "" : `${painel} mt-6`}
     >
       {terceiro && (
         <input type="hidden" name="versao" value={terceiro.versao} />

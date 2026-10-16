@@ -47,7 +47,7 @@ export default async function DetalheDoTema({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const podeEditar = permissoes.includes("esg.editar");
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link href="/esg/temas" className="text-sm text-texto-2 hover:underline">
         Temas ESG
       </Link>

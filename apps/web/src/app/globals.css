@@ -279,9 +279,11 @@
 }
 
 /* Tablet e telas estreitas: tabela larga rola dentro do próprio quadro, sem empurrar a página (tabelas com campos
-   ficam de fora, para não cortar as listas de sugestões que abrem por cima) */
+   ficam de fora, para não cortar as listas de sugestões que abrem por cima). O `relative` segura dentro do quadro
+   os textos só para leitor de tela (`sr-only`, que são absolutos); sem ele, eles alargam a página inteira. */
 @media screen and (min-width: 640px) {
   main :is(div, section):has(> table:not(:has(input, select, textarea))) {
+    position: relative;
     overflow-x: auto;
   }
 }

@@ -100,7 +100,7 @@ export default async function DetalheDoFuncionario({
   const voltar = `/cadastros/funcionarios/${f.id}`;
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link
         href="/cadastros/funcionarios"
         className="text-sm text-texto-2 hover:underline"

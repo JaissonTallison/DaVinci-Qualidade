@@ -58,7 +58,7 @@ export function FormularioDeFuncionario({
     <form
       action={acao}
       noValidate
-      className={embutido ? "" : `${painel} mt-6 max-w-4xl`}
+      className={embutido ? "" : `${painel} mt-6`}
     >
       {funcionario && (
         <input type="hidden" name="versao" value={funcionario.versao} />

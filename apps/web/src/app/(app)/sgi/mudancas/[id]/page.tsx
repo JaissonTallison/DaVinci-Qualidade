@@ -37,7 +37,7 @@ export default async function DetalheDaMudanca({
   const m = r.dados;
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/sgi/mudancas"
         className="text-sm text-texto-2 hover:underline"

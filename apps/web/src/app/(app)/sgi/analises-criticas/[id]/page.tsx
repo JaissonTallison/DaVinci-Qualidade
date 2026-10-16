@@ -31,7 +31,7 @@ export default async function DetalheDaAnalise({
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const a = r.dados;
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/sgi/analises-criticas"
         className="text-sm text-texto-2 hover:underline"

@@ -70,7 +70,7 @@ export default async function Tratar({
   ).length;
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="tratar" />
       <section
         className={`${painel} mt-6 flex flex-wrap gap-x-8 gap-y-2 px-5 py-3 text-base`}

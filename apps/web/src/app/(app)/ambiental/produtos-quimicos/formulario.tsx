@@ -55,7 +55,7 @@ export function FormularioDeProduto({
     <form
       action={enviar}
       noValidate
-      className={produto ? "" : `${painel} mt-6 max-w-4xl`}
+      className={produto ? "" : `${painel} mt-6`}
     >
       {produto && <input type="hidden" name="versao" value={produto.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${produto ? "" : "p-5"}`}>

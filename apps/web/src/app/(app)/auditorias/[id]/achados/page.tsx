@@ -73,7 +73,7 @@ export default async function Achados({
         : undefined;
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="registrar" />
       {texto && (
         <p

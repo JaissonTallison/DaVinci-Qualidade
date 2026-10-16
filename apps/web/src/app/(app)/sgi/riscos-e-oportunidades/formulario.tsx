@@ -57,7 +57,7 @@ export function FormularioDeRo({
     <form
       action={acao}
       noValidate
-      className={embutido ? "" : `${painel} mt-6 max-w-4xl`}
+      className={embutido ? "" : `${painel} mt-6`}
     >
       {ro && <input type="hidden" name="versao" value={ro.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}>

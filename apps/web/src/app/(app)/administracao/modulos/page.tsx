@@ -14,7 +14,7 @@ export default async function Modulos({
   const { aviso } = (await searchParams) as { aviso?: string };
   const r = await chamarApi<RecursosDaEmpresa>("/empresa/recursos");
   return (
-    <div className="max-w-4xl">
+    <div className="w-full">
       <h1 className={tituloDaPagina}>Módulos contratados</h1>
       <p className="mt-1 text-base text-texto-2">
         Módulo desligado some do menu e das permissões. Os dados ficam guardados

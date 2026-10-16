@@ -64,7 +64,7 @@ export default async function Relatorio({
         : `/auditorias/${id}/${d}`;
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="entregar" />
       {aviso === "pontos" && (
         <p

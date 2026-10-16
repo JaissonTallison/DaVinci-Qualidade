@@ -64,7 +64,7 @@ export default async function DetalheDaNc({
   const terminada = nc.status === "encerrada" || nc.status === "cancelada";
 
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/qualidade/nao-conformidades"
         className="text-sm text-texto-2 hover:underline"

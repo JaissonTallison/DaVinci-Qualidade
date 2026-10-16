@@ -119,7 +119,7 @@ export default async function Prompts({
                       <span className="w-16 shrink-0 font-mono text-sm">
                         {p.clausula}
                       </span>
-                      <span className="min-w-0 flex-1 text-base">
+                      <span className="min-w-0 basis-full text-base sm:basis-0 sm:flex-1">
                         {p.titulo}
                       </span>
                       <span className="text-sm text-texto-2">

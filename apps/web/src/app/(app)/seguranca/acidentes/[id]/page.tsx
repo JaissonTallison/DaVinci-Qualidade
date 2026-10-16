@@ -78,7 +78,7 @@ export default async function DetalheDoAcidente({
     0;
 
   return (
-    <article className="max-w-6xl">
+    <article>
       <Link
         href="/seguranca/acidentes"
         className="text-sm text-texto-2 hover:underline"

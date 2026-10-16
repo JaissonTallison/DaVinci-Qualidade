@@ -189,7 +189,7 @@ export function EditorDoPpap({ ppap: p, ...props }: { ppap: Ppap } & Ligacoes) {
       {(erros, v) => (
         <>
           <Cabecalho erros={erros} v={v} p={p} {...props} />
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-borda text-left text-texto-2">

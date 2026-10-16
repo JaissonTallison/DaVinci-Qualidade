@@ -100,7 +100,7 @@ export function FormularioDeAspecto({
     <form
       action={enviar}
       noValidate
-      className={aspecto ? "" : `${painel} mt-6 max-w-4xl`}
+      className={aspecto ? "" : `${painel} mt-6`}
     >
       {aspecto && <input type="hidden" name="versao" value={aspecto.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${aspecto ? "" : "p-5"}`}>

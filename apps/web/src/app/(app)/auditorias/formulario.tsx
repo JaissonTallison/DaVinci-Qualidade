@@ -49,7 +49,7 @@ export function FormularioDeAuditoria({
     <form
       action={acao}
       noValidate
-      className={embutido ? "" : `${painel} mt-6 max-w-4xl`}
+      className={embutido ? "" : `${painel} mt-6`}
     >
       {auditoria && (
         <input type="hidden" name="versao" value={auditoria.versao} />

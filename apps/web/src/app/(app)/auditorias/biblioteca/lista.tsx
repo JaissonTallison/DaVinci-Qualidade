@@ -28,7 +28,7 @@ export function ListaDeEvidencias({
               <span className="w-20 shrink-0 font-mono text-sm">
                 {e.clausula}
               </span>
-              <span className="min-w-0 flex-1 text-base">
+              <span className="min-w-0 basis-full text-base sm:basis-0 sm:flex-1">
                 {e.titulo}
                 {e.origem === "propria" && (
                   <span className="text-sm text-texto-2"> · minha</span>

@@ -80,7 +80,7 @@ export default async function NovaEntrega({
         <>
           {lista.ok && (lista.dados.total > LIMITE || busca) && (
             <form
-              className="mt-6 flex max-w-4xl flex-wrap items-center gap-3"
+              className="mt-6 flex flex-wrap items-center gap-3"
               role="search"
             >
               {funcionarioId && (

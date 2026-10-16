@@ -44,7 +44,7 @@ export default async function DetalheDoParceiro({
   const p = r.dados;
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/cadastros/clientes-e-fornecedores"
         className="text-sm text-texto-2 hover:underline"

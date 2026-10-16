@@ -50,7 +50,7 @@ export default async function DetalheDoContrato({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const podeEditar = permissoes.includes("servicos.editar");
   return (
-    <article className="max-w-5xl">
+    <article>
       <Link
         href="/servicos/contratos"
         className="text-sm text-texto-2 hover:underline"

@@ -57,7 +57,7 @@ export function FormularioDeRisco({
     <form
       action={acao}
       noValidate
-      className={embutido ? "" : `${painel} mt-6 max-w-4xl`}
+      className={embutido ? "" : `${painel} mt-6`}
     >
       {risco && <input type="hidden" name="versao" value={risco.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}>

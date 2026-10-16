@@ -182,7 +182,7 @@ export function FormularioDoPlano({
 
           <h2 className={`${tituloDaSecao} mt-2`}>Cronograma</h2>
           <input type="hidden" name="cronograma-linhas" value={nCrono} />
-          <div className="overflow-x-auto">
+          <div className="relative overflow-x-auto">
             <table className="w-full min-w-[40rem] text-sm">
               <thead>
                 <tr className="text-left text-texto-2">

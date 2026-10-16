@@ -60,9 +60,9 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
           />
           <main
             id="conteudo"
-            className="min-w-0 flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 md:pb-6"
+            className="min-w-0 flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 md:pb-6 xl:px-8"
           >
-            <div className="mx-auto w-full max-w-[90rem]">{children}</div>
+            <div className="w-full">{children}</div>
             <ListaDePessoas
               podeVer={Boolean(eu?.permissoes.includes("funcionarios.ver"))}
             />
