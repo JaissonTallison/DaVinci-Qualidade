@@ -66,7 +66,10 @@ export default async function DetalheDoInstrumento({
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-mono text-lg text-texto-2">{i.tag}</span>
-        <SituacaoDoInstrumento situacao={i.situacao} />
+        <SituacaoDoInstrumento
+          situacao={i.situacao}
+          desde={i.proximaCalibracao}
+        />
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{i.descricao}</h1>
       {aviso && AVISOS[aviso] && (
@@ -146,7 +149,7 @@ export default async function DetalheDoInstrumento({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-5 py-2 font-semibold">Data</th>
                   <th className="px-4 py-2 font-semibold">Laboratório</th>

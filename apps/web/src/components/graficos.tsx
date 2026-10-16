@@ -50,19 +50,25 @@ function escala(max: number): { teto: number; passos: number } {
 }
 
 /** Largura real do quadro, para o SVG desenhar 1:1 (texto sempre no mesmo tamanho). */
-function useLargura(): [RefObject<HTMLDivElement | null>, number] {
+/** Largura (e altura) da caixa do gráfico; a altura só importa para quem preenche o espaço do card. */
+function useLargura(): [RefObject<HTMLDivElement | null>, number, number] {
   const ref = useRef<HTMLDivElement>(null);
-  const [largura, setLargura] = useState(640);
+  const [tamanho, setTamanho] = useState({ largura: 640, altura: 0 });
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const obs = new ResizeObserver(
-      ([e]) => e && setLargura(Math.max(280, Math.round(e.contentRect.width))),
+      ([e]) =>
+        e &&
+        setTamanho({
+          largura: Math.max(280, Math.round(e.contentRect.width)),
+          altura: Math.round(e.contentRect.height),
+        }),
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
-  return [ref, largura];
+  return [ref, tamanho.largura, tamanho.altura];
 }
 
 function Dica({
@@ -121,17 +127,19 @@ function Grade({
   largura,
   max,
   passos,
+  altura = ALTURA,
 }: {
   largura: number;
   max: number;
   passos: number;
+  altura?: number;
 }) {
   return (
     <g>
       {Array.from({ length: passos + 1 }, (_, i) => {
         const v = (max / passos) * i;
         const y =
-          MARGEM.topo + (ALTURA - MARGEM.topo - MARGEM.base) * (1 - v / max);
+          MARGEM.topo + (altura - MARGEM.topo - MARGEM.base) * (1 - v / max);
         return (
           <g key={i}>
             <line
@@ -180,6 +188,7 @@ export function ColunasEmpilhadas({
   categorias,
   series,
   destaque,
+  preencher = false,
 }: {
   categorias: {
     rotulo: string;
@@ -189,9 +198,12 @@ export function ColunasEmpilhadas({
   }[];
   series: Serie[];
   destaque?: string | null;
+  /** Ocupa toda a altura da caixa (card ao lado de outro mais alto); sem isso, altura fixa de 200. */
+  preencher?: boolean;
 }) {
   const router = useRouter();
-  const [caixa, largura] = useLargura();
+  const [caixa, largura, alturaDaCaixa] = useLargura();
+  const alturaUsada = preencher ? Math.max(ALTURA, alturaDaCaixa) : ALTURA;
   const [foco, setFoco] = useState<{ i: number; x: number; y: number } | null>(
     null,
   );
@@ -199,21 +211,26 @@ export function ColunasEmpilhadas({
     series.reduce((t, s) => t + (c.valores[s.id] ?? 0), 0),
   );
   const { teto: max, passos } = escala(Math.max(...totais, 1));
-  const areaY = ALTURA - MARGEM.topo - MARGEM.base;
+  const areaY = alturaUsada - MARGEM.topo - MARGEM.base;
   const faixa =
     (largura - MARGEM.esquerda - MARGEM.direita) /
     Math.max(categorias.length, 1);
   const l = Math.min(24, faixa * 0.6);
   const mostrarRotulo = (i: number) => categorias.length <= 13 || i % 2 === 0;
   return (
-    <div ref={caixa} className="relative">
+    <div ref={caixa} className={`relative ${preencher ? "h-full" : ""}`}>
       <svg
-        viewBox={`0 0 ${largura} ${ALTURA}`}
-        className="h-auto w-full"
+        viewBox={`0 0 ${largura} ${alturaUsada}`}
+        className={preencher ? "absolute inset-0 size-full" : "h-auto w-full"}
         role="img"
         aria-label="Gráfico de colunas empilhadas"
       >
-        <Grade largura={largura} max={max} passos={passos} />
+        <Grade
+          largura={largura}
+          max={max}
+          passos={passos}
+          altura={alturaUsada}
+        />
         {categorias.map((c, i) => {
           const x = MARGEM.esquerda + faixa * i + (faixa - l) / 2;
           let acumulado = 0;
@@ -268,7 +285,7 @@ export function ColunasEmpilhadas({
               {mostrarRotulo(i) && (
                 <text
                   x={x + l / 2}
-                  y={ALTURA - 10}
+                  y={alturaUsada - 10}
                   textAnchor="middle"
                   fontSize={11}
                   fill="var(--color-texto-2)"

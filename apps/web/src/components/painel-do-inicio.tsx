@@ -1,7 +1,8 @@
 "use client";
 
+import { aba as estiloDaAba, trilho } from "@/lib/estilos";
 import Link from "next/link";
-import { ArrowRight, CircleAlert } from "lucide-react";
+import { ArrowRight, ChevronRight, CircleAlert } from "lucide-react";
 import { useMemo, useState, useTransition, type CSSProperties } from "react";
 import {
   MODULOS_DO_PAINEL,
@@ -201,36 +202,28 @@ export function PainelDoInicio({
       className="dv-entrar flex flex-col gap-4"
       style={{ "--atraso": "120ms" } as CSSProperties}
     >
-      <div className="flex flex-wrap items-end justify-between gap-3 border-b border-borda">
-        <nav
-          role="tablist"
-          aria-label="Assuntos"
-          className="-mb-px flex flex-wrap gap-1"
-        >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <nav role="tablist" aria-label="Assuntos" className={trilho}>
           {abas.map((a) => (
             <button
               key={a}
               role="tab"
               aria-selected={aba === a}
               onClick={() => setAba(a)}
-              className={`border-b-2 px-3 pb-2.5 text-base transition-colors ${aba === a ? "border-primaria font-semibold text-texto" : "border-transparent text-texto-2 hover:text-texto"}`}
+              className={estiloDaAba(aba === a)}
             >
               {NOME_DA_ABA[a]}
             </button>
           ))}
         </nav>
-        <div
-          role="group"
-          aria-label="Período"
-          className="mb-2 flex rounded-sm border border-borda bg-superficie p-0.5"
-        >
+        <div role="group" aria-label="Período" className={trilho}>
           {PERIODOS.map((p) => (
             <button
               key={p.dias}
               type="button"
               aria-pressed={periodo === p.dias}
               onClick={() => trocarPeriodo(p.dias)}
-              className={`rounded-xs px-3 py-1 text-sm transition-colors ${periodo === p.dias ? "bg-primaria font-semibold text-primaria-texto" : "text-texto-2 hover:bg-superficie-2 hover:text-texto"}`}
+              className={estiloDaAba(periodo === p.dias, true)}
             >
               {p.rotulo}
             </button>
@@ -253,13 +246,17 @@ export function PainelDoInicio({
                     ? "Vencidos e os próximos 12 meses, por mês"
                     : `Vencidos e as próximas semanas (${periodo} dias)`
                 }
-                classe="xl:col-span-2"
+                classe="flex flex-col xl:col-span-2"
               >
-                <div onMouseLeave={() => setDestaque(null)}>
+                <div
+                  className="min-h-[200px] flex-1"
+                  onMouseLeave={() => setDestaque(null)}
+                >
                   <ColunasEmpilhadas
                     categorias={categorias}
                     series={seriesPresentes}
                     destaque={destaque}
+                    preencher
                   />
                 </div>
                 <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-texto-2">
@@ -397,7 +394,7 @@ function Quadro({
 }) {
   return (
     <div
-      className={`rounded-md border border-borda bg-superficie p-5 ${classe}`}
+      className={`rounded-md border border-borda bg-superficie p-5 shadow-cartao ${classe}`}
     >
       <h2 className="text-lg text-texto">{titulo}</h2>
       <p className="mb-3 text-sm text-texto-2">{subtitulo}</p>
@@ -409,7 +406,7 @@ function Quadro({
 function FaixaDeNumeros({ itens }: { itens: Indicador[] }) {
   return (
     <div
-      className={`grid grid-cols-2 overflow-hidden rounded-md border border-borda bg-superficie sm:grid-cols-3 ${itens.length === 6 ? "" : itens.length === 5 ? "xl:grid-cols-5" : itens.length >= 4 ? "xl:grid-cols-4" : ""}`}
+      className={`grid grid-cols-2 overflow-hidden rounded-md border border-borda bg-superficie shadow-cartao sm:grid-cols-3 ${itens.length === 6 ? "" : itens.length === 5 ? "xl:grid-cols-5" : itens.length >= 4 ? "xl:grid-cols-4" : ""}`}
     >
       {itens.map((i, k) => {
         const ruim = i.alerta && (i.valor ?? 0) > 0;
@@ -452,17 +449,21 @@ function FaixaDeNumeros({ itens }: { itens: Indicador[] }) {
 function ListaDeAtencao({ itens }: { itens: Atencao[] }) {
   if (!itens.length) return null;
   return (
-    <div className="rounded-md border border-borda bg-superficie">
-      <div className="flex items-baseline justify-between border-b border-borda px-5 py-3">
-        <h2 className="text-lg text-texto">
-          Precisa da sua atenção{" "}
-          <span className="text-texto-2">({itens.length})</span>
-        </h2>
+    <div className="rounded-md border border-borda bg-superficie shadow-cartao">
+      <div className="flex items-center justify-between gap-3 border-b border-borda px-5 py-3.5">
+        <div>
+          <h2 className="text-lg text-texto">Precisa da sua atenção</h2>
+          <p className="text-sm text-texto-2">
+            {itens.length === 1 ? "1 item" : `${itens.length} itens`} · vencidos
+            primeiro
+          </p>
+        </div>
         <Link
           href="/paineis/vencimentos"
-          className="text-sm font-semibold text-info hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-acao hover:underline"
         >
           Painel de vencimentos
+          <ChevronRight aria-hidden size={14} strokeWidth={2} />
         </Link>
       </div>
       <ul className="divide-y divide-borda">
@@ -483,6 +484,14 @@ function ListaDeAtencao({ itens }: { itens: Atencao[] }) {
           </li>
         ))}
       </ul>
+      {itens.length > 6 && (
+        <Link
+          href="/paineis/vencimentos"
+          className="block border-t border-borda px-5 py-2.5 text-center text-sm font-semibold text-acao hover:bg-campo"
+        >
+          Ver mais {itens.length - 6} no painel de vencimentos
+        </Link>
+      )}
     </div>
   );
 }

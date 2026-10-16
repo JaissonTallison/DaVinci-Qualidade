@@ -94,7 +94,7 @@ export default async function Ros({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Classificação</th>
                   <th className="px-4 py-2 font-semibold">Tipo</th>
@@ -107,7 +107,7 @@ export default async function Ros({
                 {lista.dados.map((r) => (
                   <tr
                     key={r.id}
-                    className={`hover:bg-superficie-2 ${r.encerradoEm ? "text-texto-3" : ""}`}
+                    className={` ${r.encerradoEm ? "text-texto-3" : ""}`}
                   >
                     <td className="px-4 py-2">
                       <ClasseDoRo classe={r.classe} />

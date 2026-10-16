@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { IconeDaTela } from "./icones-do-menu";
 
@@ -34,9 +35,9 @@ const TELA_DO_TIPO: Record<string, string> = {
 export type TomDoSelo = "vencido" | "proximo" | "aguardando";
 
 const COR_DO_SELO: Record<TomDoSelo, string> = {
-  vencido: "bg-nao-conforme/10 text-nao-conforme",
-  proximo: "bg-atencao/10 text-atencao",
-  aguardando: "bg-superficie-2 text-texto-2",
+  vencido: "text-nao-conforme",
+  proximo: "text-atencao",
+  aguardando: "text-texto-2",
 };
 
 /** Ícone do assunto: pelo tipo do prazo ou, sem tipo, pela tela de destino. */
@@ -49,8 +50,8 @@ export function telaDoIcone(tipo: string | undefined, href: string): string {
 }
 
 /**
- * Linha de prazo ou pendência, igual no início, no sino e no painel de vencimentos: ícone do assunto em cinza (sem moldura),
- * título e contexto, selo de texto com a situação. A linha inteira é o link.
+ * Linha de prazo ou pendência, igual no início, no sino e no painel de vencimentos: ícone do assunto num quadrado neutro,
+ * o assunto em destaque e o tipo e o módulo embaixo, a situação em texto colorido. A linha inteira é o link.
  */
 export function LinhaDePrazo({
   href,
@@ -72,26 +73,44 @@ export function LinhaDePrazo({
   compacta?: boolean;
   aoClicar?: () => void;
 }) {
+  // "Revisão de FDS: Thinner 2750" → assunto em destaque; o tipo desce para a linha de contexto
+  const i = titulo.indexOf(": ");
+  const assunto = i > 0 ? titulo.slice(i + 2) : titulo;
+  const contexto = [i > 0 ? titulo.slice(0, i) : null, detalhe]
+    .filter(Boolean)
+    .join(" · ");
   return (
     <Link
       href={href}
       onClick={aoClicar}
-      className={`flex items-center gap-3 transition-colors hover:bg-superficie-2 ${compacta ? "px-4 py-2" : "px-5 py-3"}`}
+      className={`group flex items-center gap-3 transition-colors hover:bg-campo ${compacta ? "px-4 py-2.5" : "px-5 py-3"}`}
     >
-      <span className="flex w-5 shrink-0 justify-center text-texto-3">
+      <span
+        className={`flex shrink-0 items-center justify-center rounded-sm bg-campo text-texto-2 group-hover:bg-superficie ${compacta ? "size-8" : "size-9"}`}
+      >
         <IconeDaTela href={icone} />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-base text-texto">{titulo}</span>
-        {detalhe && (
-          <span className="block truncate text-sm text-texto-2">{detalhe}</span>
+        <span className="block truncate text-base font-medium text-texto">
+          {assunto}
+        </span>
+        {contexto && (
+          <span className="block truncate text-sm text-texto-2">
+            {contexto}
+          </span>
         )}
       </span>
       <span
-        className={`shrink-0 rounded-xs px-2 py-0.5 text-xs font-semibold whitespace-nowrap ${COR_DO_SELO[tom]}`}
+        className={`shrink-0 text-sm font-semibold whitespace-nowrap ${COR_DO_SELO[tom]}`}
       >
         {selo}
       </span>
+      <ChevronRight
+        aria-hidden
+        size={16}
+        strokeWidth={1.75}
+        className="-ml-1 shrink-0 text-texto-3 opacity-0 transition-opacity group-hover:opacity-100"
+      />
     </Link>
   );
 }

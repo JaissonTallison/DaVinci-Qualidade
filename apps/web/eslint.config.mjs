@@ -30,7 +30,7 @@ const eslintConfig = defineConfig([
         ),
         ...proibido(
           "/(^|\\s)rounded-(lg|xl|2xl|3xl)/",
-          "Cantos de no máximo 6 px: rounded-xs, rounded-sm ou rounded-md.",
+          "Cantos de no máximo 8 px: rounded-xs (2 px), rounded-sm, rounded-md ou rounded-campo (8 px).",
         ),
         ...proibido(
           "/(^|\\s)shadow-(lg|xl|2xl)/",

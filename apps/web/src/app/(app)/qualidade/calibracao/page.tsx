@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -48,14 +49,27 @@ export default async function ListaDeInstrumentos({
         <div>
           <h1 className={tituloDaPagina}>Calibração</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              {resumo.dados.vencidos}{" "}
-              {resumo.dados.vencidos === 1 ? "vencido" : "vencidos"} ·{" "}
-              {resumo.dados.reprovados}{" "}
-              {resumo.dados.reprovados === 1 ? "reprovado" : "reprovados"} ·{" "}
-              {resumo.dados.vencemEmBreve} vencem em até 30 dias ·{" "}
-              {resumo.dados.semCalibracao} sem calibração
-            </p>
+            <Pendencias
+              itens={[
+                {
+                  valor: resumo.dados.vencidos,
+                  rotulo: "vencidos",
+                  singular: "vencido",
+                  alerta: true,
+                },
+                {
+                  valor: resumo.dados.reprovados,
+                  rotulo: "reprovados",
+                  singular: "reprovado",
+                  alerta: true,
+                },
+                {
+                  valor: resumo.dados.vencemEmBreve,
+                  rotulo: "vencem em até 30 dias",
+                },
+                { valor: resumo.dados.semCalibracao, rotulo: "sem calibração" },
+              ]}
+            />
           )}
         </div>
         {podeCriar && (
@@ -110,7 +124,7 @@ export default async function ListaDeInstrumentos({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">TAG</th>
                   <th className="px-4 py-2 font-semibold">Instrumento</th>
@@ -122,7 +136,7 @@ export default async function ListaDeInstrumentos({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.itens.map((i) => (
-                  <tr key={i.id} className="hover:bg-superficie-2">
+                  <tr key={i.id} className="">
                     <td className="px-4 py-2 whitespace-nowrap">
                       <Link
                         href={`/qualidade/calibracao/${i.id}`}
@@ -159,7 +173,10 @@ export default async function ListaDeInstrumentos({
                         )}
                     </td>
                     <td className="px-4 py-2">
-                      <SituacaoDoInstrumento situacao={i.situacao} />
+                      <SituacaoDoInstrumento
+                        situacao={i.situacao}
+                        desde={i.proximaCalibracao}
+                      />
                     </td>
                   </tr>
                 ))}

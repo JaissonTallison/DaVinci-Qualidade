@@ -53,7 +53,7 @@ export default async function FmeaImpresso({
           FMEA de processo · {f.numero}
           {f.revisao && ` · rev. ${f.revisao}`}
         </p>
-        <h1 className="font-serif text-xl">{f.titulo}</h1>
+        <h1 className="font-bold text-xl">{f.titulo}</h1>
         <p className="text-sm">
           {f.item}
           {f.cliente && ` · Cliente: ${f.cliente}`}

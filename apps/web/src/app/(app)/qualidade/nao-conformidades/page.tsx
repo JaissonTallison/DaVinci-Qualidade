@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -57,11 +58,18 @@ export default async function ListaDeNcs({
         <div>
           <h1 className={tituloDaPagina}>Não conformidades</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              {resumo.dados.abertas} em aberto · {resumo.dados.vencidas}{" "}
-              {resumo.dados.vencidas === 1 ? "vencida" : "vencidas"} ·{" "}
-              {resumo.dados.graves} altas ou críticas
-            </p>
+            <Pendencias
+              itens={[
+                { valor: resumo.dados.abertas, rotulo: "em aberto" },
+                {
+                  valor: resumo.dados.vencidas,
+                  rotulo: "vencidas",
+                  singular: "vencida",
+                  alerta: true,
+                },
+                { valor: resumo.dados.graves, rotulo: "altas ou críticas" },
+              ]}
+            />
           )}
         </div>
         {podeAbrir && (
@@ -164,7 +172,7 @@ function Tabela({
     <>
       <div className="relative overflow-x-auto">
         <table className="w-full text-left">
-          <thead className="bg-superficie-2 text-xs text-texto-2">
+          <thead className="bg-superficie-2 text-sm text-texto-2">
             <tr>
               <th className="px-4 py-2 font-semibold">Número</th>
               <th className="px-4 py-2 font-semibold">Título</th>
@@ -180,7 +188,7 @@ function Tabela({
               const terminada =
                 nc.status === "encerrada" || nc.status === "cancelada";
               return (
-                <tr key={nc.id} className="hover:bg-superficie-2">
+                <tr key={nc.id} className="">
                   <td className="px-4 py-2 whitespace-nowrap">
                     <Link
                       href={`/qualidade/nao-conformidades/${nc.id}`}
@@ -217,7 +225,11 @@ function Tabela({
                     )}
                   </td>
                   <td className="px-4 py-2">
-                    <StatusDaNc status={nc.status} vencida={nc.vencida} />
+                    <StatusDaNc
+                      status={nc.status}
+                      vencida={nc.vencida}
+                      prazo={nc.prazo}
+                    />
                   </td>
                 </tr>
               );

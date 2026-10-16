@@ -148,7 +148,7 @@ export default async function MatrizDeMaterialidade() {
           ) : (
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-xs text-texto-2">
+                <thead className="bg-superficie-2 text-sm text-texto-2">
                   <tr>
                     <th className="px-5 py-2 font-semibold">Nº</th>
                     <th className="px-4 py-2 font-semibold">Tema</th>
@@ -158,7 +158,7 @@ export default async function MatrizDeMaterialidade() {
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {avaliados.map((t) => (
-                    <tr key={t.id} className="hover:bg-superficie-2">
+                    <tr key={t.id} className="">
                       <td className="px-5 py-2 font-semibold tabular-nums">
                         {numero.get(t.id)}
                       </td>

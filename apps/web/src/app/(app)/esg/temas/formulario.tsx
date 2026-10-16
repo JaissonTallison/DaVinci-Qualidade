@@ -87,11 +87,7 @@ export function FormularioDeTema({
     </Campo>
   );
   return (
-    <form
-      action={enviar}
-      noValidate
-      className={tema ? "" : `${painel} mt-6`}
-    >
+    <form action={enviar} noValidate className={tema ? "" : `${painel} mt-6`}>
       {tema && <input type="hidden" name="versao" value={tema.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${tema ? "" : "p-5"}`}>
         {estado.erro && !estado.erro.detalhes?.length && (

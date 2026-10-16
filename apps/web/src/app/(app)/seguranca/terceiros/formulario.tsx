@@ -32,11 +32,7 @@ export function FormularioDeTerceiro({
     fimContrato: terceiro?.fimContrato ?? "",
   };
   return (
-    <form
-      action={acao}
-      noValidate
-      className={embutido ? "" : `${painel} mt-6`}
-    >
+    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
       {terceiro && (
         <input type="hidden" name="versao" value={terceiro.versao} />
       )}

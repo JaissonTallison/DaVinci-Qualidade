@@ -103,7 +103,7 @@ export default async function Parceiros({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Nome</th>
                   <th className="px-4 py-2 font-semibold">CNPJ ou CPF</th>
@@ -113,7 +113,7 @@ export default async function Parceiros({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.itens.map((p) => (
-                  <tr key={p.id} className="hover:bg-superficie-2">
+                  <tr key={p.id} className="">
                     <td className="px-4 py-2">
                       <Link
                         href={`/cadastros/clientes-e-fornecedores/${p.id}`}

@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -48,19 +49,23 @@ export default async function Pgr({
         <div>
           <h1 className={tituloDaPagina}>PGR · Inventário de riscos</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              {resumo.dados.criticos}{" "}
-              {resumo.dados.criticos === 1 ? "crítico" : "críticos"} ·{" "}
-              {resumo.dados.altos} {resumo.dados.altos === 1 ? "alto" : "altos"}{" "}
-              ·{" "}
-              <span
-                className={
-                  resumo.dados.acoesVencidas > 0 ? "text-nao-conforme" : ""
-                }
-              >
-                {resumo.dados.acoesVencidas} com prazo de ação vencido
-              </span>
-            </p>
+            <Pendencias
+              itens={[
+                {
+                  valor: resumo.dados.criticos,
+                  rotulo: "riscos críticos",
+                  singular: "risco crítico",
+                  alerta: true,
+                },
+                { valor: resumo.dados.altos, rotulo: "riscos altos" },
+                {
+                  valor: resumo.dados.acoesVencidas,
+                  rotulo: "ações com prazo vencido",
+                  singular: "ação com prazo vencido",
+                  alerta: true,
+                },
+              ]}
+            />
           )}
         </div>
         {podeCriar && (
@@ -120,7 +125,7 @@ export default async function Pgr({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Nível</th>
                   <th className="px-4 py-2 font-semibold">
@@ -134,7 +139,7 @@ export default async function Pgr({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.map((r) => (
-                  <tr key={r.id} className="hover:bg-superficie-2">
+                  <tr key={r.id} className="">
                     <td className="px-4 py-2">
                       <NivelDoRisco nivel={r.nivel} />
                     </td>

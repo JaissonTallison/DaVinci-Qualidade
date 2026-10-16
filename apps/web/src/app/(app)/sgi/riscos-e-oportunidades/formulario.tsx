@@ -54,11 +54,7 @@ export function FormularioDeRo({
   const [i, setI] = useState(v.impacto ?? "");
   const classe = p && i ? classeDoRo(Number(p), Number(i)) : null;
   return (
-    <form
-      action={acao}
-      noValidate
-      className={embutido ? "" : `${painel} mt-6`}
-    >
+    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
       {ro && <input type="hidden" name="versao" value={ro.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}>
         {estado.erro && !estado.erro.detalhes?.length && (

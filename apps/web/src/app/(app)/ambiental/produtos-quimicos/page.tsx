@@ -103,7 +103,7 @@ export default async function Produtos({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Produto</th>
                   <th className="px-4 py-2 font-semibold">Fabricante</th>
@@ -119,7 +119,7 @@ export default async function Produtos({
                 {r.dados.map((p) => (
                   <tr
                     key={p.id}
-                    className={`hover:bg-superficie-2 ${p.ativo ? "" : "text-texto-3"}`}
+                    className={` ${p.ativo ? "" : "text-texto-3"}`}
                   >
                     <td className="px-4 py-2">
                       <Link

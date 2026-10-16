@@ -42,7 +42,7 @@ export default async function PlanoImpresso({
         <p className="text-sm text-texto-2">
           Plano de auditoria · {aud.numero}
         </p>
-        <h1 className="font-serif text-2xl">
+        <h1 className="font-bold text-2xl">
           {p.empresaAuditada ?? "Organização auditada"}
         </h1>
         <p className="mt-1 text-sm">

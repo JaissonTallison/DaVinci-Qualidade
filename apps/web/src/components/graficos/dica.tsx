@@ -82,7 +82,7 @@ export function TabelaDosDados({
       </summary>
       <div className="relative mt-2 overflow-x-auto">
         <table className="w-full text-left">
-          <thead className="bg-superficie-2 text-xs text-texto-2">
+          <thead className="bg-superficie-2 text-sm text-texto-2">
             <tr>
               {cabecalho.map((c) => (
                 <th key={c} className="px-3 py-1.5 font-semibold">

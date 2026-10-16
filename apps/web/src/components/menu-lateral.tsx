@@ -3,11 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useEstadoDoMenu } from "./estado-do-menu";
 import { IconeDaTela, IconeDoGrupo, IconeSeta } from "./icones-do-menu";
 import type { GrupoDoMenu } from "./navegacao";
 import { COOKIE_GRUPOS_FECHADOS } from "./preferencias-do-menu";
+import { useFavoritos } from "@/lib/favoritos";
 
 /** Preferência só de interface: cookie (o servidor já desenha o menu certo, sem piscar) por um ano. */
 function lembrar(nome: string, valor: string) {
@@ -30,8 +32,11 @@ export function MenuLateral({
   grupos,
   fechadosIniciais = [],
   permiteCompactar = true,
+  usuarioId,
 }: {
   grupos: GrupoDoMenu[];
+  /** Favoritos são por usuário (estrela na barra superior). */
+  usuarioId?: string;
   fechadosIniciais?: string[];
   /** No celular o menu abre inteiro: não há faixa de ícones. */
   permiteCompactar?: boolean;
@@ -40,6 +45,45 @@ export function MenuLateral({
   const estado = useEstadoDoMenu();
   const compacto = permiteCompactar && estado.exibirCompacto;
   const [fechados, setFechados] = useState(() => new Set(fechadosIniciais));
+  const marcados = useFavoritos(usuarioId);
+  const todas = grupos.flatMap((g) => g.itens);
+  const favoritos = marcados.flatMap((h) =>
+    todas.filter((i) => i.href === h).slice(0, 1),
+  );
+  // Favoritos entram como um grupo a mais, no topo (só quando há algum)
+  const comFavoritos: GrupoDoMenu[] = favoritos.length
+    ? [{ titulo: "Favoritos", itens: favoritos }, ...grupos]
+    : grupos;
+  // Recolhido: passar o mouse (ou focar) no ícone do grupo abre ao lado um painel com as telas dele
+  const [painelAberto, setPainel] = useState<{
+    titulo: string;
+    /** Tela em que abriu: mudou de tela, o painel some sozinho. */
+    caminho: string;
+    topo?: number;
+    base?: number;
+  } | null>(null);
+  const painel = painelAberto?.caminho === atual ? painelAberto : null;
+  const fechar = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const abrirPainel = (titulo: string, el: HTMLElement) => {
+    clearTimeout(fechar.current);
+    const q = el.getBoundingClientRect();
+    // Na metade de baixo da tela o painel cresce para cima, para não sair da janela
+    setPainel(
+      q.top > window.innerHeight / 2
+        ? { titulo, caminho: atual, base: window.innerHeight - q.bottom }
+        : { titulo, caminho: atual, topo: q.top },
+    );
+  };
+  const sairDoPainel = () => {
+    clearTimeout(fechar.current);
+    fechar.current = setTimeout(() => setPainel(null), 150);
+  };
+  useEffect(() => {
+    if (!painel) return;
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setPainel(null);
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [painel]);
 
   const casa = (href: string) =>
     href === "/"
@@ -94,7 +138,7 @@ export function MenuLateral({
         <div className="flex w-full flex-1 flex-col items-center gap-1 overflow-y-auto">
           {[
             { titulo: "Início", itens: [{ href: "/", rotulo: "Início" }] },
-            ...grupos,
+            ...comFavoritos,
           ].map((g) => {
             const destino = g.itens.find((i) => ativo(i.href)) ?? g.itens[0]!;
             const marcado = g.itens.some((i) => ativo(i.href));
@@ -102,9 +146,14 @@ export function MenuLateral({
               <Link
                 key={g.titulo}
                 href={destino.href}
-                title={g.titulo}
                 aria-label={g.titulo}
-                className={`relative flex h-10 w-10 items-center justify-center rounded-sm border-l-[3px] ${FOCO} ${marcado ? MARCADO : NORMAL}`}
+                aria-haspopup="menu"
+                aria-expanded={painel?.titulo === g.titulo}
+                onMouseEnter={(e) => abrirPainel(g.titulo, e.currentTarget)}
+                onMouseLeave={sairDoPainel}
+                onFocus={(e) => abrirPainel(g.titulo, e.currentTarget)}
+                onBlur={sairDoPainel}
+                className={`relative flex h-10 w-10 items-center justify-center rounded-sm border-l-[3px] ${FOCO} ${marcado || painel?.titulo === g.titulo ? MARCADO : NORMAL}`}
               >
                 <IconeDoGrupo titulo={g.titulo} />
               </Link>
@@ -117,6 +166,47 @@ export function MenuLateral({
         >
           v{VERSAO}
         </p>
+        {/* No <body>: assim nem a rolagem do menu nem o conteúdo da página cobrem o painel */}
+        {painel &&
+          createPortal(
+            <div
+              role="menu"
+              aria-label={painel.titulo}
+              onMouseEnter={() => clearTimeout(fechar.current)}
+              onMouseLeave={sairDoPainel}
+              style={
+                painel.topo !== undefined
+                  ? { top: painel.topo }
+                  : { bottom: painel.base }
+              }
+              className="fixed left-[3.75rem] z-50 max-h-[calc(100vh-1rem)] w-max max-w-80 min-w-56 overflow-y-auto rounded-md border border-primaria-texto/10 bg-menu p-1.5 text-primaria-texto shadow-md"
+            >
+              <p className="px-2.5 pt-1.5 pb-1 text-xs font-semibold tracking-[0.08em] text-primaria-texto/60 uppercase">
+                {painel.titulo}
+              </p>
+              {(painel.titulo === "Início"
+                ? [{ href: "/", rotulo: "Início" }]
+                : (comFavoritos.find((g) => g.titulo === painel.titulo)
+                    ?.itens ?? [])
+              ).map((i) => {
+                const marcado = ativo(i.href);
+                return (
+                  <Link
+                    key={i.href}
+                    href={i.href}
+                    role="menuitem"
+                    aria-current={marcado ? "page" : undefined}
+                    onClick={() => setPainel(null)}
+                    className={`flex items-center gap-2 rounded-sm border-l-[3px] py-1.5 pr-3 pl-2 text-base ${FOCO} ${marcado ? MARCADO : NORMAL}`}
+                  >
+                    <IconeDaTela href={i.href} />
+                    <span className="min-w-0 truncate">{i.rotulo}</span>
+                  </Link>
+                );
+              })}
+            </div>,
+            document.body,
+          )}
       </nav>
     );
 
@@ -145,7 +235,7 @@ export function MenuLateral({
             <IconeDoGrupo titulo="Início" />
             Início
           </Link>
-          {grupos.map((g) => {
+          {comFavoritos.map((g) => {
             const temAtivo = g.itens.some((i) => ativo(i.href));
             const aberto = temAtivo || !fechados.has(g.titulo);
             const id = `grupo-${g.titulo.replace(/\W+/g, "-")}`;

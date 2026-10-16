@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -62,23 +63,21 @@ export default async function EntregasDeEpi({
         <div>
           <h1 className={tituloDaPagina}>Entregas de EPI</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              <span
-                className={
-                  resumo.dados.trocasVencidas > 0 ? "text-nao-conforme" : ""
-                }
-              >
-                {resumo.dados.trocasVencidas}{" "}
-                {resumo.dados.trocasVencidas === 1
-                  ? "troca vencida"
-                  : "trocas vencidas"}
-              </span>{" "}
-              · {resumo.dados.semTermo} sem termo assinado ·{" "}
-              {resumo.dados.casVencendo}{" "}
-              {resumo.dados.casVencendo === 1
-                ? "CA vencido ou vencendo"
-                : "CAs vencidos ou vencendo"}
-            </p>
+            <Pendencias
+              itens={[
+                {
+                  valor: resumo.dados.trocasVencidas,
+                  rotulo: "trocas vencidas",
+                  singular: "troca vencida",
+                  alerta: true,
+                },
+                { valor: resumo.dados.semTermo, rotulo: "sem termo assinado" },
+                {
+                  valor: resumo.dados.casVencendo,
+                  rotulo: "CAs vencidos ou vencendo",
+                },
+              ]}
+            />
           )}
         </div>
         {podeEditar && (

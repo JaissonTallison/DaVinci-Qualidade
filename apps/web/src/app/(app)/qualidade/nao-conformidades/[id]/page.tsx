@@ -73,7 +73,7 @@ export default async function DetalheDaNc({
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-mono text-lg text-texto-2">{nc.numero}</span>
-        <StatusDaNc status={nc.status} vencida={nc.vencida} />
+        <StatusDaNc status={nc.status} vencida={nc.vencida} prazo={nc.prazo} />
         {nc.ciclos >= 2 && (
           <span className="text-sm text-atencao">
             Reincidente: {nc.ciclos}º ciclo de tratamento
@@ -210,7 +210,11 @@ export default async function DetalheDaNc({
                 </Link>
                 <span className="min-w-48 flex-1">{p.titulo}</span>
                 <Progresso valor={p.progresso} />
-                <StatusDoPlano status={p.status} atrasado={p.atrasado} />
+                <StatusDoPlano
+                  status={p.status}
+                  atrasado={p.atrasado}
+                  prazo={p.prazo}
+                />
               </li>
             ))}
           </ul>

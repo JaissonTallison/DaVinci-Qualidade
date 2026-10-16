@@ -1,6 +1,6 @@
+import { Alerta } from "@/components/alerta";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CircleAlert } from "lucide-react";
 import {
   TIPOS_MONITORAMENTO,
   type DadosDoUsuario,
@@ -59,7 +59,7 @@ export default async function Monitoramentos() {
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Parâmetro</th>
                   <th className="px-4 py-2 font-semibold">Ponto</th>
@@ -71,7 +71,7 @@ export default async function Monitoramentos() {
               </thead>
               <tbody className="divide-y divide-borda">
                 {r.dados.map((m) => (
-                  <tr key={m.id} className="hover:bg-superficie-2">
+                  <tr key={m.id} className="">
                     <td className="px-4 py-2">
                       <Link
                         href={`/ambiental/monitoramentos/${m.id}`}
@@ -94,15 +94,10 @@ export default async function Monitoramentos() {
                             {m.ultimo.valor.toLocaleString("pt-BR")} {m.unidade}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 rounded-xs bg-nao-conforme/10 px-1.5 text-nao-conforme tabular-nums">
-                            <CircleAlert
-                              aria-hidden
-                              size={14}
-                              strokeWidth={2}
-                            />
-                            {m.ultimo.valor.toLocaleString("pt-BR")} {m.unidade}{" "}
-                            · fora do limite
-                          </span>
+                          <Alerta
+                            texto="Fora do limite"
+                            detalhe={`${m.ultimo.valor.toLocaleString("pt-BR")} ${m.unidade}`}
+                          />
                         )
                       ) : (
                         <span className="text-texto-3">Sem coleta</span>

@@ -2,15 +2,17 @@ import {
   SITUACOES_DO_REQUISITO,
   type SituacaoDoRequisito,
 } from "@davinci/types";
+import { Alerta } from "./alerta";
 
-const COR: Record<SituacaoDoRequisito, string> = {
-  em_dia: "bg-conforme",
-  vence_em_breve: "bg-atencao",
-  vencido: "bg-nao-conforme",
-  ausente: "bg-nao-conforme",
+/** Matriz de competências: texto curto no lugar de ponto colorido. */
+const CURTO: Record<SituacaoDoRequisito, string> = {
+  em_dia: "Em dia",
+  vence_em_breve: "Vence",
+  vencido: "Vencido",
+  ausente: "Falta",
 };
 
-/** Ponto + texto. Vencido e "não tem" ganham fundo, porque exigem ação (interface.md §8). */
+/** Só texto. Vencido e "não tem" viram alerta, porque exigem ação (interface.md §8). */
 export function SituacaoDoRequisitoMarcador({
   situacao,
   curto = false,
@@ -23,23 +25,13 @@ export function SituacaoDoRequisitoMarcador({
   const alerta = situacao === "vencido" || situacao === "ausente";
   if (curto)
     return (
-      <span title={texto} className="inline-flex items-center justify-center">
-        <span
-          aria-hidden
-          className={`size-2.5 rounded-full ${COR[situacao]} ${situacao === "ausente" ? "ring-2 ring-nao-conforme/30" : ""}`}
-        />
-        <span className="sr-only">{texto}</span>
+      <span
+        title={texto}
+        className={`text-xs whitespace-nowrap ${alerta ? "font-semibold text-nao-conforme" : situacao === "vence_em_breve" ? "text-atencao" : "text-texto-2"}`}
+      >
+        {CURTO[situacao]}
       </span>
     );
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 text-sm whitespace-nowrap ${alerta ? "rounded-xs bg-nao-conforme/10 px-1.5 text-nao-conforme" : "text-texto"}`}
-    >
-      <span
-        aria-hidden
-        className={`size-2 shrink-0 rounded-full ${COR[situacao]}`}
-      />
-      {texto}
-    </span>
-  );
+  if (alerta) return <Alerta texto={texto} />;
+  return <span className="text-sm whitespace-nowrap text-texto">{texto}</span>;
 }

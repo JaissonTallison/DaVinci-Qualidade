@@ -41,27 +41,30 @@ Toda tela nova passa pelo [checklist da seção 10](#10-checklist-de-tela) antes
 
 ## 3. Cara de IA: o que é proibido
 
-| Proibido                                                                          | Como fazemos                                                                                          |
-| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Inter, Geist ou fonte padrão do sistema em tudo                                   | Família **Source** (seção 4): serifa nos títulos, sem serifa na interface                             |
-| Degradês em fundo, botão ou texto (roxo → azul, "aurora")                         | Cores sólidas dos tokens. O único gradiente é o metálico da logo                                      |
-| Cantos muito arredondados (`rounded-xl` para cima)                                | Cantos de 2 a 6 px. Os tamanhos maiores não existem no tema                                           |
-| Sombra grande e difusa, "brilho" em volta de card, vidro fosco (_glassmorphism_)  | Borda fina separa camadas. Sombra só em menu suspenso e modal                                         |
-| Ícone dentro de círculo colorido em cada card                                     | Ícone pequeno, alinhado ao rótulo, na cor do texto                                                    |
-| Grade de cards de indicador soltos, cada um de uma cor                            | Indicadores numa faixa única com divisórias, cor só no número que pede atenção                        |
-| Emoji em título, botão, mensagem ou estado vazio                                  | Nenhum emoji na interface                                                                             |
-| "Bem-vindo de volta!", "Ops! Algo deu errado", "Tudo pronto! 🎉"                  | Texto direto e específico (seção 9)                                                                   |
-| Ilustração "fofa" ou genérica em estado vazio                                     | Uma frase do que falta e o botão que resolve                                                          |
-| Hero com título gigante dentro do sistema                                         | Título da página em 26 px serifado, ações à direita                                                   |
-| Badge colorido e cheio para todo status                                           | Ponto colorido + texto; fundo colorido só em status que exige ação                                    |
-| Cor hexadecimal solta no código (`text-[#7C3AED]`)                                | Só tokens semânticos (`text-nao-conforme`)                                                            |
-| Animação de entrada em lista, _hover_ que "pula"                                  | Transição só de cor e opacidade, até 150 ms                                                           |
-| Texto de exemplo (_lorem ipsum_, "Usuário Teste", "Empresa XYZ") em tela entregue | Dados reais ou de demonstração plausíveis (NC-2026-014, "Calibração do paquímetro TAG-0042")          |
-| Ícones de várias bibliotecas misturadas                                           | Só **Lucide** (`lucide-react`), traço 1,75 a 2, 16 px em botão e item de menu, 18 px em grupo e aviso |
+| Proibido                                                                          | Como fazemos                                                                                           |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Inter, Geist ou fonte padrão do sistema em tudo                                   | Família **Source** (seção 4), sem serifa; títulos em negrito (padrão da tela de entrar, 16/10/2026)    |
+| Degradês em fundo, botão ou texto (roxo → azul, "aurora")                         | Cores sólidas dos tokens. O único gradiente é o metálico da logo                                       |
+| Cantos muito arredondados (`rounded-xl` para cima)                                | Cantos de 8 px em campos, botões, painéis e cartões (2 px só em caixa de seleção). Maiores não existem |
+| Sombra grande e difusa, "brilho" em volta de card, vidro fosco (_glassmorphism_)  | Borda fina separa camadas. Sombra só em menu suspenso e modal                                          |
+| Ícone dentro de círculo colorido em cada card                                     | Ícone pequeno, alinhado ao rótulo, na cor do texto                                                     |
+| Barrinha de progresso fina em lista ou cartão                                     | Texto: "3 de 5 tarefas · 60%" (componente `Progresso`); concluído em verde                             |
+| Grade de cards de indicador soltos, cada um de uma cor                            | Indicadores numa faixa única com divisórias, cor só no número que pede atenção                         |
+| Emoji em título, botão, mensagem ou estado vazio                                  | Nenhum emoji na interface                                                                              |
+| "Bem-vindo de volta!", "Ops! Algo deu errado", "Tudo pronto! 🎉"                  | Texto direto e específico (seção 9)                                                                    |
+| Ilustração "fofa" ou genérica em estado vazio                                     | Uma frase do que falta e o botão que resolve                                                           |
+| Hero com título gigante dentro do sistema                                         | Título da página em 26 px serifado, ações à direita                                                    |
+| Badge colorido e cheio para todo status                                           | Só o texto, sem ponto colorido (16/10/2026); fundo e `CircleAlert` só em status que exige ação         |
+| Cor hexadecimal solta no código (`text-[#7C3AED]`)                                | Só tokens semânticos (`text-nao-conforme`)                                                             |
+| Animação de entrada em lista, _hover_ que "pula"                                  | Transição só de cor e opacidade, até 150 ms                                                            |
+| Texto de exemplo (_lorem ipsum_, "Usuário Teste", "Empresa XYZ") em tela entregue | Dados reais ou de demonstração plausíveis (NC-2026-014, "Calibração do paquímetro TAG-0042")           |
+| Ícones de várias bibliotecas misturadas                                           | Só **Lucide** (`lucide-react`), traço 1,75 a 2, 16 px em botão e item de menu, 18 px em grupo e aviso  |
 
 ---
 
 ## 4. Tipografia
+
+**Escala de trabalho (16/10/2026):** `xs` 12,5 px · `sm` 14 px · `base` 15 px (texto principal) · `md` 17 px · `lg` 19 px · `xl` 23 px · `2xl` 28 px (título da página). A tabela abaixo é a escala anterior, mantida como histórico.
 
 ### 4.1 Decisão
 
@@ -108,7 +111,7 @@ As cores saem da logo (ver [logos.md](logos.md)). O contraste de cada par texto/
 
 | Token        | HEX       | Papel                                                                                   |
 | ------------ | --------- | --------------------------------------------------------------------------------------- |
-| `marinho`    | `#001228` | **Cor de trabalho:** botão primário, texto forte, cabeçalho da tabela no PDF            |
+| `marinho`    | `#102A43` | **Azul petróleo, cor principal:** botão primário, menu, cabeçalhos (14,64:1 com branco) |
 | `ouro`       | `#A06D10` | Só gráfico: moldura da logo, selo. **Nunca como texto** (4,48:1 sobre branco, reprova)  |
 | `ouro-texto` | `#986600` | Ouro quando precisa ser texto (4,96:1). Uso raro: selo "Certificado", destaque de marca |
 
@@ -116,16 +119,19 @@ As cores saem da logo (ver [logos.md](logos.md)). O contraste de cada par texto/
 
 Cinzas levemente puxados para o azul do marinho, para não brigar com ele.
 
-| Token          | HEX       | Uso                                    | Contraste sobre branco |
-| -------------- | --------- | -------------------------------------- | ---------------------- |
-| `fundo`        | `#F4F5F7` | Fundo da página                        | —                      |
-| `superficie`   | `#FFFFFF` | Painéis, tabelas, formulários          | —                      |
-| `superficie-2` | `#EEF0F3` | Cabeçalho de tabela, linha selecionada | —                      |
-| `borda`        | `#D5DAE1` | Divisórias e contornos                 | —                      |
-| `borda-forte`  | `#9AA3B0` | Contorno de campo de formulário        | 2,55:1                 |
-| `texto`        | `#0E1A2B` | Texto principal                        | 17,48:1                |
-| `texto-2`      | `#475264` | Rótulos, texto secundário              | 7,90:1                 |
-| `texto-3`      | `#5F6B7C` | Metadados, legenda                     | 5,41:1                 |
+| Token          | HEX       | Uso                                                     | Contraste sobre branco |
+| -------------- | --------- | ------------------------------------------------------- | ---------------------- |
+| `fundo`        | `#F4F7FA` | Fundo da página (cinza gelo)                            | —                      |
+| `superficie`   | `#FFFFFF` | Painéis, tabelas, formulários                           | —                      |
+| `superficie-2` | `#EEF0F3` | Cabeçalho de tabela, linha selecionada                  | —                      |
+| `borda`        | `#D5DAE1` | Divisórias e contornos                                  | —                      |
+| `borda-forte`  | `#9AA3B0` | Contorno forte (quando precisa)                         | 2,55:1                 |
+| `campo`        | `#F5F7FB` | Fundo do campo de formulário                            | —                      |
+| `borda-campo`  | `#DFE5EE` | Contorno do campo (o fundo cinza ajuda a achar o campo) | 1,27:1                 |
+| `acao`         | `#0F766E` | Botão primário, verde esmeralda (texto branco 5,47:1)   | —                      |
+| `texto`        | `#0E1A2B` | Texto principal                                         | 17,48:1                |
+| `texto-2`      | `#334155` | Rótulos, texto secundário, ícones                       | 10,35:1                |
+| `texto-3`      | `#5F6B7C` | Metadados, legenda                                      | 5,41:1                 |
 
 ### 5.3 Status do registro
 
@@ -133,13 +139,13 @@ O QSSMA vive de status: conforme, não conforme, vencido, a vencer. São tokens 
 
 | Token          | Claro            | Escuro    | Significa                                                |
 | -------------- | ---------------- | --------- | -------------------------------------------------------- |
-| `conforme`     | `#1D7044` (6,08) | `#5CC48A` | Aprovado, Conforme, Vigente, Eficaz, Habilitada, Regular |
+| `conforme`     | `#0F766E` (5,47) | `#5CC48A` | Aprovado, Conforme, Vigente, Eficaz, Habilitada, Regular |
 | `nao-conforme` | `#B3261E` (6,54) | `#F2877E` | Reprovado, Não conforme, Vencida, Ineficaz, Irregular    |
-| `atencao`      | `#A8470A` (5,88) | `#F0A35C` | A vencer, Condicional, Pendente, Atrasada, Atenção       |
+| `atencao`      | `#B45309` (5,02) | `#F0A35C` | A vencer, Condicional, Pendente, Atrasada, Atenção       |
 | `info`         | `#2B5597` (7,37) | `#8AB0EE` | Em andamento, Planejado                                  |
 | `neutro`       | `#586273` (6,16) | `#9AA4B2` | Rascunho, Não iniciado, Não se aplica                    |
 
-O `atencao` é laranja de propósito, para nunca ser confundido com o ouro da marca.
+O `atencao` é o âmbar escuro: o âmbar da paleta (`ambar`, `#F59E0B`) tem só 2,15:1 sobre branco e fica para marcador (ponto, faixa, ícone), nunca texto. Paleta adotada em 16/10/2026: azul petróleo `#102A43`, verde esmeralda `#0F766E`, âmbar `#F59E0B`, cinza gelo `#F4F7FA`, branco e cinza ardósia `#334155`.
 
 ### 5.4 Escalas de nível (risco, significância, materialidade)
 
@@ -175,14 +181,18 @@ A tela de ODS usa as **17 cores oficiais da ONU** (tokens `--dv-ods-1` a `--dv-o
 | Token        | Valor | Uso                          |
 | ------------ | ----- | ---------------------------- |
 | `rounded-xs` | 2 px  | Checkbox, marcador de status |
-| `rounded-sm` | 4 px  | Botão, campo, etiqueta       |
-| `rounded-md` | 6 px  | Painel, tabela, menu, modal  |
+| `rounded-sm` | 8 px  | Botão, campo, etiqueta       |
+| `rounded-md` | 8 px  | Painel, tabela, menu, modal  |
 
 Não existe `rounded-lg` para cima. Sombra só em menu suspenso (`shadow-sm`) e modal (`shadow-md`).
 
 ---
 
 ## 7. Estrutura de tela
+
+**Profundidade dos cards:** todo card e painel tem a sombra `shadow-cartao` (suave, em tom petróleo), junto com a borda fina. Menus suspensos e modais seguem com `shadow-sm` e `shadow-md`.
+
+**Cabeçalho da página (16/10/2026):** só o título e as ações à direita. O módulo já aparece no caminho da barra superior e não se repete. Abaixo do título, uma linha em vermelho (`Pendencias`) só quando algo pede ação ("1 vencido · 2 reprovados"); com tudo em dia, nada. Nada de faixa de números grandes: isso é painel, não tela de trabalho.
 
 ```text
 ┌────────────┬──────────────────────────────────────────────────────────────┐
@@ -284,12 +294,12 @@ Os tokens estão em `packages/tokens/css/tema.css`. O tema do Tailwind é zerado
 
 Biblioteca única: **Lucide** (`lucide-react`, versão fixa no catálogo do monorepo). Onde entra:
 
-| Lugar              | Regra                                                                                                                                                                           |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Menu lateral       | Um ícone por grupo (18 px) e por tela (16 px), mapeados em `components/icones-do-menu.tsx`. Tela nova ganha ícone lá                                                            |
-| Botões             | Criar e registrar: `Plus`. Filtrar: `ListFilter`. Voltar: `ArrowLeft`. Anexar: `Paperclip`. Ícone antes do texto, 16 px                                                         |
-| Barra superior     | Recolher o menu, empresa, usuário e sair                                                                                                                                        |
-| Avisos e situações | Sucesso: `CircleCheck` verde. Erro: `CircleAlert`. Situação que exige ação (vencido, bloqueado, pendente) troca o ponto colorido por `CircleAlert`, para não depender só da cor |
+| Lugar              | Regra                                                                                                                                                                                                                                                 |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Menu lateral       | Um ícone por grupo (18 px) e por tela (16 px), mapeados em `components/icones-do-menu.tsx`. Tela nova ganha ícone lá                                                                                                                                  |
+| Botões             | Criar e registrar: `Plus`. Filtrar: `ListFilter`. Voltar: `ArrowLeft`. Anexar: `Paperclip`. Ícone antes do texto, 16 px                                                                                                                               |
+| Barra superior     | Recolher o menu, empresa, usuário e sair                                                                                                                                                                                                              |
+| Avisos e situações | Sucesso: `CircleCheck` verde. Erro: `CircleAlert`. Situação que exige ação (vencido, bloqueado, pendente) usa o componente `Alerta` (texto em vermelho com há quanto tempo; sem caixa nem ícone) em vez de `CircleAlert`, para não depender só da cor |
 
 Sempre `aria-hidden`: o texto ao lado já diz o que é. Nunca dentro de círculo colorido.
 
@@ -318,6 +328,6 @@ SVG próprio em `components/graficos.tsx`: colunas empilhadas, colunas agrupadas
 | Texto nunca na cor da série                                 | Rótulos e valores nas cores de texto; a cor fica no quadradinho ao lado                                                                      |
 | Interação                                                   | Tooltip ao passar o mouse, realce da série pela legenda, clique abre a lista filtrada                                                        |
 
-O destaque do topo do início (`.dv-destaque` em `globals.css`) e as telas de acesso (`.dv-acesso`) são as únicas áreas com degradê e canto acima de 6 px do sistema.
+As telas de acesso (`.dv-acesso`) são a única área com degradê do sistema. O resumo do início é um painel branco comum (16/10/2026): saudação, prazos vencidos, a prioridade com link e a saúde do sistema de gestão em lista compacta.
 
 As telas de acesso (entrar, esqueci a senha, código do 2FA) seguem o visual aprovado pelo dono do produto em 16/10/2026: foto de fundo com véu marinho em degradê, cartão branco de canto 24 px com sombra, ícones das áreas em quadrado colorido, botão azul e o título "Bem-vindo(a)". É uma vitrine de quem ainda não entrou; dentro do sistema continuam valendo todas as regras desta página. Tudo fica escopado em `.dv-acesso` e não pode ser reaproveitado em outras telas.

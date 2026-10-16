@@ -35,7 +35,7 @@ export default async function Usuarios() {
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Nome</th>
                   <th className="px-4 py-2 font-semibold">E-mail</th>
@@ -48,7 +48,7 @@ export default async function Usuarios() {
                 {lista.dados.map((u) => (
                   <tr
                     key={u.id}
-                    className={`hover:bg-superficie-2 ${u.ativo ? "" : "text-texto-3"}`}
+                    className={` ${u.ativo ? "" : "text-texto-3"}`}
                   >
                     <td className="px-4 py-2">
                       <Link

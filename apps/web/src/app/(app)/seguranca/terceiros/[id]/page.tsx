@@ -105,7 +105,7 @@ export default async function DetalheDoTerceiro({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-5 py-2 font-semibold">Documento</th>
                   <th className="px-4 py-2 font-semibold">Válido até</th>

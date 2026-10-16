@@ -66,7 +66,7 @@ export function BarrasDeConformidade({
       <p className="mt-2 flex flex-wrap gap-4 text-xs text-texto-2">
         {PARTES.map(([k, n, cor]) => (
           <span key={k} className="inline-flex items-center gap-1.5">
-            <span aria-hidden className={`size-2 rounded-full ${cor}`} />
+            <span aria-hidden className={`size-2.5 rounded-xs ${cor}`} />
             {n}
           </span>
         ))}

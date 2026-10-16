@@ -19,7 +19,12 @@ import {
   TipoDaEvidencia,
 } from "@/components/marcadores-auditoria";
 import { chamarApi } from "@/lib/api";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import {
+  aba as estiloDaAba,
+  painel,
+  tituloDaPagina,
+  trilho,
+} from "@/lib/estilos";
 import { NovaEvidenciaPropria } from "../biblioteca/nova";
 import {
   ExcluirProprio,
@@ -98,16 +103,13 @@ export default async function MinhaBiblioteca({
         </p>
       )}
       {erro && !erro.ok && <AvisoDeErro erro={erro.erro} />}
-      <nav
-        aria-label="Minha biblioteca"
-        className="mt-6 flex flex-wrap gap-2 border-b border-borda"
-      >
+      <nav aria-label="Minha biblioteca" className={`mt-6 ${trilho}`}>
         {(Object.keys(ABAS) as Aba[]).map((k) => (
           <Link
             key={k}
             href={`?aba=${k}`}
             aria-current={aba === k ? "page" : undefined}
-            className={`-mb-px border-b-2 px-3 pb-2.5 text-base ${aba === k ? "border-menu font-semibold text-texto" : "border-transparent text-texto-2 hover:text-texto"}`}
+            className={estiloDaAba(aba === k)}
           >
             {ABAS[k]}
             {contagem[k] !== null && (

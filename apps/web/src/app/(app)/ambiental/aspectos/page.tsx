@@ -106,7 +106,7 @@ export default async function Aspectos({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Atividade</th>
                   <th className="px-4 py-2 font-semibold">Aspecto</th>
@@ -121,7 +121,7 @@ export default async function Aspectos({
                 {r.dados.map((a) => (
                   <tr
                     key={a.id}
-                    className={`hover:bg-superficie-2 ${a.ativo ? "" : "text-texto-3"}`}
+                    className={` ${a.ativo ? "" : "text-texto-3"}`}
                   >
                     <td className="px-4 py-2">
                       <Link

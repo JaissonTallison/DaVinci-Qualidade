@@ -76,11 +76,7 @@ export function FormularioDeMonitoramento({
     </Campo>
   );
   return (
-    <form
-      action={enviar}
-      noValidate
-      className={m ? "" : `${painel} mt-6`}
-    >
+    <form action={enviar} noValidate className={m ? "" : `${painel} mt-6`}>
       {m && <input type="hidden" name="versao" value={m.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${m ? "" : "p-5"}`}>
         {estado.erro && !estado.erro.detalhes?.length && (

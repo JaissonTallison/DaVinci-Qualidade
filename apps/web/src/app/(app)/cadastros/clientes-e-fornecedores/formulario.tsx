@@ -43,11 +43,7 @@ export function FormularioDeParceiro({
   };
   const papeis = new Set(v.papeis?.split(",") ?? []);
   return (
-    <form
-      action={acao}
-      noValidate
-      className={embutido ? "" : `${painel} mt-6`}
-    >
+    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
       {parceiro && (
         <input type="hidden" name="versao" value={parceiro.versao} />
       )}

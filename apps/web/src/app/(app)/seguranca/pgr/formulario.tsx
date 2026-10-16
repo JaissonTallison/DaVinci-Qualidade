@@ -54,11 +54,7 @@ export function FormularioDeRisco({
   const [prob, setProb] = useState(v.probabilidade ?? "");
   const nivel = sev && prob ? nivelDoRisco(Number(sev), Number(prob)) : null;
   return (
-    <form
-      action={acao}
-      noValidate
-      className={embutido ? "" : `${painel} mt-6`}
-    >
+    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
       {risco && <input type="hidden" name="versao" value={risco.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}>
         {estado.erro && !estado.erro.detalhes?.length && (

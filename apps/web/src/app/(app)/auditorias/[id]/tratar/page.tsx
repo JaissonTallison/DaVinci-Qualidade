@@ -154,7 +154,11 @@ export default async function Tratar({
                           {nc.numero}
                         </Link>
                         <p className="mt-1">
-                          <StatusDaNc status={nc.status} vencida={nc.vencida} />
+                          <StatusDaNc
+                            status={nc.status}
+                            vencida={nc.vencida}
+                            prazo={nc.prazo}
+                          />
                         </p>
                         <p className="mt-1 text-texto-2">
                           {nc.responsavel} · prazo {formatarData(nc.prazo)}
@@ -181,6 +185,7 @@ export default async function Tratar({
                               <StatusDoPlano
                                 status={pl.status}
                                 atrasado={pl.atrasado}
+                                prazo={pl.prazo}
                               />
                             </p>
                             <p className="text-texto-2 tabular-nums">

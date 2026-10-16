@@ -78,7 +78,7 @@ export default async function CatalogoDeEpis({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">EPI</th>
                   <th className="px-4 py-2 font-semibold">CA</th>
@@ -89,7 +89,7 @@ export default async function CatalogoDeEpis({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.map((e) => (
-                  <tr key={e.id} className="hover:bg-superficie-2">
+                  <tr key={e.id} className="">
                     <td className="px-4 py-2">
                       <Link
                         href={`/seguranca/epis/${e.id}`}

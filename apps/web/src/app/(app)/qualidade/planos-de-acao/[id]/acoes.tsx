@@ -21,7 +21,7 @@ import { hojeEmBrasilia } from "@/lib/datas";
 import { areaDeTexto, campoCompacto } from "@/lib/estilos";
 
 const botaoDaLinha =
-  "h-8 rounded-sm border border-borda-forte bg-superficie px-3 text-sm font-semibold text-texto hover:bg-superficie-2 disabled:opacity-60";
+  "h-8 rounded-campo border border-borda-campo bg-superficie px-3 text-sm font-semibold text-texto hover:bg-superficie-2 disabled:opacity-60";
 
 /** Concluir, reabrir ou cancelar a tarefa, na própria linha. O erro (ex.: plano alterado por outra pessoa) aparece embaixo. */
 export function AcoesDaTarefa({

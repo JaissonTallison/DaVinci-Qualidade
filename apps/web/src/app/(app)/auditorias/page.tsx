@@ -1,4 +1,5 @@
 import { ListFilter } from "lucide-react";
+import { Pendencias } from "@/components/pendencias";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
@@ -50,13 +51,16 @@ export default async function ListaDeAuditorias({
         <div>
           <h1 className={tituloDaPagina}>Auditorias</h1>
           {resumo.ok && (
-            <p className="mt-1 text-base text-texto-2">
-              {resumo.dados.planejadas}{" "}
-              {resumo.dados.planejadas === 1 ? "planejada" : "planejadas"} ·{" "}
-              {resumo.dados.emAndamento} em andamento ·{" "}
-              {resumo.dados.ncsUltimos12Meses} NCs em auditorias concluídas nos
-              últimos 12 meses
-            </p>
+            <Pendencias
+              itens={[
+                { valor: resumo.dados.planejadas, rotulo: "planejadas" },
+                { valor: resumo.dados.emAndamento, rotulo: "em andamento" },
+                {
+                  valor: resumo.dados.ncsUltimos12Meses,
+                  rotulo: "NCs em auditorias (12 meses)",
+                },
+              ]}
+            />
           )}
         </div>
         {podeCriar && (
@@ -116,7 +120,7 @@ export default async function ListaDeAuditorias({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Número</th>
                   <th className="px-4 py-2 font-semibold">Escopo</th>
@@ -129,7 +133,7 @@ export default async function ListaDeAuditorias({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.itens.map((a) => (
-                  <tr key={a.id} className="hover:bg-superficie-2">
+                  <tr key={a.id} className="">
                     <td className="px-4 py-2 whitespace-nowrap">
                       <Link
                         href={`/auditorias/${a.id}`}

@@ -73,7 +73,7 @@ export default async function Mudancas({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-xs text-texto-2">
+              <thead className="bg-superficie-2 text-sm text-texto-2">
                 <tr>
                   <th className="px-4 py-2 font-semibold">Número</th>
                   <th className="px-4 py-2 font-semibold">Mudança</th>
@@ -84,7 +84,7 @@ export default async function Mudancas({
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.map((m) => (
-                  <tr key={m.id} className="hover:bg-superficie-2">
+                  <tr key={m.id} className="">
                     <td className="px-4 py-2 font-mono text-sm whitespace-nowrap">
                       <Link
                         href={`/sgi/mudancas/${m.id}`}

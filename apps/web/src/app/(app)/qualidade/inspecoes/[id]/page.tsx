@@ -139,7 +139,7 @@ export default async function DetalheDaInspecao({
         <section className={`${painel} mt-6`}>
           <h2 className={`${tituloDaSecao} px-5 pt-5`}>Itens</h2>
           <table className="mt-3 w-full text-left">
-            <thead className="bg-superficie-2 text-xs text-texto-2">
+            <thead className="bg-superficie-2 text-sm text-texto-2">
               <tr>
                 <th className="px-5 py-2 font-semibold">Item</th>
                 <th className="px-4 py-2 font-semibold">Resposta</th>
@@ -248,7 +248,11 @@ export default async function DetalheDaInspecao({
                     {nc.numero}
                   </Link>
                   <span className="min-w-48 flex-1">{nc.titulo}</span>
-                  <StatusDaNc status={nc.status} vencida={nc.vencida} />
+                  <StatusDaNc
+                    status={nc.status}
+                    vencida={nc.vencida}
+                    prazo={nc.prazo}
+                  />
                 </li>
               ))}
             </ul>
