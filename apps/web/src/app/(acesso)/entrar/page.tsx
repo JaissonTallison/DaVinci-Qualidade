@@ -26,8 +26,8 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
   const recusa = await lerCookie(COOKIE_RECUSA);
   return (
     <section>
-      <h1 className="text-2xl">Bem-vindo(a)</h1>
-      <p className="mt-1 text-md text-texto-2">
+      <h1 className="text-center text-2xl">Bem-vindo(a)</h1>
+      <p className="mt-1 text-center text-md text-texto-2">
         Acesse seu ambiente de trabalho.
       </p>
       {aviso && AVISOS[aviso] && (

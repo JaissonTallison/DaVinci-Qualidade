@@ -165,7 +165,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
         <div className="flex items-center justify-center px-4 py-6 sm:px-8 lg:pr-12 lg:pl-0 xl:pr-20 tela-curta:py-3">
           <div className="dv-acesso-cartao w-full max-w-[26rem] px-6 py-7 sm:px-9 sm:py-8 tela-curta:py-5">
             <Image
-              className="h-auto w-[160px] tela-baixa:w-[136px]"
+              className="mx-auto h-auto w-[160px] tela-baixa:w-[136px]"
               src="/brand/logo.svg"
               alt="DaVinci Qualidade e Certificações"
               width={573}
