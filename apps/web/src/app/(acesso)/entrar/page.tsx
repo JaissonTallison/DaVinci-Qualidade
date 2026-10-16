@@ -49,7 +49,7 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
           Fale com o administrador da sua empresa
         </span>
       </p>
-      <ul className="mt-6 grid grid-cols-3 divide-x divide-borda tela-baixa:hidden">
+      <ul className="mt-6 grid grid-cols-3 divide-x divide-borda max-lg:tela-baixa:hidden">
         {DESTAQUES.map(({ icone: Icone, texto }) => (
           <li
             key={texto}
