@@ -3,6 +3,11 @@
  */
 import { z } from 'zod';
 import {
+  NIVEIS_DE_INSPECAO,
+  NQAS,
+  type PlanoDeAmostragem,
+} from './amostragem.js';
+import {
   chaves,
   data,
   enumOpcional,
@@ -101,10 +106,19 @@ export const novaInspecaoSchema = z
     /** Modelo de onde copiar os itens. Sem modelo, os itens vêm no próprio pedido. */
     modeloId: opcional(z.uuid('Modelo inválido.')),
     itens: itens.optional(),
+    /** Amostragem (NBR 5426): com NQA, a quantidade é o tamanho do lote e o plano é calculado. */
+    nqa: enumOpcional(NQAS, 'NQA desconhecido.'),
+    nivelInspecao: enumOpcional(NIVEIS_DE_INSPECAO, 'Nível desconhecido.'),
+    /** Fornecedor do lote (cadastro do codex), na inspeção de recebimento. */
+    fornecedorId: opcional(z.uuid('Fornecedor inválido.')),
   })
   .refine((d) => d.modeloId || d.itens?.length, {
     path: ['itens'],
     message: 'Escolha um modelo ou inclua os itens a verificar.',
+  })
+  .refine((d) => !d.nqa || d.quantidade, {
+    path: ['quantidade'],
+    message: 'Com amostragem, informe o tamanho do lote.',
   });
 export type NovaInspecao = z.input<typeof novaInspecaoSchema>;
 
@@ -126,7 +140,16 @@ export const responderInspecaoSchema = z.object({
 });
 export type ResponderInspecao = z.input<typeof responderInspecaoSchema>;
 
-export const concluirInspecaoSchema = z.object({ versao });
+export const concluirInspecaoSchema = z.object({
+  versao,
+  /** Com amostragem: defeituosos encontrados na amostra (decide o lote). */
+  defeituosos: opcional(
+    z.coerce
+      .number({ error: 'Informe um número.' })
+      .int('Use um número inteiro.')
+      .min(0, 'Não pode ser negativo.'),
+  ),
+});
 export const cancelarInspecaoSchema = z.object({
   versao,
   motivo: texto('o motivo do cancelamento', 500, 10),
@@ -169,6 +192,12 @@ export interface Inspecao {
   modeloId: string | null;
   modeloNome: string | null;
   observacoes: string | null;
+  /** Plano de amostragem, quando a inspeção é por amostra (NBR 5426). */
+  plano: PlanoDeAmostragem | null;
+  /** Defeituosos na amostra, registrados ao concluir. */
+  defeituosos: number | null;
+  fornecedorId: string | null;
+  fornecedorNome: string | null;
   status: StatusInspecao;
   itens: ItemDaInspecao[];
   respondidos: number;
@@ -192,7 +221,26 @@ export type InspecaoResumo = Pick<
   | 'status'
   | 'respondidos'
   | 'naoConformes'
+  | 'fornecedorNome'
 > & { totalDeItens: number };
+
+/** Recebimento de um fornecedor nos últimos 12 meses: base para a nota de qualidade na avaliação. */
+export interface RecebimentoDoFornecedor {
+  fornecedorId: string;
+  inspecoes: number;
+  aprovadas: number;
+  reprovadas: number;
+  /** Aprovadas ÷ concluídas, em %; null sem inspeção concluída. */
+  indiceDeAprovacao: number | null;
+  ultimas: Pick<
+    Inspecao,
+    'id' | 'numero' | 'data' | 'objeto' | 'lote' | 'status'
+  >[];
+}
+
+export const filtroDoFornecedorSchema = z.object({
+  fornecedorId: z.uuid('Fornecedor inválido.'),
+});
 
 export interface ResumoInspecoes {
   emAndamento: number;

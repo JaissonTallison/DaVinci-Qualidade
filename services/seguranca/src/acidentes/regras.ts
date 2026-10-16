@@ -25,11 +25,12 @@ export function diasEntre(de: string, ate: string): number {
 }
 
 export type AcaoAcidente =
-  'editar' | 'cat' | 'iniciar' | 'concluir' | 'cancelar';
+  'editar' | 'cat' | 'iniciar' | 'investigar' | 'concluir' | 'cancelar';
 const PERMITIDA_EM: Record<AcaoAcidente, readonly StatusAcidente[]> = {
   editar: ['registrado', 'em_investigacao'],
   cat: ['registrado', 'em_investigacao', 'concluido'],
   iniciar: ['registrado'],
+  investigar: ['em_investigacao'],
   concluir: ['em_investigacao'],
   cancelar: ['registrado', 'em_investigacao'],
 };
@@ -37,6 +38,7 @@ const FRASE: Record<AcaoAcidente, string> = {
   editar: 'alterar o registro',
   cat: 'registrar a CAT',
   iniciar: 'iniciar a investigação',
+  investigar: 'registrar a investigação',
   concluir: 'concluir a investigação',
   cancelar: 'cancelar o registro',
 };

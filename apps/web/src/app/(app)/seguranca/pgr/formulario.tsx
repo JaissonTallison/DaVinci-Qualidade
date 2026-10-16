@@ -224,6 +224,7 @@ export function FormularioDeRisco({
           <input
             id="responsavel"
             name="responsavel"
+            list="pessoas"
             maxLength={120}
             defaultValue={v.responsavel}
             className={campo}

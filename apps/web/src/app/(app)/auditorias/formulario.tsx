@@ -147,6 +147,7 @@ export function FormularioDeAuditoria({
             <input
               id="auditorLider"
               name="auditorLider"
+              list="pessoas"
               defaultValue={v.auditorLider}
               maxLength={120}
               className={campo}
@@ -180,6 +181,7 @@ export function FormularioDeAuditoria({
             <input
               id="representante"
               name="representante"
+              list="pessoas"
               defaultValue={v.representante}
               maxLength={120}
               className={campo}

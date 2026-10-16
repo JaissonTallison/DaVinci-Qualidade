@@ -11,6 +11,21 @@ type ComId = { id?: unknown; alteracoes?: unknown };
 export class ExamesETreinamentosController {
   constructor(private readonly s: ExamesETreinamentosService) {}
 
+  @MessagePattern(PATTERNS.asos.paraEsocial)
+  asosParaEsocial(@Contexto() ctx: Ctx, @Dados() d: unknown) {
+    return this.s.asosParaEsocial(ctx, d);
+  }
+
+  @MessagePattern(PATTERNS.treinamentos.turmas)
+  turmas(@Contexto() ctx: Ctx) {
+    return this.s.turmas(ctx);
+  }
+
+  @MessagePattern(PATTERNS.treinamentos.turma)
+  turma(@Contexto() ctx: Ctx, @Dados() d: unknown) {
+    return this.s.turma(ctx, d);
+  }
+
   @MessagePattern(PATTERNS.asos.listar)
   listarAsos(@Contexto() ctx: Ctx, @Dados() d: unknown) {
     return this.s.listarAsos(ctx, d);

@@ -94,8 +94,8 @@ Toda alteração leva a `versao` que a tela leu. Versão desatualizada responde 
 
 - [ ] Abrir NC a partir de outro serviço por evento (constatação de auditoria, reclamação de cliente, inspeção reprovada)
 - [x] Ligar a NC a um Plano de Ação (5W2H): ver [planos-de-acao.md](planos-de-acao.md)
-- [ ] Evidências anexadas (serviço `plataforma`)
-- [ ] Responsável escolhido do cadastro de funcionários (`codex`); por enquanto é texto
+- [x] Evidências anexadas (serviço `plataforma`)
+- [x] Responsável sugerido do cadastro de funcionários ativos (lista `pessoas` no layout); continua texto, para aceitar quem é de fora
 - [ ] Histórico de alterações centralizado
 - [ ] Corrigir campos descritivos pela tela (a rota `PUT` já existe)
 - [ ] Tabela da lista em formato de cartões no celular (hoje rola na horizontal)

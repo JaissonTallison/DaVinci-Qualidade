@@ -17,7 +17,7 @@ Arquivos ligados a um registro de outro módulo: o laudo da NC, a foto da inspe�
 
 ## 2. Onde aparece
 
-Na página de detalhe de: não conformidade, plano de ação, inspeção, instrumento (calibração), auditoria e acidente. Para ligar outro registro, inclua o tipo em `REGISTROS_COM_ANEXO` (`packages/types/src/anexos.ts`) e ponha `<Anexos>` na página.
+Na página de detalhe de: não conformidade, plano de ação, inspeção, instrumento (calibração), auditoria e acidente, entre outros. Também por linha: **cada tarefa do plano de ação** (evidência de execução) e **cada item da inspeção** (foto do defeito, leitura), com o componente `AnexosDoItem`. Para ligar outro registro, inclua o tipo em `REGISTROS_COM_ANEXO` (`packages/types/src/anexos.ts`) e ponha `<Anexos>` na página.
 
 ## 3. Caminho do arquivo
 

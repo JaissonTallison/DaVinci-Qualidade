@@ -25,6 +25,7 @@ import {
   type InspecaoResumo,
   type ModeloDeInspecao,
   type Pagina,
+  type RecebimentoDoFornecedor,
   type ResumoInspecoes,
 } from '@davinci/types';
 import type { z } from 'zod';
@@ -63,6 +64,20 @@ export class InspecoesController {
       SERVICES.QUALIDADE,
       I.resumo,
       {},
+      ctx,
+    );
+  }
+
+  @Get('fornecedor/:fornecedorId')
+  @Permissao('qualidade.ver')
+  recebimentoDoFornecedor(
+    @ContextoHttp() ctx: Contexto,
+    @Param('fornecedorId') fornecedorId: string,
+  ) {
+    return this.mensageria.enviar<RecebimentoDoFornecedor>(
+      SERVICES.QUALIDADE,
+      I.recebimentoDoFornecedor,
+      { fornecedorId },
       ctx,
     );
   }

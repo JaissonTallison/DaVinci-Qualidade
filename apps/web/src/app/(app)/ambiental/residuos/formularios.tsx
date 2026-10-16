@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import {
   CLASSES_RESIDUO,
   UNIDADES_RESIDUO,
+  type Destinador,
   type Residuo,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -104,7 +105,13 @@ export function FormularioDeResiduo() {
   );
 }
 
-export function FormularioDeSaida({ residuos }: { residuos: Residuo[] }) {
+export function FormularioDeSaida({
+  residuos,
+  destinadores,
+}: {
+  residuos: Residuo[];
+  destinadores: Destinador[];
+}) {
   const { estado, enviar, salvando, erros, v } = useFormulario(registrarSaida);
   const texto = (id: string, rotulo: string, max: number) => (
     <Campo id={id} rotulo={rotulo} erro={erros[id]}>
@@ -165,8 +172,47 @@ export function FormularioDeSaida({ residuos }: { residuos: Residuo[] }) {
           />
         </Campo>
         {texto("mtr", "Número do MTR", 40)}
-        {texto("transportador", "Transportador", 150)}
-        {texto("destinador", "Destinador", 150)}
+        {(["transportador", "destinador"] as const).map((papel) => {
+          const opcoes = destinadores.filter(
+            (d) => d.tipo === papel || d.tipo === "ambos",
+          );
+          return opcoes.length ? (
+            <Campo
+              key={papel}
+              id={`${papel}Id`}
+              rotulo={
+                papel === "transportador"
+                  ? "Transportador (licenciado)"
+                  : "Destinador (licenciado)"
+              }
+              erro={erros[`${papel}Id`] ?? erros[papel]}
+            >
+              <Selecao
+                id={`${papel}Id`}
+                name={`${papel}Id`}
+                defaultValue={v[`${papel}Id`] ?? ""}
+                className={campo}
+              >
+                <option value="">Escolha</option>
+                {opcoes.map((d) => (
+                  <option key={d.id} value={d.id} disabled={d.licencaVencida}>
+                    {d.nome}
+                    {d.licencaVencida ? " (licença vencida)" : ""}
+                  </option>
+                ))}
+              </Selecao>
+            </Campo>
+          ) : (
+            <span key={papel}>
+              {texto(
+                papel,
+                papel === "transportador" ? "Transportador" : "Destinador",
+                150,
+              )}
+            </span>
+          );
+        })}
+        {texto("custo", "Custo da destinação (R$)", 15)}
       </div>
       <div>
         <button type="submit" className={botaoPrimario} disabled={salvando}>

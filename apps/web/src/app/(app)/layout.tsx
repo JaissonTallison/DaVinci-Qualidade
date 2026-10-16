@@ -17,6 +17,7 @@ import {
   COOKIE_MENU_COMPACTO,
 } from "@/components/preferencias-do-menu";
 import { atalhosVisiveis, gruposVisiveis } from "@/components/navegacao";
+import { ListaDePessoas } from "@/components/lista-de-pessoas";
 import { RotulosDasTabelas } from "@/components/rotulos-das-tabelas";
 import { chamarApi } from "@/lib/api";
 
@@ -62,6 +63,9 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
             className="min-w-0 flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 md:pb-6"
           >
             <div className="mx-auto w-full max-w-[90rem]">{children}</div>
+            <ListaDePessoas
+              podeVer={Boolean(eu?.permissoes.includes("funcionarios.ver"))}
+            />
           </main>
         </div>
       </div>

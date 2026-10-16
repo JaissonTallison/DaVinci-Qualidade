@@ -45,6 +45,7 @@ TF = \frac{\text{acidentes com afastamento} \times 1\,000\,000}{\text{horas-home
 
 ## 4. Ainda não feito
 
-- [ ] Acidentado escolhido do cadastro de funcionários (`codex`); por enquanto é texto
+- [x] Acidentado escolhido do cadastro no complemento da CAT (o nome e a função são atualizados)
 - [ ] EPIs, PGR, permissão de trabalho, CIPA/DDS/APR, emergência e terceiros
-- [ ] Testemunhas e investigação em formato estruturado (5 porquês, árvore de causas)
+- [x] Investigação estruturada: testemunhas, 5 porquês e árvore de causas pelo método ITMa (fatos numerados, componente e antecedentes conferidos); plano de ação a partir do acidente
+- [x] Complemento eSocial da CAT e CAT para imprimir ([eSocial](esocial.md))

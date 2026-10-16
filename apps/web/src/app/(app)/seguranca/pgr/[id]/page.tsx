@@ -17,6 +17,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeRisco } from "../formulario";
+import { EsocialDoRisco } from "./esocial";
 import { SituacaoDoRisco } from "./situacao";
 
 export const metadata: Metadata = { title: "Risco" };
@@ -26,6 +27,7 @@ const AVISOS: Record<string, string> = {
   salvo: "Avaliação salva.",
   eliminado: "Risco marcado como eliminado: ele sai do inventário ativo.",
   reativado: "Risco de volta ao inventário.",
+  esocial: "Dados do eSocial salvos.",
 };
 
 export default async function DetalheDoRisco({
@@ -95,6 +97,17 @@ export default async function DetalheDoRisco({
       {x.ativo && permissoes.includes("seguranca.editar") && (
         <Recolhido titulo="Reavaliar ou corrigir">
           <FormularioDeRisco risco={x} embutido />
+        </Recolhido>
+      )}
+      {x.ativo && permissoes.includes("seguranca.editar") && (
+        <Recolhido
+          titulo={
+            x.dadosEsocial
+              ? `eSocial: agente ${x.dadosEsocial.codAgNoc}`
+              : "eSocial: agente nocivo (S-2240)"
+          }
+        >
+          <EsocialDoRisco risco={x} />
         </Recolhido>
       )}
       {permissoes.includes("seguranca.excluir") && (

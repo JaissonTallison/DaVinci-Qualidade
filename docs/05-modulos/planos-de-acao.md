@@ -71,5 +71,5 @@ O **prazo do plano** é calculado: o maior prazo entre as tarefas não cancelada
 ## 4. Ainda não feito
 
 - [ ] Abrir plano a partir de auditoria, risco e análise crítica (quando esses módulos existirem)
-- [ ] Evidências anexadas por tarefa
+- [x] Evidências anexadas por tarefa
 - [ ] Aviso de tarefa vencendo (serviço `plataforma`)

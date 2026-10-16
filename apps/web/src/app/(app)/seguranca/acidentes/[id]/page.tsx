@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { Printer } from "lucide-react";
 import {
   ehAcidenteComLesao,
   type Acidente,
   type DadosDoUsuario,
+  type FuncionarioResumo,
+  type Pagina,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
@@ -26,6 +29,8 @@ import {
   RegistrarCat,
 } from "./acoes";
 import { Anexos } from "@/components/anexos";
+import { ArvoreDeCausas } from "./arvore";
+import { DadosDaCatEsocial, InvestigacaoEstruturada } from "./investigacao";
 
 export const metadata: Metadata = { title: "Acidente" };
 
@@ -39,6 +44,8 @@ const AVISOS: Record<string, string> = {
   investigacao: "Investigação iniciada.",
   concluido: "Investigação concluída.",
   cancelado: "Registro cancelado.",
+  "investigacao-salva": "Investigação salva.",
+  "dados-cat": "Dados da CAT para o eSocial salvos.",
 };
 
 export default async function DetalheDoAcidente({
@@ -58,6 +65,17 @@ export default async function DetalheDoAcidente({
   const podeEditar = permissoes.includes("seguranca.editar");
   const aberto = a.status === "registrado" || a.status === "em_investigacao";
   const comLesao = ehAcidenteComLesao(a.tipo);
+  const funcionarios =
+    comLesao && podeEditar && a.status !== "cancelado"
+      ? await chamarApi<Pagina<FuncionarioResumo>>(
+          "/funcionarios?situacao=todos&porPagina=100",
+        )
+      : null;
+  const temInvestigacao =
+    a.investigacao.testemunhas.length +
+      a.investigacao.porques.length +
+      a.investigacao.fatos.length >
+    0;
 
   return (
     <article className="max-w-6xl">
@@ -149,8 +167,71 @@ export default async function DetalheDoAcidente({
       {a.status === "registrado" && podeEditar && (
         <IniciarInvestigacao acidente={a} />
       )}
+      {a.status === "em_investigacao" && podeEditar ? (
+        <section id="investigacao" className={`${painel} mt-6 p-5`}>
+          <h2 className={tituloDaSecao}>Investigação</h2>
+          <InvestigacaoEstruturada acidente={a} />
+          {a.investigacao.fatos.length > 0 && (
+            <div className="mt-5 border-t border-borda pt-4">
+              <ArvoreDeCausas fatos={a.investigacao.fatos} />
+            </div>
+          )}
+        </section>
+      ) : (
+        temInvestigacao && (
+          <section id="investigacao" className={`${painel} mt-6 p-5`}>
+            <h2 className={tituloDaSecao}>Investigação</h2>
+            {a.investigacao.testemunhas.length > 0 && (
+              <ul className="mt-3 flex flex-col gap-2 text-base">
+                {a.investigacao.testemunhas.map((t, i) => (
+                  <li key={i}>
+                    <span className="font-semibold">{t.nome}</span>
+                    {t.funcao && (
+                      <span className="text-texto-2"> · {t.funcao}</span>
+                    )}
+                    : {t.relato}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {a.investigacao.porques.length > 0 && (
+              <ol className="mt-3 list-decimal pl-5 text-base">
+                {a.investigacao.porques.map((p, i) => (
+                  <li key={i}>{p}</li>
+                ))}
+              </ol>
+            )}
+            <div className="mt-3">
+              <ArvoreDeCausas fatos={a.investigacao.fatos} />
+            </div>
+          </section>
+        )
+      )}
       {a.status === "em_investigacao" && podeEditar && (
         <ConcluirInvestigacao acidente={a} />
+      )}
+      {comLesao && funcionarios?.ok && (
+        <section id="cat-esocial" className={`${painel} mt-6 p-5`}>
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className={tituloDaSecao}>CAT para o eSocial (S-2210)</h2>
+            <Link
+              href={`/seguranca/acidentes/${a.id}/cat`}
+              className={botaoSecundario}
+            >
+              <Printer aria-hidden size={16} strokeWidth={2} />
+              CAT para imprimir
+            </Link>
+          </div>
+          <p className="mt-1 text-base text-texto-2">
+            {a.dadosCat
+              ? "Dados completos: o evento fica pronto em Segurança › eSocial SST."
+              : "Complete o que o eSocial pede além do registro do acidente."}
+          </p>
+          <DadosDaCatEsocial
+            acidente={a}
+            funcionarios={funcionarios.dados.itens}
+          />
+        </section>
       )}
 
       {a.status === "concluido" && (
@@ -177,12 +258,20 @@ export default async function DetalheDoAcidente({
             O tratamento (ação corretiva e verificação de eficácia) segue o
             ciclo da NC no Qualidade.
           </p>
-          <Link
-            href={`/qualidade/nao-conformidades/nova?acidente=${a.id}`}
-            className={botaoSecundario}
-          >
-            Abrir NC
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/qualidade/nao-conformidades/nova?acidente=${a.id}`}
+              className={botaoSecundario}
+            >
+              Abrir NC
+            </Link>
+            <Link
+              href={`/qualidade/planos-de-acao/novo?acidente=${a.id}`}
+              className={botaoSecundario}
+            >
+              Criar plano de ação
+            </Link>
+          </div>
         </section>
       )}
 

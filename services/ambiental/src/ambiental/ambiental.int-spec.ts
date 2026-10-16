@@ -9,6 +9,7 @@ import { criarBancoDeTeste } from '@davinci/database/teste';
 import * as schema from '../db/schema.js';
 import { ConsumoService } from '../consumo/consumo.service.js';
 import { MonitoramentosService } from '../monitoramentos/monitoramentos.service.js';
+import { GestaoAmbientalService } from '../gestao/gestao.service.js';
 import { PrazosService } from '../prazos/prazos.service.js';
 import { QuimicosService } from '../quimicos/quimicos.service.js';
 import { AmbientalService, situacaoDaLicenca } from './ambiental.service.js';
@@ -181,7 +182,16 @@ describe('Meio Ambiente', () => {
       alteracoes: { versao: l.versao, data: hoje, protocolo: 'PROT-889' },
     });
     expect(l.situacao).toBe('em_renovacao');
-    const prazos = await new PrazosService(s, quimicos, monit).prazos(ctx, {
+    const prazos = await new PrazosService(
+      s,
+      quimicos,
+      monit,
+      new GestaoAmbientalService(banco.db, {
+        send: () => {
+          throw new Error('sem qualidade no teste');
+        },
+      }),
+    ).prazos(ctx, {
       dias: 90,
     });
     expect(prazos.map((p) => p.tipo)).toEqual(
@@ -390,7 +400,16 @@ describe('Meio Ambiente', () => {
       unidade: 'L',
       fdsRevisao: somarMeses(hoje, -58),
     });
-    const prazos = await new PrazosService(s, quimicos, monit).prazos(ctx, {
+    const prazos = await new PrazosService(
+      s,
+      quimicos,
+      monit,
+      new GestaoAmbientalService(banco.db, {
+        send: () => {
+          throw new Error('sem qualidade no teste');
+        },
+      }),
+    ).prazos(ctx, {
       dias: 365,
     });
     expect(prazos.map((p) => p.tipo)).toEqual(

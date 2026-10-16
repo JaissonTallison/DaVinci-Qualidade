@@ -1,6 +1,8 @@
 // Tabelas do serviço ambiental. Cada tabela exportada aqui entra nas migrações (pnpm db:generate).
 import {
   boolean,
+  jsonb,
+  text,
   date,
   doublePrecision,
   index,
@@ -103,6 +105,10 @@ export const saidas = pgTable(
     mtr: varchar({ length: 40 }).notNull(),
     transportador: varchar({ length: 150 }).notNull(),
     destinador: varchar({ length: 150 }).notNull(),
+    transportadorId: uuid(),
+    destinadorId: uuid(),
+    /** Custo da destinação (R$). */
+    custo: doublePrecision(),
     cdfNumero: varchar({ length: 40 }),
     cdfData: date({ mode: 'string' }),
     cdfRegistradoEm: timestamp({ withTimezone: true, precision: 3 }),
@@ -180,3 +186,95 @@ export const resultados = pgTable(
   },
   (t) => [index('resultados_monitoramento_idx').on(t.monitoramentoId, t.data)],
 );
+
+/** Ocorrências ambientais: vazamento, derrame, emissão. Comunicação ao órgão quando obrigatória. */
+export const ocorrencias = pgTable(
+  'ocorrencias_ambientais',
+  {
+    ...colunasPadrao(),
+    numero: varchar({ length: 20 }).notNull(),
+    tipo: varchar({ length: 20 }).notNull(),
+    data: date({ mode: 'string' }).notNull(),
+    hora: varchar({ length: 5 }).notNull(),
+    local: varchar({ length: 150 }).notNull(),
+    substancia: varchar({ length: 150 }).notNull(),
+    quantidade: doublePrecision(),
+    unidade: varchar({ length: 10 }),
+    meios: jsonb().notNull(),
+    severidade: varchar({ length: 10 }).notNull(),
+    descricao: text().notNull(),
+    contencao: text().notNull(),
+    comunicacao: jsonb(),
+    ncId: uuid(),
+    ncNumero: varchar({ length: 20 }),
+    status: varchar({ length: 10 }).notNull().default('aberta'),
+    causas: text(),
+    acoes: text(),
+    remediacao: text(),
+  },
+  (t) => [uniqueIndex('ocorrencias_numero').on(t.empresaId, t.numero)],
+);
+
+/** Contador da numeração (OCA-2026 → último número). */
+export const sequencias = pgTable(
+  'sequencias',
+  {
+    empresaId: uuid().notNull(),
+    nome: varchar({ length: 30 }).notNull(),
+    ultimo: smallint().notNull(),
+  },
+  (t) => [uniqueIndex('sequencias_unica').on(t.empresaId, t.nome)],
+);
+
+/** Obrigações legais com calendário (RAPP, TCFA, relatórios de automonitoramento...). */
+export const obrigacoes = pgTable('obrigacoes_legais', {
+  ...colunasPadrao(),
+  nome: varchar({ length: 200 }).notNull(),
+  orgao: varchar({ length: 120 }).notNull(),
+  periodicidade: varchar({ length: 12 }).notNull(),
+  proximoVencimento: date({ mode: 'string' }),
+  responsavel: varchar({ length: 120 }).notNull(),
+  descricao: varchar({ length: 1000 }),
+  historico: jsonb().notNull().default([]),
+});
+
+/** Transportadores e destinadores de resíduos, com a licença ambiental. */
+export const destinadores = pgTable('destinadores', {
+  ...colunasPadrao(),
+  nome: varchar({ length: 150 }).notNull(),
+  cnpj: varchar({ length: 18 }),
+  tipo: varchar({ length: 15 }).notNull(),
+  licencaNumero: varchar({ length: 60 }).notNull(),
+  licencaOrgao: varchar({ length: 60 }).notNull(),
+  licencaValidade: date({ mode: 'string' }).notNull(),
+  atividades: varchar({ length: 500 }),
+});
+
+/** Produção mensal: a base dos indicadores de ecoeficiência. */
+export const producao = pgTable(
+  'producao',
+  {
+    ...colunasPadrao(),
+    competencia: varchar({ length: 7 }).notNull(),
+    quantidade: doublePrecision().notNull(),
+    unidade: varchar({ length: 20 }).notNull(),
+  },
+  (t) => [uniqueIndex('producao_mes_unico').on(t.empresaId, t.competencia)],
+);
+
+/** Programas ambientais com meta, ações e medições. */
+export const programas = pgTable('programas_ambientais', {
+  ...colunasPadrao(),
+  nome: varchar({ length: 150 }).notNull(),
+  objetivo: varchar({ length: 1000 }).notNull(),
+  indicador: varchar({ length: 25 }).notNull(),
+  unidadeManual: varchar({ length: 20 }),
+  linhaDeBase: doublePrecision().notNull(),
+  anoBase: smallint().notNull(),
+  meta: doublePrecision().notNull(),
+  prazo: date({ mode: 'string' }).notNull(),
+  responsavel: varchar({ length: 120 }).notNull(),
+  acoes: jsonb().notNull().default([]),
+  medicoes: jsonb().notNull().default([]),
+  encerrado: boolean().notNull().default(false),
+});

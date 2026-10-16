@@ -2,6 +2,7 @@
  * Exames ocupacionais (ASO, NR-7) e treinamentos (NRs) dos funcionários (serviço codex). docs/05-modulos/exames-e-treinamentos.md
  */
 import { z } from 'zod';
+import { exameDoAsoSchema, type ExameDoAso } from './esocial.js';
 import { chaves, data, opcional, texto, textoOpcional } from './validadores.js';
 
 export const TIPOS_ASO = {
@@ -48,7 +49,17 @@ export const registrarAsoSchema = z
     proximoExame: opcional(data('a data do próximo exame')),
     medico: textoOpcional(120),
     crm: textoOpcional(20),
+    /** UF do CRM (eSocial S-2220). */
+    ufCrm: opcional(
+      z
+        .string()
+        .trim()
+        .toUpperCase()
+        .regex(/^[A-Z]{2}$/, 'UF com 2 letras.'),
+    ),
     observacao: textoOpcional(300),
+    /** Exames realizados com o procedimento da tabela 27 do eSocial. */
+    exames: z.array(exameDoAsoSchema).max(30).default([]),
   })
   .refine((a) => a.tipo === 'demissional' || a.proximoExame, {
     path: ['proximoExame'],
@@ -69,8 +80,45 @@ export interface Aso {
   proximoExame: string | null;
   medico: string | null;
   crm: string | null;
+  ufCrm: string | null;
   observacao: string | null;
+  exames: ExameDoAso[];
   motivoAnulacao: string | null;
+}
+
+/** ASO com os dados do trabalhador, para o S-2220 (serviço seguranca pede ao codex). */
+export interface AsoParaEsocial extends Aso {
+  funcionarioNome: string;
+  cpf: string;
+  matricula: string;
+}
+export const filtroAsosParaEsocialSchema = z.object({
+  desde: data('a data inicial'),
+});
+
+/** Turma: participantes de um treinamento numa data (lista de presença e certificados). */
+export const filtroTurmaSchema = z.object({
+  treinamentoId: z.uuid('Treinamento inválido.'),
+  data: data('a data da turma'),
+});
+export interface ResumoDaTurma {
+  treinamentoId: string;
+  treinamentoNome: string;
+  data: string;
+  participantes: number;
+}
+export interface Turma {
+  treinamento: Treinamento;
+  data: string;
+  instrutor: string | null;
+  participantes: {
+    funcionarioId: string;
+    nome: string;
+    matricula: string;
+    cpf: string;
+    funcaoNome: string;
+    validade: string | null;
+  }[];
 }
 
 // ---------------------------------------------------------------- treinamentos

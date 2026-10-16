@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { ClientProxy } from '@nestjs/microservices';
 import {
   and,
   asc,
@@ -12,10 +13,20 @@ import {
   type SQL,
 } from 'drizzle-orm';
 import { DATABASE, type Database } from '@davinci/database';
-import { ErroDeNegocio, validar } from '@davinci/shared';
+import { ErroDeNegocio, pedir, validar } from '@davinci/shared';
 import {
   cancelarInspecaoSchema,
   concluirInspecaoSchema,
+  filtroDoFornecedorSchema,
+  loteAceito,
+  PATTERNS,
+  planoDeAmostragem,
+  SERVICES,
+  type NivelDeInspecao,
+  type Nqa,
+  type Parceiro,
+  type PlanoDeAmostragem,
+  type RecebimentoDoFornecedor,
   filtroInspecoesSchema,
   isUuid,
   novaInspecaoSchema,
@@ -57,7 +68,11 @@ const ALTERADA_POR_OUTRA_PESSOA =
 
 @Injectable()
 export class InspecoesService {
-  constructor(@Inject(DATABASE) private readonly db: Db) {}
+  constructor(
+    @Inject(DATABASE) private readonly db: Db,
+    /** Dono do cadastro de fornecedores: confere o fornecedor da inspeção de recebimento. */
+    @Inject(SERVICES.CODEX) private readonly codex: Pick<ClientProxy, 'send'>,
+  ) {}
 
   async listar(ctx: Contexto, dados: unknown): Promise<Pagina<InspecaoResumo>> {
     const f = validar(filtroInspecoesSchema, dados ?? {});
@@ -70,6 +85,7 @@ export class InspecoesService {
         or(
           ilike(inspecoes.numero, termo),
           ilike(inspecoes.lote, termo),
+          ilike(inspecoes.fornecedorNome, termo),
           sql`unaccent(${inspecoes.objeto}) ILIKE unaccent(${termo})`,
         )!,
       );
@@ -103,6 +119,7 @@ export class InspecoesService {
           status: l.status as StatusInspecao,
           respondidos: contarRespondidos(daInspecao),
           naoConformes: contarNaoConformes(daInspecao),
+          fornecedorNome: l.fornecedorNome,
           totalDeItens: daInspecao.length,
         };
       }),
@@ -146,8 +163,13 @@ export class InspecoesService {
     const {
       itens: digitados,
       modeloId,
+      fornecedorId,
       ...nova
     } = validar(novaInspecaoSchema, dados);
+    const fornecedorNome = fornecedorId
+      ? (await this.fornecedor(ctx, fornecedorId)).nome
+      : null;
+    const nivelInspecao = nova.nqa ? (nova.nivelInspecao ?? 'II') : null;
     if (nova.data > hojeEmBrasilia())
       throw invalido('data', 'A data da inspeção não pode estar no futuro.');
     let itens = digitados ?? [];
@@ -181,6 +203,9 @@ export class InspecoesService {
         .insert(inspecoes)
         .values({
           ...nova,
+          nivelInspecao,
+          fornecedorId: fornecedorId ?? null,
+          fornecedorNome,
           modeloId: modeloId ?? null,
           modeloNome,
           empresaId: ctx.empresaId,
@@ -250,9 +275,23 @@ export class InspecoesService {
 
   /** Todos respondidos e NOK descritos: o resultado é calculado e a inspeção vira registro, sem mais mudanças. */
   async concluir(ctx: Contexto, dados: ComId): Promise<Inspecao> {
-    const { versao } = validar(concluirInspecaoSchema, dados?.alteracoes);
+    const { versao, defeituosos } = validar(
+      concluirInspecaoSchema,
+      dados?.alteracoes,
+    );
     return this.alterar(ctx, dados?.id, versao, async (tx, linha, itens) => {
       const pendencias = pendenciasParaConcluir(itens);
+      const plano = planoDa(linha);
+      if (plano && defeituosos === null)
+        pendencias.push({
+          campo: 'defeituosos',
+          mensagem: `Informe quantos defeituosos havia na amostra de ${plano.amostra}.`,
+        });
+      if (plano && defeituosos !== null && defeituosos > plano.amostra)
+        pendencias.push({
+          campo: 'defeituosos',
+          mensagem: `A amostra tem ${plano.amostra} peças: os defeituosos não passam disso.`,
+        });
       if (pendencias.length)
         throw new ErroDeNegocio(
           'DADOS_INVALIDOS',
@@ -262,7 +301,13 @@ export class InspecoesService {
       await tx
         .update(inspecoes)
         .set({
-          status: resultadoDaInspecao(itens),
+          // Com amostragem, decide o número de defeituosos na amostra (Ac/Re); sem, um NOK reprova
+          status: plano
+            ? loteAceito(plano, defeituosos!)
+              ? 'aprovada'
+              : 'reprovada'
+            : resultadoDaInspecao(itens),
+          defeituosos: plano ? defeituosos : null,
           concluidaEm: new Date(),
           concluidaPor: ctx.usuarioId,
         })
@@ -286,6 +331,73 @@ export class InspecoesService {
         })
         .where(eq(inspecoes.id, linha.id));
     });
+  }
+
+  /** Recebimento do fornecedor nos últimos 12 meses (base da nota de qualidade na avaliação). */
+  async recebimentoDoFornecedor(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<RecebimentoDoFornecedor> {
+    const { fornecedorId } = validar(filtroDoFornecedorSchema, dados);
+    const desde = new Date(`${hojeEmBrasilia()}T12:00:00Z`);
+    desde.setUTCFullYear(desde.getUTCFullYear() - 1);
+    const linhas = await this.db
+      .select()
+      .from(inspecoes)
+      .where(
+        and(
+          eq(inspecoes.empresaId, ctx.empresaId),
+          eq(inspecoes.fornecedorId, fornecedorId),
+          sql`${inspecoes.data} >= ${desde.toISOString().slice(0, 10)}`,
+        ),
+      )
+      .orderBy(desc(inspecoes.data), desc(inspecoes.numero));
+    const aprovadas = linhas.filter((l) => l.status === 'aprovada').length;
+    const reprovadas = linhas.filter((l) => l.status === 'reprovada').length;
+    return {
+      fornecedorId,
+      inspecoes: linhas.length,
+      aprovadas,
+      reprovadas,
+      indiceDeAprovacao:
+        aprovadas + reprovadas
+          ? Math.round((aprovadas / (aprovadas + reprovadas)) * 100)
+          : null,
+      ultimas: linhas.slice(0, 10).map((l) => ({
+        id: l.id,
+        numero: l.numero,
+        data: l.data,
+        objeto: l.objeto,
+        lote: l.lote,
+        status: l.status as StatusInspecao,
+      })),
+    };
+  }
+
+  /** Confere no codex: existe, está ativo e é fornecedor. */
+  private async fornecedor(ctx: Contexto, id: string): Promise<Parceiro> {
+    const p = await pedir<Parceiro>(
+      this.codex,
+      PATTERNS.parceiros.obter,
+      { id },
+      ctx,
+      'Cadastros',
+    ).catch((erro: unknown) => {
+      if (
+        erro instanceof ErroDeNegocio &&
+        (erro.getError() as { codigo?: string }).codigo === 'NAO_ENCONTRADO'
+      )
+        throw invalido('fornecedorId', 'Fornecedor não encontrado.');
+      throw erro;
+    });
+    if (!p.ativo)
+      throw invalido('fornecedorId', `${p.nome} está inativo no cadastro.`);
+    if (!p.papeis.includes('fornecedor'))
+      throw invalido(
+        'fornecedorId',
+        `${p.nome} não está cadastrado como fornecedor.`,
+      );
+    return p;
   }
 
   /** Transação: confere empresa, status e versão (já avançando-a, o que trava gravação simultânea) e aplica a mudança. */
@@ -384,6 +496,10 @@ function montar(l: Linha, itens: LinhaItem[]): Inspecao {
     modeloId: l.modeloId,
     modeloNome: l.modeloNome,
     observacoes: l.observacoes,
+    plano: planoDa(l),
+    defeituosos: l.defeituosos,
+    fornecedorId: l.fornecedorId,
+    fornecedorNome: l.fornecedorNome,
     status: l.status as StatusInspecao,
     itens: itens.map((i) => ({
       id: i.id,
@@ -400,4 +516,15 @@ function montar(l: Linha, itens: LinhaItem[]): Inspecao {
     criadoEm: l.criadoEm.toISOString(),
     versao: l.atualizadoEm.toISOString(),
   };
+}
+
+/** Plano de amostragem da inspeção: NQA, nível e a quantidade como tamanho do lote. */
+function planoDa(l: Linha): PlanoDeAmostragem | null {
+  return l.nqa && l.quantidade
+    ? planoDeAmostragem(
+        l.quantidade,
+        (l.nivelInspecao ?? 'II') as NivelDeInspecao,
+        l.nqa as Nqa,
+      )
+    : null;
 }

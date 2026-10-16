@@ -82,6 +82,36 @@ import {
   FuncoesController,
   SetoresDaEmpresaController,
 } from './cadastros/funcionarios.controller.js';
+import { CompetenciasController } from './cadastros/competencias.controller.js';
+import {
+  DestinadoresController,
+  EcoeficienciaController,
+  ObrigacoesLegaisController,
+  OcorrenciasAmbientaisController,
+  ProgramasAmbientaisController,
+} from './ambiental/gestao.controller.js';
+import {
+  BrigadaController,
+  EquipamentosController,
+  EsocialController,
+  EsocialDoRiscoController,
+  InvestigacaoDoAcidenteController,
+  OrdensSstController,
+  PlanoDeEmergenciaController,
+  TurmasController,
+} from './seguranca/sst-ampliada.controller.js';
+import {
+  CatalogoDeServicosController,
+  ContratosController,
+  ExecucaoDaOsController,
+  PesquisasController,
+  ReclamacoesController,
+} from './servicos/gestao.controller.js';
+import {
+  FmeasController,
+  PlanosDeControleController,
+  PpapsController,
+} from './qualidade/automotivo.controller.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -158,6 +188,28 @@ export const observeEnabled = Boolean(
     FuncionariosController,
     SetoresDaEmpresaController,
     FuncoesController,
+    CompetenciasController,
+    OcorrenciasAmbientaisController,
+    ObrigacoesLegaisController,
+    DestinadoresController,
+    EcoeficienciaController,
+    ProgramasAmbientaisController,
+    InvestigacaoDoAcidenteController,
+    EsocialDoRiscoController,
+    EsocialController,
+    EquipamentosController,
+    BrigadaController,
+    PlanoDeEmergenciaController,
+    OrdensSstController,
+    TurmasController,
+    ExecucaoDaOsController,
+    CatalogoDeServicosController,
+    ContratosController,
+    ReclamacoesController,
+    PesquisasController,
+    FmeasController,
+    PlanosDeControleController,
+    PpapsController,
   ],
   providers: [
     MensageriaService,

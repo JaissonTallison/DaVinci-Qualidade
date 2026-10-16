@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type {
+  ConviteDePesquisa,
   DadosDoUsuario,
   Pagina,
   ParceiroResumo,
@@ -12,6 +13,9 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
+import { LinkDaPesquisa } from "@/components/link-da-pesquisa";
+import { formatarMomento } from "@/lib/datas";
+import { NovoConvite } from "./convites";
 import { FormularioDeNps } from "./formulario";
 
 export const metadata: Metadata = { title: "Satisfação do cliente (NPS)" };
@@ -24,12 +28,19 @@ const CATEGORIA = {
 export default async function Nps({
   searchParams,
 }: PageProps<"/servicos/nps">) {
-  const { aviso } = (await searchParams) as { aviso?: string };
-  const [r, eu, clientes] = await Promise.all([
+  const { aviso, convite } = (await searchParams) as {
+    aviso?: string;
+    convite?: string;
+  };
+  const [r, eu, clientes, convites] = await Promise.all([
     chamarApi<ResultadoNps>("/nps"),
     chamarApi<DadosDoUsuario>("/auth/eu"),
     chamarApi<Pagina<ParceiroResumo>>("/parceiros?papel=cliente&porPagina=100"),
+    chamarApi<ConviteDePesquisa[]>("/pesquisas"),
   ]);
+  const novo = convites.ok
+    ? convites.dados.find((c) => c.id === convite)
+    : undefined;
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
     <>
@@ -40,6 +51,45 @@ export default async function Nps({
         últimos 12 meses.
       </p>
       <Aviso avisos={{ registrada: "Resposta registrada." }} chave={aviso} />
+      {novo && <LinkDaPesquisa convite={novo} />}
+      {podeEditar && clientes.ok && (
+        <Recolhido titulo="Enviar pesquisa por link">
+          <p className="mb-3 text-base text-texto-2">
+            O cliente responde pelo link, sem login, em até 30 dias. A resposta
+            entra aqui sozinha.
+          </p>
+          <NovoConvite clientes={clientes.dados.itens} />
+          {convites.ok && convites.dados.length > 0 && (
+            <ul className="mt-4 divide-y divide-borda border-t border-borda text-sm">
+              {convites.dados.slice(0, 15).map((c) => (
+                <li
+                  key={c.id}
+                  className="flex flex-wrap justify-between gap-2 py-1.5"
+                >
+                  <span>
+                    {c.clienteNome}
+                    {c.osNumero && (
+                      <span className="font-mono text-texto-2">
+                        {" "}
+                        · {c.osNumero}
+                      </span>
+                    )}
+                  </span>
+                  <span
+                    className={
+                      c.respondidoEm ? "text-conforme" : "text-texto-2"
+                    }
+                  >
+                    {c.respondidoEm
+                      ? `Respondida em ${formatarMomento(c.respondidoEm)}`
+                      : `Aguardando · vale até ${formatarData(c.expiraEm)}`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Recolhido>
+      )}
       {podeEditar && clientes.ok && (
         <Recolhido titulo="Registrar resposta">
           <FormularioDeNps clientes={clientes.dados.itens} />

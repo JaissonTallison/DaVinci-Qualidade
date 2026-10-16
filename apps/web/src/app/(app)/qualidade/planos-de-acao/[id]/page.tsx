@@ -15,6 +15,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { formatarReais } from "@/lib/valores";
+import { AnexosDoItem } from "@/components/anexos-do-item";
 import { AcoesDaTarefa, AcoesDoPlano } from "./acoes";
 import { Anexos } from "@/components/anexos";
 
@@ -187,6 +188,40 @@ export default async function DetalheDoPlano({
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section className={`${painel} mt-6`}>
+        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Evidências das tarefas</h2>
+        <p className="px-5 text-base text-texto-2">
+          O registro que comprova cada tarefa feita: documento revisado, lista
+          de presença, foto, tela do sistema.
+        </p>
+        <ol className="mt-3 divide-y divide-borda border-t border-borda">
+          {p.tarefas
+            .filter((t) => t.situacao !== "cancelada")
+            .map((t) => (
+              <li
+                key={t.id}
+                className="grid gap-2 px-5 py-3 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]"
+              >
+                <p className="text-base">
+                  <span className="mr-2 text-texto-3 tabular-nums">
+                    {t.ordem + 1}.
+                  </span>
+                  {t.oQue}
+                  <span className="block text-sm text-texto-2">
+                    {t.responsavel} · {SITUACOES_TAREFA[t.situacao]}
+                  </span>
+                </p>
+                <AnexosDoItem
+                  registro="tarefa_do_plano"
+                  registroId={t.id}
+                  voltar={`/qualidade/planos-de-acao/${p.id}`}
+                  podeEditar={podeEditar}
+                />
+              </li>
+            ))}
+        </ol>
       </section>
 
       {p.eficaz !== null && (

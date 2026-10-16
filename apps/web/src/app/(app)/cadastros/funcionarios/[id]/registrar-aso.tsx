@@ -2,6 +2,7 @@
 
 import { RESULTADOS_ASO, TIPOS_ASO } from "@davinci/types";
 import { Campo } from "@/components/campo";
+import { EditorDeLinhas } from "@/components/editor-de-linhas";
 import { Formulario, Recolhido } from "@/components/formulario-de-acao";
 import { Selecao } from "@/components/selecao";
 import { registrarAso } from "@/lib/acoes-exames-e-treinamentos";
@@ -100,6 +101,41 @@ export function RegistrarAso({
                 className={`${campo} font-mono`}
               />
             </Campo>
+            <Campo id="ufCrm" rotulo="UF do CRM" erro={erros.ufCrm}>
+              <input
+                id="ufCrm"
+                name="ufCrm"
+                maxLength={2}
+                defaultValue={v.ufCrm}
+                className={`${campo} uppercase`}
+              />
+            </Campo>
+            <div className="sm:col-span-3">
+              <p className="text-sm font-semibold text-texto-2">
+                Exames realizados (para o eSocial S-2220)
+              </p>
+              <EditorDeLinhas
+                colunas={[
+                  {
+                    nome: "data",
+                    rotulo: "Data",
+                    tipo: "data",
+                    largura: "min-w-36",
+                  },
+                  {
+                    nome: "procedimento",
+                    rotulo: "Procedimento (tabela 27, 4 dígitos)",
+                    largura: "min-w-56",
+                    max: 4,
+                  },
+                ]}
+                iniciais={[]}
+                erros={erros}
+                prefixo="exames"
+                rotuloDaLinha="Exame"
+                comLinhaVazia={false}
+              />
+            </div>
             <Campo
               id="observacao"
               rotulo="Observação ou restrição (opcional)"

@@ -138,6 +138,8 @@ export interface Risco {
   /** Prazo passou e o risco segue alto ou crítico. */
   acaoVencida: boolean;
   ativo: boolean;
+  /** Agente nocivo e avaliação para o S-2240. */
+  dadosEsocial: import('./esocial.js').DadosEsocialDoRisco | null;
   /** Última revisão (alteração) do risco. */
   revisadoEm: string;
   versao: string;

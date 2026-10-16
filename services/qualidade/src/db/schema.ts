@@ -190,6 +190,13 @@ export const inspecoes = pgTable(
     /** Nome do modelo no dia da inspeção (o modelo pode ser renomeado depois). */
     modeloNome: varchar({ length: 120 }),
     observacoes: text(),
+    /** Amostragem NBR 5426: NQA e nível; o plano é calculado com a quantidade (tamanho do lote). */
+    nqa: varchar({ length: 6 }),
+    nivelInspecao: varchar({ length: 3 }),
+    defeituosos: integer(),
+    /** Fornecedor no serviço codex (outro banco: sem chave estrangeira); nome do dia. */
+    fornecedorId: uuid(),
+    fornecedorNome: varchar({ length: 150 }),
     status: varchar({ length: 15 }).notNull().default('em_andamento'),
     concluidaEm: timestamp({ withTimezone: true, precision: 3 }),
     concluidaPor: uuid(),
@@ -281,5 +288,65 @@ export const calibracoes = pgTable(
   },
   (t) => [
     index('calibracoes_instrumento_data_idx').on(t.instrumentoId, t.data),
+  ],
+);
+
+/** FMEA de processo (AIAG-VDA). As linhas vão juntas, num documento só, gravado inteiro a cada revisão. */
+export const fmeas = pgTable(
+  'fmeas',
+  {
+    ...colunasPadrao(),
+    numero: varchar({ length: 20 }).notNull(),
+    titulo: varchar({ length: 150 }).notNull(),
+    item: varchar({ length: 150 }).notNull(),
+    cliente: varchar({ length: 150 }),
+    equipe: varchar({ length: 300 }),
+    revisao: varchar({ length: 20 }),
+    linhas: jsonb().notNull().default([]),
+  },
+  (t) => [unique('fmeas_numero_por_empresa').on(t.empresaId, t.numero)],
+);
+
+/** Plano de controle (IATF 8.5.1.1), opcionalmente gerado de um FMEA. */
+export const planosDeControle = pgTable(
+  'planos_de_controle',
+  {
+    ...colunasPadrao(),
+    numero: varchar({ length: 20 }).notNull(),
+    titulo: varchar({ length: 150 }).notNull(),
+    item: varchar({ length: 150 }).notNull(),
+    fase: varchar({ length: 20 }).notNull(),
+    revisao: varchar({ length: 20 }),
+    fmeaId: uuid().references(() => fmeas.id),
+    linhas: jsonb().notNull().default([]),
+  },
+  (t) => [
+    unique('planos_de_controle_numero_por_empresa').on(t.empresaId, t.numero),
+  ],
+);
+
+/** PPAP (AIAG 4ª ed.): os 18 elementos com status, submissão e decisão do cliente. */
+export const ppaps = pgTable(
+  'ppaps',
+  {
+    ...colunasPadrao(),
+    numero: varchar({ length: 20 }).notNull(),
+    peca: varchar({ length: 150 }).notNull(),
+    numeroDaPeca: varchar({ length: 60 }).notNull(),
+    revisaoDoDesenho: varchar({ length: 20 }),
+    cliente: varchar({ length: 150 }).notNull(),
+    nivel: smallint().notNull(),
+    motivo: varchar({ length: 25 }).notNull(),
+    fmeaId: uuid().references(() => fmeas.id),
+    planoDeControleId: uuid().references(() => planosDeControle.id),
+    elementos: jsonb().notNull().default({}),
+    status: varchar({ length: 25 }).notNull().default('em_preparacao'),
+    submetidoEm: date({ mode: 'string' }),
+    parecer: varchar({ length: 1000 }),
+    decididoEm: timestamp({ withTimezone: true, precision: 3 }),
+  },
+  (t) => [
+    unique('ppaps_numero_por_empresa').on(t.empresaId, t.numero),
+    check('ppaps_nivel', sql`${t.nivel} BETWEEN 1 AND 5`),
   ],
 );

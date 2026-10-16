@@ -6,6 +6,8 @@ import type { ReactNode } from "react";
 import {
   formatarDocumento,
   formatarTelefone,
+  TIPOS_DE_REQUISITO,
+  type ConformidadeDoFuncionario,
   type DadosDoUsuario,
   type EntregaEpi,
   type Funcao,
@@ -16,6 +18,7 @@ import {
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
+import { SituacaoDoRequisitoMarcador } from "@/components/situacao-do-requisito";
 import { TabelaDeEntregas } from "@/components/tabela-de-entregas";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
@@ -64,7 +67,7 @@ export default async function DetalheDoFuncionario({
     eu.ok &&
     eu.dados.recursos.includes("seguranca") &&
     permissoes.includes("seguranca.ver");
-  const [setores, funcoes, ficha] = await Promise.all([
+  const [setores, funcoes, ficha, compT, compE] = await Promise.all([
     podeEditar && f.ativo
       ? chamarApi<SetorDaEmpresa[]>("/setores-da-empresa?situacao=todos")
       : null,
@@ -76,7 +79,24 @@ export default async function DetalheDoFuncionario({
           `/epis/entregas?funcionarioId=${f.id}&porPagina=100`,
         )
       : null,
+    f.ativo
+      ? chamarApi<ConformidadeDoFuncionario>(
+          `/competencias/funcionarios/${f.id}/treinamentos`,
+        )
+      : null,
+    f.ativo && veEpi
+      ? chamarApi<ConformidadeDoFuncionario>(
+          `/competencias/funcionarios/${f.id}/epis`,
+        )
+      : null,
   ]);
+  const requisitos = [
+    ...(compT?.ok ? compT.dados.requisitos : []),
+    ...(compE?.ok ? compE.dados.requisitos : []),
+  ];
+  const pendencias =
+    (compT?.ok ? compT.dados.pendentes : 0) +
+    (compE?.ok ? compE.dados.pendentes : 0);
   const voltar = `/cadastros/funcionarios/${f.id}`;
 
   return (
@@ -95,7 +115,25 @@ export default async function DetalheDoFuncionario({
             : `Desligado em ${f.desligamento ? formatarData(f.desligamento) : "—"}`}
         </span>
       </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{f.nome}</h1>
+      <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">
+        <h1 className={tituloDaPagina}>{f.nome}</h1>
+        <nav aria-label="Documentos" className="flex flex-wrap gap-4 text-sm">
+          <Link
+            href={`/cadastros/funcionarios/${f.id}/ordem-de-servico`}
+            className="text-info hover:underline"
+          >
+            Ordem de serviço de segurança
+          </Link>
+          {veEpi && (
+            <Link
+              href={`/cadastros/funcionarios/${f.id}/ficha-de-epi`}
+              className="text-info hover:underline"
+            >
+              Ficha de EPI para assinar
+            </Link>
+          )}
+        </nav>
+      </div>
       <Aviso avisos={AVISOS} chave={aviso} />
 
       <section className={`${painel} mt-6 p-5`}>
@@ -115,6 +153,65 @@ export default async function DetalheDoFuncionario({
           )}
         </dl>
       </section>
+
+      {compT && (
+        <section className={`${painel} mt-6`}>
+          <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pt-5">
+            <h2 className={tituloDaSecao}>Competências da função</h2>
+            <p className="text-base text-texto-2">
+              {pendencias === 0 ? (
+                "Em dia com tudo o que a função exige."
+              ) : (
+                <span className="font-semibold text-nao-conforme">
+                  {pendencias} pendência{pendencias > 1 ? "s" : ""}
+                </span>
+              )}{" "}
+              <Link
+                href={`/cadastros/setores-e-funcoes/${f.funcaoId}`}
+                className="text-sm text-info hover:underline"
+              >
+                Requisitos de {f.funcaoNome}
+              </Link>
+            </p>
+          </div>
+          {!compT.ok ? (
+            <div className="p-5">
+              <AvisoDeErro erro={compT.erro} />
+            </div>
+          ) : (
+            <ul className="mt-3 divide-y divide-borda border-t border-borda">
+              {requisitos.map((r) => (
+                <li
+                  key={`${r.tipo}:${r.id}`}
+                  className="grid gap-1 px-5 py-2.5 sm:grid-cols-[9rem_minmax(0,1fr)_10rem_8rem] sm:items-center"
+                >
+                  <span className="text-sm text-texto-2">
+                    {TIPOS_DE_REQUISITO[r.tipo]}
+                  </span>
+                  <span className="text-base">
+                    {r.nome}
+                    {r.referencia && (
+                      <span className="text-sm text-texto-2">
+                        {" "}
+                        · {r.referencia}
+                      </span>
+                    )}
+                    {r.motivo && (
+                      <span className="block text-sm text-texto-3">
+                        Risco do PGR: {r.motivo}
+                      </span>
+                    )}
+                  </span>
+                  <SituacaoDoRequisitoMarcador situacao={r.situacao} />
+                  <span className="text-sm text-texto-2 tabular-nums">
+                    {r.validade ? formatarData(r.validade) : ""}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
 
       <ExamesETreinamentos f={f} podeEditar={podeEditar} />
 

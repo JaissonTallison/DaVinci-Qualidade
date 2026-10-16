@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { DadosDoUsuario, Funcao, SetorDaEmpresa } from "@davinci/types";
+import Link from "next/link";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi, type Resultado } from "@/lib/api";
@@ -112,6 +113,14 @@ function Lista({
                     : "funcionários ativos"}
                 </p>
               </div>
+              {tipo === "funcao" && item.ativo && (
+                <Link
+                  href={`/cadastros/setores-e-funcoes/${item.id}`}
+                  className="h-8 content-center text-sm text-info hover:underline"
+                >
+                  Competências
+                </Link>
+              )}
               {podeEditar && (
                 <div className="flex items-start gap-3">
                   {item.ativo && (

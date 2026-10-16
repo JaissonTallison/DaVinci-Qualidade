@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useActionState } from "react";
-import type { ParceiroResumo } from "@davinci/types";
+import type {
+  Contrato,
+  ParceiroResumo,
+  ServicoDoCatalogo,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import type { EstadoDaAcao } from "@/lib/acao";
@@ -16,9 +20,18 @@ import {
   painel,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Selecao } from "@/components/selecao";
 import { EscolhaDeParceiro } from "../../escolha-de-parceiro";
 
-export function FormularioDeOs({ clientes }: { clientes: ParceiroResumo[] }) {
+export function FormularioDeOs({
+  clientes,
+  contratos,
+  catalogo,
+}: {
+  clientes: ParceiroResumo[];
+  contratos: Contrato[];
+  catalogo: ServicoDoCatalogo[];
+}) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     criarOs,
     {},
@@ -46,7 +59,16 @@ export function FormularioDeOs({ clientes }: { clientes: ParceiroResumo[] }) {
             invalido={Boolean(erros.clienteId)}
           />
         </Campo>
-        <Campo id="prazo" rotulo="Prazo" erro={erros.prazo}>
+        <Campo
+          id="prazo"
+          rotulo="Prazo"
+          erro={erros.prazo}
+          ajuda={
+            contratos.length
+              ? "Com contrato, em branco usa o prazo do SLA."
+              : undefined
+          }
+        >
           <input
             id="prazo"
             name="prazo"
@@ -75,12 +97,58 @@ export function FormularioDeOs({ clientes }: { clientes: ParceiroResumo[] }) {
           <input
             id="responsavel"
             name="responsavel"
+            list="pessoas"
             maxLength={120}
             defaultValue={v.responsavel}
             className={campo}
             aria-invalid={Boolean(erros.responsavel)}
           />
         </Campo>
+        {contratos.length > 0 && (
+          <Campo
+            id="contratoId"
+            rotulo="Contrato (SLA)"
+            erro={erros.contratoId}
+            className="sm:col-span-2"
+          >
+            <Selecao
+              id="contratoId"
+              name="contratoId"
+              defaultValue={v.contratoId ?? ""}
+              className={campo}
+            >
+              <option value="">Sem contrato</option>
+              {contratos.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.numero} · {c.clienteNome} · SLA {c.prazoAtendimentoDias}{" "}
+                  dia(s)
+                </option>
+              ))}
+            </Selecao>
+          </Campo>
+        )}
+        {catalogo.length > 0 && (
+          <Campo
+            id="servicoId"
+            rotulo="Serviço do catálogo"
+            erro={erros.servicoId}
+            ajuda="Traz o checklist de execução."
+          >
+            <Selecao
+              id="servicoId"
+              name="servicoId"
+              defaultValue={v.servicoId ?? ""}
+              className={campo}
+            >
+              <option value="">Sem catálogo</option>
+              {catalogo.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nome}
+                </option>
+              ))}
+            </Selecao>
+          </Campo>
+        )}
         <Campo
           id="descricao"
           rotulo="O que será feito"

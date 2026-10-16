@@ -43,6 +43,20 @@
       "when": 1792050560826,
       "tag": "0005_terceiros",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792153418512,
+      "tag": "0006_competencias",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792157003531,
+      "tag": "0007_esocial_investigacao_emergencia",
+      "breakpoints": true
     }
   ]
 }

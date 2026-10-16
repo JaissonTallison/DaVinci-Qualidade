@@ -7,6 +7,7 @@ import { ParceirosModule } from './parceiros/parceiros.module.js';
 import { ReferenciasModule } from './referencias/referencias.module.js';
 import { FuncionariosModule } from './funcionarios/funcionarios.module.js';
 import { ExamesETreinamentosModule } from './exames-e-treinamentos/exames-e-treinamentos.module.js';
+import { CompetenciasModule } from './competencias/competencias.module.js';
 import { PrazosModule } from './prazos/prazos.module.js';
 import { BuscaModule } from './busca/busca.module.js';
 
@@ -19,6 +20,7 @@ import { BuscaModule } from './busca/busca.module.js';
     ReferenciasModule,
     FuncionariosModule,
     ExamesETreinamentosModule,
+    CompetenciasModule,
   ],
   controllers: [HealthController],
 })

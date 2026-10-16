@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CircleAlert } from "lucide-react";
 import {
   CLASSES_RESIDUO,
   UNIDADES_RESIDUO,
   type DadosDoUsuario,
+  type Destinador,
   type Residuo,
   type SaidaDeResiduo,
 } from "@davinci/types";
@@ -32,17 +34,34 @@ export default async function Residuos({
   searchParams,
 }: PageProps<"/ambiental/residuos">) {
   const { aviso } = (await searchParams) as { aviso?: string };
-  const [rs, ss, eu] = await Promise.all([
+  const [rs, ss, eu, ds] = await Promise.all([
     chamarApi<Residuo[]>("/residuos"),
     chamarApi<SaidaDeResiduo[]>("/residuos/saidas"),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<Destinador[]>("/destinadores"),
   ]);
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   const semCdf = ss.ok ? ss.dados.filter((s) => !s.cdfNumero) : [];
   const atrasados = semCdf.filter((s) => s.cdfAtrasado).length;
   return (
     <>
-      <h1 className={tituloDaPagina}>Resíduos</h1>
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <h1 className={tituloDaPagina}>Resíduos</h1>
+        <nav aria-label="Resíduos" className="flex flex-wrap gap-4 text-sm">
+          <Link
+            href="/ambiental/destinadores"
+            className="text-info hover:underline"
+          >
+            Transportadores e destinadores
+          </Link>
+          <Link
+            href="/ambiental/residuos/inventario"
+            className="text-info hover:underline"
+          >
+            Inventário anual e planilha do MTR
+          </Link>
+        </nav>
+      </div>
       <p className="mt-1 max-w-2xl text-base text-texto-2">
         Inventário por classe (NBR 10004) e cada saída com o MTR. O destinador
         devolve o CDF; passados 30 dias sem ele, a saída fica atrasada e aparece
@@ -53,7 +72,10 @@ export default async function Residuos({
         <>
           {rs.ok && rs.dados.length > 0 && (
             <Recolhido titulo="Registrar saída com MTR">
-              <FormularioDeSaida residuos={rs.dados} />
+              <FormularioDeSaida
+                residuos={rs.dados}
+                destinadores={ds.ok ? ds.dados : []}
+              />
             </Recolhido>
           )}
           <Recolhido titulo="Cadastrar resíduo">
@@ -163,6 +185,14 @@ export default async function Residuos({
                     <td className="px-4 py-2.5 font-mono text-sm">{s.mtr}</td>
                     <td className="px-4 py-2.5 text-texto-2">
                       {s.transportador} · {s.destinador}
+                      {s.custo !== null && (
+                        <span className="block text-sm">
+                          R${" "}
+                          {s.custo.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                          })}
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-2.5">
                       {s.cdfNumero ? (

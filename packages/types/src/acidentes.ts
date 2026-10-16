@@ -170,6 +170,9 @@ export interface Acidente {
   causas: string | null;
   medidas: string | null;
   motivoCancelamento: string | null;
+  investigacao: InvestigacaoDoAcidente;
+  /** Complemento do S-2210 (eSocial). */
+  dadosCat: import('./esocial.js').DadosDaCat | null;
   versao: string;
 }
 
@@ -209,4 +212,64 @@ export interface ResumoAcidentes {
   emAberto: number;
   catsAtrasadas: number;
   diasSemAcidente: number | null;
+}
+
+// ---------------------------------------------------------------- investigação estruturada
+
+/** Método ITMa (árvore de causas): cada fato é do Indivíduo, da Tarefa, do Material ou do Meio. */
+export const COMPONENTES_ITMA = {
+  individuo: 'Indivíduo',
+  tarefa: 'Tarefa',
+  material: 'Material',
+  meio: 'Meio',
+} as const;
+export type ComponenteItma = keyof typeof COMPONENTES_ITMA;
+
+export const registrarInvestigacaoSchema = z.object({
+  versao,
+  testemunhas: z
+    .array(
+      z.object({
+        nome: texto('o nome da testemunha', 120, 2),
+        funcao: z.string().trim().max(100).default(''),
+        relato: texto('o relato', 2000, 5),
+      }),
+    )
+    .max(20)
+    .default([]),
+  porques: z.array(z.string().trim().max(300)).max(5).default([]),
+  /** Árvore de causas: fatos numerados a partir de 1; `antecedentes` são os números dos fatos que levaram a este. */
+  fatos: z
+    .array(
+      z.object({
+        fato: texto('o fato', 300, 3),
+        componente: z.enum(chaves(COMPONENTES_ITMA), {
+          error: 'Escolha o componente.',
+        }),
+        antecedentes: z
+          .array(z.coerce.number().int().min(1))
+          .max(10)
+          .default([]),
+      }),
+    )
+    .max(60)
+    .default([])
+    .superRefine((fatos, ctx) => {
+      fatos.forEach((f, i) => {
+        for (const a of f.antecedentes)
+          if (a > fatos.length || a === i + 1)
+            ctx.addIssue({
+              code: 'custom',
+              path: [i, 'antecedentes'],
+              message: `Fato ${i + 1}: o antecedente ${a} não existe (ou é o próprio fato).`,
+            });
+      });
+    }),
+});
+export type RegistrarInvestigacao = z.input<typeof registrarInvestigacaoSchema>;
+
+export interface InvestigacaoDoAcidente {
+  testemunhas: { nome: string; funcao: string; relato: string }[];
+  porques: string[];
+  fatos: { fato: string; componente: ComponenteItma; antecedentes: number[] }[];
 }

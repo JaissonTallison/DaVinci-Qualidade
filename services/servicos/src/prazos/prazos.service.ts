@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, eq, inArray, lte } from 'drizzle-orm';
+import { and, eq, inArray, isNull, lte } from 'drizzle-orm';
 import { DATABASE, type Database } from '@davinci/database';
 import { hojeEmBrasilia, somarDias, validar } from '@davinci/shared';
 import {
@@ -10,7 +10,7 @@ import {
   type Prazo,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
-import { ordensServico as os } from '../db/schema.js';
+import { contratos, ordensServico as os, reclamacoes } from '../db/schema.js';
 import { ServicosService } from '../servicos/servicos.service.js';
 
 type Db = Database<typeof schema>;
@@ -28,7 +28,7 @@ export class PrazosService {
     const { dias } = validar(horizonteSchema, dados ?? {});
     const hoje = hojeEmBrasilia();
     const limite = somarDias(hoje, dias);
-    const [abertas, avaliacoes] = await Promise.all([
+    const [abertas, avaliacoes, vencendo, semResposta] = await Promise.all([
       this.db
         .select()
         .from(os)
@@ -40,8 +40,52 @@ export class PrazosService {
           ),
         ),
       this.servicos.listarAvaliacoes(ctx),
+      this.db
+        .select()
+        .from(contratos)
+        .where(
+          and(
+            eq(contratos.empresaId, ctx.empresaId),
+            isNull(contratos.encerradoEm),
+            lte(contratos.fim, limite),
+          ),
+        ),
+      this.db
+        .select()
+        .from(reclamacoes)
+        .where(
+          and(
+            eq(reclamacoes.empresaId, ctx.empresaId),
+            inArray(reclamacoes.status, ['aberta', 'analisada']),
+            lte(reclamacoes.prazoResposta, limite),
+          ),
+        ),
     ]);
     return [
+      ...vencendo.map((c) =>
+        prazo(
+          {
+            modulo: 'servicos',
+            tipo: 'Contrato',
+            descricao: `${c.numero} · ${c.clienteNome} · fim da vigência`,
+            data: c.fim,
+            href: `/servicos/contratos/${c.id}`,
+          },
+          hoje,
+        ),
+      ),
+      ...semResposta.map((r) =>
+        prazo(
+          {
+            modulo: 'servicos',
+            tipo: 'Reclamação de cliente',
+            descricao: `${r.numero} · ${r.clienteNome} · responder`,
+            data: r.prazoResposta,
+            href: `/servicos/reclamacoes/${r.id}`,
+          },
+          hoje,
+        ),
+      ),
       ...abertas.map((o) =>
         prazo(
           {

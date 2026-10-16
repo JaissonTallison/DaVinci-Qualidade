@@ -1,5 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, desc, eq, inArray, isNull, type SQL } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gte,
+  inArray,
+  isNull,
+  sql,
+  type SQL,
+} from 'drizzle-orm';
 import {
   DATABASE,
   type Database,
@@ -16,7 +26,12 @@ import {
   anularRegistroSchema,
   atualizarTreinamentoSchema,
   filtroCadastroSimplesSchema,
+  filtroAsosParaEsocialSchema,
   filtroDoFuncionarioSchema,
+  filtroTurmaSchema,
+  type AsoParaEsocial,
+  type ResumoDaTurma,
+  type Turma,
   filtroVencimentosSchema,
   isUuid,
   novoTreinamentoSchema,
@@ -37,6 +52,7 @@ import * as schema from '../db/schema.js';
 import {
   asos,
   funcionarios,
+  funcoes,
   treinamentos,
   treinamentosRealizados,
 } from '../db/schema.js';
@@ -91,6 +107,37 @@ export class ExamesETreinamentosService {
       })
       .returning();
     return montarAso(l!);
+  }
+
+  /** ASOs não anulados desde a data, com CPF e matrícula: o que o S-2220 precisa. */
+  async asosParaEsocial(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<AsoParaEsocial[]> {
+    const { desde } = validar(filtroAsosParaEsocialSchema, dados);
+    const linhas = await this.db
+      .select({
+        a: asos,
+        nome: funcionarios.nome,
+        cpf: funcionarios.cpf,
+        matricula: funcionarios.matricula,
+      })
+      .from(asos)
+      .innerJoin(funcionarios, eq(funcionarios.id, asos.funcionarioId))
+      .where(
+        and(
+          eq(asos.empresaId, ctx.empresaId),
+          isNull(asos.motivoAnulacao),
+          gte(asos.data, desde),
+        ),
+      )
+      .orderBy(desc(asos.data));
+    return linhas.map((l) => ({
+      ...montarAso(l.a),
+      funcionarioNome: l.nome,
+      cpf: l.cpf,
+      matricula: l.matricula,
+    }));
   }
 
   async anularAso(ctx: Contexto, dados: ComId): Promise<Aso> {
@@ -194,6 +241,90 @@ export class ExamesETreinamentosService {
       )
       .orderBy(desc(treinamentosRealizados.data), asc(treinamentos.nome));
     return linhas.map(montarRealizado);
+  }
+
+  /** Turmas recentes: treinamento e data, com quantos participaram (não anulados). */
+  async turmas(ctx: Contexto): Promise<ResumoDaTurma[]> {
+    const linhas = await this.db
+      .select({
+        treinamentoId: treinamentosRealizados.treinamentoId,
+        treinamentoNome: treinamentos.nome,
+        data: treinamentosRealizados.data,
+        participantes: sql<number>`count(*)::int`,
+      })
+      .from(treinamentosRealizados)
+      .innerJoin(
+        treinamentos,
+        eq(treinamentos.id, treinamentosRealizados.treinamentoId),
+      )
+      .where(
+        and(
+          eq(treinamentosRealizados.empresaId, ctx.empresaId),
+          isNull(treinamentosRealizados.motivoAnulacao),
+        ),
+      )
+      .groupBy(
+        treinamentosRealizados.treinamentoId,
+        treinamentos.nome,
+        treinamentosRealizados.data,
+      )
+      .orderBy(desc(treinamentosRealizados.data))
+      .limit(100);
+    return linhas;
+  }
+
+  /** Participantes de uma turma: base da lista de presença e dos certificados. */
+  async turma(ctx: Contexto, dados: unknown): Promise<Turma> {
+    const { treinamentoId, data } = validar(filtroTurmaSchema, dados);
+    const [t] = await this.db
+      .select()
+      .from(treinamentos)
+      .where(
+        and(
+          eq(treinamentos.id, treinamentoId),
+          eq(treinamentos.empresaId, ctx.empresaId),
+        ),
+      );
+    if (!t)
+      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Treinamento não encontrado.');
+    const linhas = await this.db
+      .select({
+        r: treinamentosRealizados,
+        nome: funcionarios.nome,
+        matricula: funcionarios.matricula,
+        cpf: funcionarios.cpf,
+        funcaoNome: funcoes.nome,
+      })
+      .from(treinamentosRealizados)
+      .innerJoin(
+        funcionarios,
+        eq(funcionarios.id, treinamentosRealizados.funcionarioId),
+      )
+      .innerJoin(funcoes, eq(funcoes.id, funcionarios.funcaoId))
+      .where(
+        and(
+          eq(treinamentosRealizados.empresaId, ctx.empresaId),
+          eq(treinamentosRealizados.treinamentoId, treinamentoId),
+          eq(treinamentosRealizados.data, data),
+          isNull(treinamentosRealizados.motivoAnulacao),
+        ),
+      )
+      .orderBy(asc(funcionarios.nome));
+    if (!linhas.length)
+      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Turma não encontrada.');
+    return {
+      treinamento: montarTreinamento(t),
+      data,
+      instrutor: linhas[0]!.r.instrutor,
+      participantes: linhas.map((l) => ({
+        funcionarioId: l.r.funcionarioId,
+        nome: l.nome,
+        matricula: l.matricula,
+        cpf: l.cpf,
+        funcaoNome: l.funcaoNome,
+        validade: l.r.validade,
+      })),
+    };
   }
 
   /** Turma: todos ativos e admitidos até a data; se alguém não puder, ninguém é gravado. */
@@ -503,7 +634,9 @@ function montarAso(l: typeof asos.$inferSelect): Aso {
     proximoExame: l.proximoExame,
     medico: l.medico,
     crm: l.crm,
+    ufCrm: l.ufCrm,
     observacao: l.observacao,
+    exames: l.exames as Aso['exames'],
     motivoAnulacao: l.motivoAnulacao,
   };
 }
