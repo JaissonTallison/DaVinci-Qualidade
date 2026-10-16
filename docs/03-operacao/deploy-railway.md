@@ -37,15 +37,15 @@ PG_ADMIN_URL=<url do postgres pelo proxy> PG_SENHAS='{"qualidade":"…",…}' no
 Em todos: `NODE_ENV=production` e `PACOTE=@davinci/<nome>` (variável de build do Dockerfile). Menos na web:
 `RABBITMQ_URL=amqp://davinci:<senha>@${{RabbitMQ.RAILWAY_PRIVATE_DOMAIN}}:5672`.
 
-| Serviço       | Variáveis próprias                                                                                                                                     |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `web`         | `PORT=3170`, `DAVINCI_API_URL=http://${{@davinci/api-gateway.RAILWAY_PRIVATE_DOMAIN}}:3171`                                                            |
-| `api-gateway` | `PORT=3171`, `JWT_CHAVE_PUBLICA`                                                                                                                       |
-| `identidade`  | `JWT_CHAVE_PRIVADA`, `CRIPTOGRAFIA_CHAVE`, `APP_URL`                                                                                                   |
-| `integracoes` | `INTEGRACOES_CHAVE`, `NFE_PROVEDOR=simulado`                                                                                                           |
-| `paineis`     | `AVISOS_AUTOMATICOS=nao` e `APP_URL`: o e-mail está desligado por enquanto                                                                             |
-| `plataforma`  | E-mail desligado. Ao ligar: o Railway bloqueia SMTP nos planos menores; usar provedor por API HTTP (ex.: Brevo) e tirar o `AVISOS_AUTOMATICOS`         |
-| `RabbitMQ`    | `RABBITMQ_DEFAULT_USER`, `RABBITMQ_DEFAULT_PASS`, `RABBITMQ_NODENAME=rabbit@localhost` (nome fixo: sem ele as filas do volume se perdem a cada deploy) |
+| Serviço       | Variáveis próprias                                                                                                                                                                                    |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `web`         | `PORT=3170`, `DAVINCI_API_URL=http://${{@davinci/api-gateway.RAILWAY_PRIVATE_DOMAIN}}:3171`. Para Microsoft/Google: `APP_URL` e os `*_CLIENT_ID`/`*_CLIENT_SECRET` (docs/05-modulos/identidade.md §3) |
+| `api-gateway` | `PORT=3171`, `JWT_CHAVE_PUBLICA`                                                                                                                                                                      |
+| `identidade`  | `JWT_CHAVE_PRIVADA`, `CRIPTOGRAFIA_CHAVE`, `APP_URL`; para Microsoft/Google, `MICROSOFT_CLIENT_ID` e `GOOGLE_CLIENT_ID`                                                                               |
+| `integracoes` | `INTEGRACOES_CHAVE`, `NFE_PROVEDOR=simulado`                                                                                                                                                          |
+| `paineis`     | `AVISOS_AUTOMATICOS=nao` e `APP_URL`: o e-mail está desligado por enquanto                                                                                                                            |
+| `plataforma`  | E-mail desligado. Ao ligar: o Railway bloqueia SMTP nos planos menores; usar provedor por API HTTP (ex.: Brevo) e tirar o `AVISOS_AUTOMATICOS`                                                        |
+| `RabbitMQ`    | `RABBITMQ_DEFAULT_USER`, `RABBITMQ_DEFAULT_PASS`, `RABBITMQ_NODENAME=rabbit@localhost` (nome fixo: sem ele as filas do volume se perdem a cada deploy)                                                |
 
 As chaves de produção foram geradas só para produção e estão apenas nas variáveis do Railway: **guarde uma cópia num
 cofre de senhas**.

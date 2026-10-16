@@ -24,6 +24,7 @@ export const PATTERNS = {
     obterPreferencia: 'identidade.obter-preferencia',
     salvarPreferencia: 'identidade.salvar-preferencia',
     autenticar2fa: 'identidade.autenticar-2fa',
+    autenticarExterno: 'identidade.autenticar-externo',
     seguranca: 'identidade.seguranca',
     iniciar2fa: 'identidade.iniciar-2fa',
     confirmar2fa: 'identidade.confirmar-2fa',

@@ -3,6 +3,7 @@ import {
   PATTERNS,
   SERVICES,
   login2faSchema,
+  loginExternoSchema,
   loginSchema,
   recuperarSenhaSchema,
   redefinirSenhaSchema,
@@ -57,6 +58,24 @@ export class AuthController {
     return this.mensageria.enviar<Sessao>(
       SERVICES.IDENTIDADE,
       PATTERNS.identidade.autenticar2fa,
+      { ...dados, origem },
+      { rastreioId },
+    );
+  }
+
+  /** "Entrar com Microsoft/Google": o web já trocou o código do provedor pelo id_token. */
+  @Post('login/externo')
+  @Publica()
+  @HttpCode(200)
+  loginExterno(
+    @RastreioHttp() rastreioId: string,
+    @OrigemHttp() origem: OrigemDoAcesso,
+    @Body() dados: Record<string, unknown>,
+  ) {
+    validarEntrada(loginExternoSchema, dados, rastreioId);
+    return this.mensageria.enviar<RespostaLogin>(
+      SERVICES.IDENTIDADE,
+      PATTERNS.identidade.autenticarExterno,
       { ...dados, origem },
       { rastreioId },
     );

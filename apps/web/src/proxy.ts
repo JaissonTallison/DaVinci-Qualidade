@@ -3,6 +3,7 @@ import type { Sessao } from "@davinci/types";
 import { API_URL } from "@/lib/api-url";
 import {
   COOKIE_ACESSO,
+  COOKIE_LEMBRAR,
   COOKIE_RENOVACAO,
   MARGEM_DE_RENOVACAO_MS,
   caminhoDeVolta,
@@ -27,10 +28,14 @@ export async function proxy(req: NextRequest) {
   if (caminho === "/sessao-encerrada") return NextResponse.next();
   // Pesquisa de satisfação: o cliente responde por link, sem login (o token é a credencial)
   if (caminho.startsWith("/pesquisa/")) return NextResponse.next();
+  // Esqueci a senha e o link do e-mail: abrem com ou sem sessão
+  if (caminho === "/esqueci-a-senha" || caminho === "/redefinir-senha")
+    return NextResponse.next();
   // Server Actions (POST com o cabeçalho next-action) nunca recebem redirecionamento daqui: o Next espera a resposta
   // da ação e, com um 307, mostra "An unexpected response was received from the server" (ex.: tela de entrar aberta
   // enquanto a sessão foi renovada em outra aba ou o gateway voltou). A própria ação confere a sessão no gateway.
   const ehAcao = req.method !== "GET" && req.method !== "HEAD";
+  const lembrar = req.cookies.get(COOKIE_LEMBRAR)?.value === "1";
   let conteudo = lerToken(req.cookies.get(COOKIE_ACESSO)?.value);
   let sessaoNova: Sessao | null = null;
 
@@ -58,7 +63,7 @@ export async function proxy(req: NextRequest) {
   let res: NextResponse;
   if (ehAcao) {
     if (!sessaoNova) return NextResponse.next();
-    for (const c of cookiesDaSessao(sessaoNova))
+    for (const c of cookiesDaSessao(sessaoNova, lembrar))
       req.cookies.set(c.name, c.value);
     const headers = new Headers(req.headers);
     headers.set("cookie", req.cookies.toString());
@@ -71,7 +76,7 @@ export async function proxy(req: NextRequest) {
     res = NextResponse.redirect(new URL(TROCAR_SENHA, req.url));
   } else if (sessaoNova) {
     // A página desta mesma requisição já precisa enxergar o token novo
-    for (const c of cookiesDaSessao(sessaoNova))
+    for (const c of cookiesDaSessao(sessaoNova, lembrar))
       req.cookies.set(c.name, c.value);
     const headers = new Headers(req.headers);
     headers.set("cookie", req.cookies.toString());
@@ -80,7 +85,7 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
   if (sessaoNova)
-    for (const c of cookiesDaSessao(sessaoNova)) res.cookies.set(c);
+    for (const c of cookiesDaSessao(sessaoNova, lembrar)) res.cookies.set(c);
   return res;
 }
 
@@ -103,8 +108,8 @@ async function renovar(
 }
 
 export const config = {
-  // Tudo, menos arquivos estáticos (scripts, imagens, ícones e a marca)
+  // Tudo, menos arquivos estáticos (scripts, imagens, ícones, a marca e as fotos da tela de entrar)
   matcher: [
-    "/((?!_next/static|_next/image|brand/|favicon.ico|icon.svg|apple-icon.png|manifest.webmanifest|opengraph-image).*)",
+    "/((?!_next/static|_next/image|brand/|acesso/|favicon.ico|icon.svg|apple-icon.png|manifest.webmanifest|opengraph-image).*)",
   ],
 };
