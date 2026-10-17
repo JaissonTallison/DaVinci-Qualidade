@@ -106,7 +106,7 @@ export default async function ListaDeAcidentes({
           {filtrando && (
             <Link
               href="/seguranca/acidentes"
-              className="h-9 content-center text-sm text-texto-2 hover:underline"
+              className="h-9 content-center dv-voltar"
             >
               Limpar filtros
             </Link>

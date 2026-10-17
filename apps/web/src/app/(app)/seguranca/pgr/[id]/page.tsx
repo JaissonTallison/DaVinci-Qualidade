@@ -48,7 +48,7 @@ export default async function DetalheDoRisco({
     <article>
       <Link
         href="/seguranca/pgr"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         PGR
       </Link>

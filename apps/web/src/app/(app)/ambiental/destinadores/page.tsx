@@ -29,7 +29,7 @@ export default async function Destinadores({
     <>
       <Link
         href="/ambiental/residuos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Resíduos
       </Link>

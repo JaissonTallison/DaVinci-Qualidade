@@ -117,7 +117,7 @@ export default async function ListaDePlanos({
           {filtrando && (
             <Link
               href="/qualidade/planos-de-acao"
-              className="h-9 content-center text-sm text-texto-2 hover:underline"
+              className="h-9 content-center dv-voltar"
             >
               Limpar filtros
             </Link>

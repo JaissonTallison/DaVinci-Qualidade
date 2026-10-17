@@ -51,7 +51,7 @@ export default async function DetalheDaLicenca({
     <article>
       <Link
         href="/ambiental/licencas"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Licenças
       </Link>

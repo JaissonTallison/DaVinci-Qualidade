@@ -69,7 +69,7 @@ export default async function NovoPlano({
               ? `/seguranca/acidentes/${acidente.dados.id}`
               : "/qualidade/planos-de-acao"
         }
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         {nc?.ok
           ? nc.dados.numero

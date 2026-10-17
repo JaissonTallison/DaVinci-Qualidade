@@ -28,7 +28,7 @@ export default async function Turma({
       : null;
   return (
     <>
-      <Link href={voltar} className="text-sm text-texto-2 hover:underline">
+      <Link href={voltar} className="dv-voltar">
         {funcionario ? "Funcionário" : "Treinamentos"}
       </Link>
       <h1 className={`${tituloDaPagina} mt-1`}>Registrar turma</h1>

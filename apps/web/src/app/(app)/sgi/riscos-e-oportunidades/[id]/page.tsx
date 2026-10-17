@@ -43,7 +43,7 @@ export default async function DetalheDoRo({
     <article>
       <Link
         href="/sgi/riscos-e-oportunidades"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Riscos e oportunidades
       </Link>

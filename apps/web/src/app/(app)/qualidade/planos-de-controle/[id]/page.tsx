@@ -35,7 +35,7 @@ export default async function DetalheDoPlanoDeControle({
     <article>
       <Link
         href="/qualidade/planos-de-controle"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Planos de controle
       </Link>

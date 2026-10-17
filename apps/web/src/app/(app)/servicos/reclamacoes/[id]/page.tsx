@@ -48,7 +48,7 @@ export default async function DetalheDaReclamacao({
     <article>
       <Link
         href="/servicos/reclamacoes"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Reclamações de clientes
       </Link>

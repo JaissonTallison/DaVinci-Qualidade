@@ -10,7 +10,7 @@ export default function NovoParceiro() {
     <>
       <Link
         href="/cadastros/clientes-e-fornecedores"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Clientes e fornecedores
       </Link>

@@ -31,7 +31,7 @@ export default async function TurmaImpressa({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href="/cadastros/treinamentos/turmas"
-          className="text-sm text-texto-2 hover:underline"
+          className="dv-voltar"
         >
           Turmas
         </Link>

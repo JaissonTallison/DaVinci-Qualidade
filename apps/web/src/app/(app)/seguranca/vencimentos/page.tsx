@@ -76,7 +76,7 @@ export default async function Vencimentos({
           {filtrando && (
             <Link
               href="/seguranca/vencimentos"
-              className="h-9 content-center text-sm text-texto-2 hover:underline"
+              className="h-9 content-center dv-voltar"
             >
               Limpar filtros
             </Link>

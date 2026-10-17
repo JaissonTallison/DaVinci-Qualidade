@@ -10,7 +10,7 @@ export default function NovaMudanca() {
     <>
       <Link
         href="/sgi/mudancas"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Gestão de mudanças
       </Link>

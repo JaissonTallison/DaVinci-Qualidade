@@ -53,7 +53,7 @@ export default async function DetalheDoMonitoramento({
     <article>
       <Link
         href="/ambiental/monitoramentos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Monitoramentos
       </Link>

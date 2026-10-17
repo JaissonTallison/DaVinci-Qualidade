@@ -42,7 +42,7 @@ export default async function FmeaImpresso({
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href={`/qualidade/fmea/${id}`}
-          className="text-sm text-texto-2 hover:underline"
+          className="dv-voltar"
         >
           Voltar ao FMEA
         </Link>

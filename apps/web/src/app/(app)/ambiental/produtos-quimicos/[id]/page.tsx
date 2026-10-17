@@ -48,7 +48,7 @@ export default async function DetalheDoProduto({
     <article>
       <Link
         href="/ambiental/produtos-quimicos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Produtos químicos
       </Link>

@@ -19,7 +19,7 @@ export function CabecalhoDaAuditoria({
 }) {
   return (
     <>
-      <Link href="/auditorias" className="text-sm text-texto-2 hover:underline">
+      <Link href="/auditorias" className="dv-voltar">
         Auditorias
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">

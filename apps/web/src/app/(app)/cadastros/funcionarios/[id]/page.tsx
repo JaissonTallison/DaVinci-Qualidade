@@ -103,7 +103,7 @@ export default async function DetalheDoFuncionario({
     <article>
       <Link
         href="/cadastros/funcionarios"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Funcionários
       </Link>

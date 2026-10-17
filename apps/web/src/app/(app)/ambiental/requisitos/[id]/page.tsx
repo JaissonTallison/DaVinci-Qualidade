@@ -46,7 +46,7 @@ export default async function DetalheDoRequisito({
     <article>
       <Link
         href="/ambiental/requisitos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Requisitos legais
       </Link>

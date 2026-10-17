@@ -70,7 +70,7 @@ export default async function DetalheDaInspecao({
     <article>
       <Link
         href="/qualidade/inspecoes"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Inspeções
       </Link>

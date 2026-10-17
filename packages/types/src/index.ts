@@ -42,3 +42,4 @@ export * from './registros-de-seguranca.js';
 export * from './permissoes-de-trabalho.js';
 export * from './exames-e-treinamentos.js';
 export * from './competencias.js';
+export * from './listas-cadastro.js';

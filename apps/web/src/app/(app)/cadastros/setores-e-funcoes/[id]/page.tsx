@@ -111,7 +111,7 @@ export default async function CompetenciasDaFuncao({
     <article>
       <Link
         href="/cadastros/competencias"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Competências por função
       </Link>

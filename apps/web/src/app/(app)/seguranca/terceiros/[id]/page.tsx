@@ -48,7 +48,7 @@ export default async function DetalheDoTerceiro({
     <article>
       <Link
         href="/seguranca/terceiros"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Terceiros
       </Link>

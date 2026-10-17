@@ -43,6 +43,13 @@
       "when": 1792157014580,
       "tag": "0005_aso_exames",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792218491710,
+      "tag": "0006_listas_cadastro",
+      "breakpoints": true
     }
   ]
 }

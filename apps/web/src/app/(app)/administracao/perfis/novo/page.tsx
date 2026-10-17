@@ -10,7 +10,7 @@ export default function NovoPerfil() {
     <div className="w-full">
       <Link
         href="/administracao/perfis"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Perfis de acesso
       </Link>

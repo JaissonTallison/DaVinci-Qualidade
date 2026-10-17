@@ -238,6 +238,29 @@
   text-decoration: underline;
 }
 
+/* Botão de voltar no topo das telas (detalhe e cadastro): seta (Lucide arrow-left) + rótulo, estilo do botão secundário */
+.dv-voltar {
+  display: inline-flex;
+  align-items: center;
+  height: 2rem;
+  padding-left: 2.1rem;
+  padding-right: 0.875rem;
+  border: 1px solid var(--color-borda-forte);
+  border-radius: var(--radius-campo);
+  background: var(--color-superficie)
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='15'%20height='15'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23475264'%20stroke-width='2.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%2019-7-7%207-7'/%3E%3Cpath%20d='M19%2012H5'/%3E%3C/svg%3E") 0.75rem center / 15px 15px no-repeat;
+  color: var(--color-texto);
+  font-size: var(--text-base);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color 150ms;
+}
+.dv-voltar:hover {
+  background-color: var(--color-campo);
+}
+
+
+
 @media (prefers-reduced-motion: reduce) {
   .dv-entrar,
   .dv-crescer,

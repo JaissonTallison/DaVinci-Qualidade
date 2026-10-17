@@ -2,8 +2,13 @@
 
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { useActionState } from "react";
-import { GRAVIDADES_NC, ORIGENS_NC, TIPOS_NC } from "@davinci/types";
+import { useActionState, useState } from "react";
+import {
+  GRAVIDADES_NC,
+  ORIGENS_NC,
+  TIPOS_NC,
+  type OrigemNc,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { Selecao } from "@/components/selecao";
@@ -16,13 +21,25 @@ import {
   painel,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { ORIGEM_VINCULAVEL } from "@/lib/origem-nc";
 
 export function FormularioNovaNc({
   hoje,
   inicial,
+  setores,
+  processos,
+  registrosPorOrigem,
 }: {
   hoje: string;
   inicial?: Record<string, string>;
+  /** Setores cadastrados, para selecionar em vez de digitar. */
+  setores: string[];
+  /** Processos ou áreas cadastrados (Cadastros › Listas de cadastro). */
+  processos: string[];
+  /** Registros de cada origem vinculável, para selecionar o "Registro de origem". */
+  registrosPorOrigem: Partial<
+    Record<OrigemNc, { numero: string; desc: string }[]>
+  >;
 }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     abrirNc,
@@ -30,6 +47,10 @@ export function FormularioNovaNc({
   );
   const erros = errosPorCampo(estado.erro?.detalhes);
   const v = estado.valores ?? inicial ?? {};
+  // Origem escolhida: define o autocomplete do "Registro de origem"
+  const [origem, setOrigem] = useState(v.origem ?? "");
+  const vinc = ORIGEM_VINCULAVEL[origem as OrigemNc];
+  const registros = registrosPorOrigem[origem as OrigemNc] ?? [];
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
   const invalido = (nome: string) => ({
@@ -77,6 +98,7 @@ export function FormularioNovaNc({
               id="origem"
               opcoes={ORIGENS_NC}
               valor={v.origem}
+              onChange={(e) => setOrigem(e.target.value)}
               {...invalido("origem")}
             />
           </Campo>
@@ -100,9 +122,15 @@ export function FormularioNovaNc({
         <div className="grid gap-5 sm:grid-cols-3">
           <Campo
             id="origemRef"
-            rotulo="Registro de origem"
+            rotulo={vinc ? vinc.rotuloCampo : "Registro de origem"}
             erro={erros.origemRef}
-            ajuda="Ex.: AUD-2026-003"
+            ajuda={
+              vinc
+                ? registros.length > 0
+                  ? "Selecione ou digite o número."
+                  : "Digite o número do registro."
+                : "Ex.: AUD-2026-003"
+            }
           >
             <input
               id="origemRef"
@@ -110,16 +138,79 @@ export function FormularioNovaNc({
               defaultValue={v.origemRef}
               maxLength={60}
               className={`${campo} font-mono`}
+              list={vinc && registros.length > 0 ? "registros-origem" : undefined}
+              autoComplete="off"
             />
+            {vinc && registros.length > 0 && (
+              <datalist id="registros-origem">
+                {registros.map((r) => (
+                  <option key={r.numero} value={r.numero} label={r.desc} />
+                ))}
+              </datalist>
+            )}
           </Campo>
           <Campo id="setor" rotulo="Setor" erro={erros.setor}>
-            <input
-              id="setor"
-              name="setor"
-              defaultValue={v.setor}
-              maxLength={100}
-              className={campo}
-            />
+            {setores.length > 0 ? (
+              <Selecao
+                id="setor"
+                name="setor"
+                defaultValue={v.setor ?? ""}
+                className={campo}
+              >
+                <option value="">Selecione o setor</option>
+                {/* Setor que veio pré-preenchido (acidente, calibração) mas não está no cadastro */}
+                {v.setor && !setores.includes(v.setor) && (
+                  <option value={v.setor}>{v.setor}</option>
+                )}
+                {setores.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </Selecao>
+            ) : (
+              <input
+                id="setor"
+                name="setor"
+                defaultValue={v.setor}
+                maxLength={100}
+                className={campo}
+                placeholder="Cadastre setores em Cadastros › Setores e funções"
+              />
+            )}
+          </Campo>
+          <Campo
+            id="processo"
+            rotulo="Processo ou área"
+            erro={erros.processo}
+          >
+            {processos.length > 0 ? (
+              <Selecao
+                id="processo"
+                name="processo"
+                defaultValue={v.processo ?? ""}
+                className={campo}
+              >
+                <option value="">Selecione o processo</option>
+                {v.processo && !processos.includes(v.processo) && (
+                  <option value={v.processo}>{v.processo}</option>
+                )}
+                {processos.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </Selecao>
+            ) : (
+              <input
+                id="processo"
+                name="processo"
+                defaultValue={v.processo}
+                maxLength={100}
+                className={campo}
+                placeholder="Cadastre em Cadastros › Listas de cadastro"
+              />
+            )}
           </Campo>
           <Campo id="produto" rotulo="Produto ou serviço" erro={erros.produto}>
             <input
@@ -217,6 +308,7 @@ function Opcoes({
   id: string;
   opcoes: Record<string, string>;
   valor?: string;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
   "aria-invalid"?: boolean;
   "aria-describedby"?: string;
 }) {

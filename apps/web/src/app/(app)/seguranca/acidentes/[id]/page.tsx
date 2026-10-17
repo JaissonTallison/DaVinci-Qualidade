@@ -81,7 +81,7 @@ export default async function DetalheDoAcidente({
     <article>
       <Link
         href="/seguranca/acidentes"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Acidentes
       </Link>

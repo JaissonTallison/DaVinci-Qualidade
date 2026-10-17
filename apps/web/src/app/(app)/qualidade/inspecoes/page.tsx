@@ -110,7 +110,7 @@ export default async function ListaDeInspecoes({
           {filtrando && (
             <Link
               href="/qualidade/inspecoes"
-              className="h-9 content-center text-sm text-texto-2 hover:underline"
+              className="h-9 content-center dv-voltar"
             >
               Limpar filtros
             </Link>

@@ -28,7 +28,7 @@ export default async function NovaInspecao() {
     <>
       <Link
         href="/qualidade/inspecoes"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Inspeções
       </Link>

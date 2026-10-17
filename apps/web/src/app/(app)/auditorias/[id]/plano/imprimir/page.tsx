@@ -32,7 +32,7 @@ export default async function PlanoImpresso({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href={`/auditorias/${id}/plano`}
-          className="text-sm text-texto-2 hover:underline"
+          className="dv-voltar"
         >
           Voltar ao plano
         </Link>

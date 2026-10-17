@@ -10,7 +10,7 @@ export default function NovoRisco() {
     <>
       <Link
         href="/seguranca/pgr"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         PGR
       </Link>

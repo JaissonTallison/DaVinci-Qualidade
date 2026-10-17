@@ -43,7 +43,7 @@ export default async function DetalheDoRegistro({
     <article>
       <Link
         href="/seguranca/registros"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Registros de segurança
       </Link>

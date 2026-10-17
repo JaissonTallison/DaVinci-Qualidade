@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Planejar auditoria" };
 export default function NovaAuditoria() {
   return (
     <>
-      <Link href="/auditorias" className="text-sm text-texto-2 hover:underline">
+      <Link href="/auditorias" className="dv-voltar">
         Auditorias
       </Link>
       <h1 className={`${tituloDaPagina} mt-1`}>Planejar auditoria</h1>

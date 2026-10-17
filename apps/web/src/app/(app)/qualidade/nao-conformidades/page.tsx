@@ -130,7 +130,7 @@ export default async function ListaDeNcs({
           {filtrando && (
             <Link
               href="/qualidade/nao-conformidades"
-              className="h-9 content-center text-sm text-texto-2 hover:underline"
+              className="h-9 content-center dv-voltar"
             >
               Limpar filtros
             </Link>

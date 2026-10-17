@@ -232,6 +232,20 @@ export const setoresEmpresa = pgTable(
   (t) => [unique('setores_empresa_nome_por_empresa').on(t.empresaId, t.nome)],
 );
 
+/** Listas auxiliares da empresa (processo/área, tipo de causa…), selecionadas nos registros. */
+export const listasCadastro = pgTable(
+  'listas_cadastro',
+  {
+    ...colunasPadrao(),
+    lista: varchar({ length: 30 }).notNull(),
+    nome: varchar({ length: 100 }).notNull(),
+    ativo: boolean().notNull().default(true),
+  },
+  (t) => [
+    unique('listas_cadastro_nome_por_empresa').on(t.empresaId, t.lista, t.nome),
+  ],
+);
+
 /** Funções (cargos), com o CBO quando houver. */
 export const funcoes = pgTable(
   'funcoes',

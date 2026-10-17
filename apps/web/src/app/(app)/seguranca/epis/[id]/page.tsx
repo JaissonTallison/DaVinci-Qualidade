@@ -39,7 +39,7 @@ export default async function DetalheDoEpi({
     <article>
       <Link
         href="/seguranca/epis"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Catálogo de EPIs
       </Link>

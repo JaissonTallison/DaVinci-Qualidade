@@ -28,7 +28,7 @@ export default async function RelatorioDaOs({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href={`/servicos/ordens/${id}`}
-          className="text-sm text-texto-2 hover:underline"
+          className="dv-voltar"
         >
           Voltar à OS
         </Link>

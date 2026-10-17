@@ -124,7 +124,7 @@ export default async function Objetivos({
               )}
               {permissoes.includes("sgi.excluir") && (
                 <details className="mt-3">
-                  <summary className="cursor-pointer text-sm text-texto-2 hover:underline">
+                  <summary className="cursor-pointer dv-voltar">
                     {o.ativo ? "Inativar" : "Reativar"}
                   </summary>
                   <SituacaoDoObjetivo objetivo={o} />

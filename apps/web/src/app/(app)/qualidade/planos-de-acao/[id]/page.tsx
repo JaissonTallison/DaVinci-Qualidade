@@ -55,7 +55,7 @@ export default async function DetalheDoPlano({
     <article>
       <Link
         href="/qualidade/planos-de-acao"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Planos de ação
       </Link>
