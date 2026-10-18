@@ -11,7 +11,7 @@ import { campoCompacto, tituloDaSecao } from "@/lib/estilos";
 
 const HORAS: ColunaDoEditor[] = [
   { nome: "data", rotulo: "Data", tipo: "data", largura: "min-w-36" },
-  { nome: "tecnico", rotulo: "Técnico", max: 120 },
+  { nome: "tecnico", rotulo: "Técnico", max: 120, lista: "pessoas" },
   { nome: "horas", rotulo: "Horas", largura: "min-w-20", max: 6 },
   { nome: "descricao", rotulo: "O que fez", largura: "min-w-56", max: 300 },
 ];

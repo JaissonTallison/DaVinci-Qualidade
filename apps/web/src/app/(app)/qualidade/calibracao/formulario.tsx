@@ -27,8 +27,8 @@ const CAMPOS = [
     max: 80,
     ajuda: "Ex.: 0 a 150 mm",
   },
-  { nome: "local", rotulo: "Local", max: 120 },
-  { nome: "responsavel", rotulo: "Responsável", max: 120 },
+  { nome: "local", rotulo: "Local", max: 120, lista: "setores" },
+  { nome: "responsavel", rotulo: "Responsável", max: 120, lista: "pessoas" },
   {
     nome: "criterioAceitacao",
     rotulo: "Critério de aceitação",
@@ -100,6 +100,7 @@ export function FormularioDeInstrumento({
             <input
               id={c.nome}
               name={c.nome}
+              list={"lista" in c ? c.lista : undefined}
               defaultValue={v[c.nome]}
               maxLength={c.max}
               className={`${campo} ${"mono" in c ? "font-mono" : ""}`}

@@ -18,6 +18,7 @@ import {
 } from "@/components/preferencias-do-menu";
 import { atalhosVisiveis, gruposVisiveis } from "@/components/navegacao";
 import { ListaDePessoas } from "@/components/lista-de-pessoas";
+import { ListaDeSetores } from "@/components/lista-de-setores";
 import { RotulosDasTabelas } from "@/components/rotulos-das-tabelas";
 import { chamarApi } from "@/lib/api";
 
@@ -68,6 +69,9 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
           >
             <div className="w-full">{children}</div>
             <ListaDePessoas
+              podeVer={Boolean(eu?.permissoes.includes("funcionarios.ver"))}
+            />
+            <ListaDeSetores
               podeVer={Boolean(eu?.permissoes.includes("funcionarios.ver"))}
             />
           </main>

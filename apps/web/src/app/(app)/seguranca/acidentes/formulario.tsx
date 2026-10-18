@@ -54,7 +54,7 @@ export function FormularioDeAcidente({
     nome: string,
     rotulo: string,
     max: number,
-    extra: { ajuda?: string; classe?: string } = {},
+    extra: { ajuda?: string; classe?: string; lista?: "pessoas" | "setores" } = {},
   ) => (
     <Campo
       id={nome}
@@ -68,6 +68,7 @@ export function FormularioDeAcidente({
         name={nome}
         defaultValue={v[nome]}
         maxLength={max}
+        list={extra.lista}
         className={campo}
         aria-invalid={Boolean(erros[nome])}
       />
@@ -126,7 +127,7 @@ export function FormularioDeAcidente({
           {texto("local", "Local exato", 150, {
             ajuda: "Ex.: Linha 2, prensa P-04",
           })}
-          {texto("setor", "Setor", 100)}
+          {texto("setor", "Setor", 100, { lista: "setores" })}
         </div>
         <Campo
           id="descricao"
@@ -145,7 +146,7 @@ export function FormularioDeAcidente({
         </Campo>
         {comLesao && (
           <div className="grid gap-5 sm:grid-cols-2">
-            {texto("acidentado", "Acidentado", 120)}
+            {texto("acidentado", "Acidentado", 120, { lista: "pessoas" })}
             {texto("funcao", "Função", 100)}
             {texto("lesao", "Natureza da lesão", 200, {
               ajuda: "Ex.: corte, contusão, fratura",

@@ -17,6 +17,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { DecisaoDoCliente, EditorDoPpap, SubmeterPpap } from "../formularios";
+import { LinhaDoTempoDoPpap } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "PPAP" };
 
@@ -74,6 +75,10 @@ export default async function DetalheDoPpap({
         {p.submetidoEm && ` · submetido em ${formatarData(p.submetidoEm)}`}
       </p>
       <Aviso avisos={AVISOS} chave={aviso} />
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoDoPpap p={p} />
+      </section>
       {p.parecer && (
         <section className={`${painel} mt-4 p-5`}>
           <h2 className={tituloDaSecao}>Parecer do cliente</h2>

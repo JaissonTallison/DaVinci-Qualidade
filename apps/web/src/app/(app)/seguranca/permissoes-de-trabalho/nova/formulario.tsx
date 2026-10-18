@@ -55,6 +55,7 @@ export function FormularioDePt() {
             name="local"
             maxLength={120}
             defaultValue={v.local}
+            list="setores"
             className={campo}
             aria-invalid={Boolean(erros.local)}
           />

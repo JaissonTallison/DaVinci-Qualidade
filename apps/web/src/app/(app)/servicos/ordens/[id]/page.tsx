@@ -15,10 +15,16 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { StatusDaOs } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
-import { botaoSecundario, painel, tituloDaPagina } from "@/lib/estilos";
+import {
+  botaoSecundario,
+  painel,
+  tituloDaPagina,
+  tituloDaSecao,
+} from "@/lib/estilos";
 import { LinkDaPesquisa } from "@/components/link-da-pesquisa";
 import { AvaliarOs, CancelarOs, ConcluirOs, IniciarOs } from "./acoes";
 import { ExecucaoDaOs } from "./execucao";
+import { LinhaDoTempoDaOs } from "./linha-do-tempo";
 import { EnviarPesquisa } from "./pesquisa";
 
 export const metadata: Metadata = { title: "Ordem de serviço" };
@@ -90,6 +96,10 @@ export default async function DetalheDaOs({
       </div>
       <Aviso avisos={AVISOS} chave={aviso} />
       {conviteNovo && <LinkDaPesquisa convite={conviteNovo} />}
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoDaOs o={o} />
+      </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Cliente">

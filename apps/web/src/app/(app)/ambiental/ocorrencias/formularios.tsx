@@ -85,6 +85,7 @@ export function NovaOcorrencia({ hoje }: { hoje: string }) {
               <input
                 id="local"
                 name="local"
+                list="setores"
                 maxLength={150}
                 defaultValue={v.local}
                 className={campo}

@@ -18,6 +18,8 @@ import { formatarReais } from "@/lib/valores";
 import { AnexosDoItem } from "@/components/anexos-do-item";
 import { AcoesDaTarefa, AcoesDoPlano } from "./acoes";
 import { Anexos } from "@/components/anexos";
+import { linkDaOrigemDoPlano } from "@/lib/origem-plano";
+import { LinhaDoTempoDoPlano } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Plano de ação" };
 
@@ -74,6 +76,11 @@ export default async function DetalheDoPlano({
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
 
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoDoPlano p={p} />
+      </section>
+
       {aviso && AVISOS[aviso] && (
         <p
           role="status"
@@ -93,16 +100,19 @@ export default async function DetalheDoPlano({
           <Dado rotulo="Origem">
             {ORIGENS_PLANO[p.origem]}
             {p.origemRef &&
-              (p.ncId ? (
-                <Link
-                  href={`/qualidade/nao-conformidades/${p.ncId}`}
-                  className="ml-1 font-mono text-sm text-info hover:underline"
-                >
-                  {p.origemRef}
-                </Link>
-              ) : (
-                <span className="ml-1 font-mono text-sm">{p.origemRef}</span>
-              ))}
+              (() => {
+                const href = linkDaOrigemDoPlano(p.origem, p.origemRef, p.ncId);
+                return href ? (
+                  <Link
+                    href={href}
+                    className="ml-1 font-mono text-sm font-medium text-acao hover:underline"
+                  >
+                    {p.origemRef}
+                  </Link>
+                ) : (
+                  <span className="ml-1 font-mono text-sm">{p.origemRef}</span>
+                );
+              })()}
           </Dado>
           <Dado rotulo="Responsável">{p.responsavel}</Dado>
           <Dado rotulo="Prazo">
