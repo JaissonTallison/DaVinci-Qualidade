@@ -42,7 +42,7 @@ export default async function DetalheDoEquipamento({
     <article>
       <Link
         href="/seguranca/equipamentos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Equipamentos de emergência
       </Link>

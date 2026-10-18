@@ -39,17 +39,17 @@ A não conformidade (NC) é o registro de que algo não atendeu a um requisito. 
 
 ## 2. Campos
 
-| Grupo            | Campos                                                                            | Obrigatório                                                      |
-| ---------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| Identificação    | número `NC-AAAA-NNN` (automático), título, descrição                              | título, descrição                                                |
-| Classificação    | origem, referência da origem (ex.: `AUD-2026-003`), tipo, gravidade               | origem, tipo, gravidade                                          |
-| Onde             | setor, produto ou serviço, lote                                                   | —                                                                |
-| Responsabilidade | responsável, prazo                                                                | os dois                                                          |
-| Contenção        | ação imediata para conter o efeito                                                | —                                                                |
-| Análise          | método (5 porquês, Ishikawa, outro), categoria 6M, os porquês (até 5), causa raiz | causa raiz para registrar o tratamento                           |
-| Tratamento       | ação corretiva, data de implantação                                               | ação para registrar o tratamento; data para enviar à verificação |
-| Eficácia         | resultado (eficaz/ineficaz), parecer, quem verificou e quando, ciclos             | resultado e parecer para verificar                               |
-| Custo            | custo estimado da falha (R$)                                                      | —                                                                |
+| Grupo            | Campos                                                                        | Obrigatório                                                      |
+| ---------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Identificação    | número `NC-AAAA-NNN` (automático), título, descrição                          | título, descrição                                                |
+| Classificação    | origem, referência da origem (ex.: `AUD-2026-003`), tipo, gravidade           | origem, tipo, gravidade                                          |
+| Onde             | setor, processo ou área, produto ou serviço, lote                             | —                                                                |
+| Responsabilidade | responsável, prazo                                                            | os dois                                                          |
+| Contenção        | ação imediata para conter o efeito                                            | —                                                                |
+| Análise          | método, categoria 6M, tipo de causa ou desvio, os porquês (até 5), causa raiz | causa raiz para registrar o tratamento                           |
+| Tratamento       | ação corretiva, data de implantação                                           | ação para registrar o tratamento; data para enviar à verificação |
+| Eficácia         | resultado (eficaz/ineficaz), parecer, quem verificou e quando, ciclos         | resultado e parecer para verificar                               |
+| Custo            | custo estimado da falha (R$)                                                  | —                                                                |
 
 | Lista        | Valores                                                                                                |
 | ------------ | ------------------------------------------------------------------------------------------------------ |
@@ -59,6 +59,8 @@ A não conformidade (NC) é o registro de que algo não atendeu a um requisito. 
 | Categoria 6M | Mão de obra, Método, Máquina, Material, Medição, Meio ambiente                                         |
 
 **Numeração:** sequencial por empresa e por ano (`NC-2026-001`, `NC-2026-002`…), por contador atômico no banco. Número usado nunca se repete, nem se a NC for cancelada.
+
+**Seleção em vez de digitação (16/10/2026):** setor vem do cadastro de Setores; processo/área e tipo de causa vêm de **Cadastros › Listas de cadastro** (listas que a empresa mantém, serviço `codex`, tabela `listas_cadastro`, API `/listas/:lista`). O responsável é autocomplete do cadastro de funcionários. O "registro de origem" é autocomplete dos registros reais da origem (auditoria, inspeção, acidente, reclamação) e, no detalhe, vira link clicável para o registro. Se a lista estiver vazia, o campo cai para texto livre com dica de onde cadastrar.
 
 **Edição:** campos descritivos podem ser corrigidos enquanto a NC não está encerrada nem cancelada. Toda gravação confere a versão lida: se outra pessoa alterou antes, a gravação é recusada.
 
@@ -84,11 +86,11 @@ Toda alteração leva a `versao` que a tela leu. Versão desatualizada responde 
 
 ## 5. Telas (web)
 
-| Tela     | Caminho                             | O que tem                                                                                                                |
-| -------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Lista    | `/qualidade/nao-conformidades`      | Resumo no topo, filtros na URL (dá para compartilhar o link), tabela com prazo relativo e marcação de reincidência       |
-| Abrir NC | `/qualidade/nao-conformidades/nova` | Só o necessário para abrir; custo aceita "1.250,00"                                                                      |
-| Detalhe  | `/qualidade/nao-conformidades/:id`  | O registro em seções e, embaixo, só a próxima ação possível para o status. Revisar a análise e cancelar ficam recolhidos |
+| Tela     | Caminho                             | O que tem                                                                                                                                                   |
+| -------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Lista    | `/qualidade/nao-conformidades`      | Resumo no topo, filtros na URL (dá para compartilhar o link), tabela com prazo relativo e marcação de reincidência                                          |
+| Abrir NC | `/qualidade/nao-conformidades/nova` | Só o necessário para abrir; custo aceita "1.250,00"                                                                                                         |
+| Detalhe  | `/qualidade/nao-conformidades/:id`  | Linha do tempo do ciclo, o registro em seções, planos de ação, outras NCs do mesmo registro de origem (recorrência) e, embaixo, só a próxima ação do status |
 
 ## 6. Ainda não feito (próximos passos)
 

@@ -41,7 +41,7 @@ export default async function DetalheDoUsuario({
     <article>
       <Link
         href="/administracao/usuarios"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Usuários
       </Link>

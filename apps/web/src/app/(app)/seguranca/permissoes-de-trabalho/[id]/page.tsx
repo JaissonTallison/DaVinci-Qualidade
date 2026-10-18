@@ -48,7 +48,7 @@ export default async function DetalheDaPt({
     <article>
       <Link
         href="/seguranca/permissoes-de-trabalho"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Permissões de trabalho
       </Link>

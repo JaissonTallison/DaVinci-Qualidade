@@ -48,7 +48,7 @@ export default async function DetalheDoTema({
   const podeEditar = permissoes.includes("esg.editar");
   return (
     <article>
-      <Link href="/esg/temas" className="text-sm text-texto-2 hover:underline">
+      <Link href="/esg/temas" className="dv-voltar">
         Temas ESG
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4">

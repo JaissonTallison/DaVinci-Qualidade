@@ -83,6 +83,7 @@ import {
   SetoresDaEmpresaController,
 } from './cadastros/funcionarios.controller.js';
 import { CompetenciasController } from './cadastros/competencias.controller.js';
+import { ListasController } from './cadastros/listas.controller.js';
 import {
   DestinadoresController,
   EcoeficienciaController,
@@ -189,6 +190,7 @@ export const observeEnabled = Boolean(
     SetoresDaEmpresaController,
     FuncoesController,
     CompetenciasController,
+    ListasController,
     OcorrenciasAmbientaisController,
     ObrigacoesLegaisController,
     DestinadoresController,

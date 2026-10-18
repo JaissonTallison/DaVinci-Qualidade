@@ -61,7 +61,7 @@ export default async function DetalheDaOs({
     <article>
       <Link
         href="/servicos/ordens"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Ordens de serviço
       </Link>

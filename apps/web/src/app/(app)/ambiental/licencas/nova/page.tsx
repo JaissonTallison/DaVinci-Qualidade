@@ -10,7 +10,7 @@ export default function NovaLicenca() {
     <>
       <Link
         href="/ambiental/licencas"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Licenças
       </Link>

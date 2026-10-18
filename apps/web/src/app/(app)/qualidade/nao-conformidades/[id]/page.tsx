@@ -8,7 +8,9 @@ import {
   ORIGENS_NC,
   TIPOS_NC,
   type DadosDoUsuario,
+  type ItemDeLista,
   type NaoConformidade,
+  type NaoConformidadeResumo,
   type Pagina,
   type PlanoResumo,
 } from "@davinci/types";
@@ -29,6 +31,8 @@ import {
 } from "@/lib/estilos";
 import { AcoesDaNc } from "./acoes";
 import { Anexos } from "@/components/anexos";
+import { linkDaOrigem } from "@/lib/origem-nc";
+import { LinhaDoTempoNc } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Não conformidade" };
 
@@ -50,24 +54,36 @@ export default async function DetalheDaNc({
 }: PageProps<"/qualidade/nao-conformidades/[id]">) {
   const { id } = await params;
   const { aviso } = (await searchParams) as { aviso?: string };
-  const [r, eu, planos] = await Promise.all([
+  const [r, eu, planos, causas] = await Promise.all([
     chamarApi<NaoConformidade>(`/nao-conformidades/${id}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
     chamarApi<Pagina<PlanoResumo>>(
       `/planos-de-acao?ncId=${encodeURIComponent(id)}&porPagina=100`,
     ),
+    chamarApi<ItemDeLista[]>("/listas/causa_nc"),
   ]);
   if (!r.ok && r.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const nc = r.dados;
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const terminada = nc.status === "encerrada" || nc.status === "cancelada";
+  // Outras NCs abertas do mesmo registro de origem (recorrência do mesmo problema)
+  const relacionadas =
+    nc.origemRef && linkDaOrigem(nc.origem, nc.origemRef)
+      ? await chamarApi<Pagina<NaoConformidadeResumo>>(
+          `/nao-conformidades?origemRef=${encodeURIComponent(nc.origemRef)}&porPagina=50`,
+        )
+      : null;
+  const outras =
+    relacionadas?.ok
+      ? relacionadas.dados.itens.filter((n) => n.id !== nc.id)
+      : [];
 
   return (
     <article>
       <Link
         href="/qualidade/nao-conformidades"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Não conformidades
       </Link>
@@ -81,6 +97,11 @@ export default async function DetalheDaNc({
         )}
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{nc.titulo}</h1>
+
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoNc nc={nc} />
+      </section>
 
       {aviso && AVISOS[aviso] && (
         <p
@@ -97,13 +118,29 @@ export default async function DetalheDaNc({
         </p>
         <Dados
           itens={[
-            [
+[
               "Origem",
-              `${ORIGENS_NC[nc.origem]}${nc.origemRef ? ` · ${nc.origemRef}` : ""}`,
+              (() => {
+                const href = linkDaOrigem(nc.origem, nc.origemRef);
+                return href ? (
+                  <span>
+                    {ORIGENS_NC[nc.origem]} ·{" "}
+                    <Link
+                      href={href}
+                      className="font-medium text-acao hover:underline"
+                    >
+                      {nc.origemRef}
+                    </Link>
+                  </span>
+                ) : (
+                  `${ORIGENS_NC[nc.origem]}${nc.origemRef ? ` · ${nc.origemRef}` : ""}`
+                );
+              })(),
             ],
             ["Tipo", TIPOS_NC[nc.tipo]],
             ["Gravidade", <GravidadeDaNc key="g" gravidade={nc.gravidade} />],
             ["Setor", nc.setor],
+            ["Processo ou área", nc.processo],
             ["Produto ou serviço", nc.produto],
             ["Lote", nc.lote],
             ["Responsável", nc.responsavel],
@@ -140,6 +177,7 @@ export default async function DetalheDaNc({
                 "Categoria 6M",
                 nc.categoria6m ? CATEGORIAS_6M[nc.categoria6m] : null,
               ],
+              ["Tipo de causa", nc.causaTipo],
               [
                 "Implantada em",
                 nc.dataImplantacao ? formatarData(nc.dataImplantacao) : null,
@@ -226,6 +264,36 @@ export default async function DetalheDaNc({
         )}
       </section>
 
+      {outras.length > 0 && (
+        <section className={`${painel} mt-6 p-5`}>
+          <h2 className={tituloDaSecao}>
+            Outras NCs do mesmo registro de origem
+          </h2>
+          <p className="mt-1 text-sm text-texto-2">
+            Abertas a partir de {nc.origemRef}. Pode indicar recorrência do
+            mesmo problema.
+          </p>
+          <ul className="mt-3 divide-y divide-borda">
+            {outras.map((n) => (
+              <li
+                key={n.id}
+                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
+              >
+                <Link
+                  href={`/qualidade/nao-conformidades/${n.id}`}
+                  className="font-mono text-sm font-medium text-acao hover:underline"
+                >
+                  {n.numero}
+                </Link>
+                <span className="min-w-48 flex-1">{n.titulo}</span>
+                <GravidadeDaNc gravidade={n.gravidade} />
+                <StatusDaNc status={n.status} vencida={n.vencida} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {nc.status === "cancelada" && (
         <Secao titulo="Cancelamento">
           <Dados
@@ -246,6 +314,7 @@ export default async function DetalheDaNc({
         <AcoesDaNc
           nc={nc}
           podeCancelar={permissoes.includes("qualidade.excluir")}
+          causas={causas.ok ? causas.dados.map((c) => c.nome) : []}
         />
       )}
       <Anexos

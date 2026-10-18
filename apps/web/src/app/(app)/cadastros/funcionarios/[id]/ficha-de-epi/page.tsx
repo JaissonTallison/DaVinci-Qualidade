@@ -38,7 +38,7 @@ export default async function FichaDeEpi({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href={`/cadastros/funcionarios/${id}`}
-          className="text-sm text-texto-2 hover:underline"
+          className="dv-voltar"
         >
           Voltar ao funcionário
         </Link>

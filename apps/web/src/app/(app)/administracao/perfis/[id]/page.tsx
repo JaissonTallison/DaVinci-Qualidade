@@ -36,7 +36,7 @@ export default async function DetalheDoPerfil({
     <article>
       <Link
         href="/administracao/perfis"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Perfis de acesso
       </Link>

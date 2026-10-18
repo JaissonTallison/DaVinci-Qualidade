@@ -29,7 +29,7 @@ export default async function DetalheDoFmea({
     <article>
       <Link
         href="/qualidade/fmea"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         FMEA de processo
       </Link>

@@ -10,7 +10,7 @@ export default function NovoInstrumento() {
     <>
       <Link
         href="/qualidade/calibracao"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Calibração
       </Link>

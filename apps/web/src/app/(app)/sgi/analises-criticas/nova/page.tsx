@@ -45,7 +45,7 @@ export default async function NovaAnalise() {
     <>
       <Link
         href="/sgi/analises-criticas"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Análises críticas
       </Link>

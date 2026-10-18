@@ -25,7 +25,7 @@ export default async function EditarModelo({
     <>
       <Link
         href="/qualidade/modelos-de-inspecao"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Modelos de inspeção
       </Link>

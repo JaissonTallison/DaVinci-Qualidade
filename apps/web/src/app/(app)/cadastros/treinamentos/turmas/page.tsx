@@ -15,7 +15,7 @@ export default async function Turmas() {
     <>
       <Link
         href="/cadastros/treinamentos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Treinamentos
       </Link>

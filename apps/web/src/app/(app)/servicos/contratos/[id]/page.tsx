@@ -53,7 +53,7 @@ export default async function DetalheDoContrato({
     <article>
       <Link
         href="/servicos/contratos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Contratos e SLA
       </Link>

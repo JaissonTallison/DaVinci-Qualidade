@@ -10,6 +10,7 @@ import { ExamesETreinamentosModule } from './exames-e-treinamentos/exames-e-trei
 import { CompetenciasModule } from './competencias/competencias.module.js';
 import { PrazosModule } from './prazos/prazos.module.js';
 import { BuscaModule } from './busca/busca.module.js';
+import { ListasModule } from './listas/listas.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { BuscaModule } from './busca/busca.module.js';
     FuncionariosModule,
     ExamesETreinamentosModule,
     CompetenciasModule,
+    ListasModule,
   ],
   controllers: [HealthController],
 })

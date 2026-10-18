@@ -152,6 +152,7 @@ export const ICONE_DA_TELA: Record<string, LucideIcon> = {
   "/cadastros/funcionarios": Users,
   "/cadastros/treinamentos": GraduationCap,
   "/cadastros/setores-e-funcoes": Network,
+  "/cadastros/listas": ListChecks,
   "/administracao/usuarios": UserCog,
   "/administracao/perfis": KeyRound,
   "/administracao/modulos": Blocks,

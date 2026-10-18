@@ -11,7 +11,7 @@ export default function NovoAcidente() {
     <>
       <Link
         href="/seguranca/acidentes"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Acidentes
       </Link>

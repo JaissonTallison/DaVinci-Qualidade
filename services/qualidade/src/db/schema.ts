@@ -46,6 +46,7 @@ export const naoConformidades = pgTable(
     tipo: varchar({ length: 20 }).notNull(),
     gravidade: varchar({ length: 10 }).notNull(),
     setor: varchar({ length: 100 }),
+    processo: varchar({ length: 100 }),
     produto: varchar({ length: 150 }),
     lote: varchar({ length: 60 }),
     responsavel: varchar({ length: 120 }).notNull(),
@@ -57,6 +58,7 @@ export const naoConformidades = pgTable(
     // Análise e tratamento
     metodoAnalise: varchar({ length: 20 }),
     categoria6m: varchar({ length: 20 }),
+    causaTipo: varchar({ length: 100 }),
     porques: text()
       .array()
       .notNull()

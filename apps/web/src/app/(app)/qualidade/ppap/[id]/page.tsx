@@ -47,7 +47,7 @@ export default async function DetalheDoPpap({
     <article>
       <Link
         href="/qualidade/ppap"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         PPAP
       </Link>

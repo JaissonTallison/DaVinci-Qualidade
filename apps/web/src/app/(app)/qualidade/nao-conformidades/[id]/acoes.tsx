@@ -21,9 +21,12 @@ import { areaDeTexto, campo } from "@/lib/estilos";
 export function AcoesDaNc({
   nc,
   podeCancelar,
+  causas,
 }: {
   nc: NaoConformidade;
   podeCancelar: boolean;
+  /** Tipos de causa cadastrados (Cadastros › Listas de cadastro). */
+  causas: string[];
 }) {
   return (
     <>
@@ -32,7 +35,7 @@ export function AcoesDaNc({
           titulo="Registrar tratamento"
           descricao="Analise a causa raiz e defina a ação corretiva. A NC passa para “Em tratamento”."
         >
-          <FormularioTratamento nc={nc} />
+          <FormularioTratamento nc={nc} causas={causas} />
         </Bloco>
       )}
 
@@ -69,7 +72,7 @@ export function AcoesDaNc({
             </Formulario>
           </Bloco>
           <Recolhido titulo="Revisar a análise e a ação corretiva">
-            <FormularioTratamento nc={nc} />
+            <FormularioTratamento nc={nc} causas={causas} />
           </Recolhido>
         </>
       )}
@@ -170,7 +173,13 @@ export function AcoesDaNc({
   );
 }
 
-function FormularioTratamento({ nc }: { nc: NaoConformidade }) {
+function FormularioTratamento({
+  nc,
+  causas,
+}: {
+  nc: NaoConformidade;
+  causas: string[];
+}) {
   return (
     <Formulario
       acao={registrarTratamento.bind(null, nc.id)}
@@ -206,6 +215,39 @@ function FormularioTratamento({ nc }: { nc: NaoConformidade }) {
               />
             </Campo>
           </div>
+          <Campo
+            id="causaTipo"
+            rotulo="Tipo de causa ou desvio"
+            erro={erros.causaTipo}
+          >
+            {causas.length > 0 ? (
+              <Selecao
+                id="causaTipo"
+                opcoes={Object.fromEntries(
+                  [
+                    ...causas,
+                    ...(v.causaTipo &&
+                    !causas.includes(v.causaTipo as string)
+                      ? [v.causaTipo as string]
+                      : nc.causaTipo && !causas.includes(nc.causaTipo)
+                        ? [nc.causaTipo]
+                        : []),
+                  ].map((c) => [c, c]),
+                )}
+                valor={(v.causaTipo as string) ?? nc.causaTipo ?? ""}
+                vazio="Não classificado"
+              />
+            ) : (
+              <input
+                id="causaTipo"
+                name="causaTipo"
+                defaultValue={(v.causaTipo as string) ?? nc.causaTipo ?? ""}
+                maxLength={100}
+                className={campo}
+                placeholder="Cadastre em Cadastros › Listas de cadastro"
+              />
+            )}
+          </Campo>
           <fieldset className="flex flex-col gap-2">
             <legend className="text-sm font-semibold text-texto-2">
               Porquês (até 5)

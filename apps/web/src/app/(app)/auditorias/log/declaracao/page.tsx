@@ -56,7 +56,7 @@ export default async function Declaracao({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href={`/auditorias/log?auditor=${encodeURIComponent(auditor)}`}
-          className="text-sm text-texto-2 hover:underline"
+          className="dv-voltar"
         >
           Voltar ao log
         </Link>

@@ -3,8 +3,16 @@ import Link from "next/link";
 import {
   RESPOSTAS_ITEM,
   type Acidente,
+  type AcidenteResumo,
+  type AuditoriaResumo,
   type Inspecao,
+  type InspecaoResumo,
   type Instrumento,
+  type ItemDeLista,
+  type OrigemNc,
+  type Pagina,
+  type Reclamacao,
+  type SetorDaEmpresa,
   type TipoInspecao,
   type TipoNc,
 } from "@davinci/types";
@@ -106,14 +114,51 @@ export default async function NovaNc({
     instrumento?: string;
     acidente?: string;
   };
-  // A NC pode vir de uma inspeção reprovada, de um instrumento reprovado ou de um acidente, já preenchida
-  const [inspecao, instrumento, acidente] = await Promise.all([
+  // A NC pode vir de uma inspeção reprovada, de um instrumento reprovado ou de um acidente, já preenchida.
+  // Também busca os registros das origens para selecionar o "Registro de origem" em vez de digitar.
+  const [
+    inspecao,
+    instrumento,
+    acidente,
+    setores,
+    auditorias,
+    inspecoes,
+    acidentes,
+    reclamacoes,
+    processos,
+  ] = await Promise.all([
     q.inspecao ? chamarApi<Inspecao>(`/inspecoes/${q.inspecao}`) : null,
     q.instrumento
       ? chamarApi<Instrumento>(`/instrumentos/${q.instrumento}`)
       : null,
     q.acidente ? chamarApi<Acidente>(`/acidentes/${q.acidente}`) : null,
+    chamarApi<SetorDaEmpresa[]>("/setores-da-empresa"),
+    chamarApi<Pagina<AuditoriaResumo>>("/auditorias?porPagina=50"),
+    chamarApi<Pagina<InspecaoResumo>>("/inspecoes?porPagina=50"),
+    chamarApi<Pagina<AcidenteResumo>>("/acidentes?porPagina=50"),
+    chamarApi<Reclamacao[]>("/reclamacoes"),
+    chamarApi<ItemDeLista[]>("/listas/processo"),
   ]);
+  const setoresAtivos = setores.ok ? setores.dados.map((s) => s.nome) : [];
+  const processosAtivos = processos.ok ? processos.dados.map((p) => p.nome) : [];
+  // Número → descrição curta, por origem, para o autocomplete do campo "Registro de origem"
+  const opcao = (numero: string, desc: string) => ({ numero, desc });
+  const registrosPorOrigem: Partial<
+    Record<OrigemNc, { numero: string; desc: string }[]>
+  > = {
+    auditoria: auditorias.ok
+      ? auditorias.dados.itens.map((a) => opcao(a.numero, a.escopo))
+      : [],
+    inspecao: inspecoes.ok
+      ? inspecoes.dados.itens.map((i) => opcao(i.numero, i.objeto))
+      : [],
+    acidente: acidentes.ok
+      ? acidentes.dados.itens.map((a) => opcao(a.numero, a.local))
+      : [],
+    reclamacao_cliente: reclamacoes.ok
+      ? reclamacoes.dados.map((r) => opcao(r.numero, r.descricao))
+      : [],
+  };
   const origem =
     inspecao?.ok && inspecao.dados.status === "reprovada"
       ? {
@@ -138,7 +183,7 @@ export default async function NovaNc({
     <>
       <Link
         href={origem?.href ?? "/qualidade/nao-conformidades"}
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         {origem?.rotulo ?? "Não conformidades"}
       </Link>
@@ -147,7 +192,13 @@ export default async function NovaNc({
         Registre o que aconteceu, quem responde e até quando. A causa raiz e a
         ação corretiva entram depois, no tratamento.
       </p>
-      <FormularioNovaNc hoje={hojeEmBrasilia()} inicial={origem?.inicial} />
+      <FormularioNovaNc
+        hoje={hojeEmBrasilia()}
+        inicial={origem?.inicial}
+        setores={setoresAtivos}
+        processos={processosAtivos}
+        registrosPorOrigem={registrosPorOrigem}
+      />
     </>
   );
 }

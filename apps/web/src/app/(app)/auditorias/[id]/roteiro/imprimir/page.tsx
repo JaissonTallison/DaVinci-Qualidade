@@ -40,7 +40,7 @@ export default async function RoteiroDeCampo({
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
           href={`/auditorias/${id}/roteiro`}
-          className="text-sm text-texto-2 hover:underline"
+          className="dv-voltar"
         >
           Voltar ao roteiro
         </Link>

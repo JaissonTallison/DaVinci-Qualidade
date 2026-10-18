@@ -60,7 +60,7 @@ export default async function DetalheDoInstrumento({
     <article>
       <Link
         href="/qualidade/calibracao"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Calibração
       </Link>

@@ -56,7 +56,7 @@ export default async function NovaEntrega({
 
   return (
     <>
-      <Link href={voltar} className="text-sm text-texto-2 hover:underline">
+      <Link href={voltar} className="dv-voltar">
         {funcionarioId ? "Funcionário" : "Entregas de EPI"}
       </Link>
       <h1 className={`${tituloDaPagina} mt-1`}>Registrar entrega de EPI</h1>

@@ -37,7 +37,7 @@ export default async function DetalheDoPrograma({
     <article>
       <Link
         href="/ambiental/programas"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Programas e metas ambientais
       </Link>

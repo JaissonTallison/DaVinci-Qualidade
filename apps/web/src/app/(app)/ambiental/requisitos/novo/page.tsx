@@ -11,7 +11,7 @@ export default function NovoRequisito() {
     <>
       <Link
         href="/ambiental/requisitos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Requisitos legais
       </Link>

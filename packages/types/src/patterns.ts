@@ -331,6 +331,12 @@ export const PATTERNS = {
     listar: 'vencimentos.listar',
     resumo: 'vencimentos.resumo',
   },
+  listasCadastro: {
+    listar: 'listas-cadastro.listar',
+    criar: 'listas-cadastro.criar',
+    atualizar: 'listas-cadastro.atualizar',
+    mudarSituacao: 'listas-cadastro.mudar-situacao',
+  },
   setoresEmpresa: {
     listar: 'setores-empresa.listar',
     criar: 'setores-empresa.criar',

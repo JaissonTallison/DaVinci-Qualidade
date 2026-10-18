@@ -93,6 +93,7 @@ const camposDescritivos = {
   tipo: z.enum(chaves(TIPOS_NC), { error: 'Escolha o tipo.' }),
   gravidade: z.enum(chaves(GRAVIDADES_NC), { error: 'Escolha a gravidade.' }),
   setor: textoOpcional(100),
+  processo: textoOpcional(100),
   produto: textoOpcional(150),
   lote: textoOpcional(60),
   responsavel: texto('o responsável', 120, 3),
@@ -121,6 +122,7 @@ export const registrarTratamentoSchema = z.object({
     error: 'Escolha o método de análise.',
   }),
   categoria6m: enumOpcional(CATEGORIAS_6M, 'Categoria desconhecida.'),
+  causaTipo: textoOpcional(100),
   porques: lista(texto('o porquê', 300), 5, 'porquês'),
   causaRaiz: texto('a causa raiz', 2000, 10),
   acaoCorretiva: texto('a ação corretiva', 2000, 10),
@@ -181,6 +183,7 @@ export interface NaoConformidade {
   tipo: TipoNc;
   gravidade: GravidadeNc;
   setor: string | null;
+  processo: string | null;
   produto: string | null;
   lote: string | null;
   responsavel: string;
@@ -192,6 +195,7 @@ export interface NaoConformidade {
   status: StatusNc;
   metodoAnalise: MetodoAnalise | null;
   categoria6m: Categoria6m | null;
+  causaTipo: string | null;
   porques: string[];
   causaRaiz: string | null;
   acaoCorretiva: string | null;

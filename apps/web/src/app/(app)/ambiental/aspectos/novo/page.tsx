@@ -11,7 +11,7 @@ export default function NovoAspecto() {
     <>
       <Link
         href="/ambiental/aspectos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Aspectos e impactos
       </Link>

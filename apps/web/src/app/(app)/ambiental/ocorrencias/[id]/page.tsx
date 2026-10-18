@@ -50,7 +50,7 @@ export default async function DetalheDaOcorrencia({
     <article>
       <Link
         href="/ambiental/ocorrencias"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Ocorrências ambientais
       </Link>

@@ -45,7 +45,7 @@ export default async function DetalheDoAspecto({
     <article>
       <Link
         href="/ambiental/aspectos"
-        className="text-sm text-texto-2 hover:underline"
+        className="dv-voltar"
       >
         Aspectos e impactos
       </Link>
