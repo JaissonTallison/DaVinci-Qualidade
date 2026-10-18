@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { Acidente, NaoConformidade } from "@davinci/types";
+import type {
+  AcidenteResumo,
+  AuditoriaResumo,
+  Acidente,
+  NaoConformidade,
+  NaoConformidadeResumo,
+  OrigemPlano,
+  Pagina,
+} from "@davinci/types";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { tituloDaPagina } from "@/lib/estilos";
@@ -22,6 +30,24 @@ export default async function NovoPlano({
     !ncId && acidenteId
       ? await chamarApi<Acidente>(`/acidentes/${acidenteId}`)
       : null;
+  // Registros das origens vinculáveis, para selecionar o "Registro de origem" em vez de digitar
+  const [auditorias, acidentes, ncs] = await Promise.all([
+    chamarApi<Pagina<AuditoriaResumo>>("/auditorias?porPagina=50"),
+    chamarApi<Pagina<AcidenteResumo>>("/acidentes?porPagina=50"),
+    chamarApi<Pagina<NaoConformidadeResumo>>("/nao-conformidades?porPagina=50"),
+  ]);
+  const opc = (numero: string, desc: string) => ({ numero, desc });
+  const registrosPorOrigem: Partial<
+    Record<OrigemPlano, { numero: string; desc: string }[]>
+  > = {
+    auditoria: auditorias.ok
+      ? auditorias.dados.itens.map((a) => opc(a.numero, a.escopo))
+      : [],
+    acidente: acidentes.ok
+      ? acidentes.dados.itens.map((a) => opc(a.numero, a.local))
+      : [],
+    nc: ncs.ok ? ncs.dados.itens.map((n) => opc(n.numero, n.titulo)) : [],
+  };
   // Vindo de uma NC: origem, vínculo, responsável e a ação corretiva dela como primeira tarefa
   const inicial: Inicial | undefined = nc?.ok
     ? {
@@ -83,7 +109,11 @@ export default async function NovoPlano({
         quando. O plano termina quando as tarefas estão concluídas e o resultado
         é verificado.
       </p>
-      <FormularioNovoPlano hoje={hojeEmBrasilia()} inicial={inicial} />
+      <FormularioNovoPlano
+        hoje={hojeEmBrasilia()}
+        inicial={inicial}
+        registrosPorOrigem={registrosPorOrigem}
+      />
     </>
   );
 }

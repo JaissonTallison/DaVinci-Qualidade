@@ -12,6 +12,8 @@ export interface ColunaDoEditor {
   /** Classe de largura mínima da coluna. */
   largura?: string;
   max?: number;
+  /** Autocomplete da coluna (datalist global). */
+  lista?: "pessoas" | "setores";
 }
 
 type Linha = { chave: number; valores: Record<string, string> };
@@ -136,7 +138,8 @@ export function EditorDeLinhas({
                           type={c.tipo === "data" ? "date" : "text"}
                           maxLength={c.max}
                           list={
-                            c.nome === "responsavel" ? "pessoas" : undefined
+                            c.lista ??
+                            (c.nome === "responsavel" ? "pessoas" : undefined)
                           }
                           onChange={(e) =>
                             mudar(l.chave, c.nome, e.target.value)

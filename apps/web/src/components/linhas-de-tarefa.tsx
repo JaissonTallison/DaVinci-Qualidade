@@ -9,7 +9,7 @@ const COLUNAS = [
   },
   { nome: "responsavel", rotulo: "Quem", classe: "min-w-36 flex-1", max: 120 },
   { nome: "prazo", rotulo: "Até quando", classe: "w-40", tipo: "date" },
-  { nome: "onde", rotulo: "Onde", classe: "min-w-28 flex-1", max: 150 },
+  { nome: "onde", rotulo: "Onde", classe: "min-w-28 flex-1", max: 150, lista: "setores" },
   { nome: "como", rotulo: "Como", classe: "min-w-40 flex-[2]", max: 1000 },
 ] as const;
 
@@ -54,7 +54,13 @@ export function LinhasDeTarefa({
                   type={"tipo" in c ? c.tipo : "text"}
                   min={"tipo" in c ? hoje : undefined}
                   maxLength={"max" in c ? c.max : undefined}
-                  list={c.nome === "responsavel" ? "pessoas" : undefined}
+                  list={
+                    c.nome === "responsavel"
+                      ? "pessoas"
+                      : "lista" in c
+                        ? c.lista
+                        : undefined
+                  }
                   defaultValue={valores?.[i]?.[c.nome]}
                   aria-invalid={Boolean(erro(c.nome))}
                   className={`${campoCompacto} w-full`}

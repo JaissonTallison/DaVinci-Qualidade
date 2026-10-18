@@ -153,6 +153,7 @@ export function FormularioNovaInspecao({
             <input
               id="local"
               name="local"
+              list="setores"
               defaultValue={v.local}
               maxLength={120}
               className={campo}

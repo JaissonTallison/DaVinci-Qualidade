@@ -13,9 +13,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { StatusDaPt } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarMomento } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { periodoDaPt } from "../periodo";
 import { CancelarPt, EncerrarPt, LiberarPt } from "./acoes";
+import { LinhaDoTempoDaPt } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Permissão de trabalho" };
 
@@ -60,6 +61,10 @@ export default async function DetalheDaPt({
         {TIPOS_PT[pt.tipo]} · {pt.local}
       </h1>
       <Aviso avisos={AVISOS} chave={aviso} />
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoDaPt pt={pt} />
+      </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Serviço" largo>

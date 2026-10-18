@@ -77,6 +77,7 @@ function Campos({
         <input
           id="local"
           name="local"
+          list="setores"
           maxLength={150}
           defaultValue={d("local")}
           className={campo}

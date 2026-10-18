@@ -13,12 +13,13 @@ import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import {
   AnalisarReclamacao,
   EncerrarReclamacao,
   ResponderReclamacao,
 } from "../formularios";
+import { LinhaDoTempoDaReclamacao } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Reclamação" };
 const AVISOS = {
@@ -61,6 +62,10 @@ export default async function DetalheDaReclamacao({
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{x.clienteNome}</h1>
       <Aviso avisos={AVISOS} chave={aviso} />
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoDaReclamacao r={x} />
+      </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-4">
           <Dado rotulo="Canal">{CANAIS_DE_RECLAMACAO[x.canal]}</Dado>

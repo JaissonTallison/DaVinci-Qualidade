@@ -11,6 +11,7 @@ import {
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
 import { Formulario } from "@/components/formulario-de-acao";
+import { ListaDeProcessosAuditados } from "@/components/lista-de-processos-auditados";
 import { Selecao } from "@/components/selecao";
 import { registrarConstatacao } from "@/lib/acoes-auditorias";
 import { areaDeTexto, campo } from "@/lib/estilos";
@@ -48,6 +49,7 @@ export function RegistrarAchado({
     >
       {(erros, v) => (
         <>
+          <ListaDeProcessosAuditados />
           <input
             type="hidden"
             name="voltar"
@@ -171,6 +173,7 @@ export function RegistrarAchado({
               <input
                 id={`${k}-area`}
                 name="area"
+                list="processos-auditados"
                 defaultValue={v.area ?? area}
                 maxLength={120}
                 className={campo}

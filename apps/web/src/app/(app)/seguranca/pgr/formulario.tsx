@@ -87,6 +87,7 @@ export function FormularioDeRisco({
           <input
             id="local"
             name="local"
+            list="setores"
             maxLength={120}
             defaultValue={v.local}
             className={campo}

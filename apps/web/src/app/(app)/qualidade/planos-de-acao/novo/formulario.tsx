@@ -3,7 +3,12 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useState } from "react";
-import { MAXIMO_DE_TAREFAS, ORIGENS_PLANO, TIPOS_PLANO } from "@davinci/types";
+import {
+  MAXIMO_DE_TAREFAS,
+  ORIGENS_PLANO,
+  TIPOS_PLANO,
+  type OrigemPlano,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { LinhasDeTarefa } from "@/components/linhas-de-tarefa";
@@ -18,6 +23,7 @@ import {
   tituloDaSecao,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { ORIGEM_PLANO_VINCULAVEL } from "@/lib/origem-plano";
 
 export interface Inicial {
   valores: Record<string, string>;
@@ -27,9 +33,14 @@ export interface Inicial {
 export function FormularioNovoPlano({
   hoje,
   inicial,
+  registrosPorOrigem,
 }: {
   hoje: string;
   inicial?: Inicial;
+  /** Registros de cada origem vinculável, para o autocomplete do "Registro de origem". */
+  registrosPorOrigem: Partial<
+    Record<OrigemPlano, { numero: string; desc: string }[]>
+  >;
 }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     criarPlano,
@@ -37,6 +48,9 @@ export function FormularioNovoPlano({
   );
   const erros = errosPorCampo(estado.erro?.detalhes);
   const v = estado.valores ?? inicial?.valores ?? {};
+  const [origem, setOrigem] = useState(v.origem ?? "");
+  const vinc = ORIGEM_PLANO_VINCULAVEL[origem as OrigemPlano];
+  const registros = registrosPorOrigem[origem as OrigemPlano] ?? [];
   const [linhas, setLinhas] = useState(
     Math.max(estado.tarefas?.length ?? 0, inicial?.tarefas?.length ?? 0, 2),
   );
@@ -79,11 +93,16 @@ export function FormularioNovoPlano({
             <Opcoes id="tipo" opcoes={TIPOS_PLANO} valor={v.tipo} />
           </Campo>
           <Campo id="origem" rotulo="Origem" erro={erros.origem}>
-            <Opcoes id="origem" opcoes={ORIGENS_PLANO} valor={v.origem} />
+            <Opcoes
+              id="origem"
+              opcoes={ORIGENS_PLANO}
+              valor={v.origem}
+              onChange={(e) => setOrigem(e.target.value)}
+            />
           </Campo>
           <Campo
             id="origemRef"
-            rotulo="Registro de origem"
+            rotulo={vinc ? vinc.rotuloCampo : "Registro de origem"}
             erro={erros.origemRef}
           >
             <input
@@ -92,7 +111,18 @@ export function FormularioNovoPlano({
               defaultValue={v.origemRef}
               maxLength={60}
               className={`${campo} font-mono`}
+              list={
+                vinc && registros.length > 0 ? "registros-origem" : undefined
+              }
+              autoComplete="off"
             />
+            {vinc && registros.length > 0 && (
+              <datalist id="registros-origem">
+                {registros.map((rg) => (
+                  <option key={rg.numero} value={rg.numero} label={rg.desc} />
+                ))}
+              </datalist>
+            )}
           </Campo>
           <Campo
             id="responsavel"
@@ -167,13 +197,21 @@ function Opcoes({
   id,
   opcoes,
   valor,
+  onChange,
 }: {
   id: string;
   opcoes: Record<string, string>;
   valor?: string;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
 }) {
   return (
-    <Selecao id={id} name={id} defaultValue={valor ?? ""} className={campo}>
+    <Selecao
+      id={id}
+      name={id}
+      defaultValue={valor ?? ""}
+      className={campo}
+      onChange={onChange}
+    >
       <option value="" disabled>
         Escolha
       </option>

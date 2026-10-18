@@ -8,6 +8,7 @@ import {
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
 import { Formulario } from "@/components/formulario-de-acao";
+import { ListaDeProcessosAuditados } from "@/components/lista-de-processos-auditados";
 import { salvarPlanoDaAuditoria } from "@/lib/acoes-auditorias";
 import {
   areaDeTexto,
@@ -23,6 +24,13 @@ type Props = {
   criteriosPadrao: string;
   metodologiaPadrao: string;
 };
+
+/** Qual datalist sugere cada coluna do cronograma. */
+const LISTA_DA_COLUNA = {
+  processo: "processos-auditados",
+  auditado: "pessoas",
+  local: "setores",
+} as const;
 
 /** Plano enviado ao auditado antes da auditoria: identificação, objetivo, critérios, cronograma, convocados e logística. */
 export function FormularioDoPlano({
@@ -46,6 +54,7 @@ export function FormularioDoPlano({
     >
       {(erros, v) => (
         <>
+          <ListaDeProcessosAuditados />
           <h2 className={tituloDaSecao}>Identificação</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <Campo
@@ -75,6 +84,7 @@ export function FormularioDoPlano({
               <input
                 id="emissor"
                 name="emissor"
+                list="pessoas"
                 defaultValue={v.emissor ?? p.emissor ?? a.auditorLider}
                 maxLength={120}
                 className={campo}
@@ -223,6 +233,7 @@ export function FormularioDoPlano({
                         <td key={c} className="py-1 pr-2">
                           <input
                             name={`cronograma.${i}.${c}`}
+                            list={LISTA_DA_COLUNA[c]}
                             defaultValue={d(c)}
                             maxLength={120}
                             aria-label={`${c}, linha ${i + 1}`}
@@ -259,6 +270,7 @@ export function FormularioDoPlano({
                 <div key={i} className="grid gap-2 sm:grid-cols-3">
                   <input
                     name={`auditados.${i}.nome`}
+                    list="pessoas"
                     defaultValue={v[`auditados.${i}.nome`] ?? l?.nome ?? ""}
                     placeholder="Nome"
                     aria-label={`Nome, linha ${i + 1}`}
@@ -275,6 +287,7 @@ export function FormularioDoPlano({
                   />
                   <input
                     name={`auditados.${i}.processo`}
+                    list="processos-auditados"
                     defaultValue={
                       v[`auditados.${i}.processo`] ?? l?.processo ?? ""
                     }
@@ -329,6 +342,7 @@ export function FormularioDoPlano({
               <input
                 id="logistica-acompanhante"
                 name="logistica.acompanhante"
+                list="pessoas"
                 defaultValue={
                   v["logistica.acompanhante"] ?? p.logistica.acompanhante
                 }

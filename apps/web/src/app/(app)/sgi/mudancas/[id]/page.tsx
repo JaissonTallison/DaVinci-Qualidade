@@ -8,9 +8,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { StatusDaMudanca } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { Dado } from "../../dado";
 import { DecidirMudanca, ImplementarMudanca } from "./acoes";
+import { LinhaDoTempoDaMudanca } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Mudança" };
 const AVISOS: Record<string, string> = {
@@ -50,6 +51,10 @@ export default async function DetalheDaMudanca({
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{m.titulo}</h1>
       <Aviso avisos={AVISOS} chave={aviso} />
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoDaMudanca m={m} />
+      </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="O que muda" largo>

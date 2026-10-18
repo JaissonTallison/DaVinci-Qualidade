@@ -8,11 +8,17 @@ import {
   type Acidente,
   type DadosDoUsuario,
   type FuncionarioResumo,
+  type NaoConformidadeResumo,
   type Pagina,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
-import { StatusDoAcidente, TipoDoAcidente } from "@/components/marcadores";
+import {
+  GravidadeDaNc,
+  StatusDaNc,
+  StatusDoAcidente,
+  TipoDoAcidente,
+} from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
@@ -31,6 +37,7 @@ import {
 import { Anexos } from "@/components/anexos";
 import { ArvoreDeCausas } from "./arvore";
 import { DadosDaCatEsocial, InvestigacaoEstruturada } from "./investigacao";
+import { LinhaDoTempoDoAcidente } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Acidente" };
 
@@ -64,6 +71,10 @@ export default async function DetalheDoAcidente({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const podeEditar = permissoes.includes("seguranca.editar");
   const aberto = a.status === "registrado" || a.status === "em_investigacao";
+  const ncsGeradas = await chamarApi<Pagina<NaoConformidadeResumo>>(
+    `/nao-conformidades?origemRef=${encodeURIComponent(a.numero)}&porPagina=50`,
+  );
+  const ncs = ncsGeradas.ok ? ncsGeradas.dados.itens : [];
   const comLesao = ehAcidenteComLesao(a.tipo);
   const funcionarios =
     comLesao && podeEditar && a.status !== "cancelado"
@@ -93,6 +104,35 @@ export default async function DetalheDoAcidente({
       <h1 className={`${tituloDaPagina} mt-1`}>
         {a.acidentado ? `${a.acidentado} · ${a.local}` : a.local}
       </h1>
+
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Linha do tempo</h2>
+        <LinhaDoTempoDoAcidente a={a} />
+      </section>
+
+      {ncs.length > 0 && (
+        <section className={`${painel} mt-6 p-5`}>
+          <h2 className={tituloDaSecao}>Não conformidades geradas</h2>
+          <ul className="mt-3 divide-y divide-borda">
+            {ncs.map((n) => (
+              <li
+                key={n.id}
+                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
+              >
+                <Link
+                  href={`/qualidade/nao-conformidades/${n.id}`}
+                  className="font-mono text-sm font-medium text-acao hover:underline"
+                >
+                  {n.numero}
+                </Link>
+                <span className="min-w-48 flex-1">{n.titulo}</span>
+                <GravidadeDaNc gravidade={n.gravidade} />
+                <StatusDaNc status={n.status} vencida={n.vencida} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {aviso && AVISOS[aviso] && (
         <p
           role="status"
