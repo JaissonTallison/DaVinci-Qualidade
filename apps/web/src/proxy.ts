@@ -108,8 +108,8 @@ async function renovar(
 }
 
 export const config = {
-  // Tudo, menos arquivos estáticos (scripts, imagens, ícones, a marca e as fotos da tela de entrar)
+  // Tudo, menos arquivos estáticos (scripts, imagens, ícones, a marca, as fotos da tela de entrar e dos módulos)
   matcher: [
-    "/((?!_next/static|_next/image|brand/|acesso/|favicon.ico|icon.svg|apple-icon.png|manifest.webmanifest|opengraph-image).*)",
+    "/((?!_next/static|_next/image|brand/|acesso/|modulos/|favicon.ico|icon.svg|apple-icon.png|manifest.webmanifest|opengraph-image).*)",
   ],
 };

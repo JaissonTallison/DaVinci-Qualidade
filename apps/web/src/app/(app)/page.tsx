@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import { AtalhosDeModulos } from "@/components/atalhos-de-modulos";
+import { RelogioDoDia } from "@/components/relogio-do-dia";
 import { botaoPrimario } from "@/lib/estilos";
 import type { CSSProperties } from "react";
 import { ArrowRight, ChevronRight } from "lucide-react";
@@ -512,12 +515,6 @@ export default async function Inicio() {
   );
   const saudacao =
     hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
-  const data = new Intl.DateTimeFormat("pt-BR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    timeZone: "America/Sao_Paulo",
-  }).format(agora);
   const vencidos =
     painel?.prazos.filter((p) => p.situacao === "vencido").length ?? 0;
   const emSeteDias = diasDepois(hoje, 7);
@@ -529,15 +526,37 @@ export default async function Inicio() {
   return (
     <div className="flex flex-col gap-6">
       <section
+        className="relative isolate overflow-hidden rounded-md border border-borda shadow-cartao"
+        aria-label="DaVinci Qualidade"
+      >
+        <Image
+          src="/acesso/fundo.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="-z-10 object-cover object-[30%_center]"
+        />
+        <div aria-hidden className="absolute inset-0 -z-10 bg-marinho/85" />
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 p-5">
+          <div className="min-w-0 max-w-xl">
+            <h1 className="text-2xl font-semibold text-primaria-texto">
+              {saudacao}, {eu.usuario.nome.split(" ")[0]}
+            </h1>
+            <p className="mt-1 text-base text-primaria-texto/80">
+              Gestão integrada para uma empresa mais segura, eficiente e
+              sustentável.
+            </p>
+          </div>
+          <RelogioDoDia inicialISO={agora.toISOString()} />
+        </div>
+      </section>
+
+      <section
         className="dv-entrar overflow-hidden rounded-md border border-borda bg-superficie shadow-cartao md:grid md:grid-cols-[minmax(0,1fr)_auto]"
         aria-label="Resumo do dia"
       >
         <div className="min-w-0 p-5">
-          <p className="text-sm text-texto-2 first-letter:uppercase">{data}</p>
-          <h1 className="mt-0.5 text-2xl text-texto">
-            {saudacao}, {eu.usuario.nome.split(" ")[0]}
-          </h1>
-          <p className="mt-1 text-base text-texto-2">
+          <p className="text-base text-texto-2">
             {vencidos ? (
               <span className="font-semibold text-nao-conforme">
                 {plural(vencidos, "prazo vencido", "prazos vencidos")}
@@ -612,6 +631,8 @@ export default async function Inicio() {
           </div>
         )}
       </section>
+
+      <AtalhosDeModulos permissoes={eu.permissoes} />
 
       <PainelDoInicio
         hoje={hoje}
