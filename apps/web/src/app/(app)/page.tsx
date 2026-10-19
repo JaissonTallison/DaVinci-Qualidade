@@ -365,7 +365,7 @@ export default async function Inicio() {
 
 /** Saúde em anel compacto: verde a partir de 90%, âmbar de 70 a 89%, vermelho abaixo; preenche ao abrir. */
 function Anel({ valor }: { valor: number | null }) {
-  const r = 35;
+  const r = 34;
   const c = 2 * Math.PI * r;
   const v = valor ?? 0;
   const cor =
@@ -378,7 +378,7 @@ function Anel({ valor }: { valor: number | null }) {
           : "stroke-nao-conforme";
   return (
     <div
-      className="relative size-[88px] shrink-0"
+      className="relative size-28 shrink-0"
       role="img"
       aria-label={
         valor === null
@@ -392,7 +392,7 @@ function Anel({ valor }: { valor: number | null }) {
           cy={44}
           r={r}
           fill="none"
-          strokeWidth={11}
+          strokeWidth={15}
           className="stroke-borda"
         />
         <circle
@@ -400,7 +400,7 @@ function Anel({ valor }: { valor: number | null }) {
           cy={44}
           r={r}
           fill="none"
-          strokeWidth={11}
+          strokeWidth={15}
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - v / 100)}
@@ -409,7 +409,7 @@ function Anel({ valor }: { valor: number | null }) {
         />
       </svg>
       <span className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-        <span className="text-xl font-bold text-texto tabular-nums">
+        <span className="text-2xl font-bold text-texto tabular-nums">
           {valor === null ? "—" : `${valor}%`}
         </span>
         <span className="mt-1 text-[0.625rem] font-semibold tracking-[0.1em] text-texto-3 uppercase">

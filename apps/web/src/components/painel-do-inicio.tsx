@@ -430,7 +430,7 @@ function ItemDeAtencao({ a, atraso }: { a: Atencao; atraso: number }) {
         {a.selo}
       </span>
       <span className="mt-auto pt-4">
-        <span className="inline-flex h-9 items-center gap-2 rounded-campo border border-borda-campo bg-superficie px-4 text-base font-semibold text-texto transition-colors group-hover:bg-campo">
+        <span className="inline-flex h-9 items-center gap-2 rounded-campo bg-acao px-4 text-base font-semibold text-primaria-texto transition-colors group-hover:bg-acao-escuro">
           Abrir
           <ArrowRight
             aria-hidden
