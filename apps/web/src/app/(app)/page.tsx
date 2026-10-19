@@ -12,27 +12,16 @@ import {
   type IndicadoresSst,
   type NcsDoMes,
   type PainelDeVencimentos,
-  type ResumoAcidentes,
   type ResumoAmbiental,
-  type ResumoEsg,
-  type ResumoAuditorias,
   type ResumoCalibracao,
-  type ResumoEpis,
-  type ResumoInspecoes,
   type ResumoNcs,
   type ResumoPgr,
   type ResumoPlanos,
   type ResumoPts,
-  type ResumoServicos,
   type ResumoSgi,
   type ResumoVencimentos,
 } from "@davinci/types";
-import {
-  PainelDoInicio,
-  type Aba,
-  type Atencao,
-  type Indicador,
-} from "@/components/painel-do-inicio";
+import { PainelDoInicio, type Atencao } from "@/components/painel-do-inicio";
 import { chamarApi, type Resultado } from "@/lib/api";
 import { hojeEmBrasilia, prazoRelativo } from "@/lib/datas";
 import { telaDoIcone, textoDoSelo } from "@/components/linha-de-prazo";
@@ -69,19 +58,13 @@ export default async function Inicio() {
     ncsMesR,
     ncsR,
     planosR,
-    inspR,
     calR,
-    audR,
     sgiR,
-    servR,
-    acidR,
     sstR,
-    episR,
     pgrR,
     ptsR,
     vencR,
     ambR,
-    esgR,
   ] = await Promise.all([
     pode("paineis.ver")
       ? chamarApi<PainelDeVencimentos>("/paineis/vencimentos?dias=30")
@@ -96,25 +79,14 @@ export default async function Inicio() {
       ? chamarApi<ResumoPlanos>("/planos-de-acao/resumo")
       : null,
     pode("qualidade.ver")
-      ? chamarApi<ResumoInspecoes>("/inspecoes/resumo")
-      : null,
-    pode("qualidade.ver")
       ? chamarApi<ResumoCalibracao>("/instrumentos/resumo")
       : null,
-    pode("auditorias.ver")
-      ? chamarApi<ResumoAuditorias>("/auditorias/resumo")
-      : null,
     pode("sgi.ver") ? chamarApi<ResumoSgi>("/sgi/resumo") : null,
-    pode("servicos.ver") ? chamarApi<ResumoServicos>("/servicos/resumo") : null,
-    pode("seguranca.ver")
-      ? chamarApi<ResumoAcidentes>("/acidentes/resumo")
-      : null,
     pode("seguranca.ver")
       ? chamarApi<IndicadoresSst>(
           `/acidentes/indicadores?ano=${hoje.slice(0, 4)}`,
         )
       : null,
-    pode("seguranca.ver") ? chamarApi<ResumoEpis>("/epis/resumo") : null,
     pode("seguranca.ver") ? chamarApi<ResumoPgr>("/riscos/resumo") : null,
     pode("seguranca.ver")
       ? chamarApi<ResumoPts>("/permissoes-de-trabalho/resumo")
@@ -125,44 +97,19 @@ export default async function Inicio() {
     pode("ambiental.ver")
       ? chamarApi<ResumoAmbiental>("/ambiental/resumo")
       : null,
-    pode("esg.ver") ? chamarApi<ResumoEsg>("/esg/resumo") : null,
   ]);
-  const [
-    painel,
-    ncsMes,
-    ncs,
-    planos,
-    insp,
-    cal,
-    aud,
-    sgi,
-    serv,
-    acid,
-    sst,
-    epis,
-    pgr,
-    pts,
-    venc,
-    amb,
-    esgRes,
-  ] = [
+  const [painel, ncsMes, ncs, planos, cal, sgi, sst, pgr, pts, venc, amb] = [
     ok(painelR),
     ok(ncsMesR),
     ok(ncsR),
     ok(planosR),
-    ok(inspR),
     ok(calR),
-    ok(audR),
     ok(sgiR),
-    ok(servR),
-    ok(acidR),
     ok(sstR),
-    ok(episR),
     ok(pgrR),
     ok(ptsR),
     ok(vencR),
     ok(ambR),
-    ok(esgR),
   ];
 
   // ---------------------------------------------------------------- saúde do sistema de gestão
@@ -270,242 +217,6 @@ export default async function Inicio() {
       tom: Boolean(sgi.proximaAnaliseCritica) ? "vencido" : "aguardando",
     });
 
-  // ---------------------------------------------------------------- números de cada aba
-  const indicadores: Partial<Record<Exclude<Aba, "geral">, Indicador[]>> = {};
-  if (ncs || planos || insp || cal)
-    indicadores.qualidade = [
-      ...(ncs
-        ? [
-            {
-              rotulo: "NCs em aberto",
-              valor: ncs.abertas,
-              href: "/qualidade/nao-conformidades",
-            },
-            {
-              rotulo: "NCs altas ou críticas",
-              valor: ncs.graves,
-              href: "/qualidade/nao-conformidades",
-              alerta: true,
-            },
-          ]
-        : []),
-      ...(planos
-        ? [
-            {
-              rotulo: "Planos com tarefa vencida",
-              valor: planos.atrasados,
-              href: "/qualidade/planos-de-acao?atrasados=true",
-              alerta: true,
-            },
-          ]
-        : []),
-      ...(insp
-        ? [
-            {
-              rotulo: "Aprovação das inspeções (30 dias)",
-              valor: insp.taxaDeAprovacao30Dias,
-              sufixo: "%",
-              href: "/qualidade/inspecoes",
-            },
-          ]
-        : []),
-      ...(cal
-        ? [
-            {
-              rotulo: "Instrumentos vencidos",
-              valor: cal.vencidos,
-              href: "/qualidade/calibracao?situacao=vencido",
-              alerta: true,
-            },
-          ]
-        : []),
-      ...(aud
-        ? [
-            {
-              rotulo: "Auditorias planejadas",
-              valor: aud.planejadas,
-              href: "/auditorias?status=planejada",
-            },
-          ]
-        : []),
-    ];
-  if (acid || epis || pgr || venc)
-    indicadores.seguranca = [
-      ...(acid
-        ? [
-            {
-              rotulo: "Dias sem acidente com afastamento",
-              valor: acid.diasSemAcidente,
-              href: "/seguranca/indicadores",
-            },
-            {
-              rotulo: "CATs atrasadas",
-              valor: acid.catsAtrasadas,
-              href: "/seguranca/acidentes",
-              alerta: true,
-            },
-          ]
-        : []),
-      ...(pgr
-        ? [
-            {
-              rotulo: "Riscos críticos no PGR",
-              valor: pgr.criticos,
-              href: "/seguranca/pgr?nivel=critico",
-              alerta: true,
-            },
-          ]
-        : []),
-      ...(pts
-        ? [
-            {
-              rotulo: "PTs aguardando liberação",
-              valor: pts.aguardandoLiberacao,
-              href: "/seguranca/permissoes-de-trabalho?status=solicitada",
-            },
-          ]
-        : []),
-      ...(epis
-        ? [
-            {
-              rotulo: "Trocas de EPI vencidas",
-              valor: epis.trocasVencidas,
-              href: "/seguranca/entregas-de-epi?situacao=troca_vencida",
-              alerta: true,
-            },
-          ]
-        : []),
-      ...(venc
-        ? [
-            {
-              rotulo: "ASO e treinamentos vencidos",
-              valor: venc.vencidos,
-              href: "/seguranca/vencimentos?situacao=vencido",
-              alerta: true,
-            },
-          ]
-        : []),
-    ];
-  if (sgi)
-    indicadores.sgi = [
-      {
-        rotulo: "Objetivos fora da meta",
-        valor: sgi.objetivosFora,
-        href: "/sgi/objetivos",
-        alerta: true,
-      },
-      {
-        rotulo: "Riscos e oportunidades altos",
-        valor: sgi.rosAltosAbertos,
-        href: "/sgi/riscos-e-oportunidades?classe=alta",
-        alerta: true,
-      },
-      {
-        rotulo: "Mudanças aguardando decisão",
-        valor: sgi.mudancasAguardandoDecisao,
-        href: "/sgi/mudancas?status=proposta",
-      },
-      {
-        rotulo: "Objetivos sem medição",
-        valor: sgi.objetivosSemMedicao,
-        href: "/sgi/objetivos",
-        alerta: true,
-      },
-    ];
-  if (serv)
-    indicadores.servicos = [
-      {
-        rotulo: "Ordens de serviço em aberto",
-        valor: serv.osAbertas,
-        href: "/servicos/ordens",
-      },
-      {
-        rotulo: "OS atrasadas",
-        valor: serv.osAtrasadas,
-        href: "/servicos/ordens",
-        alerta: true,
-      },
-      {
-        rotulo: "NPS (12 meses)",
-        valor: serv.nps12Meses,
-        href: "/servicos/nps",
-      },
-      {
-        rotulo: "Fornecedores reprovados",
-        valor: serv.fornecedoresReprovados,
-        href: "/servicos/fornecedores",
-        alerta: true,
-      },
-    ];
-  if (amb)
-    indicadores.ambiental = [
-      {
-        rotulo: "Aspectos significativos",
-        valor: amb.aspectosSignificativos,
-        href: "/ambiental/aspectos?significativos=sim",
-      },
-      {
-        rotulo: "Licenças a renovar ou vencidas",
-        valor: amb.licencasParaRenovar + amb.licencasVencidas,
-        href: "/ambiental/licencas",
-        alerta: true,
-      },
-      {
-        rotulo: "Condicionantes e CDFs atrasados",
-        valor: amb.condicionantesVencidas + amb.cdfsAtrasados,
-        href: "/paineis/vencimentos",
-        alerta: true,
-      },
-      {
-        rotulo: "Requisitos não atendidos",
-        valor: amb.requisitosNaoAtendidos,
-        href: "/ambiental/requisitos?atendimento=nao_atende",
-        alerta: true,
-      },
-      {
-        rotulo: "Monitoramentos fora do limite",
-        valor: amb.foraDoLimite,
-        href: "/ambiental/monitoramentos",
-        alerta: true,
-      },
-      {
-        rotulo: "FDS para revisar",
-        valor: amb.fdsVencidas,
-        href: "/ambiental/produtos-quimicos?fds=vencida",
-        alerta: true,
-      },
-    ];
-  if (esgRes)
-    indicadores.esg = [
-      {
-        rotulo: "Temas materiais",
-        valor: esgRes.materiais,
-        href: "/esg/materialidade",
-      },
-      {
-        rotulo: "Metas atrasadas",
-        valor: esgRes.metasAtrasadas,
-        href: "/esg/temas",
-        alerta: true,
-      },
-      {
-        rotulo: "Temas sem avaliação",
-        valor: esgRes.semAvaliacao,
-        href: "/esg/temas",
-        alerta: true,
-      },
-      {
-        rotulo: "ODS com tema material",
-        valor: esgRes.odsComTemaMaterial,
-        href: "/esg/ods",
-      },
-    ];
-  const abas: Aba[] = [
-    "geral",
-    ...(
-      ["qualidade", "seguranca", "sgi", "servicos", "ambiental", "esg"] as const
-    ).filter((a) => indicadores[a]?.length),
-  ];
 
   const agora = new Date();
   const hora = Number(
@@ -555,28 +266,33 @@ export default async function Inicio() {
         className="dv-entrar overflow-hidden rounded-md border border-borda bg-superficie shadow-cartao md:grid md:grid-cols-[minmax(0,1fr)_auto]"
         aria-label="Resumo do dia"
       >
-        <div className="min-w-0 p-5">
-          <p className="text-base text-texto-2">
-            {vencidos ? (
-              <span className="font-semibold text-nao-conforme">
-                {plural(vencidos, "prazo vencido", "prazos vencidos")}
-              </span>
-            ) : (
-              "Nenhum prazo vencido"
-            )}{" "}
-            {nestaSemana > 0 && (
-              <>
-                {" "}
-                ·{" "}
-                <span className="font-semibold text-atencao">
-                  {plural(nestaSemana, "vence", "vencem")} nos próximos 7 dias
-                </span>
-              </>
-            )}{" "}
-            em {eu.empresa.nome}.
+        <div className="flex min-w-0 flex-col p-5">
+          <p className="text-xs font-semibold tracking-[0.08em] text-texto-3 uppercase">
+            Resumo de hoje · {eu.empresa.nome}
           </p>
+          <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-3">
+            <div className="flex items-baseline gap-2">
+              <span
+                className={`text-3xl font-bold tabular-nums ${vencidos ? "text-nao-conforme" : "text-conforme"}`}
+              >
+                {vencidos}
+              </span>
+              <span className="text-sm text-texto-2">
+                {vencidos === 1 ? "prazo vencido" : "prazos vencidos"}
+              </span>
+            </div>
+            <span aria-hidden className="h-8 w-px bg-borda" />
+            <div className="flex items-baseline gap-2">
+              <span
+                className={`text-3xl font-bold tabular-nums ${nestaSemana ? "text-atencao" : "text-texto-2"}`}
+              >
+                {nestaSemana}
+              </span>
+              <span className="text-sm text-texto-2">vencem em 7 dias</span>
+            </div>
+          </div>
           {pior && pior.pct < 100 ? (
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-borda pt-3">
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-md border border-borda bg-campo p-3.5">
               <p className="min-w-0 flex-1 text-base text-texto">
                 <span className="mr-2 text-xs font-semibold tracking-[0.08em] text-acao uppercase">
                   Prioridade
@@ -589,7 +305,7 @@ export default async function Inicio() {
               </Link>
             </div>
           ) : (
-            <p className="mt-4 border-t border-borda pt-3 text-base text-conforme">
+            <p className="mt-4 rounded-md border border-conforme/30 bg-conforme/8 p-3.5 text-base text-conforme">
               Todos os indicadores em 100%. Nada pede ação agora.
             </p>
           )}
@@ -636,12 +352,11 @@ export default async function Inicio() {
 
       <PainelDoInicio
         hoje={hoje}
-        abas={abas}
+        temNcs={pode("qualidade.ver")}
         inicial={{ prazos: painel?.prazos ?? [], ncsPorMes: ncsMes }}
         sst={
           sst?.meses.filter((m) => m.competencia <= hoje.slice(0, 7)) ?? null
         }
-        indicadores={indicadores}
         atencao={atencao}
       />
     </div>
@@ -650,7 +365,7 @@ export default async function Inicio() {
 
 /** Saúde em anel compacto: verde a partir de 90%, âmbar de 70 a 89%, vermelho abaixo; preenche ao abrir. */
 function Anel({ valor }: { valor: number | null }) {
-  const r = 38;
+  const r = 35;
   const c = 2 * Math.PI * r;
   const v = valor ?? 0;
   const cor =
@@ -677,7 +392,7 @@ function Anel({ valor }: { valor: number | null }) {
           cy={44}
           r={r}
           fill="none"
-          strokeWidth={7}
+          strokeWidth={11}
           className="stroke-borda"
         />
         <circle
@@ -685,7 +400,7 @@ function Anel({ valor }: { valor: number | null }) {
           cy={44}
           r={r}
           fill="none"
-          strokeWidth={7}
+          strokeWidth={11}
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - v / 100)}

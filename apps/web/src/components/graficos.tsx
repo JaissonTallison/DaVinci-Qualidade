@@ -24,7 +24,7 @@ export interface Serie {
   cor: string;
 }
 
-const ALTURA = 200;
+const ALTURA = 155;
 const MARGEM = { topo: 12, base: 28, esquerda: 40, direita: 8 };
 
 /** Rótulo do eixo: a partir de 10 mil, abreviado ("20 mil", "1,5 mi") para caber na margem. */
@@ -140,6 +140,7 @@ function Grade({
         const v = (max / passos) * i;
         const y =
           MARGEM.topo + (altura - MARGEM.topo - MARGEM.base) * (1 - v / max);
+        const base = i === 0;
         return (
           <g key={i}>
             <line
@@ -147,11 +148,12 @@ function Grade({
               x2={largura - MARGEM.direita}
               y1={y}
               y2={y}
-              stroke="var(--color-borda)"
+              stroke={base ? "var(--color-borda-forte)" : "var(--color-borda)"}
               strokeWidth={1}
+              strokeDasharray={base ? undefined : "2 5"}
             />
             <text
-              x={MARGEM.esquerda - 6}
+              x={MARGEM.esquerda - 8}
               y={y}
               dy="0.32em"
               textAnchor="end"
@@ -215,7 +217,7 @@ export function ColunasEmpilhadas({
   const faixa =
     (largura - MARGEM.esquerda - MARGEM.direita) /
     Math.max(categorias.length, 1);
-  const l = Math.min(24, faixa * 0.6);
+  const l = Math.min(48, faixa * 0.72);
   const mostrarRotulo = (i: number) => categorias.length <= 13 || i % 2 === 0;
   return (
     <div ref={caixa} className={`relative ${preencher ? "h-full" : ""}`}>
@@ -282,6 +284,18 @@ export function ColunasEmpilhadas({
                   />
                 );
               })}
+              {totais[i]! > 0 && mostrarRotulo(i) && (
+                <text
+                  x={x + l / 2}
+                  y={MARGEM.topo + areaY - (totais[i]! / max) * areaY - 5}
+                  textAnchor="middle"
+                  fontSize={10}
+                  fontWeight={600}
+                  fill="var(--color-texto-2)"
+                >
+                  {totais[i]}
+                </text>
+              )}
               {mostrarRotulo(i) && (
                 <text
                   x={x + l / 2}
@@ -353,7 +367,7 @@ export function ColunasAgrupadas({
   const faixa =
     (largura - MARGEM.esquerda - MARGEM.direita) /
     Math.max(categorias.length, 1);
-  const l = Math.min(18, (faixa * 0.7) / series.length);
+  const l = Math.min(40, (faixa * 0.82) / series.length);
   return (
     <div ref={caixa} className="relative">
       <svg
@@ -387,22 +401,37 @@ export function ColunasAgrupadas({
                 fill="transparent"
               />
               {series.map((s, k) => {
-                const a = ((c.valores[k] ?? 0) / max) * areaY;
+                const v = c.valores[k] ?? 0;
+                const a = (v / max) * areaY;
+                const cx = inicio + k * (l + 2) + l / 2;
                 return (
-                  <path
-                    key={s.id}
-                    d={caminhoDaColuna(
-                      inicio + k * (l + 2),
-                      MARGEM.topo + areaY - a,
-                      l,
-                      a,
-                      true,
+                  <g key={s.id}>
+                    <path
+                      d={caminhoDaColuna(
+                        inicio + k * (l + 2),
+                        MARGEM.topo + areaY - a,
+                        l,
+                        a,
+                        true,
+                      )}
+                      fill={s.cor}
+                      opacity={foco && foco.i !== i ? 0.55 : 1}
+                      className="dv-crescer-y transition-opacity"
+                      style={{ "--atraso": `${i * 40}ms` } as CSSProperties}
+                    />
+                    {v > 0 && (
+                      <text
+                        x={cx}
+                        y={MARGEM.topo + areaY - a - 5}
+                        textAnchor="middle"
+                        fontSize={10}
+                        fontWeight={600}
+                        fill="var(--color-texto-2)"
+                      >
+                        {v}
+                      </text>
                     )}
-                    fill={s.cor}
-                    opacity={foco && foco.i !== i ? 0.55 : 1}
-                    className="dv-crescer-y transition-opacity"
-                    style={{ "--atraso": `${i * 40}ms` } as CSSProperties}
-                  />
+                  </g>
                 );
               })}
               <text
@@ -471,7 +500,7 @@ export function Rosca({
     <div className="flex flex-wrap items-center gap-6">
       <svg
         viewBox="0 0 180 180"
-        className="w-44 shrink-0"
+        className="w-36 shrink-0"
         role="img"
         aria-label="Gráfico de rosca"
       >
@@ -481,7 +510,7 @@ export function Rosca({
           r={r}
           fill="none"
           stroke="var(--color-superficie-2)"
-          strokeWidth={22}
+          strokeWidth={30}
         />
         {total > 0 &&
           fatias
@@ -499,7 +528,7 @@ export function Rosca({
                   r={r}
                   fill="none"
                   stroke={f.cor}
-                  strokeWidth={foco === f.id ? 26 : 22}
+                  strokeWidth={foco === f.id ? 34 : 30}
                   strokeDasharray={`${traco} ${c - traco}`}
                   strokeDashoffset={deslocamento}
                   transform="rotate(-90 90 90)"
@@ -524,15 +553,15 @@ export function Rosca({
         </text>
         <text
           x={90}
-          y={108}
+          y={110}
           textAnchor="middle"
-          fontSize={11}
+          fontSize={14}
           fill="var(--color-texto-2)"
         >
           {focada ? focada.rotulo : rotuloDoCentro}
         </text>
       </svg>
-      <ul className="flex min-w-40 flex-1 flex-col gap-1.5 text-sm">
+      <ul className="flex min-w-40 flex-1 flex-col gap-0.5 text-sm">
         {fatias.map((f) => (
           <li key={f.id}>
             <button
@@ -540,7 +569,7 @@ export function Rosca({
               onMouseEnter={() => setFoco(f.id)}
               onMouseLeave={() => setFoco(null)}
               onClick={() => f.href && router.push(f.href)}
-              className={`flex w-full items-center gap-2 rounded-sm px-1.5 py-1 text-left hover:bg-superficie-2 ${foco && foco !== f.id ? "opacity-50" : ""}`}
+              className={`flex w-full items-center gap-2 rounded-sm px-1.5 py-0.5 text-left hover:bg-superficie-2 ${foco && foco !== f.id ? "opacity-50" : ""}`}
             >
               <span
                 aria-hidden
@@ -604,13 +633,27 @@ export function Linha({
           .filter((t) => t.length > 1)
           .map((t, k) => (
             <path
+              key={`area-${k}`}
+              d={
+                `M${px(t[0]!.i)},${MARGEM.topo + areaY} ` +
+                t.map((p) => `L${px(p.i)},${py(p.v)}`).join(" ") +
+                ` L${px(t[t.length - 1]!.i)},${MARGEM.topo + areaY} Z`
+              }
+              fill={cor}
+              opacity={0.1}
+            />
+          ))}
+        {trechos
+          .filter((t) => t.length > 1)
+          .map((t, k) => (
+            <path
               key={k}
               d={t
                 .map((p, j) => `${j ? "L" : "M"}${px(p.i)},${py(p.v)}`)
                 .join(" ")}
               fill="none"
               stroke={cor}
-              strokeWidth={2}
+              strokeWidth={2.5}
               strokeLinejoin="round"
               strokeLinecap="round"
               pathLength={1}
@@ -644,16 +687,28 @@ export function Linha({
               />
             )}
             {p.valor !== null && (
-              <circle
-                cx={px(i)}
-                cy={py(p.valor)}
-                r={foco?.i === i ? 5 : 4}
-                fill={cor}
-                stroke="var(--color-superficie)"
-                strokeWidth={2}
-                className="dv-entrar"
-                style={{ "--atraso": `${300 + i * 40}ms` } as CSSProperties}
-              />
+              <>
+                <text
+                  x={px(i)}
+                  y={py(p.valor) - 11}
+                  textAnchor="middle"
+                  fontSize={10}
+                  fontWeight={600}
+                  fill="var(--color-texto-2)"
+                >
+                  {formato(p.valor)}
+                </text>
+                <circle
+                  cx={px(i)}
+                  cy={py(p.valor)}
+                  r={foco?.i === i ? 5 : 4}
+                  fill={cor}
+                  stroke="var(--color-superficie)"
+                  strokeWidth={2}
+                  className="dv-entrar"
+                  style={{ "--atraso": `${300 + i * 40}ms` } as CSSProperties}
+                />
+              </>
             )}
             <text
               x={px(i)}
