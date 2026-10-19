@@ -6,6 +6,7 @@ import {
   desc,
   eq,
   ilike,
+  inArray,
   lt,
   notInArray,
   or,
@@ -15,6 +16,7 @@ import {
 import { DATABASE, type Database } from '@davinci/database';
 import { ErroDeNegocio, somarMeses, validar } from '@davinci/shared';
 import {
+  atribuirResponsavelNcEmLoteSchema,
   atualizarNcSchema,
   cancelarNcSchema,
   enviarParaVerificacaoSchema,
@@ -110,6 +112,28 @@ export class NaoConformidadesService {
       pagina: f.pagina,
       porPagina: f.porPagina,
     };
+  }
+
+  /** Troca o responsável de várias NCs de uma vez (seleção em massa). Só as NCs da empresa. */
+  async atribuirResponsavelEmLote(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<{ atualizadas: number }> {
+    const { ids, responsavel } = validar(
+      atribuirResponsavelNcEmLoteSchema,
+      dados,
+    );
+    const linhas = await this.db
+      .update(naoConformidades)
+      .set({ responsavel, atualizadoPor: ctx.usuarioId })
+      .where(
+        and(
+          eq(naoConformidades.empresaId, ctx.empresaId),
+          inArray(naoConformidades.id, ids),
+        ),
+      )
+      .returning({ id: naoConformidades.id });
+    return { atualizadas: linhas.length };
   }
 
   /** NCs abertas (data de abertura) e encerradas (dia do encerramento em Brasília) por mês, para o gráfico do início. */

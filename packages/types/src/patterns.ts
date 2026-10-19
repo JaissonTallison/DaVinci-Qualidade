@@ -151,6 +151,8 @@ export const PATTERNS = {
     enviarParaVerificacao: 'nao-conformidades.enviar-para-verificacao',
     verificarEficacia: 'nao-conformidades.verificar-eficacia',
     cancelar: 'nao-conformidades.cancelar',
+    atribuirResponsavelEmLote:
+      'nao-conformidades.atribuir-responsavel-em-lote',
   },
   /** Qualidade: planos de ação (docs/05-modulos/planos-de-acao.md). */
   planosDeAcao: {

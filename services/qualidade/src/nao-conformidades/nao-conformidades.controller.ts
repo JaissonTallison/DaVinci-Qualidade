@@ -17,6 +17,11 @@ export class NaoConformidadesController {
     return this.ncs.listar(ctx, dados);
   }
 
+  @MessagePattern(P.atribuirResponsavelEmLote)
+  atribuirResponsavelEmLote(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.ncs.atribuirResponsavelEmLote(ctx, dados);
+  }
+
   @MessagePattern(P.porMes)
   porMes(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
     return this.ncs.porMes(ctx, dados);
