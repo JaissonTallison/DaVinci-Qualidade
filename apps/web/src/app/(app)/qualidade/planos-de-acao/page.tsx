@@ -2,6 +2,7 @@ import { ListChecks, ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
+import { AtribuirResponsavelEmLote } from "@/components/atribuir-responsavel-em-lote";
 import { BotaoExportar } from "@/components/botao-exportar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
@@ -15,6 +16,7 @@ import {
   CaixaSelecionarTodos,
   SelecaoDeLinhas,
 } from "@/components/selecao-de-linhas";
+import { atribuirResponsavelPlanoEmLote } from "./acoes";
 import {
   ORIGENS_PLANO,
   STATUS_PLANO,
@@ -344,7 +346,13 @@ export default async function ListaDePlanos({
             <BarraDeSelecao
               recurso="planos-de-acao"
               rotulo={["plano selecionado", "planos selecionados"]}
-            />
+            >
+              {podeCriar && (
+                <AtribuirResponsavelEmLote
+                  acao={atribuirResponsavelPlanoEmLote}
+                />
+              )}
+            </BarraDeSelecao>
           </SelecaoDeLinhas>
         )}
       </section>

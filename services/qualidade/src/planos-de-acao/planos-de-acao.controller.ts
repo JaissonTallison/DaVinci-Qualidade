@@ -17,6 +17,11 @@ export class PlanosDeAcaoController {
     return this.planos.listar(ctx, dados);
   }
 
+  @MessagePattern(P.atribuirResponsavelEmLote)
+  atribuirResponsavelEmLote(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.planos.atribuirResponsavelEmLote(ctx, dados);
+  }
+
   @MessagePattern(P.resumo)
   resumo(@Contexto() ctx: Ctx) {
     return this.planos.resumo(ctx);

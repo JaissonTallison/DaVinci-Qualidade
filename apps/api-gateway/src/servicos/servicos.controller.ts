@@ -13,6 +13,7 @@ import {
   cancelarOsSchema,
   concluirOsSchema,
   filtroNpsSchema,
+  atribuirResponsavelOsEmLoteSchema,
   filtroOsSchema,
   iniciarOsSchema,
   novaOsSchema,
@@ -77,6 +78,22 @@ export class OrdensDeServicoController {
       dados,
       ctx,
       15_000,
+    );
+  }
+
+  @Post('responsavel-em-lote')
+  @Permissao('servicos.editar')
+  @HttpCode(200)
+  atribuirResponsavelEmLote(
+    @ContextoHttp() ctx: Contexto,
+    @Body() dados: unknown,
+  ) {
+    validarEntrada(atribuirResponsavelOsEmLoteSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<{ atualizadas: number }>(
+      SERVICES.SERVICOS,
+      P.atribuirResponsavelOsEmLote,
+      dados,
+      ctx,
     );
   }
 

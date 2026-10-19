@@ -167,6 +167,7 @@ export const PATTERNS = {
     cancelarTarefa: 'planos-de-acao.cancelar-tarefa',
     verificarEficacia: 'planos-de-acao.verificar-eficacia',
     cancelar: 'planos-de-acao.cancelar',
+    atribuirResponsavelEmLote: 'planos-de-acao.atribuir-responsavel-em-lote',
   },
   /** Qualidade: inspeções e modelos de inspeção (docs/05-modulos/inspecoes.md). */
   inspecoes: {
@@ -414,6 +415,7 @@ export const PATTERNS = {
     iniciarOs: 'servicos.os.iniciar',
     concluirOs: 'servicos.os.concluir',
     cancelarOs: 'servicos.os.cancelar',
+    atribuirResponsavelOsEmLote: 'servicos.os.atribuir-responsavel-em-lote',
     avaliarOs: 'servicos.os.avaliar',
     listarNps: 'servicos.nps.listar',
     registrarNps: 'servicos.nps.registrar',

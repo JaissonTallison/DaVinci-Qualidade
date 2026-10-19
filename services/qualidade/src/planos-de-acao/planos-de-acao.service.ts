@@ -19,6 +19,7 @@ import {
   cancelarPlanoSchema,
   cancelarTarefaSchema,
   concluirTarefaSchema,
+  atribuirResponsavelPlanoEmLoteSchema,
   filtroPlanosSchema,
   incluirTarefaSchema,
   isUuid,
@@ -136,6 +137,28 @@ export class PlanosDeAcaoService {
       pagina: f.pagina,
       porPagina: f.porPagina,
     };
+  }
+
+  /** Troca o responsável de vários planos de uma vez (seleção em massa). Só os planos da empresa. */
+  async atribuirResponsavelEmLote(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<{ atualizadas: number }> {
+    const { ids, responsavel } = validar(
+      atribuirResponsavelPlanoEmLoteSchema,
+      dados,
+    );
+    const linhas = await this.db
+      .update(planosAcao)
+      .set({ responsavel, atualizadoPor: ctx.usuarioId })
+      .where(
+        and(
+          eq(planosAcao.empresaId, ctx.empresaId),
+          inArray(planosAcao.id, ids),
+        ),
+      )
+      .returning({ id: planosAcao.id });
+    return { atualizadas: linhas.length };
   }
 
   async resumo(ctx: Contexto): Promise<ResumoPlanos> {
