@@ -22,6 +22,11 @@ export class ServicosController {
     return this.s.listarOs(ctx, d);
   }
 
+  @MessagePattern(P.atribuirResponsavelOsEmLote)
+  atribuirResponsavelOsEmLote(@Contexto() ctx: Ctx, @Dados() d: unknown) {
+    return this.s.atribuirResponsavelOsEmLote(ctx, d);
+  }
+
   @MessagePattern(P.obterOs)
   obterOs(@Contexto() ctx: Ctx, @Dados() d: { id?: unknown }) {
     return this.s.obterOs(ctx, d);

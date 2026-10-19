@@ -148,6 +148,22 @@ export const filtroPlanosSchema = z.object({
 });
 export type FiltroPlanos = z.input<typeof filtroPlanosSchema>;
 
+/** Atribuir um responsável a vários planos de uma vez (seleção em massa). */
+export const atribuirResponsavelPlanoEmLoteSchema = z.object({
+  ids: z
+    .array(z.uuid('Plano inválido.'))
+    .min(1, 'Selecione ao menos um plano.')
+    .max(200, 'Selecione no máximo 200 por vez.'),
+  responsavel: z
+    .string()
+    .trim()
+    .min(1, 'Informe o responsável.')
+    .max(120, 'Use no máximo 120 caracteres.'),
+});
+export type AtribuirResponsavelPlanoEmLote = z.input<
+  typeof atribuirResponsavelPlanoEmLoteSchema
+>;
+
 export interface Tarefa {
   id: string;
   ordem: number;

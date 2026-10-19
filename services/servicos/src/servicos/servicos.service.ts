@@ -29,6 +29,7 @@ import {
   classificarFornecedor,
   concluirOsSchema,
   filtroNpsSchema,
+  atribuirResponsavelOsEmLoteSchema,
   filtroOsSchema,
   iniciarOsSchema,
   isUuid,
@@ -109,6 +110,23 @@ export class ServicosService {
       pagina: f.pagina,
       porPagina: f.porPagina,
     };
+  }
+
+  /** Troca o responsável de várias OS de uma vez (seleção em massa). Só as OS da empresa. */
+  async atribuirResponsavelOsEmLote(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<{ atualizadas: number }> {
+    const { ids, responsavel } = validar(
+      atribuirResponsavelOsEmLoteSchema,
+      dados,
+    );
+    const linhas = await this.db
+      .update(os)
+      .set({ responsavel, atualizadoPor: ctx.usuarioId })
+      .where(and(eq(os.empresaId, ctx.empresaId), inArray(os.id, ids)))
+      .returning({ id: os.id });
+    return { atualizadas: linhas.length };
   }
 
   async obterOs(

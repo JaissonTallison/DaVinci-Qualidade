@@ -134,6 +134,22 @@ export const filtroOsSchema = z.object({
     .default(50),
 });
 
+/** Atribuir um responsável a várias OS de uma vez (seleção em massa). */
+export const atribuirResponsavelOsEmLoteSchema = z.object({
+  ids: z
+    .array(z.uuid('OS inválida.'))
+    .min(1, 'Selecione ao menos uma OS.')
+    .max(200, 'Selecione no máximo 200 por vez.'),
+  responsavel: z
+    .string()
+    .trim()
+    .min(1, 'Informe o responsável.')
+    .max(120, 'Use no máximo 120 caracteres.'),
+});
+export type AtribuirResponsavelOsEmLote = z.input<
+  typeof atribuirResponsavelOsEmLoteSchema
+>;
+
 export interface OrdemDeServico {
   id: string;
   numero: string;

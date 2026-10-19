@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ListFilter, Wrench } from "lucide-react";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
+import { AtribuirResponsavelEmLote } from "@/components/atribuir-responsavel-em-lote";
 import { BotaoExportar } from "@/components/botao-exportar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
@@ -15,6 +16,7 @@ import {
   CaixaSelecionarTodos,
   SelecaoDeLinhas,
 } from "@/components/selecao-de-linhas";
+import { atribuirResponsavelOsEmLote } from "./acoes";
 import {
   STATUS_OS,
   type DadosDoUsuario,
@@ -263,7 +265,11 @@ export default async function Ordens({
             <BarraDeSelecao
               recurso="ordens"
               rotulo={["ordem selecionada", "ordens selecionadas"]}
-            />
+            >
+              {podeCriar && (
+                <AtribuirResponsavelEmLote acao={atribuirResponsavelOsEmLote} />
+              )}
+            </BarraDeSelecao>
           </SelecaoDeLinhas>
         )}
       </section>
