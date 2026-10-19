@@ -2,6 +2,7 @@ import { ClipboardList, ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
+import { AtribuirResponsavelEmLote } from "@/components/atribuir-responsavel-em-lote";
 import { BotaoExportar } from "@/components/botao-exportar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
@@ -15,6 +16,7 @@ import {
   CaixaSelecionarTodos,
   SelecaoDeLinhas,
 } from "@/components/selecao-de-linhas";
+import { atribuirResponsavelNcEmLote } from "./acoes";
 import {
   GRAVIDADES_NC,
   ORIGENS_NC,
@@ -61,7 +63,8 @@ export default async function ListaDeNcs({
   const consulta = new URLSearchParams();
   for (const f of FILTROS) if (params[f]) consulta.set(f, params[f]!);
   const [lista, eu] = await Promise.all([
-    chamarApi<Pagina<NaoConformidadeResumo>>(`${BASE}?${consulta}`),
+    // BASE é a rota da tela (links); a API das NCs é /nao-conformidades.
+    chamarApi<Pagina<NaoConformidadeResumo>>(`/nao-conformidades?${consulta}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
   ]);
   const podeAbrir = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
@@ -351,7 +354,11 @@ export default async function ListaDeNcs({
             <BarraDeSelecao
               recurso="nao-conformidades"
               rotulo={["NC selecionada", "NCs selecionadas"]}
-            />
+            >
+              {podeAbrir && (
+                <AtribuirResponsavelEmLote acao={atribuirResponsavelNcEmLote} />
+              )}
+            </BarraDeSelecao>
           </SelecaoDeLinhas>
         )}
       </section>

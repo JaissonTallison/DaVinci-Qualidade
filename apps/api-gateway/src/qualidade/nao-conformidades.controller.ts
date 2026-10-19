@@ -9,6 +9,7 @@ import {
   Query,
 } from '@nestjs/common';
 import {
+  atribuirResponsavelNcEmLoteSchema,
   atualizarNcSchema,
   cancelarNcSchema,
   enviarParaVerificacaoSchema,
@@ -101,6 +102,22 @@ export class NaoConformidadesController {
     return this.mensageria.enviar<NaoConformidade>(
       SERVICES.QUALIDADE,
       P.criar,
+      dados,
+      ctx,
+    );
+  }
+
+  @Post('responsavel-em-lote')
+  @Permissao('qualidade.editar')
+  @HttpCode(200)
+  atribuirResponsavelEmLote(
+    @ContextoHttp() ctx: Contexto,
+    @Body() dados: unknown,
+  ) {
+    validarEntrada(atribuirResponsavelNcEmLoteSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<{ atualizadas: number }>(
+      SERVICES.QUALIDADE,
+      P.atribuirResponsavelEmLote,
       dados,
       ctx,
     );

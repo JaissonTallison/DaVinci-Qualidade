@@ -177,6 +177,22 @@ export const filtroNcsSchema = z.object({
 });
 export type FiltroNcs = z.input<typeof filtroNcsSchema>;
 
+/** Atribuir um responsável a várias NCs de uma vez (seleção em massa). */
+export const atribuirResponsavelNcEmLoteSchema = z.object({
+  ids: z
+    .array(z.uuid('NC inválida.'))
+    .min(1, 'Selecione ao menos uma NC.')
+    .max(200, 'Selecione no máximo 200 por vez.'),
+  responsavel: z
+    .string()
+    .trim()
+    .min(1, 'Informe o responsável.')
+    .max(120, 'Use no máximo 120 caracteres.'),
+});
+export type AtribuirResponsavelNcEmLote = z.input<
+  typeof atribuirResponsavelNcEmLoteSchema
+>;
+
 export interface NaoConformidade {
   id: string;
   numero: string;

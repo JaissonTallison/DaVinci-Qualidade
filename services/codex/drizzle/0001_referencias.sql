@@ -1,6 +1,8 @@
 -- Busca sem depender de acento ("jose" encontra "José").
 -- unaccent é uma extensão "confiável" do Postgres: o dono do banco (svc_codex) pode criá-la.
-CREATE EXTENSION IF NOT EXISTS unaccent;
+-- SCHEMA public: nos testes de integração cada arquivo roda num schema temporário; fixar o public
+-- garante que a extensão (objeto do banco inteiro) fique visível a todos os search_path.
+CREATE EXTENSION IF NOT EXISTS unaccent SCHEMA public;
 --> statement-breakpoint
 -- Tabelas oficiais: seções e subclasses da CNAE 2.3 (IBGE) e bancos com código COMPE (Banco Central).
 -- Mesmo conteúdo da DaVinci Finance.

@@ -20,7 +20,7 @@ interface Selecao {
 
 const Contexto = createContext<Selecao | null>(null);
 
-function useSelecao(): Selecao {
+export function useSelecao(): Selecao {
   const c = useContext(Contexto);
   if (!c)
     throw new Error("Use os componentes de seleção dentro de <SelecaoDeLinhas>.");
@@ -101,7 +101,8 @@ export function BarraDeSelecao({
 }: {
   recurso: string;
   rotulo: [string, string];
-  children?: (selecionados: string[], limpar: () => void) => ReactNode;
+  /** Ações a mais (ex.: atribuir responsável): client components que leem a seleção por useSelecao(). */
+  children?: ReactNode;
 }) {
   const { selecionados, limpar } = useSelecao();
   const n = selecionados.size;
@@ -120,7 +121,7 @@ export function BarraDeSelecao({
         >
           Exportar selecionadas
         </a>
-        {children?.(ids, limpar)}
+        {children}
       </div>
       <button
         type="button"
