@@ -171,7 +171,7 @@ export function IconeDoGrupo({ titulo }: { titulo: string }) {
 }
 
 /** Ícone de uma tela ou de qualquer endereço dentro dela (ex.: /qualidade/calibracao/novo usa o de Calibração). */
-export function IconeDaTela({ href }: { href: string }) {
+export function IconeDaTela({ href, size = 16 }: { href: string; size?: number }) {
   const caminho = href.split("?")[0]!;
   const chave = ICONE_DA_TELA[caminho]
     ? caminho
@@ -179,7 +179,7 @@ export function IconeDaTela({ href }: { href: string }) {
         .filter((k) => caminho.startsWith(`${k}/`))
         .sort((x, y) => y.length - x.length)[0];
   const I = (chave ? ICONE_DA_TELA[chave] : undefined) ?? Wrench;
-  return <I aria-hidden size={16} strokeWidth={1.75} className="shrink-0" />;
+  return <I aria-hidden size={size} strokeWidth={1.75} className="shrink-0" />;
 }
 
 export function IconeSeta({ aberto }: { aberto: boolean }) {
