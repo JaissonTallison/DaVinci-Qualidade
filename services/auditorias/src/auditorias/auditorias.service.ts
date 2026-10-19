@@ -113,16 +113,21 @@ export class AuditoriasService {
     }
     const onde = and(...condicoes);
     const terminada = sql`${auditorias.status} IN ('concluida', 'cancelada')`;
+    const colunas = {
+      numero: auditorias.numero,
+      auditorLider: auditorias.auditorLider,
+      dataInicio: auditorias.dataInicio,
+      status: auditorias.status,
+    } as const;
+    const ordenacao = f.ordenar
+      ? [f.ordem === 'asc' ? asc(colunas[f.ordenar]) : desc(colunas[f.ordenar])]
+      : [terminada, desc(auditorias.dataInicio), desc(auditorias.numero)];
     const [linhas, [{ total }]] = await Promise.all([
       this.db
         .select()
         .from(auditorias)
         .where(onde)
-        .orderBy(
-          terminada,
-          desc(auditorias.dataInicio),
-          desc(auditorias.numero),
-        )
+        .orderBy(...ordenacao)
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db.select({ total: count() }).from(auditorias).where(onde),

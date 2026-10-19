@@ -3,6 +3,7 @@ import type { ClientProxy } from '@nestjs/microservices';
 import {
   and,
   count,
+  asc,
   desc,
   eq,
   ilike,
@@ -86,12 +87,21 @@ export class AcidentesService {
     }
     const onde = and(...condicoes);
     const hoje = hojeEmBrasilia();
+    const colunas = {
+      numero: acidentes.numero,
+      data: acidentes.data,
+      tipo: acidentes.tipo,
+      status: acidentes.status,
+    } as const;
+    const ordenacao = f.ordenar
+      ? [f.ordem === 'asc' ? asc(colunas[f.ordenar]) : desc(colunas[f.ordenar])]
+      : [desc(acidentes.data), desc(acidentes.numero)];
     const [linhas, [{ total }]] = await Promise.all([
       this.db
         .select()
         .from(acidentes)
         .where(onde)
-        .orderBy(desc(acidentes.data), desc(acidentes.numero))
+        .orderBy(...ordenacao)
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db.select({ total: count() }).from(acidentes).where(onde),

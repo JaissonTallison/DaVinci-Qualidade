@@ -64,15 +64,25 @@ export class CalibracaoService {
           !termo ||
           i.tag.toLocaleLowerCase('pt-BR').includes(termo) ||
           i.descricao.toLocaleLowerCase('pt-BR').includes(termo),
-      )
-      .sort(
-        (a, b) =>
-          PRIORIDADE[a.situacao] - PRIORIDADE[b.situacao] ||
-          (a.proximaCalibracao ?? '').localeCompare(
-            b.proximaCalibracao ?? '',
-          ) ||
-          a.tag.localeCompare(b.tag),
       );
+    const dir = f.ordem === 'desc' ? -1 : 1;
+    filtrados.sort((a, b) => {
+      if (!f.ordenar)
+        // Padrão: o que pede atenção primeiro, pela próxima calibração, depois pela TAG
+        return (
+          PRIORIDADE[a.situacao] - PRIORIDADE[b.situacao] ||
+          (a.proximaCalibracao ?? '').localeCompare(b.proximaCalibracao ?? '') ||
+          a.tag.localeCompare(b.tag)
+        );
+      if (f.ordenar === 'situacao')
+        return (PRIORIDADE[a.situacao] - PRIORIDADE[b.situacao]) * dir;
+      return (
+        ((a[f.ordenar] ?? '') as string).localeCompare(
+          (b[f.ordenar] ?? '') as string,
+          'pt-BR',
+        ) * dir
+      );
+    });
     const inicio = (f.pagina - 1) * f.porPagina;
     return {
       itens: filtrados.slice(inicio, inicio + f.porPagina),

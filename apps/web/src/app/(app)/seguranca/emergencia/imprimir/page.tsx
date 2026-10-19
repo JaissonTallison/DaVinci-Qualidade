@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import {
   PAPEIS_NA_BRIGADA,
@@ -7,9 +6,9 @@ import {
   type DadosDoUsuario,
   type PlanoDeEmergencia,
 } from "@davinci/types";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { formatarData } from "@/lib/datas";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "Plano de emergência" };
 
@@ -22,27 +21,15 @@ export default async function PlanoImpresso() {
   ]);
   const p = plano.ok ? plano.dados : null;
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href="/seguranca/emergencia"
-          className="dv-voltar"
-        >
-          Voltar
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">Plano de emergência</p>
-        <h1 className="font-bold text-2xl">
-          {eu.ok ? eu.dados.empresa.nome : ""}
-        </h1>
-        {p && (
-          <p className="text-sm">
-            Revisado em {formatarData(p.revisadoEm.slice(0, 10))}
-          </p>
-        )}
-      </header>
+    <FolhaDeDocumento
+      tipo="Plano de emergência"
+      titulo={eu.ok ? eu.dados.empresa.nome : "Plano de emergência"}
+      subtitulo={
+        p ? `Revisado em ${formatarData(p.revisadoEm.slice(0, 10))}` : undefined
+      }
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref="/seguranca/emergencia"
+    >
       {!p ? (
         <p className="mt-6 text-base">Plano ainda não preenchido.</p>
       ) : (
@@ -84,7 +71,7 @@ export default async function PlanoImpresso() {
           </ul>
         </section>
       )}
-    </article>
+    </FolhaDeDocumento>
   );
 }
 

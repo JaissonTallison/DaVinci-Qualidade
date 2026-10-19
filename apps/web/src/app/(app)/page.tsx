@@ -401,7 +401,6 @@ function Anel({ valor }: { valor: number | null }) {
           r={r}
           fill="none"
           strokeWidth={15}
-          strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - v / 100)}
           className={`dv-anel ${cor}`}

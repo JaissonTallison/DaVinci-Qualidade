@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { NORMAS, type EvidenciaDaBiblioteca } from "@davinci/types";
+import {
+  NORMAS,
+  type DadosDoUsuario,
+  type EvidenciaDaBiblioteca,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { filtrosDaBiblioteca } from "../filtros";
 import { ListaDeEvidencias } from "../lista";
 
@@ -15,32 +19,23 @@ export default async function ImprimirBiblioteca({
 }: PageProps<"/auditorias/biblioteca/imprimir">) {
   const f = (await searchParams) as Record<string, string | undefined>;
   const filtro = filtrosDaBiblioteca(f);
-  const r = await chamarApi<EvidenciaDaBiblioteca[]>(
-    `/evidencias-de-auditoria?${filtro}`,
-  );
+  const [r, eu] = await Promise.all([
+    chamarApi<EvidenciaDaBiblioteca[]>(`/evidencias-de-auditoria?${filtro}`),
+    chamarApi<DadosDoUsuario>("/auth/eu"),
+  ]);
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/auditorias/biblioteca?${filtro}`}
-          className="dv-voltar"
-        >
-          Voltar à biblioteca
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <h1 className="font-bold text-2xl">
-          Evidências objetivas por cláusula
-        </h1>
-        <p className="mt-1 text-sm text-texto-2">
-          {f.norma ? NORMAS[f.norma as keyof typeof NORMAS] : "Todas as normas"}
-          {f.clausula && ` · cláusula ${f.clausula}`}
-          {f.busca && ` · "${f.busca}"`} · {r.dados.length} evidências
-        </p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Biblioteca de evidências"
+      titulo="Evidências objetivas por cláusula"
+      subtitulo={`${f.norma ? NORMAS[f.norma as keyof typeof NORMAS] : "Todas as normas"}${f.clausula ? ` · cláusula ${f.clausula}` : ""}${f.busca ? ` · "${f.busca}"` : ""} · ${r.dados.length} evidências`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/auditorias/biblioteca?${filtro}`}
+      voltarRotulo="Voltar à biblioteca"
+    >
       <ListaDeEvidencias evidencias={r.dados} impressao />
-    </article>
+    </FolhaDeDocumento>
   );
 }

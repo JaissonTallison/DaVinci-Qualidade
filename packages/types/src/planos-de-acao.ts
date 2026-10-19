@@ -134,6 +134,8 @@ export const filtroPlanosSchema = z.object({
     .union([z.boolean(), z.enum(['true', 'false'])])
     .optional()
     .transform((v) => v === true || v === 'true'),
+  ordenar: z.enum(['numero', 'titulo', 'origem', 'status']).optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
   pagina: z.coerce.number().int().min(1).default(1),
   porPagina: z.coerce
     .number()

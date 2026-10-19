@@ -89,12 +89,21 @@ export class PlanosDeAcaoService {
     }
     const onde = and(...condicoes);
     const terminado = sql`${planosAcao.status} IN ('encerrado', 'cancelado')`;
+    const colunas = {
+      numero: planosAcao.numero,
+      titulo: planosAcao.titulo,
+      origem: planosAcao.origem,
+      status: planosAcao.status,
+    } as const;
+    const ordenacao = f.ordenar
+      ? [f.ordem === 'asc' ? asc(colunas[f.ordenar]) : desc(colunas[f.ordenar])]
+      : [terminado, desc(planosAcao.numero)];
     const [linhas, [{ total }]] = await Promise.all([
       this.db
         .select()
         .from(planosAcao)
         .where(onde)
-        .orderBy(terminado, desc(planosAcao.numero))
+        .orderBy(...ordenacao)
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db.select({ total: count() }).from(planosAcao).where(onde),

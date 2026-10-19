@@ -171,6 +171,10 @@ export const filtroAuditoriasSchema = z.object({
   busca: opcional(z.string().trim().max(100, 'Use no máximo 100 caracteres.')),
   status: enumOpcional(STATUS_AUDITORIA, 'Status desconhecido.'),
   tipo: enumOpcional(TIPOS_AUDITORIA, 'Tipo desconhecido.'),
+  ordenar: z
+    .enum(['numero', 'auditorLider', 'dataInicio', 'status'])
+    .optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
   pagina: z.coerce.number().int().min(1).default(1),
   porPagina: z.coerce
     .number()

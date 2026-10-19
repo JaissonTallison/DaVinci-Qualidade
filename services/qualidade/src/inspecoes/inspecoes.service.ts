@@ -91,12 +91,22 @@ export class InspecoesService {
       );
     }
     const onde = and(...condicoes);
+    const colunas = {
+      numero: inspecoes.numero,
+      objeto: inspecoes.objeto,
+      tipo: inspecoes.tipo,
+      data: inspecoes.data,
+      status: inspecoes.status,
+    } as const;
+    const ordenacao = f.ordenar
+      ? [f.ordem === 'asc' ? asc(colunas[f.ordenar]) : desc(colunas[f.ordenar])]
+      : [desc(inspecoes.data), desc(inspecoes.numero)];
     const [linhas, [{ total }]] = await Promise.all([
       this.db
         .select()
         .from(inspecoes)
         .where(onde)
-        .orderBy(desc(inspecoes.data), desc(inspecoes.numero))
+        .orderBy(...ordenacao)
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db.select({ total: count() }).from(inspecoes).where(onde),

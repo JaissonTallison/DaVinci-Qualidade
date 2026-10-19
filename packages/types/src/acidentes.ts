@@ -118,6 +118,8 @@ export const filtroAcidentesSchema = z.object({
   busca: opcional(z.string().trim().max(100, 'Use no máximo 100 caracteres.')),
   tipo: enumOpcional(TIPOS_ACIDENTE, 'Tipo desconhecido.'),
   status: enumOpcional(STATUS_ACIDENTE, 'Status desconhecido.'),
+  ordenar: z.enum(['numero', 'data', 'tipo', 'status']).optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
   pagina: z.coerce.number().int().min(1).default(1),
   porPagina: z.coerce
     .number()
