@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   MOTIVOS_ENTREGA,
@@ -9,7 +8,7 @@ import {
   type Pagina,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
@@ -33,27 +32,23 @@ export default async function FichaDeEpi({
   const lista = entregas.ok
     ? entregas.dados.itens.filter((e) => !e.motivoAnulacao)
     : [];
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/cadastros/funcionarios/${id}`}
-          className="dv-voltar"
-        >
-          Voltar ao funcionário
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">
-          Ficha de entrega de equipamento de proteção individual · NR-6
-        </p>
-        <h1 className="font-bold text-2xl">{f.nome}</h1>
-        <p className="text-sm">
-          {eu.ok ? eu.dados.empresa.nome : ""} · Matrícula {f.matricula} ·{" "}
-          {f.funcaoNome} · {f.setorNome}
-        </p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Ficha de entrega de EPI · NR-6"
+      titulo={f.nome}
+      subtitulo={`Matrícula ${f.matricula} · ${f.funcaoNome} · ${f.setorNome}`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/cadastros/funcionarios/${id}`}
+      voltarRotulo="Voltar ao funcionário"
+      assinaturas={[
+        { papel: "Funcionário", nome: f.nome },
+        {
+          papel: `Responsável pela entrega · ${formatarData(hojeEmBrasilia())}`,
+        },
+      ]}
+    >
       <table className="mt-4 w-full text-sm">
         <thead>
           <tr className="border-b border-borda-forte text-left">
@@ -94,12 +89,6 @@ export default async function FichaDeEpi({
         torne impróprios e a devolvê-los quando solicitado ou no desligamento
         (NR-6, item 6.7.1).
       </p>
-      <section className="mt-14 grid grid-cols-2 gap-10 text-sm break-inside-avoid">
-        <div className="border-t border-texto pt-1 text-center">{f.nome}</div>
-        <div className="border-t border-texto pt-1 text-center">
-          Responsável pela entrega · {formatarData(hojeEmBrasilia())}
-        </div>
-      </section>
-    </article>
+    </FolhaDeDocumento>
   );
 }

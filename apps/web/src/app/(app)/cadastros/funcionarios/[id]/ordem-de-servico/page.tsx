@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import type {
@@ -9,7 +8,7 @@ import type {
   RequisitoDaFuncao,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
@@ -37,26 +36,23 @@ export default async function OrdemDeServico({
   const ordem = o.ok ? o.dados : null;
   const empresa = eu.ok ? eu.dados.empresa.nome : "";
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/cadastros/funcionarios/${id}`}
-          className="dv-voltar"
-        >
-          Voltar ao funcionário
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">
-          Ordem de serviço de segurança e saúde no trabalho · NR-1, item 1.4.1,
-          alínea c
-        </p>
-        <h1 className="font-bold text-2xl">{f.nome}</h1>
-        <p className="text-sm">
-          {empresa} · Matrícula {f.matricula} · {f.funcaoNome} · {f.setorNome}
-        </p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Ordem de serviço de SST · NR-1, 1.4.1 c"
+      titulo={f.nome}
+      subtitulo={`Matrícula ${f.matricula} · ${f.funcaoNome} · ${f.setorNome}`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/cadastros/funcionarios/${id}`}
+      voltarRotulo="Voltar ao funcionário"
+      assinaturas={
+        ordem
+          ? [
+              { papel: "Funcionário", nome: f.nome },
+              { papel: "Responsável pela empresa" },
+            ]
+          : undefined
+      }
+    >
       {!ordem ? (
         <p className="mt-6 text-base">
           A ordem de serviço desta função ainda não foi preenchida (Cadastros ›
@@ -110,21 +106,12 @@ export default async function OrdemDeServico({
             cumpri-la. O descumprimento injustificado constitui ato faltoso
             (CLT, art. 158).
           </p>
-          <section className="mt-14 grid grid-cols-2 gap-10 text-sm break-inside-avoid">
-            <div className="border-t border-texto pt-1 text-center">
-              {f.nome}
-            </div>
-            <div className="border-t border-texto pt-1 text-center">
-              Responsável pela empresa
-            </div>
-          </section>
           <p className="mt-4 text-xs text-texto-2">
-            Emitida em {formatarData(hojeEmBrasilia())} · revisada em{" "}
-            {formatarData(ordem.revisadaEm.slice(0, 10))}
+            Ordem revisada em {formatarData(ordem.revisadaEm.slice(0, 10))}.
           </p>
         </>
       )}
-    </article>
+    </FolhaDeDocumento>
   );
 }
 

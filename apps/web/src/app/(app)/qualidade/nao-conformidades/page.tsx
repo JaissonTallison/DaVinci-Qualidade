@@ -1,8 +1,20 @@
-import { ListFilter } from "lucide-react";
-import { Pendencias } from "@/components/pendencias";
+import { ClipboardList, ListFilter } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
+import { BotaoExportar } from "@/components/botao-exportar";
+import { BuscasSalvas } from "@/components/buscas-salvas";
+import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
+import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
+import { EstadoVazio } from "@/components/estado-vazio";
 import { IconeDaTela } from "@/components/icones-do-menu";
+import { Paginacao } from "@/components/paginacao";
+import {
+  BarraDeSelecao,
+  CaixaDeSelecao,
+  CaixaSelecionarTodos,
+  SelecaoDeLinhas,
+} from "@/components/selecao-de-linhas";
 import {
   GRAVIDADES_NC,
   ORIGENS_NC,
@@ -10,7 +22,6 @@ import {
   type DadosDoUsuario,
   type NaoConformidadeResumo,
   type Pagina,
-  type ResumoNcs,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
@@ -22,19 +33,24 @@ import {
   botaoSecundario,
   campoCompacto,
   painel,
+  subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
 
 export const metadata: Metadata = { title: "Não conformidades" };
 
+const BASE = "/qualidade/nao-conformidades";
 const FILTROS = [
   "busca",
   "status",
   "gravidade",
   "origem",
   "vencidas",
+  "ordenar",
+  "ordem",
   "pagina",
 ] as const;
+const NAO_FILTRAM = new Set(["ordenar", "ordem", "pagina"]);
 
 export default async function ListaDeNcs({
   searchParams,
@@ -44,40 +60,61 @@ export default async function ListaDeNcs({
   >;
   const consulta = new URLSearchParams();
   for (const f of FILTROS) if (params[f]) consulta.set(f, params[f]!);
-  const [lista, resumo, eu] = await Promise.all([
-    chamarApi<Pagina<NaoConformidadeResumo>>(`/nao-conformidades?${consulta}`),
-    chamarApi<ResumoNcs>("/nao-conformidades/resumo"),
+  const [lista, eu] = await Promise.all([
+    chamarApi<Pagina<NaoConformidadeResumo>>(`${BASE}?${consulta}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
   ]);
   const podeAbrir = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
-  const filtrando = FILTROS.some((f) => f !== "pagina" && params[f]);
+  const filtrando = FILTROS.some((f) => !NAO_FILTRAM.has(f) && params[f]);
+  const ordenar = params.ordenar;
+  const ordem = params.ordem as Ordem | undefined;
+
+  const semFiltro = (nome: string) => {
+    const q = new URLSearchParams(consulta);
+    q.delete(nome);
+    q.delete("pagina");
+    const s = q.toString();
+    return s ? `${BASE}?${s}` : BASE;
+  };
+  const chips: ChipDeFiltro[] = [];
+  if (params.busca)
+    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+  if (params.status)
+    chips.push({
+      rotulo: "Status",
+      valor: STATUS_NC[params.status as keyof typeof STATUS_NC] ?? params.status,
+      href: semFiltro("status"),
+    });
+  if (params.gravidade)
+    chips.push({
+      rotulo: "Gravidade",
+      valor:
+        GRAVIDADES_NC[params.gravidade as keyof typeof GRAVIDADES_NC] ??
+        params.gravidade,
+      href: semFiltro("gravidade"),
+    });
+  if (params.origem)
+    chips.push({
+      rotulo: "Origem",
+      valor: ORIGENS_NC[params.origem as keyof typeof ORIGENS_NC] ?? params.origem,
+      href: semFiltro("origem"),
+    });
+  if (params.vencidas === "true")
+    chips.push({ rotulo: "Prazo", valor: "Só vencidas", href: semFiltro("vencidas") });
 
   return (
     <>
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Não conformidades</h1>
-          {resumo.ok && (
-            <Pendencias
-              itens={[
-                { valor: resumo.dados.abertas, rotulo: "em aberto" },
-                {
-                  valor: resumo.dados.vencidas,
-                  rotulo: "vencidas",
-                  singular: "vencida",
-                  alerta: true,
-                },
-                { valor: resumo.dados.graves, rotulo: "altas ou críticas" },
-              ]}
-            />
-          )}
+          <p className={subtituloDaPagina}>
+            Não conformidades registradas e o andamento do tratamento de cada
+            uma.
+          </p>
         </div>
         {podeAbrir && (
-          <Link
-            href="/qualidade/nao-conformidades/nova"
-            className={botaoPrimario}
-          >
-            <IconeDaTela href={"/qualidade/nao-conformidades/nova"} />
+          <Link href={`${BASE}/nova`} className={botaoPrimario}>
+            <IconeDaTela href={`${BASE}/nova`} />
             Abrir NC
           </Link>
         )}
@@ -127,142 +164,197 @@ export default async function ListaDeNcs({
             <ListFilter aria-hidden size={16} strokeWidth={2} />
             Filtrar
           </button>
+          <BotaoExportar recurso="nao-conformidades" consulta={consulta} />
           {filtrando && (
-            <Link
-              href="/qualidade/nao-conformidades"
-              className="h-9 content-center dv-voltar"
-            >
+            <Link href={BASE} className="h-9 content-center dv-voltar">
               Limpar filtros
             </Link>
           )}
         </form>
+
+        <ChipsDeFiltro itens={chips} />
+        <BuscasSalvas />
 
         {!lista.ok ? (
           <div className="p-4">
             <AvisoDeErro erro={lista.erro} />
           </div>
         ) : lista.dados.itens.length === 0 ? (
-          <p className="px-4 py-8 text-base text-texto-2">
-            {filtrando
-              ? "Nenhuma NC com esses filtros."
-              : "Nenhuma não conformidade registrada. Quando uma inspeção, auditoria ou reclamação apontar um problema, abra a NC aqui."}
-          </p>
+          <EstadoVazio
+            icone={<ClipboardList aria-hidden size={40} strokeWidth={1.5} />}
+            titulo={
+              filtrando
+                ? "Nenhuma NC com esses filtros."
+                : "Nenhuma não conformidade registrada."
+            }
+            descricao={
+              filtrando
+                ? "Ajuste ou limpe os filtros para ver mais registros."
+                : "Quando uma inspeção, auditoria ou reclamação apontar um problema, abra a NC aqui."
+            }
+            acao={
+              filtrando ? (
+                <Link href={BASE} className={botaoSecundario}>
+                  Limpar filtros
+                </Link>
+              ) : podeAbrir ? (
+                <Link href={`${BASE}/nova`} className={botaoPrimario}>
+                  <IconeDaTela href={`${BASE}/nova`} />
+                  Abrir a primeira NC
+                </Link>
+              ) : undefined
+            }
+          />
         ) : (
-          <Tabela pagina={lista.dados} consulta={consulta} />
+          <SelecaoDeLinhas>
+            <div className="relative overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-superficie-2 text-sm text-texto-2">
+                  <tr>
+                    <th className="w-10 px-3 py-2">
+                      <CaixaSelecionarTodos
+                        ids={lista.dados.itens.map((i) => i.id)}
+                      />
+                    </th>
+                    <ThOrdenavel
+                      campo="numero"
+                      ordenar={ordenar}
+                      ordem={ordem}
+                      base={BASE}
+                      consulta={consulta}
+                    >
+                      Número
+                    </ThOrdenavel>
+                    <ThOrdenavel
+                      campo="titulo"
+                      ordenar={ordenar}
+                      ordem={ordem}
+                      base={BASE}
+                      consulta={consulta}
+                    >
+                      Título
+                    </ThOrdenavel>
+                    <ThOrdenavel
+                      campo="origem"
+                      ordenar={ordenar}
+                      ordem={ordem}
+                      base={BASE}
+                      consulta={consulta}
+                    >
+                      Origem
+                    </ThOrdenavel>
+                    <th className="px-4 py-2 font-semibold">Gravidade</th>
+                    <th className="px-4 py-2 font-semibold">Responsável</th>
+                    <ThOrdenavel
+                      campo="prazo"
+                      ordenar={ordenar}
+                      ordem={ordem}
+                      base={BASE}
+                      consulta={consulta}
+                    >
+                      Prazo
+                    </ThOrdenavel>
+                    <ThOrdenavel
+                      campo="status"
+                      ordenar={ordenar}
+                      ordem={ordem}
+                      base={BASE}
+                      consulta={consulta}
+                    >
+                      Status
+                    </ThOrdenavel>
+                    <th className="w-10 px-2 py-2" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-borda">
+                  {lista.dados.itens.map((nc) => {
+                    const terminada =
+                      nc.status === "encerrada" || nc.status === "cancelada";
+                    return (
+                      <tr key={nc.id} className="relative hover:bg-campo">
+                        <td className="relative z-10 px-3 py-2">
+                          <CaixaDeSelecao
+                            id={nc.id}
+                            rotulo={`Selecionar a NC ${nc.numero}`}
+                          />
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap">
+                          <Link
+                            href={`${BASE}/${nc.id}`}
+                            aria-label={`Abrir a NC ${nc.numero}`}
+                            className="font-mono text-sm font-medium text-info after:absolute after:inset-0 after:content-[''] hover:underline"
+                          >
+                            {nc.numero}
+                          </Link>
+                        </td>
+                        <td className="max-w-md px-4 py-2">
+                          <span className="line-clamp-2">{nc.titulo}</span>
+                          {nc.ciclos >= 2 && (
+                            <span className="text-xs text-atencao">
+                              Reincidente: {nc.ciclos}º ciclo
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                          {ORIGENS_NC[nc.origem]}
+                        </td>
+                        <td className="px-4 py-2">
+                          <GravidadeDaNc gravidade={nc.gravidade} />
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                          {nc.responsavel}
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap">
+                          {formatarData(nc.prazo)}
+                          {!terminada && (
+                            <span
+                              className={`block text-xs ${nc.vencida ? "text-nao-conforme" : "text-texto-3"}`}
+                            >
+                              {prazoRelativo(nc.prazo)}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-2">
+                          <StatusDaNc
+                            status={nc.status}
+                            vencida={nc.vencida}
+                            prazo={nc.prazo}
+                          />
+                        </td>
+                        <td className="relative z-10 px-2 py-2 text-right">
+                          <AcoesDaLinha rotulo={`Ações da NC ${nc.numero}`}>
+                            <Link href={`${BASE}/${nc.id}`} className={itemDeAcao}>
+                              Abrir
+                            </Link>
+                            <a
+                              href={`${BASE}/${nc.id}`}
+                              target="_blank"
+                              rel="noopener"
+                              className={itemDeAcao}
+                            >
+                              Abrir em nova aba
+                            </a>
+                          </AcoesDaLinha>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <Paginacao
+              pagina={lista.dados}
+              base={BASE}
+              consulta={consulta}
+              rotulo={["NC", "NCs"]}
+            />
+            <BarraDeSelecao
+              recurso="nao-conformidades"
+              rotulo={["NC selecionada", "NCs selecionadas"]}
+            />
+          </SelecaoDeLinhas>
         )}
       </section>
-    </>
-  );
-}
-
-function Tabela({
-  pagina,
-  consulta,
-}: {
-  pagina: Pagina<NaoConformidadeResumo>;
-  consulta: URLSearchParams;
-}) {
-  const paginas = Math.max(1, Math.ceil(pagina.total / pagina.porPagina));
-  const link = (n: number) => {
-    const q = new URLSearchParams(consulta);
-    q.set("pagina", String(n));
-    return `/qualidade/nao-conformidades?${q}`;
-  };
-  return (
-    <>
-      <div className="relative overflow-x-auto">
-        <table className="w-full text-left">
-          <thead className="bg-superficie-2 text-sm text-texto-2">
-            <tr>
-              <th className="px-4 py-2 font-semibold">Número</th>
-              <th className="px-4 py-2 font-semibold">Título</th>
-              <th className="px-4 py-2 font-semibold">Origem</th>
-              <th className="px-4 py-2 font-semibold">Gravidade</th>
-              <th className="px-4 py-2 font-semibold">Responsável</th>
-              <th className="px-4 py-2 font-semibold">Prazo</th>
-              <th className="px-4 py-2 font-semibold">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-borda">
-            {pagina.itens.map((nc) => {
-              const terminada =
-                nc.status === "encerrada" || nc.status === "cancelada";
-              return (
-                <tr key={nc.id} className="">
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <Link
-                      href={`/qualidade/nao-conformidades/${nc.id}`}
-                      className="font-mono text-sm font-medium text-info hover:underline"
-                    >
-                      {nc.numero}
-                    </Link>
-                  </td>
-                  <td className="max-w-md px-4 py-2">
-                    <span className="line-clamp-2">{nc.titulo}</span>
-                    {nc.ciclos >= 2 && (
-                      <span className="text-xs text-atencao">
-                        Reincidente: {nc.ciclos}º ciclo
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-texto-2">
-                    {ORIGENS_NC[nc.origem]}
-                  </td>
-                  <td className="px-4 py-2">
-                    <GravidadeDaNc gravidade={nc.gravidade} />
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-texto-2">
-                    {nc.responsavel}
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    {formatarData(nc.prazo)}
-                    {!terminada && (
-                      <span
-                        className={`block text-xs ${nc.vencida ? "text-nao-conforme" : "text-texto-3"}`}
-                      >
-                        {prazoRelativo(nc.prazo)}
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-2">
-                    <StatusDaNc
-                      status={nc.status}
-                      vencida={nc.vencida}
-                      prazo={nc.prazo}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <nav
-        aria-label="Páginas"
-        className="flex items-center justify-between border-t border-borda px-4 py-2.5 text-sm text-texto-2"
-      >
-        <span>
-          {pagina.total.toLocaleString("pt-BR")}{" "}
-          {pagina.total === 1 ? "NC" : "NCs"}
-        </span>
-        {paginas > 1 && (
-          <span className="flex items-center gap-4">
-            {pagina.pagina > 1 && (
-              <Link href={link(pagina.pagina - 1)} className="hover:underline">
-                Anterior
-              </Link>
-            )}
-            <span>
-              Página {pagina.pagina} de {paginas}
-            </span>
-            {pagina.pagina < paginas && (
-              <Link href={link(pagina.pagina + 1)} className="hover:underline">
-                Próxima
-              </Link>
-            )}
-          </span>
-        )}
-      </nav>
     </>
   );
 }

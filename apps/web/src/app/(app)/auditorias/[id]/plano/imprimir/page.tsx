@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -9,11 +8,12 @@ import {
   TIPOS_AUDITORIA,
   criteriosSugeridos,
   type Auditoria,
+  type DadosDoUsuario,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { formatarData } from "@/lib/datas";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "Plano de auditoria" };
 
@@ -22,35 +22,33 @@ export default async function PlanoImpresso({
   params,
 }: PageProps<"/auditorias/[id]/plano/imprimir">) {
   const { id } = await params;
-  const a = await chamarApi<Auditoria>(`/auditorias/${id}`);
+  const [a, eu] = await Promise.all([
+    chamarApi<Auditoria>(`/auditorias/${id}`),
+    chamarApi<DadosDoUsuario>("/auth/eu"),
+  ]);
   if (!a.ok && a.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!a.ok) return <AvisoDeErro erro={a.erro} />;
   const aud = a.dados;
   const p = aud.plano;
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/auditorias/${id}/plano`}
-          className="dv-voltar"
-        >
-          Voltar ao plano
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">
-          Plano de auditoria · {aud.numero}
-        </p>
-        <h1 className="font-bold text-2xl">
-          {p.empresaAuditada ?? "Organização auditada"}
-        </h1>
-        <p className="mt-1 text-sm">
-          Auditoria {TIPOS_AUDITORIA[aud.tipo].toLowerCase()} ·{" "}
-          {aud.normas.map((n) => NORMAS[n]).join(", ")}
-          {p.unidade && ` · ${p.unidade}`}
-        </p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Plano de auditoria"
+      numero={aud.numero}
+      titulo={p.empresaAuditada ?? "Organização auditada"}
+      subtitulo={`Auditoria ${TIPOS_AUDITORIA[aud.tipo].toLowerCase()} · ${aud.normas
+        .map((n) => NORMAS[n])
+        .join(", ")}${p.unidade ? ` · ${p.unidade}` : ""}`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/auditorias/${id}/plano`}
+      voltarRotulo="Voltar ao plano"
+      assinaturas={[
+        { papel: "Auditor líder", nome: aud.auditorLider },
+        { papel: "Representante do auditado", nome: aud.representante },
+        ...(p.emissor ? [{ papel: "Emitido por", nome: p.emissor }] : []),
+      ]}
+    >
       <dl className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-4">
         <Dado rotulo="Período">
           {aud.dataInicio === aud.dataFim
@@ -142,20 +140,7 @@ export default async function PlanoImpresso({
           </dl>
         </section>
       )}
-      <section className="mt-12 grid grid-cols-2 gap-10 text-sm break-inside-avoid">
-        {[
-          `Auditor líder: ${aud.auditorLider}`,
-          `Representante do auditado${aud.representante ? `: ${aud.representante}` : ""}`,
-        ].map((t) => (
-          <div key={t} className="border-t border-texto pt-1 text-center">
-            {t}
-          </div>
-        ))}
-      </section>
-      {p.emissor && (
-        <p className="mt-6 text-xs text-texto-2">Emitido por {p.emissor}.</p>
-      )}
-    </article>
+    </FolhaDeDocumento>
   );
 }
 

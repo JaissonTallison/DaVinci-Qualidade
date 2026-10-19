@@ -159,6 +159,10 @@ export const filtroInspecoesSchema = z.object({
   busca: opcional(z.string().trim().max(100, 'Use no máximo 100 caracteres.')),
   status: enumOpcional(STATUS_INSPECAO, 'Status desconhecido.'),
   tipo: enumOpcional(TIPOS_INSPECAO, 'Tipo desconhecido.'),
+  ordenar: z
+    .enum(['numero', 'objeto', 'tipo', 'data', 'status'])
+    .optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
   pagina: z.coerce.number().int().min(1).default(1),
   porPagina: z.coerce
     .number()

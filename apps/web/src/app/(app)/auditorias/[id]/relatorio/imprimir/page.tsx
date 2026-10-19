@@ -18,6 +18,7 @@ import {
   indiceDeConformidade,
   resultadoDaAuditoria,
   type Auditoria,
+  type DadosDoUsuario,
   type KitPreAuditoria,
   type NaoConformidade,
   type Pagina,
@@ -25,9 +26,9 @@ import {
   type RoteiroDaAuditoria,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { formatarData } from "@/lib/datas";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { BarrasDeConformidade, agrupar } from "../barras";
 
 export const metadata: Metadata = { title: "Relatório de auditoria" };
@@ -43,11 +44,14 @@ export default async function RelatorioImpresso({
   const { id } = await params;
   const { modelo } = (await searchParams) as { modelo?: string };
   const executivo = modelo === "executivo";
-  const [a, r, k] = await Promise.all([
+  const [a, r, k, eu] = await Promise.all([
     chamarApi<Auditoria>(`/auditorias/${id}`),
     chamarApi<RoteiroDaAuditoria>(`/auditorias/${id}/roteiro`),
     chamarApi<KitPreAuditoria>(`/auditorias/${id}/kit`),
+    chamarApi<DadosDoUsuario>("/auth/eu"),
   ]);
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
+  const emitidoEm = formatarData(hojeEmBrasilia());
   if (!a.ok && a.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!a.ok) return <AvisoDeErro erro={a.erro} />;
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
@@ -79,47 +83,40 @@ export default async function RelatorioImpresso({
       ? formatarData(aud.dataInicio)
       : `${formatarData(aud.dataInicio)} a ${formatarData(aud.dataFim)}`;
 
-  return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
+  const nav = (
+    <nav aria-label="Modelo" className="flex gap-1.5 text-sm">
+      {(["classico", "executivo"] as const).map((m) => (
         <Link
-          href={`/auditorias/${id}/relatorio`}
-          className="dv-voltar"
+          key={m}
+          href={`?modelo=${m}`}
+          aria-current={(m === "executivo") === executivo ? "page" : undefined}
+          className={`rounded-sm px-2 py-1 ${(m === "executivo") === executivo ? "bg-superficie-2 font-semibold" : "text-texto-2"}`}
         >
-          Voltar ao relatório
+          {m === "classico" ? "Clássico" : "Executivo"}
         </Link>
-        <nav aria-label="Modelo" className="flex gap-1.5 text-sm">
-          {(["classico", "executivo"] as const).map((m) => (
-            <Link
-              key={m}
-              href={`?modelo=${m}`}
-              aria-current={
-                (m === "executivo") === executivo ? "page" : undefined
-              }
-              className={`rounded-sm px-2 py-1 ${(m === "executivo") === executivo ? "bg-superficie-2 font-semibold" : "text-texto-2"}`}
-            >
-              {m === "classico" ? "Clássico" : "Executivo"}
-            </Link>
-          ))}
-        </nav>
-        <BotaoImprimir />
-      </div>
+      ))}
+    </nav>
+  );
 
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">
-          Relatório de auditoria{executivo ? " · resumo executivo" : ""} ·{" "}
-          {aud.numero}
-        </p>
-        <h1 className="font-bold text-2xl">
-          {p.empresaAuditada ?? "Organização auditada"}
-        </h1>
-        <p className="mt-1 text-sm">
-          Auditoria {TIPOS_AUDITORIA[aud.tipo].toLowerCase()} ·{" "}
-          {aud.normas.map((n) => NORMAS[n]).join(", ")}
-          {p.unidade && ` · ${p.unidade}`} · {periodo}
-        </p>
-      </header>
-
+  return (
+    <FolhaDeDocumento
+      tipo={`Relatório de auditoria${executivo ? " · resumo executivo" : ""}`}
+      numero={aud.numero}
+      titulo={p.empresaAuditada ?? "Organização auditada"}
+      subtitulo={`Auditoria ${TIPOS_AUDITORIA[aud.tipo].toLowerCase()} · ${aud.normas
+        .map((n) => NORMAS[n])
+        .join(", ")}${p.unidade ? ` · ${p.unidade}` : ""} · ${periodo}`}
+      empresa={empresa}
+      emitidoEm={emitidoEm}
+      voltarHref={`/auditorias/${id}/relatorio`}
+      voltarRotulo="Voltar ao relatório"
+      acoes={nav}
+      assinaturas={[
+        { papel: "Auditor líder", nome: aud.auditorLider },
+        { papel: "Representante do auditado", nome: aud.representante },
+        ...(p.emissor ? [{ papel: "Emitido por", nome: p.emissor }] : []),
+      ]}
+    >
       <section className="mt-4 grid grid-cols-3 gap-4 border-b border-borda pb-4 text-sm">
         <div>
           <p className="text-xs text-texto-2">Índice de conformidade</p>
@@ -354,20 +351,7 @@ export default async function RelatorioImpresso({
         </section>
       )}
 
-      <section className="mt-12 grid grid-cols-2 gap-10 text-sm break-inside-avoid">
-        {[
-          `Auditor líder: ${aud.auditorLider}`,
-          `Representante do auditado${aud.representante ? `: ${aud.representante}` : ""}`,
-        ].map((t) => (
-          <div key={t} className="border-t border-texto pt-1 text-center">
-            {t}
-          </div>
-        ))}
-      </section>
-      {p.emissor && (
-        <p className="mt-6 text-xs text-texto-2">Emitido por {p.emissor}.</p>
-      )}
-    </article>
+    </FolhaDeDocumento>
   );
 }
 

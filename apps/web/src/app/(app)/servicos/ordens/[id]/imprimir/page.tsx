@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
   STATUS_DO_PASSO,
   STATUS_OS,
+  type DadosDoUsuario,
   type OrdemDeServico,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { formatarData, formatarMomento } from "@/lib/datas";
+import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "Relatório da OS" };
 
@@ -19,32 +19,32 @@ export default async function RelatorioDaOs({
   params,
 }: PageProps<"/servicos/ordens/[id]/imprimir">) {
   const { id } = await params;
-  const r = await chamarApi<OrdemDeServico>(`/ordens-de-servico/${id}`);
+  const [r, eu] = await Promise.all([
+    chamarApi<OrdemDeServico>(`/ordens-de-servico/${id}`),
+    chamarApi<DadosDoUsuario>("/auth/eu"),
+  ]);
   if (!r.ok && r.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const o = r.dados;
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/servicos/ordens/${id}`}
-          className="dv-voltar"
-        >
-          Voltar à OS
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">
-          Relatório de ordem de serviço · {o.numero} · {STATUS_OS[o.status]}
-        </p>
-        <h1 className="font-bold text-2xl">{o.titulo}</h1>
-        <p className="mt-1 text-sm">
-          Cliente: {o.clienteNome}
-          {o.contratoNumero && ` · Contrato ${o.contratoNumero}`} · Prazo{" "}
-          {formatarData(o.prazo)}
-        </p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Relatório de ordem de serviço"
+      numero={`${o.numero} · ${STATUS_OS[o.status]}`}
+      titulo={o.titulo}
+      subtitulo={`Cliente: ${o.clienteNome}${o.contratoNumero ? ` · Contrato ${o.contratoNumero}` : ""} · Prazo ${formatarData(o.prazo)}`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/servicos/ordens/${id}`}
+      voltarRotulo="Voltar à OS"
+      assinaturas={[
+        { papel: "Responsável técnico", nome: o.responsavel },
+        {
+          papel: "Aceite do cliente · data ___/___/______",
+          nome: o.recebidoPor,
+        },
+      ]}
+    >
       <dl className="mt-4 grid grid-cols-2 gap-x-8 gap-y-2 text-sm sm:grid-cols-4">
         <Dado rotulo="Responsável">{o.responsavel}</Dado>
         <Dado rotulo="Início">
@@ -122,16 +122,7 @@ export default async function RelatorioDaOs({
       {o.relatorio && (
         <Secao titulo="Relatório do que foi feito">{o.relatorio}</Secao>
       )}
-      <section className="mt-14 grid grid-cols-2 gap-10 text-sm break-inside-avoid">
-        <div className="border-t border-texto pt-1 text-center">
-          Responsável técnico: {o.responsavel}
-        </div>
-        <div className="border-t border-texto pt-1 text-center">
-          Aceite do cliente{o.recebidoPor ? `: ${o.recebidoPor}` : ""} · data
-          ____/____/______
-        </div>
-      </section>
-    </article>
+    </FolhaDeDocumento>
   );
 }
 

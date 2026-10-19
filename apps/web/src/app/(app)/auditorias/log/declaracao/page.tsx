@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   NORMAS,
   PAPEIS_DO_AUDITOR,
@@ -8,7 +7,7 @@ import {
   type LogDoAuditor,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
@@ -52,24 +51,18 @@ export default async function Declaracao({
   };
   const empresa = eu.ok ? eu.dados.empresa.nome : "";
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/auditorias/log?auditor=${encodeURIComponent(auditor)}`}
-          className="dv-voltar"
-        >
-          Voltar ao log
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <h1 className="font-bold text-2xl">
-          Declaração de experiência em auditoria
-        </h1>
-        <p className="mt-1 text-sm text-texto-2">
-          Emitida em {formatarData(hojeEmBrasilia())}
-        </p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Declaração de experiência"
+      titulo="Declaração de experiência em auditoria"
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/auditorias/log?auditor=${encodeURIComponent(auditor)}`}
+      voltarRotulo="Voltar ao log"
+      assinaturas={[
+        { papel: "Responsável pela declaração", nome: empresa },
+        { papel: "Declarante", nome: (nome || log.auditor).trim() },
+      ]}
+    >
       <p className="mt-5 max-w-[72ch] text-base">
         Declaramos que <strong>{(nome || log.auditor).trim()}</strong>{" "}
         participou das auditorias de sistemas de gestão relacionadas abaixo,
@@ -125,14 +118,6 @@ export default async function Declaracao({
           Organizações anonimizadas a pedido do declarante.
         </p>
       )}
-      <section className="mt-16 grid grid-cols-2 gap-10 text-sm break-inside-avoid">
-        <div className="border-t border-texto pt-1 text-center">
-          Responsável pela declaração{empresa && ` · ${empresa}`}
-        </div>
-        <div className="border-t border-texto pt-1 text-center">
-          {(nome || log.auditor).trim()}
-        </div>
-      </section>
-    </article>
+    </FolhaDeDocumento>
   );
 }

@@ -84,16 +84,22 @@ export class NaoConformidadesService {
     const onde = and(...condicoes);
     // As que ainda pedem trabalho primeiro, pelo prazo mais próximo; depois as terminadas, mais recentes primeiro
     const terminada = sql`${naoConformidades.status} IN ('encerrada', 'cancelada')`;
+    const colunas = {
+      numero: naoConformidades.numero,
+      titulo: naoConformidades.titulo,
+      prazo: naoConformidades.prazo,
+      status: naoConformidades.status,
+      origem: naoConformidades.origem,
+    } as const;
+    const ordenacao = f.ordenar
+      ? [f.ordem === 'asc' ? asc(colunas[f.ordenar]) : desc(colunas[f.ordenar])]
+      : [terminada, asc(naoConformidades.prazo), desc(naoConformidades.numero)];
     const [linhas, [{ total }]] = await Promise.all([
       this.db
         .select()
         .from(naoConformidades)
         .where(onde)
-        .orderBy(
-          terminada,
-          asc(naoConformidades.prazo),
-          desc(naoConformidades.numero),
-        )
+        .orderBy(...ordenacao)
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db.select({ total: count() }).from(naoConformidades).where(onde),

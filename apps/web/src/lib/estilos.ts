@@ -24,6 +24,8 @@ export const botaoLink =
 
 export const painel = "rounded-md border border-borda bg-superficie shadow-cartao";
 export const tituloDaPagina = "text-2xl text-texto";
+/** Linha abaixo do título da página: explica, em cinza, para que serve a tela. */
+export const subtituloDaPagina = "mt-1 text-sm text-texto-2";
 export const tituloDaSecao = "text-xl text-texto";
 
 /**

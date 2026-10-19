@@ -119,6 +119,10 @@ export const avaliarOsSchema = z.object({
 export const filtroOsSchema = z.object({
   status: enumOpcional(STATUS_OS, 'Status desconhecido.'),
   clienteId: opcional(z.uuid()),
+  ordenar: z
+    .enum(['numero', 'titulo', 'clienteNome', 'prazo', 'status'])
+    .optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
   pagina: z.coerce.number().int().min(1).default(1),
   porPagina: z.coerce
     .number()

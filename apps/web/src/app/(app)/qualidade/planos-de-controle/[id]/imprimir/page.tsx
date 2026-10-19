@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   FASES_DO_PLANO_DE_CONTROLE,
   TIPOS_DE_CARACTERISTICA,
+  type DadosDoUsuario,
   type PlanoDeControle,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { formatarMomento } from "@/lib/datas";
+import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "Plano de controle" };
 
@@ -18,10 +18,14 @@ export default async function PlanoDeControleImpresso({
   params,
 }: PageProps<"/qualidade/planos-de-controle/[id]/imprimir">) {
   const { id } = await params;
-  const r = await chamarApi<PlanoDeControle>(`/planos-de-controle/${id}`);
+  const [r, eu] = await Promise.all([
+    chamarApi<PlanoDeControle>(`/planos-de-controle/${id}`),
+    chamarApi<DadosDoUsuario>("/auth/eu"),
+  ]);
   if (!r.ok && r.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const p = r.dados;
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
   const cab = [
     "Etapa",
     "Máquina",
@@ -36,29 +40,17 @@ export default async function PlanoDeControleImpresso({
     "Reação",
   ];
   return (
-    <article className="bg-superficie">
-      <style>{"@page { size: A4 landscape; margin: 10mm; }"}</style>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/qualidade/planos-de-controle/${id}`}
-          className="dv-voltar"
-        >
-          Voltar ao plano
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-2">
-        <p className="text-sm text-texto-2">
-          Plano de controle · {FASES_DO_PLANO_DE_CONTROLE[p.fase]} · {p.numero}
-          {p.revisao && ` · rev. ${p.revisao}`}
-        </p>
-        <h1 className="font-bold text-xl">{p.titulo}</h1>
-        <p className="text-sm">
-          {p.item}
-          {p.fmeaNumero && ` · FMEA ${p.fmeaNumero}`} · Atualizado em{" "}
-          {formatarMomento(p.atualizadoEm)}
-        </p>
-      </header>
+    <FolhaDeDocumento
+      paisagem
+      tipo="Plano de controle"
+      numero={`${p.numero}${p.revisao ? ` · rev. ${p.revisao}` : ""}`}
+      titulo={p.titulo}
+      subtitulo={`${FASES_DO_PLANO_DE_CONTROLE[p.fase]} · ${p.item}${p.fmeaNumero ? ` · FMEA ${p.fmeaNumero}` : ""} · Atualizado em ${formatarMomento(p.atualizadoEm)}`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/qualidade/planos-de-controle/${id}`}
+      voltarRotulo="Voltar ao plano"
+    >
       <table className="mt-3 w-full border-collapse text-[10px] leading-tight">
         <thead>
           <tr>
@@ -96,6 +88,6 @@ export default async function PlanoDeControleImpresso({
           ))}
         </tbody>
       </table>
-    </article>
+    </FolhaDeDocumento>
   );
 }

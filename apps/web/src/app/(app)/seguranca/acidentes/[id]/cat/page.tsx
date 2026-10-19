@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -8,12 +7,13 @@ import {
   TIPOS_ACIDENTE,
   TIPOS_DE_ACIDENTE_ESOCIAL,
   type Acidente,
+  type DadosDoUsuario,
   type Funcionario,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { formatarData } from "@/lib/datas";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "CAT" };
 
@@ -24,41 +24,38 @@ export default async function CatImpressa({
   params,
 }: PageProps<"/seguranca/acidentes/[id]/cat">) {
   const { id } = await params;
-  const r = await chamarApi<Acidente>(`/acidentes/${id}`);
+  const [r, eu] = await Promise.all([
+    chamarApi<Acidente>(`/acidentes/${id}`),
+    chamarApi<DadosDoUsuario>("/auth/eu"),
+  ]);
   if (!r.ok && r.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const a = r.dados;
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
   const c = a.dadosCat;
   const f = c
     ? await chamarApi<Funcionario>(`/funcionarios/${c.acidentadoId}`)
     : null;
   const p = f?.ok ? f.dados : null;
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/seguranca/acidentes/${id}`}
-          className="dv-voltar"
-        >
-          Voltar ao acidente
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">
-          Comunicação de acidente de trabalho · {a.numero}
-          {a.catNumero && ` · CAT ${a.catNumero}`}
-        </p>
-        <h1 className="font-bold text-2xl">
-          {p?.nome ?? a.acidentado ?? "Acidentado"}
-        </h1>
-        <p className="text-sm">
-          {TIPOS_ACIDENTE[a.tipo]}
-          {c && ` · ${TIPOS_DE_ACIDENTE_ESOCIAL[c.tpAcid as 1 | 2 | 3]}`} ·{" "}
-          {formatarData(a.data)}
-          {c && ` às ${h(c.hrAcid)}`}
-        </p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Comunicação de acidente de trabalho"
+      numero={`${a.numero}${a.catNumero ? ` · CAT ${a.catNumero}` : ""}`}
+      titulo={p?.nome ?? a.acidentado ?? "Acidentado"}
+      subtitulo={`${TIPOS_ACIDENTE[a.tipo]}${c ? ` · ${TIPOS_DE_ACIDENTE_ESOCIAL[c.tpAcid as 1 | 2 | 3]}` : ""} · ${formatarData(a.data)}${c ? ` às ${h(c.hrAcid)}` : ""}`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/seguranca/acidentes/${id}`}
+      voltarRotulo="Voltar ao acidente"
+      assinaturas={
+        c
+          ? [
+              { papel: "Emitente pela empresa" },
+              { papel: "Acidentado ou representante" },
+            ]
+          : undefined
+      }
+    >
       {!c && (
         <p className="mt-6 text-base">
           Complete os dados da CAT para o eSocial no registro do acidente.
@@ -115,17 +112,9 @@ export default async function CatImpressa({
               {c.ufOC && `/${c.ufOC}`}
             </Dado>
           </Secao>
-          <section className="mt-14 grid grid-cols-2 gap-10 text-sm break-inside-avoid">
-            <div className="border-t border-texto pt-1 text-center">
-              Emitente pela empresa
-            </div>
-            <div className="border-t border-texto pt-1 text-center">
-              Acidentado ou representante
-            </div>
-          </section>
         </>
       )}
-    </article>
+    </FolhaDeDocumento>
   );
 }
 

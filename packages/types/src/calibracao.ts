@@ -91,6 +91,17 @@ export const anularCalibracaoSchema = z.object({
 export const filtroInstrumentosSchema = z.object({
   busca: opcional(z.string().trim().max(100, 'Use no máximo 100 caracteres.')),
   situacao: enumOpcional(SITUACOES_INSTRUMENTO, 'Situação desconhecida.'),
+  ordenar: z
+    .enum([
+      'tag',
+      'descricao',
+      'local',
+      'ultimaCalibracao',
+      'proximaCalibracao',
+      'situacao',
+    ])
+    .optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
   pagina: z.coerce.number().int().min(1).default(1),
   porPagina: z.coerce
     .number()

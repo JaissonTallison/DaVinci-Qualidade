@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, count, desc, eq, sql, type SQL } from 'drizzle-orm';
+import { and, asc, count, desc, eq, sql, type SQL } from 'drizzle-orm';
 import { DATABASE, type Database } from '@davinci/database';
 import { agoraEmBrasilia, ErroDeNegocio, validar } from '@davinci/shared';
 import {
@@ -36,12 +36,21 @@ export class PtsService {
     if (f.status) condicoes.push(eq(pts.status, f.status));
     if (f.tipo) condicoes.push(eq(pts.tipo, f.tipo));
     const onde = and(...condicoes);
+    const colunas = {
+      numero: pts.numero,
+      tipo: pts.tipo,
+      inicio: pts.inicio,
+      status: pts.status,
+    } as const;
+    const ordenacao = f.ordenar
+      ? [f.ordem === 'asc' ? asc(colunas[f.ordenar]) : desc(colunas[f.ordenar])]
+      : [desc(pts.inicio), desc(pts.criadoEm)];
     const [linhas, [{ total }]] = await Promise.all([
       this.db
         .select()
         .from(pts)
         .where(onde)
-        .orderBy(desc(pts.inicio), desc(pts.criadoEm))
+        .orderBy(...ordenacao)
         .limit(f.porPagina)
         .offset((f.pagina - 1) * f.porPagina),
       this.db.select({ total: count() }).from(pts).where(onde),

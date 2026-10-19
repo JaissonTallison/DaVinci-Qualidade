@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   NORMAS,
   PROCESSOS_AUDITADOS,
   TIPOS_AUDITORIA,
   type Auditoria,
+  type DadosDoUsuario,
   type RoteiroDaAuditoria,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { FolhaDeDocumento } from "@/components/folha-de-documento";
 import { chamarApi } from "@/lib/api";
-import { formatarData } from "@/lib/datas";
-import { BotaoImprimir } from "@/components/botao-imprimir";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "Roteiro de campo" };
 
@@ -20,14 +20,16 @@ export default async function RoteiroDeCampo({
   params,
 }: PageProps<"/auditorias/[id]/roteiro/imprimir">) {
   const { id } = await params;
-  const [a, r] = await Promise.all([
+  const [a, r, eu] = await Promise.all([
     chamarApi<Auditoria>(`/auditorias/${id}`),
     chamarApi<RoteiroDaAuditoria>(`/auditorias/${id}/roteiro`),
+    chamarApi<DadosDoUsuario>("/auth/eu"),
   ]);
   if (!a.ok && a.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!a.ok) return <AvisoDeErro erro={a.erro} />;
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
   const aud = a.dados;
+  const empresa = eu.ok ? eu.dados.empresa.nome : undefined;
   const grupos = Object.entries(PROCESSOS_AUDITADOS)
     .map(([k, n]) => ({
       k,
@@ -36,31 +38,19 @@ export default async function RoteiroDeCampo({
     }))
     .filter((g) => g.perguntas.length);
   return (
-    <article className="mx-auto max-w-4xl bg-superficie print:max-w-none">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">
-        <Link
-          href={`/auditorias/${id}/roteiro`}
-          className="dv-voltar"
-        >
-          Voltar ao roteiro
-        </Link>
-        <BotaoImprimir />
-      </div>
-      <header className="border-b-2 border-texto pb-3">
-        <p className="text-sm text-texto-2">Roteiro de campo · {aud.numero}</p>
-        <h1 className="font-bold text-2xl">
-          Auditoria {TIPOS_AUDITORIA[aud.tipo].toLowerCase()} ·{" "}
-          {aud.normas.map((n) => NORMAS[n]).join(", ")}
-        </h1>
-        <p className="mt-1 text-sm">
-          {formatarData(aud.dataInicio)}
-          {aud.dataFim !== aud.dataInicio &&
-            ` a ${formatarData(aud.dataFim)}`}{" "}
-          · Auditor líder: {aud.auditorLider}
-          {aud.equipe && ` · Equipe: ${aud.equipe}`}
-        </p>
-        <p className="mt-1 text-sm whitespace-pre-line">{aud.escopo}</p>
-      </header>
+    <FolhaDeDocumento
+      tipo="Roteiro de campo"
+      numero={aud.numero}
+      titulo={`Auditoria ${TIPOS_AUDITORIA[aud.tipo].toLowerCase()} · ${aud.normas
+        .map((n) => NORMAS[n])
+        .join(", ")}`}
+      subtitulo={`${formatarData(aud.dataInicio)}${aud.dataFim !== aud.dataInicio ? ` a ${formatarData(aud.dataFim)}` : ""} · Auditor líder: ${aud.auditorLider}${aud.equipe ? ` · Equipe: ${aud.equipe}` : ""}`}
+      empresa={empresa}
+      emitidoEm={formatarData(hojeEmBrasilia())}
+      voltarHref={`/auditorias/${id}/roteiro`}
+      voltarRotulo="Voltar ao roteiro"
+    >
+      <p className="mt-3 text-sm whitespace-pre-line">{aud.escopo}</p>
       {grupos.map((g) => (
         <section key={g.k} className="mt-6 break-inside-avoid-page">
           <h2 className="border-b border-borda-forte pb-1 text-lg font-semibold">
@@ -105,6 +95,6 @@ export default async function RoteiroDeCampo({
           </ol>
         </section>
       ))}
-    </article>
+    </FolhaDeDocumento>
   );
 }

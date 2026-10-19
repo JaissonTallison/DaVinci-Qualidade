@@ -79,3 +79,6 @@ temp/
 __pycache__/
 *.pyc
 
+
+# Relatórios de pentest (Strix) — contêm PoCs, não versionar
+strix_runs/

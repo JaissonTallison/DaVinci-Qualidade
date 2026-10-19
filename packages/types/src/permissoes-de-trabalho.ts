@@ -76,6 +76,8 @@ export const cancelarPtSchema = z.object({
 export const filtroPtsSchema = z.object({
   status: enumOpcional(STATUS_PT, 'Status desconhecido.'),
   tipo: enumOpcional(TIPOS_PT, 'Tipo desconhecido.'),
+  ordenar: z.enum(['numero', 'tipo', 'inicio', 'status']).optional(),
+  ordem: z.enum(['asc', 'desc']).optional(),
   pagina: z.coerce.number().int().min(1).default(1),
   porPagina: z.coerce
     .number()
