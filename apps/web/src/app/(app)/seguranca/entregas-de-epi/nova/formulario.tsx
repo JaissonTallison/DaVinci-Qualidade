@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
 import {
   MOTIVOS_ENTREGA,
@@ -17,7 +15,6 @@ import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -55,7 +52,7 @@ export function FormularioDeEntrega({
         )}
         <Campo
           id="funcionarioId"
-          rotulo="Funcionário"
+          rotulo="Profissional"
           erro={erros.funcionarioId}
           className="sm:col-span-3"
         >
@@ -147,7 +144,7 @@ export function FormularioDeEntrega({
             value="sim"
             defaultChecked={v.termoAssinado === "sim"}
           />
-          O funcionário assinou o termo de recebimento
+          O profissional assinou o termo de recebimento
         </label>
         <Campo
           id="observacao"
@@ -166,10 +163,6 @@ export function FormularioDeEntrega({
         </Campo>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href={voltar} className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : "Registrar entrega"}
         </button>

@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
 import { ENTRADAS_ANALISE_CRITICA } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -12,7 +10,6 @@ import { hojeEmBrasilia } from "@/lib/datas";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -118,10 +115,6 @@ export function FormularioDeAnalise({
         </Campo>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href="/sgi/analises-criticas" className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : "Registrar análise crítica"}
         </button>

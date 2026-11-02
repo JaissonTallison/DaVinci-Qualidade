@@ -1,17 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { and, asc, eq, ilike, or, type SQL } from 'drizzle-orm';
 import { DATABASE, type Database, ordemAlfabetica } from '@davinci/database';
-import { ErroDeNegocio, hojeEmBrasilia, validar } from '@davinci/shared';
+import {
+  ErroDeNegocio,
+  hojeEmBrasilia,
+  somarMeses,
+  validar,
+} from '@davinci/shared';
 import {
   atualizarRiscoSchema,
   dadosEsocialDoRiscoSchema,
   filtroRiscosSchema,
   isUuid,
+  MESES_REVISAO_PGR,
   nivelDoRisco,
   novoRiscoSchema,
   situacaoDoRiscoSchema,
   type Contexto,
   type GrupoDeRisco,
+  type HierarquiaDeControle,
   type ResumoPgr,
   type Risco,
 } from '@davinci/types';
@@ -112,6 +119,7 @@ export class PgrService {
       criticos: lista.filter((r) => r.nivel === 'critico').length,
       altos: lista.filter((r) => r.nivel === 'alto').length,
       acoesVencidas: lista.filter((r) => r.acaoVencida).length,
+      revisoesVencidas: lista.filter((r) => r.revisaoVencida).length,
     };
   }
 
@@ -147,6 +155,10 @@ export class PgrService {
 
 function montar(l: Linha, hoje: string): Risco {
   const nivel = nivelDoRisco(l.severidade, l.probabilidade);
+  const proximaRevisao = somarMeses(
+    l.atualizadoEm.toISOString().slice(0, 10),
+    MESES_REVISAO_PGR,
+  );
   return {
     id: l.id,
     grupo: l.grupo as GrupoDeRisco,
@@ -158,6 +170,7 @@ function montar(l: Linha, hoje: string): Risco {
     nivel,
     controles: l.controles,
     acoes: l.acoes,
+    hierarquiaControle: l.hierarquiaControle as HierarquiaDeControle | null,
     responsavel: l.responsavel,
     prazo: l.prazo,
     acaoVencida:
@@ -167,6 +180,8 @@ function montar(l: Linha, hoje: string): Risco {
     ativo: l.ativo,
     dadosEsocial: (l.dadosEsocial as Risco['dadosEsocial']) ?? null,
     revisadoEm: l.atualizadoEm.toISOString(),
+    proximaRevisao,
+    revisaoVencida: l.ativo && proximaRevisao < hoje,
     versao: l.atualizadoEm.toISOString(),
   };
 }

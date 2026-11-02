@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { useActionState } from "react";
 import { ESFERAS, type RequisitoLegal } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -11,7 +9,6 @@ import type { EstadoDaAcao } from "@/lib/acao";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -118,12 +115,6 @@ export function FormularioDeRequisito({
       <div
         className={`flex gap-3 ${requisito ? "mt-5" : "justify-end border-t border-borda px-5 py-3"}`}
       >
-        {!requisito && (
-          <Link href="/ambiental/requisitos" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando
             ? "Salvando…"

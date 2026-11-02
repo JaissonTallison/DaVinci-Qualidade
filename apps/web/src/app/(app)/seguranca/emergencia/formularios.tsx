@@ -35,7 +35,7 @@ export function NovoBrigadista({
         <div className="grid gap-4 sm:grid-cols-4">
           <Campo
             id="funcionarioId"
-            rotulo="Funcionário"
+            rotulo="Profissional"
             erro={erros.funcionarioId}
             className="sm:col-span-2"
           >

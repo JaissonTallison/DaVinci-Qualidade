@@ -48,7 +48,9 @@ export default async function Registros({
         <div>
           <h1 className={tituloDaPagina}>Registros de segurança</h1>
           <p className="mt-1 max-w-2xl text-base text-texto-2">
-            DDS, APR, reuniões da CIPA e simulados de emergência.
+            DDS (Diálogo Diário de Segurança), APR (Análise Preliminar de
+            Risco), reuniões da CIPA (Comissão Interna de Prevenção de Acidentes
+            e de Assédio) e simulados de emergência.
           </p>
         </div>
         {podeCriar && (

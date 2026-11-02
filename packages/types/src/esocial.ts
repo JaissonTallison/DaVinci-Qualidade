@@ -138,7 +138,7 @@ export const LATERALIDADES = {
 } as const;
 
 export const dadosDaCatSchema = z.object({
-  acidentadoId: z.uuid('Escolha o funcionário acidentado.'),
+  acidentadoId: z.uuid('Escolha o profissional acidentado.'),
   tpAcid: z.coerce.number().refine((n) => n >= 1 && n <= 3, 'Escolha o tipo.'),
   hrAcid: hhmm('a hora do acidente'),
   hrsTrab: hhmm('as horas trabalhadas antes do acidente'),
@@ -238,7 +238,7 @@ export const gerarEventoSchema = z.object({
   evento: z.enum(['S-2210', 'S-2220', 'S-2240'], {
     error: 'Evento desconhecido.',
   }),
-  /** Acidente (S-2210), ASO (S-2220) ou funcionário (S-2240). */
+  /** Acidente (S-2210), ASO (S-2220) ou profissional (S-2240). */
   referenciaId: z.uuid('Registro inválido.'),
 });
 export const marcarEnviadoSchema = z.object({

@@ -2,7 +2,7 @@ import type { FuncionarioResumo, Pagina } from "@davinci/types";
 import { chamarApi } from "@/lib/api";
 
 /**
- * Sugestões de responsável vindas do cadastro de funcionários: um `<datalist id="pessoas">` por página.
+ * Sugestões de responsável vindas do cadastro de profissionais: um `<datalist id="pessoas">` por página.
  * Campos de pessoa (responsável, inspetor, auditor) usam `list="pessoas"`; quem é de fora (consultor,
  * terceiro) continua podendo ser digitado. Sem `funcionarios.ver`, não há sugestões.
  */

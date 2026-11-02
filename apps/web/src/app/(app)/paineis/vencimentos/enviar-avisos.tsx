@@ -13,7 +13,7 @@ export function EnviarAvisos() {
   return (
     <form action={enviar} className="flex flex-col items-end gap-1">
       <button type="submit" className={botaoSecundario} disabled={enviando}>
-        {enviando ? "Enviando…" : "Enviar avisos por e-mail agora"}
+        {enviando ? "Enviando…" : "Enviar avisos agora"}
       </button>
       {estado.enviados !== undefined && (
         <p role="status" className="text-sm text-texto-2">

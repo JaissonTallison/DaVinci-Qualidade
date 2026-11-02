@@ -1,5 +1,5 @@
 /**
- * Exames ocupacionais (ASO, NR-7) e treinamentos (NRs) dos funcionários (serviço codex). docs/05-modulos/exames-e-treinamentos.md
+ * Exames ocupacionais (ASO, NR-7) e treinamentos (NRs) dos profissionais (serviço codex). docs/05-modulos/exames-e-treinamentos.md
  */
 import { z } from 'zod';
 import { exameDoAsoSchema, type ExameDoAso } from './esocial.js';
@@ -40,7 +40,7 @@ export const anularRegistroSchema = z.object({
 
 export const registrarAsoSchema = z
   .object({
-    funcionarioId: z.uuid('Escolha o funcionário.'),
+    funcionarioId: z.uuid('Escolha o profissional.'),
     tipo: z.enum(chaves(TIPOS_ASO), { error: 'Escolha o tipo de exame.' }),
     data: data('a data do exame'),
     resultado: z.enum(chaves(RESULTADOS_ASO), {
@@ -154,7 +154,7 @@ export const situacaoDoTreinamentoSchema = z.object({
 export const registrarTurmaSchema = z.object({
   treinamentoId: z.uuid('Escolha o treinamento.'),
   funcionarioIds: z
-    .array(z.uuid('Funcionário inválido.'), {
+    .array(z.uuid('Profissional inválido.'), {
       error: 'Marque quem participou.',
     })
     .min(1, 'Marque quem participou.')
@@ -188,7 +188,7 @@ export interface TreinamentoRealizado {
 }
 
 export const filtroDoFuncionarioSchema = z.object({
-  funcionarioId: z.uuid('Funcionário inválido.'),
+  funcionarioId: z.uuid('Profissional inválido.'),
 });
 
 // ---------------------------------------------------------------- vencimentos
@@ -216,10 +216,10 @@ export interface Vencimento {
 }
 
 export interface ResumoVencimentos {
-  /** ASO vigentes e treinamentos com validade de funcionários ativos (base dos percentuais). */
+  /** ASO vigentes e treinamentos com validade de profissionais ativos (base dos percentuais). */
   total: number;
   vencidos: number;
   vencemEmBreve: number;
-  /** Funcionários ativos sem nenhum ASO registrado. */
+  /** Profissionais ativos sem nenhum ASO registrado. */
   semAso: number;
 }

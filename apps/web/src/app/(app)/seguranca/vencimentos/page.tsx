@@ -141,7 +141,7 @@ export default async function Vencimentos({
             descricao={
               filtrando
                 ? "Ajuste ou limpe os filtros para ver mais registros."
-                : "Registre os ASOs e treinamentos na página de cada funcionário."
+                : "Registre os ASOs e treinamentos na página de cada profissional."
             }
             acao={
               filtrando ? (
@@ -172,7 +172,7 @@ export default async function Vencimentos({
                     base={BASE}
                     consulta={consulta}
                   >
-                    Funcionário
+                    Profissional
                   </ThOrdenavel>
                   <ThOrdenavel
                     campo="descricao"
@@ -207,7 +207,7 @@ export default async function Vencimentos({
                     <td className="px-4 py-2">
                       <Link
                         href={`/cadastros/funcionarios/${v.funcionarioId}`}
-                        aria-label={`Abrir o funcionário ${v.funcionarioNome}`}
+                        aria-label={`Abrir o profissional ${v.funcionarioNome}`}
                         className="text-info after:absolute after:inset-0 after:content-[''] hover:underline"
                       >
                         {v.funcionarioNome}
@@ -226,7 +226,7 @@ export default async function Vencimentos({
                           href={`/cadastros/funcionarios/${v.funcionarioId}`}
                           className={itemDeAcao}
                         >
-                          Abrir funcionário
+                          Abrir profissional
                         </Link>
                         <a
                           href={`/cadastros/funcionarios/${v.funcionarioId}`}

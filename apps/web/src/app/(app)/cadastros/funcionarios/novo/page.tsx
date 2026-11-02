@@ -6,7 +6,7 @@ import { chamarApi } from "@/lib/api";
 import { botaoLink, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeFuncionario } from "../formulario";
 
-export const metadata: Metadata = { title: "Cadastrar funcionário" };
+export const metadata: Metadata = { title: "Cadastrar profissional" };
 
 export default async function NovoFuncionario() {
   const [setores, funcoes] = await Promise.all([
@@ -23,9 +23,9 @@ export default async function NovoFuncionario() {
         href="/cadastros/funcionarios"
         className="dv-voltar"
       >
-        Funcionários
+        Profissionais
       </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Cadastrar funcionário</h1>
+      <h1 className={`${tituloDaPagina} mt-1`}>Cadastrar profissional</h1>
       {!setores.ok ? (
         <div className="mt-6">
           <AvisoDeErro erro={setores.erro} />
@@ -36,7 +36,7 @@ export default async function NovoFuncionario() {
         </div>
       ) : semEstrutura ? (
         <p className="mt-4 max-w-2xl text-base text-texto-2">
-          Todo funcionário tem setor e função. Cadastre-os antes em{" "}
+          Todo profissional tem setor e função. Cadastre-os antes em{" "}
           <Link href="/cadastros/setores-e-funcoes" className={botaoLink}>
             Setores e funções
           </Link>

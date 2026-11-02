@@ -65,7 +65,7 @@ const ALTERADO_POR_OUTRA_PESSOA =
 export class AcidentesService {
   constructor(
     @Inject(DATABASE) private readonly db: Db,
-    /** Cadastro de funcionários: o acidentado do S-2210 vem de lá. */
+    /** Cadastro de profissionais: o acidentado do S-2210 vem de lá. */
     @Inject(SERVICES.CODEX) private readonly codex: Pick<ClientProxy, 'send'>,
   ) {}
 
@@ -263,7 +263,7 @@ export class AcidentesService {
         erro instanceof ErroDeNegocio &&
         (erro.getError() as { codigo?: string }).codigo === 'NAO_ENCONTRADO'
       )
-        throw invalido('acidentadoId', 'Funcionário não encontrado.');
+        throw invalido('acidentadoId', 'Profissional não encontrado.');
       throw erro;
     });
     return this.alterar(ctx, dados?.id, versao, 'cat', async (tx, l) => {

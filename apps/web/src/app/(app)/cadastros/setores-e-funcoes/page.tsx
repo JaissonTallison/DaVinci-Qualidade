@@ -13,12 +13,12 @@ const AVISOS: Record<string, string> = {
   "setor-criado": "Setor cadastrado.",
   "setor-salvo": "Setor salvo.",
   "setor-inativado":
-    "Setor inativado: ele sai da escolha no cadastro de funcionários.",
+    "Setor inativado: ele sai da escolha no cadastro de profissionais.",
   "setor-ativado": "Setor reativado.",
   "funcao-criado": "Função cadastrada.",
   "funcao-salvo": "Função salva.",
   "funcao-inativado":
-    "Função inativada: ela sai da escolha no cadastro de funcionários.",
+    "Função inativada: ela sai da escolha no cadastro de profissionais.",
   "funcao-ativado": "Função reativada.",
 };
 
@@ -38,7 +38,7 @@ export default async function SetoresEFuncoes({
     <>
       <h1 className={tituloDaPagina}>Setores e funções</h1>
       <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Todo funcionário tem um setor e uma função. Com funcionário ativo, o
+        Todo profissional tem um setor e uma função. Com profissional ativo, o
         setor ou a função não se inativa: mude as pessoas antes.
       </p>
       <Aviso avisos={AVISOS} chave={aviso} />
@@ -109,8 +109,8 @@ function Lista({
                   {item.ativo ? "" : "Inativo · "}
                   {item.funcionariosAtivos}{" "}
                   {item.funcionariosAtivos === 1
-                    ? "funcionário ativo"
-                    : "funcionários ativos"}
+                    ? "profissional ativo"
+                    : "profissionais ativos"}
                 </p>
               </div>
               {tipo === "funcao" && item.ativo && (

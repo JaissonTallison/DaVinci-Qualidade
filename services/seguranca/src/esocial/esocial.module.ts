@@ -5,7 +5,7 @@ import { SERVICES } from '@davinci/types';
 import { EsocialController } from './esocial.controller.js';
 import { EsocialService } from './esocial.service.js';
 
-/** Funcionários e ASOs vêm do codex. */
+/** Profissionais e ASOs vêm do codex. */
 @Module({
   imports: [ClientsModule.register([rmqClientOptions(SERVICES.CODEX)])],
   controllers: [EsocialController],

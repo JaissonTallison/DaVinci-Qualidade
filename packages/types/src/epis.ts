@@ -1,5 +1,5 @@
 /**
- * Controle de EPIs: catálogo com CA e entregas por funcionário (serviço seguranca). docs/05-modulos/epis.md
+ * Controle de EPIs: catálogo com CA e entregas por profissional (serviço seguranca). docs/05-modulos/epis.md
  */
 import { z } from 'zod';
 import {
@@ -64,7 +64,7 @@ export const filtroEpisSchema = z.object({
 });
 
 export const registrarEntregaSchema = z.object({
-  funcionarioId: z.uuid('Escolha o funcionário.'),
+  funcionarioId: z.uuid('Escolha o profissional.'),
   epiId: z.uuid('Escolha o EPI.'),
   quantidade: z.coerce
     .number({ error: 'Informe a quantidade.' })
@@ -86,7 +86,7 @@ export const anularEntregaSchema = z.object({
 });
 
 export const filtroEntregasSchema = z.object({
-  funcionarioId: opcional(z.uuid('Funcionário inválido.')),
+  funcionarioId: opcional(z.uuid('Profissional inválido.')),
   epiId: opcional(z.uuid('EPI inválido.')),
   situacao: enumOpcional(SITUACOES_ENTREGA, 'Situação desconhecida.'),
   pagina: z.coerce.number().int().min(1).default(1),

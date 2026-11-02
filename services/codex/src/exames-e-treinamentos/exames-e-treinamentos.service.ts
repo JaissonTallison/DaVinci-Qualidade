@@ -359,7 +359,7 @@ export class ExamesETreinamentosService {
     if (pessoas.length !== ids.length)
       throw invalido(
         'funcionarioIds',
-        'Algum funcionário marcado não foi encontrado. Recarregue a página.',
+        'Algum profissional marcado não foi encontrado. Recarregue a página.',
       );
     const desligados = pessoas.filter((p) => !p.ativo).map((p) => p.nome);
     if (desligados.length)
@@ -558,7 +558,7 @@ export class ExamesETreinamentosService {
       .where(
         and(eq(funcionarios.id, id), eq(funcionarios.empresaId, ctx.empresaId)),
       );
-    if (!f) throw invalido('funcionarioId', 'Funcionário não encontrado.');
+    if (!f) throw invalido('funcionarioId', 'Profissional não encontrado.');
     return f;
   }
 

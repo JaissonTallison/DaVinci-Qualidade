@@ -42,6 +42,7 @@ import { AcidentesController } from './seguranca/acidentes.controller.js';
 import { EpisController } from './seguranca/epis.controller.js';
 import { RegistrosDeSegurancaController } from './seguranca/registros.controller.js';
 import { TerceirosController } from './seguranca/terceiros.controller.js';
+import { RequisitosLegaisSstController } from './seguranca/requisitos-legais-sst.controller.js';
 import {
   SgiController,
   RiscosEOportunidadesController,
@@ -161,6 +162,7 @@ export const observeEnabled = Boolean(
     EpisController,
     RegistrosDeSegurancaController,
     TerceirosController,
+    RequisitosLegaisSstController,
     SgiController,
     RiscosEOportunidadesController,
     ObjetivosController,

@@ -74,7 +74,7 @@ export default async function Competencias() {
       >
         <span>
           <span className="font-semibold tabular-nums">{totalPessoas}</span>{" "}
-          funcionários ativos
+          profissionais ativos
         </span>
         <span>
           <span

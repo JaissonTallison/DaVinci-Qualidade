@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { useActionState } from "react";
 import { formatarDocumento, type Parceiro } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -12,7 +10,6 @@ import { salvarParceiro } from "@/lib/acoes-parceiros";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -167,15 +164,6 @@ export function FormularioDeParceiro({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link
-            href="/cadastros/clientes-e-fornecedores"
-            className={botaoSecundario}
-          >
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : parceiro ? "Salvar" : "Cadastrar"}
         </button>

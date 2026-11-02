@@ -130,8 +130,29 @@ export const contratos = pgTable(
     observacoes: varchar({ length: 1000 }),
     motivoEncerramento: varchar({ length: 300 }),
     encerradoEm: timestamp({ withTimezone: true, precision: 3 }),
+    // Análise crítica dos requisitos do cliente (ISO 9001 8.2.3).
+    analiseData: date({ mode: 'string' }),
+    analiseResponsavel: varchar({ length: 120 }),
+    analiseConclusao: varchar({ length: 30 }),
+    analiseParecer: varchar({ length: 1000 }),
   },
   (t) => [unique('contratos_numero_por_empresa').on(t.empresaId, t.numero)],
+);
+
+/** Requisitos do cliente de cada contrato (ISO 9001 8.2.2). */
+export const requisitosContrato = pgTable(
+  'requisitos_contrato',
+  {
+    ...colunasPadrao(),
+    contratoId: uuid().notNull(),
+    tipo: varchar({ length: 20 }).notNull(),
+    descricao: varchar({ length: 500 }).notNull(),
+    criterioAceitacao: varchar({ length: 500 }),
+    obrigatorio: boolean().notNull().default(true),
+    situacao: varchar({ length: 20 }).notNull().default('pendente'),
+    evidencia: varchar({ length: 500 }),
+  },
+  (t) => [index('requisitos_contrato_idx').on(t.empresaId, t.contratoId)],
 );
 
 /** Reclamações de clientes (ISO 10002): registro, análise, resposta e encerramento. */

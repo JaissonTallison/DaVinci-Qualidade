@@ -29,7 +29,7 @@ export default async function Turma({
   return (
     <>
       <Link href={voltar} className="dv-voltar">
-        {funcionario ? "Funcionário" : "Treinamentos"}
+        {funcionario ? "Profissional" : "Treinamentos"}
       </Link>
       <h1 className={`${tituloDaPagina} mt-1`}>Registrar turma</h1>
       <p className="mt-1 max-w-2xl text-base text-texto-2">
@@ -53,7 +53,7 @@ export default async function Turma({
             funcionarios.dados.total > funcionarios.dados.itens.length && (
               <p className="mt-4 text-sm text-atencao">
                 Mostrando {funcionarios.dados.itens.length} de{" "}
-                {funcionarios.dados.total} funcionários ativos: registre turmas
+                {funcionarios.dados.total} profissionais ativos: registre turmas
                 maiores em partes.
               </p>
             )}

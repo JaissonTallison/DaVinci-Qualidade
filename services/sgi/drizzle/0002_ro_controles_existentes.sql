@@ -1,0 +1,1 @@
+ALTER TABLE "riscos_oportunidades" ADD COLUMN "controles_existentes" varchar(1000);

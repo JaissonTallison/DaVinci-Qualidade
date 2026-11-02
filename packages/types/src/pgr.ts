@@ -16,6 +16,7 @@ export const GRUPOS_DE_RISCO = {
   quimico: 'Químico',
   biologico: 'Biológico',
   ergonomico: 'Ergonômico',
+  psicossocial: 'Psicossocial',
   acidente: 'Acidente (mecânico)',
 } as const;
 export type GrupoDeRisco = keyof typeof GRUPOS_DE_RISCO;
@@ -40,6 +41,18 @@ export const NIVEIS_DE_RISCO = {
   critico: 'Crítico',
 } as const;
 export type NivelDeRisco = keyof typeof NIVEIS_DE_RISCO;
+
+/** Hierarquia de controle da NR-1 (1.4.1 g), da mais eficaz para a menos. */
+export const HIERARQUIAS_DE_CONTROLE = {
+  eliminacao: 'Eliminação do perigo',
+  protecao_coletiva: 'Proteção coletiva (EPC)',
+  administrativa: 'Medida administrativa',
+  epi: 'EPI',
+} as const;
+export type HierarquiaDeControle = keyof typeof HIERARQUIAS_DE_CONTROLE;
+
+/** A avaliação de riscos deve ser revista a cada 2 anos (NR-1, 1.5.4.4.6). */
+export const MESES_REVISAO_PGR = 24;
 
 /** Matriz 4×4: severidade × probabilidade. 1–3 baixo, 4–6 moderado, 8–9 alto, 12–16 crítico. */
 export function nivelDoRisco(
@@ -71,6 +84,11 @@ const camposDoRisco = {
   probabilidade: escala('probabilidade'),
   controles: textoOpcional(1000),
   acoes: textoOpcional(1000),
+  /** Nível da medida a implementar, na ordem de prioridade da NR-1 (1.4.1 g). */
+  hierarquiaControle: enumOpcional(
+    HIERARQUIAS_DE_CONTROLE,
+    'Hierarquia de controle inválida.',
+  ),
   responsavel: textoOpcional(120),
   prazo: opcional(data('o prazo das ações')),
 };
@@ -133,6 +151,7 @@ export interface Risco {
   nivel: NivelDeRisco;
   controles: string | null;
   acoes: string | null;
+  hierarquiaControle: HierarquiaDeControle | null;
   responsavel: string | null;
   prazo: string | null;
   /** Prazo passou e o risco segue alto ou crítico. */
@@ -142,6 +161,9 @@ export interface Risco {
   dadosEsocial: import('./esocial.js').DadosEsocialDoRisco | null;
   /** Última revisão (alteração) do risco. */
   revisadoEm: string;
+  /** Revisão bienal (NR-1 1.5.4.4.6): data-limite e se já passou. */
+  proximaRevisao: string;
+  revisaoVencida: boolean;
   versao: string;
 }
 
@@ -149,4 +171,5 @@ export interface ResumoPgr {
   criticos: number;
   altos: number;
   acoesVencidas: number;
+  revisoesVencidas: number;
 }

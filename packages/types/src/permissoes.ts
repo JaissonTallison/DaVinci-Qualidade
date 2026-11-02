@@ -8,9 +8,9 @@ export const PERMISSOES = {
   'parceiros.editar': 'Cadastrar e editar clientes e fornecedores',
   'parceiros.inativar': 'Inativar e reativar clientes e fornecedores',
   'funcionarios.ver':
-    'Ver funcionários, setores, funções, exames e treinamentos',
+    'Ver profissionais, setores, funções, exames e treinamentos',
   'funcionarios.editar':
-    'Cadastrar e editar funcionários, setores, funções, exames e treinamentos',
+    'Cadastrar e editar profissionais, setores, funções, exames e treinamentos',
   'qualidade.ver':
     'Ver Qualidade: inspeções, checklists, não conformidades, planos de ação e calibração',
   'qualidade.editar': 'Criar e editar registros de Qualidade',
@@ -63,7 +63,7 @@ export const GRUPOS_DE_PERMISSOES: {
     permissoes: ['parceiros.ver', 'parceiros.editar', 'parceiros.inativar'],
   },
   {
-    titulo: 'Cadastros · Funcionários',
+    titulo: 'Cadastros · Profissionais',
     permissoes: ['funcionarios.ver', 'funcionarios.editar'],
   },
   {

@@ -48,7 +48,7 @@ function acao<R>(
   return mensageria.enviar<R>(SERVICES.CODEX, padrao, { id, alteracoes }, ctx);
 }
 
-/** Funcionários (serviço codex). docs/05-modulos/funcionarios.md */
+/** Profissionais (serviço codex). docs/05-modulos/funcionarios.md */
 @Controller('funcionarios')
 export class FuncionariosController {
   constructor(private readonly mensageria: MensageriaService) {}

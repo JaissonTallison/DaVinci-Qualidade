@@ -16,7 +16,7 @@ const ATALHOS = {
   objetivos: { rotulo: 'Objetivos', href: '/sgi/objetivos' },
   riscos: {
     rotulo: 'Riscos e oportunidades',
-    href: '/sgi/riscos-e-oportunidades',
+    href: '/sgi/riscos',
   },
   mudancas: { rotulo: 'Gestão de mudanças', href: '/sgi/mudancas' },
 } as const;

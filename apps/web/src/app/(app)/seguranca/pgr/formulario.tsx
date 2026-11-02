@@ -1,10 +1,9 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   GRUPOS_DE_RISCO,
+  HIERARQUIAS_DE_CONTROLE,
   nivelDoRisco,
   PROBABILIDADES,
   SEVERIDADES,
@@ -19,7 +18,6 @@ import { salvarRisco } from "@/lib/acoes-pgr-pt";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -47,6 +45,7 @@ export function FormularioDeRisco({
     probabilidade: risco ? String(risco.probabilidade) : "",
     controles: risco?.controles ?? "",
     acoes: risco?.acoes ?? "",
+    hierarquiaControle: risco?.hierarquiaControle ?? "",
     responsavel: risco?.responsavel ?? "",
     prazo: risco?.prazo ?? "",
   };
@@ -213,6 +212,27 @@ export function FormularioDeRisco({
           />
         </Campo>
         <Campo
+          id="hierarquiaControle"
+          rotulo="Hierarquia de controle"
+          erro={erros.hierarquiaControle}
+          ajuda="Priorize do topo para a base: eliminação antes de EPI (NR-1)."
+          className="sm:col-span-3"
+        >
+          <Selecao
+            id="hierarquiaControle"
+            name="hierarquiaControle"
+            defaultValue={v.hierarquiaControle}
+            className={campo}
+          >
+            <option value="">Não definida</option>
+            {Object.entries(HIERARQUIAS_DE_CONTROLE).map(([k, n]) => (
+              <option key={k} value={k}>
+                {n}
+              </option>
+            ))}
+          </Selecao>
+        </Campo>
+        <Campo
           id="responsavel"
           rotulo="Responsável"
           erro={erros.responsavel}
@@ -242,12 +262,6 @@ export function FormularioDeRisco({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link href="/seguranca/pgr" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando
             ? "Salvando…"

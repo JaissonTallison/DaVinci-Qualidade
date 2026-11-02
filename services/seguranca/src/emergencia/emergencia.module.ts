@@ -5,7 +5,7 @@ import { SERVICES } from '@davinci/types';
 import { EmergenciaController } from './emergencia.controller.js';
 import { EmergenciaService } from './emergencia.service.js';
 
-/** O brigadista vem do cadastro de funcionários (codex). */
+/** O brigadista vem do cadastro de profissionais (codex). */
 @Module({
   imports: [ClientsModule.register([rmqClientOptions(SERVICES.CODEX)])],
   controllers: [EmergenciaController],

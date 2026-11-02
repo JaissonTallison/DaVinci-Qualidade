@@ -27,15 +27,15 @@ type Db = Database<typeof schema>;
 type ComId = { id?: unknown; alteracoes?: unknown };
 
 const ALTERADO_POR_OUTRA_PESSOA =
-  'Este funcionário foi alterado por outra pessoa. Recarregue a página para ver a versão atual.';
+  'Este profissional foi alterado por outra pessoa. Recarregue a página para ver a versão atual.';
 const REPETIDO: Record<string, [string, string]> = {
   funcionarios_matricula_por_empresa: [
     'matricula',
-    'Já existe um funcionário com esta matrícula.',
+    'Já existe um profissional com esta matrícula.',
   ],
   funcionarios_cpf_por_empresa: [
     'cpf',
-    'Já existe um funcionário com este CPF.',
+    'Já existe um profissional com este CPF.',
   ],
 };
 
@@ -126,7 +126,7 @@ export class FuncionariosService {
     if (!atual.ativo)
       throw new ErroDeNegocio(
         'REGRA_DE_NEGOCIO',
-        'Funcionário desligado não é alterado. Readmita-o antes.',
+        'Profissional desligado não é alterado. Readmita-o antes.',
       );
     await this.conferirEstrutura(ctx, campos.setorId, campos.funcaoId);
     try {
@@ -145,7 +145,7 @@ export class FuncionariosService {
     if (!atual.ativo)
       throw new ErroDeNegocio(
         'REGRA_DE_NEGOCIO',
-        'Este funcionário já está desligado.',
+        'Este profissional já está desligado.',
       );
     if (data < atual.admissao)
       throw invalido(
@@ -171,7 +171,7 @@ export class FuncionariosService {
     if (atual.ativo)
       throw new ErroDeNegocio(
         'REGRA_DE_NEGOCIO',
-        'Este funcionário já está ativo.',
+        'Este profissional já está ativo.',
       );
     await this.conferirEstrutura(ctx, atual.setorId, atual.funcaoId);
     return this.gravar(ctx, atual.id, versao, {
@@ -204,7 +204,7 @@ export class FuncionariosService {
         )
       : [];
     if (!l)
-      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Funcionário não encontrado.');
+      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Profissional não encontrado.');
     return montar(l);
   }
 

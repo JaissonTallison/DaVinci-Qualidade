@@ -21,7 +21,8 @@ export const TIPOS_REGISTRO_SST = {
     conteudo: 'Etapas, riscos e medidas de controle',
   },
   reuniao_cipa: {
-    rotulo: 'Reunião da CIPA',
+    rotulo:
+      'Reunião da CIPA (comissão interna de prevenção de acidentes e de assédio)',
     conteudo: 'Pauta e deliberações (ata)',
   },
   simulado: {

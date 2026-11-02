@@ -59,7 +59,7 @@ const acao = (a: Acidente, alteracoes: Record<string, unknown>) => ({
   alteracoes: { versao: a.versao, ...alteracoes },
 });
 
-/** Codex falso: um funcionário conhecido. */
+/** Codex falso: um profissional conhecido. */
 const funcionarioDeTeste = {
   id: '01900000-0000-7000-8000-000000000001',
   nome: 'João Pereira',
@@ -75,7 +75,7 @@ const codexDeTeste = {
         ? of(funcionarioDeTeste)
         : throwError(() => ({
             codigo: 'NAO_ENCONTRADO',
-            mensagem: 'Funcionário não encontrado.',
+            mensagem: 'Profissional não encontrado.',
           }))
     ) as Observable<R>;
   },

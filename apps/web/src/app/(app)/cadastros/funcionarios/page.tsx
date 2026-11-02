@@ -19,7 +19,7 @@ import {
   tituloDaPagina,
 } from "@/lib/estilos";
 
-export const metadata: Metadata = { title: "Funcionários" };
+export const metadata: Metadata = { title: "Profissionais" };
 
 const FILTROS = ["busca", "setorId", "situacao", "pagina"] as const;
 const SITUACOES = {
@@ -53,7 +53,7 @@ export default async function ListaDeFuncionarios({
     <>
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className={tituloDaPagina}>Funcionários</h1>
+          <h1 className={tituloDaPagina}>Profissionais</h1>
           <p className="mt-1 max-w-2xl text-base text-texto-2">
             O cadastro que a segurança do trabalho usa: entregas de EPI,
             treinamentos e exames saem daqui.
@@ -62,7 +62,7 @@ export default async function ListaDeFuncionarios({
         {podeCriar && (
           <Link href="/cadastros/funcionarios/novo" className={botaoPrimario}>
             <IconeDaTela href={"/cadastros/funcionarios/novo"} />
-            Cadastrar funcionário
+            Cadastrar profissional
           </Link>
         )}
       </header>
@@ -126,8 +126,8 @@ export default async function ListaDeFuncionarios({
         ) : lista.dados.itens.length === 0 ? (
           <p className="px-4 py-8 text-base text-texto-2">
             {filtrando
-              ? "Nenhum funcionário com esses filtros."
-              : "Nenhum funcionário cadastrado. Cadastre primeiro os setores e as funções da empresa."}
+              ? "Nenhum profissional com esses filtros."
+              : "Nenhum profissional cadastrado. Cadastre primeiro os setores e as funções da empresa."}
           </p>
         ) : (
           <div className="relative overflow-x-auto">
@@ -178,7 +178,7 @@ export default async function ListaDeFuncionarios({
             </table>
             <p className="border-t border-borda px-4 py-2.5 text-sm text-texto-2">
               {lista.dados.total.toLocaleString("pt-BR")}{" "}
-              {lista.dados.total === 1 ? "funcionário" : "funcionários"}
+              {lista.dados.total === 1 ? "profissional" : "profissionais"}
             </p>
           </div>
         )}

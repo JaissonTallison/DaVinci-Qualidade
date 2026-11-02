@@ -136,7 +136,7 @@ export default async function CompetenciasDaFuncao({
         </div>
         {linhas.length === 0 ? (
           <p className="px-5 py-5 text-base text-texto-2">
-            Nenhum funcionário ativo nesta função.
+            Nenhum profissional ativo nesta função.
           </p>
         ) : (
           <div className="relative mt-3 overflow-x-auto border-t border-borda">
@@ -144,7 +144,7 @@ export default async function CompetenciasDaFuncao({
               <thead>
                 <tr className="border-b border-borda text-left text-texto-2">
                   <th className="sticky left-0 bg-superficie px-4 py-2 font-semibold">
-                    Funcionário
+                    Profissional
                   </th>
                   {requisitos.map((r) => (
                     <th

@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
 import { NORMAS, TIPOS_AUDITORIA, type Auditoria } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -11,7 +9,6 @@ import { salvarAuditoria, type EstadoDaAcao } from "@/lib/acoes-auditorias";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -188,12 +185,6 @@ export function FormularioDeAuditoria({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link href="/auditorias" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando
             ? "Salvando…"

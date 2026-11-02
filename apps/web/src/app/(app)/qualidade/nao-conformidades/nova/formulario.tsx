@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   GRAVIDADES_NC,
@@ -16,7 +14,6 @@ import { abrirNc, type EstadoDaAcao } from "@/lib/acoes-nc";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -287,10 +284,6 @@ export function FormularioNovaNc({
         </Campo>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href="/qualidade/nao-conformidades" className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Abrindo…" : "Abrir NC"}
         </button>

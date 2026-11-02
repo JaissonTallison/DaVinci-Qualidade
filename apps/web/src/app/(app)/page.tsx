@@ -189,10 +189,10 @@ export default async function Inicio() {
     });
   if (sgi?.mudancasAguardandoDecisao && pode("sgi.excluir"))
     atencao.push({
-      titulo: `${plural(sgi.mudancasAguardandoDecisao, "mudança aguardando", "mudanças aguardando")} decisão`,
-      detalhe: "Gestão do SGI · aprovar ou rejeitar",
-      href: "/sgi/mudancas?status=proposta",
-      icone: telaDoIcone(undefined, "/sgi/mudancas?status=proposta"),
+      titulo: `${plural(sgi.mudancasAguardandoDecisao, "inovação aguardando", "inovações aguardando")} decisão`,
+      detalhe: "Gestão de inovação · avaliar",
+      href: "/sgi/inovacao?status=proposta",
+      icone: telaDoIcone(undefined, "/sgi/inovacao?status=proposta"),
       selo: "Aguardando",
       tom: "aguardando",
     });
@@ -203,6 +203,15 @@ export default async function Inicio() {
       href: "/seguranca/pgr?nivel=critico",
       icone: telaDoIcone(undefined, "/seguranca/pgr?nivel=critico"),
       selo: "Crítico",
+      tom: "vencido",
+    });
+  if (pgr?.revisoesVencidas)
+    atencao.push({
+      titulo: `${plural(pgr.revisoesVencidas, "risco com revisão vencida", "riscos com revisão vencida")} no PGR`,
+      detalhe: "Segurança do Trabalho · reavalie (NR-1: a cada 2 anos)",
+      href: "/seguranca/pgr",
+      icone: telaDoIcone(undefined, "/seguranca/pgr"),
+      selo: "Vencida",
       tom: "vencido",
     });
   if (sgi?.analiseCriticaAtrasada)

@@ -18,13 +18,13 @@ export function DesligarFuncionario({
   return (
     <Recolhido titulo="Desligar">
       <p className="text-base text-texto-2">
-        Desligado, o funcionário sai das listas e não recebe EPI. O histórico
+        Desligado, o profissional sai das listas e não recebe EPI. O histórico
         (fichas, entregas, acidentes) continua guardado.
       </p>
       <Formulario
         acao={desligarFuncionario.bind(null, funcionario.id)}
         versao={funcionario.versao}
-        rotuloDoBotao="Desligar funcionário"
+        rotuloDoBotao="Desligar profissional"
         perigo
       >
         {(erros, v) => (
@@ -76,7 +76,7 @@ export function ReadmitirFuncionario({
       <Formulario
         acao={readmitirFuncionario.bind(null, funcionario.id)}
         versao={funcionario.versao}
-        rotuloDoBotao="Readmitir funcionário"
+        rotuloDoBotao="Readmitir profissional"
       >
         {() => null}
       </Formulario>

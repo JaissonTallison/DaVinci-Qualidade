@@ -1,6 +1,6 @@
 /**
  * Módulos contratados por empresa: cada grupo do QSSMA é um módulo. Desligado, some do menu, das permissões e
- * dos painéis; os dados ficam. Os cadastros (clientes, fornecedores, funcionários) estão sempre ligados.
+ * dos painéis; os dados ficam. Os cadastros (clientes, fornecedores, profissionais) estão sempre ligados.
  */
 import { z } from 'zod';
 import type { Permissao } from './permissoes.js';

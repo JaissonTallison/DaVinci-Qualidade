@@ -1,14 +1,12 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
 import { formatarDocumento, type Terceiro } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarTerceiro } from "@/lib/acoes-terceiros";
-import { botaoPrimario, botaoSecundario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 export function FormularioDeTerceiro({
@@ -125,12 +123,6 @@ export function FormularioDeTerceiro({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link href="/seguranca/terceiros" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : terceiro ? "Salvar" : "Cadastrar terceiro"}
         </button>

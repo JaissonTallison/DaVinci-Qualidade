@@ -43,7 +43,7 @@ export class BuscaService {
         .then((ls) =>
           ls.map((l): ResultadoDaBusca => ({
             modulo: 'funcionarios',
-            tipo: 'Funcionário',
+            tipo: 'Profissional',
             titulo: l.nome,
             detalhe: `Matrícula ${l.matricula}`,
             href: `/cadastros/funcionarios/${l.id}`,

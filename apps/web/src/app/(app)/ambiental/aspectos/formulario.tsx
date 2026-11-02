@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { useActionState, useState } from "react";
 import {
   aspectoSignificativo,
@@ -18,7 +16,6 @@ import type { EstadoDaAcao } from "@/lib/acao";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -227,12 +224,6 @@ export function FormularioDeAspecto({
       <div
         className={`flex gap-3 ${aspecto ? "mt-5" : "justify-end border-t border-borda px-5 py-3"}`}
       >
-        {!aspecto && (
-          <Link href="/ambiental/aspectos" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando
             ? "Salvando…"

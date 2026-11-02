@@ -77,7 +77,7 @@ describe('setores e funções', () => {
     });
   });
 
-  it('setor com funcionário ativo não se inativa; inativo sai da escolha', async () => {
+  it('setor com profissional ativo não se inativa; inativo sai da escolha', async () => {
     const exp = await estrutura.criarSetor(empresaA, { nome: 'Expedição' });
     const f = await funcionarios.criar(
       empresaA,
@@ -97,7 +97,7 @@ describe('setores e funções', () => {
         )
       ).mensagem,
     ).toBe(
-      '1 funcionário ativo está neste setor. Mude de setor antes de inativá-lo.',
+      '1 profissional ativo está neste setor. Mude de setor antes de inativá-lo.',
     );
     await funcionarios.desligar(empresaA, {
       id: f.id,
@@ -123,7 +123,7 @@ describe('setores e funções', () => {
   });
 });
 
-describe('funcionários', () => {
+describe('profissionais', () => {
   it('CPF validado e guardado só com dígitos; matrícula e CPF únicos na empresa', async () => {
     expect(
       (
@@ -150,14 +150,14 @@ describe('funcionários', () => {
     ).toEqual([
       {
         campo: 'matricula',
-        mensagem: 'Já existe um funcionário com esta matrícula.',
+        mensagem: 'Já existe um profissional com esta matrícula.',
       },
     ]);
     expect(
       (await recusa(funcionarios.criar(empresaA, joao({ matricula: '9999' }))))
         .detalhes,
     ).toEqual([
-      { campo: 'cpf', mensagem: 'Já existe um funcionário com este CPF.' },
+      { campo: 'cpf', mensagem: 'Já existe um profissional com este CPF.' },
     ]);
   });
 
@@ -211,7 +211,7 @@ describe('funcionários', () => {
           }),
         )
       ).mensagem,
-    ).toBe('Funcionário desligado não é alterado. Readmita-o antes.');
+    ).toBe('Profissional desligado não é alterado. Readmita-o antes.');
     expect(
       (await funcionarios.listar(empresaA, { busca: '3001' })).itens,
     ).toHaveLength(0);

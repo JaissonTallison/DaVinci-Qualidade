@@ -112,12 +112,12 @@ export const epis = pgTable(
   (t) => [unique('epis_nome_ca_por_empresa').on(t.empresaId, t.nome, t.ca)],
 );
 
-/** Entregas de EPI: a ficha da NR-6. Funcionário e EPI ficam copiados como estavam no dia. */
+/** Entregas de EPI: a ficha da NR-6. Profissional e EPI ficam copiados como estavam no dia. */
 export const entregasEpi = pgTable(
   'entregas_epi',
   {
     ...colunasPadrao(),
-    /** Funcionário no serviço codex (outro banco: sem chave estrangeira). */
+    /** Profissional no serviço codex (outro banco: sem chave estrangeira). */
     funcionarioId: uuid().notNull(),
     funcionarioNome: varchar({ length: 120 }).notNull(),
     funcionarioMatricula: varchar({ length: 20 }).notNull(),
@@ -163,6 +163,7 @@ export const riscos = pgTable(
     probabilidade: smallint().notNull(),
     controles: varchar({ length: 1000 }),
     acoes: varchar({ length: 1000 }),
+    hierarquiaControle: varchar({ length: 20 }),
     responsavel: varchar({ length: 120 }),
     prazo: date({ mode: 'string' }),
     ativo: boolean().notNull().default(true),
@@ -177,6 +178,19 @@ export const riscos = pgTable(
     ),
   ],
 );
+
+/** Requisitos legais de SST (NR e demais normas) com a avaliação de atendimento. ISO 45001 6.1.3. */
+export const requisitosLegaisSst = pgTable('requisitos_legais_sst', {
+  ...colunasPadrao(),
+  norma: varchar({ length: 200 }).notNull(),
+  esfera: varchar({ length: 15 }).notNull(),
+  tema: varchar({ length: 100 }).notNull(),
+  requisito: varchar({ length: 1000 }).notNull(),
+  atendimento: varchar({ length: 15 }).notNull().default('nao_avaliado'),
+  ultimaAvaliacao: date({ mode: 'string' }),
+  evidencia: varchar({ length: 500 }),
+  acao: varchar({ length: 500 }),
+});
 
 /** Permissões de trabalho. Horários em AAAA-MM-DDTHH:mm, hora de Brasília (é como a PT é preenchida no papel). */
 export const permissoesDeTrabalho = pgTable(

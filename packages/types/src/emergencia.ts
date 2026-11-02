@@ -159,7 +159,7 @@ export const PAPEIS_NA_BRIGADA = {
 export const MESES_DE_VALIDADE_DA_BRIGADA = 12;
 
 export const novoBrigadistaSchema = z.object({
-  funcionarioId: z.uuid('Escolha o funcionário.'),
+  funcionarioId: z.uuid('Escolha o profissional.'),
   papel: z.enum(chaves(PAPEIS_NA_BRIGADA), { error: 'Escolha o papel.' }),
   turno: textoOpcional(40),
   treinadoEm: data('a data do treinamento de brigada'),

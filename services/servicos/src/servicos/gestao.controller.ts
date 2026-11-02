@@ -64,6 +64,26 @@ export class GestaoDeServicosController {
   encerrarContrato(@Contexto() ctx: Ctx, @Dados() d: ComId) {
     return this.contratos.encerrar(ctx, d);
   }
+  @MessagePattern(P.analisarContrato)
+  analisarContrato(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.contratos.analisar(ctx, d);
+  }
+  @MessagePattern(P.criarRequisito)
+  criarRequisito(@Contexto() ctx: Ctx, @Dados() d: { contratoId?: unknown }) {
+    return this.contratos.criarRequisito(ctx, d);
+  }
+  @MessagePattern(P.atualizarRequisito)
+  atualizarRequisito(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.contratos.atualizarRequisito(ctx, d);
+  }
+  @MessagePattern(P.situacaoRequisito)
+  situacaoRequisito(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.contratos.situacaoRequisito(ctx, d);
+  }
+  @MessagePattern(P.removerRequisito)
+  removerRequisito(@Contexto() ctx: Ctx, @Dados() d: { id?: unknown }) {
+    return this.contratos.removerRequisito(ctx, d);
+  }
 
   @MessagePattern(P.listarReclamacoes)
   listarReclamacoes(@Contexto() ctx: Ctx, @Dados() d: unknown) {

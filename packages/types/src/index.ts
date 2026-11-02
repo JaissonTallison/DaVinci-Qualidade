@@ -31,6 +31,7 @@ export * from './funcionarios.js';
 export * from './epis.js';
 export * from './anexos.js';
 export * from './pgr.js';
+export * from './requisitos-legais-sst.js';
 export * from './sgi.js';
 export * from './servicos.js';
 export * from './ambiental.js';

@@ -11,17 +11,21 @@ import {
   novaOsSchema,
   registrarRespostaNpsSchema,
   analisarReclamacaoSchema,
+  analiseDoContratoSchema,
   atualizarContratoSchema,
+  atualizarRequisitoDoContratoSchema,
   atualizarServicoDoCatalogoSchema,
   criarConviteSchema,
   encerrarContratoSchema,
   encerrarReclamacaoSchema,
   novaReclamacaoSchema,
   novoContratoSchema,
+  novoRequisitoDoContratoSchema,
   novoServicoDoCatalogoSchema,
   registrarExecucaoSchema,
   responderPesquisaSchema,
   responderReclamacaoSchema,
+  situacaoDoRequisitoDoContratoSchema,
   situacaoDoServicoSchema,
   type ConviteDePesquisa,
   type Contrato,
@@ -340,6 +344,101 @@ export async function encerrarContrato(
   );
   if ("erro" in r) return r;
   redirect(`${CONTRATOS}/${id}?aviso=encerrado`);
+}
+
+// ----- requisitos do cliente e análise crítica (ISO 9001 8.2)
+
+const requisitoDoForm = (v: Record<string, string>) => ({
+  tipo: v.tipo,
+  descricao: v.descricao,
+  criterioAceitacao: v.criterioAceitacao,
+  obrigatorio: v.obrigatorio !== "nao",
+  evidencia: v.evidencia,
+});
+
+export async function analisarContrato(
+  id: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar<Contrato>(
+    analiseDoContratoSchema,
+    {
+      versao: versaoDe(form),
+      conclusao: v.conclusao,
+      responsavel: v.responsavel,
+      parecer: v.parecer,
+    },
+    `/contratos/${id}/analise`,
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`${CONTRATOS}/${id}?aviso=analisado#analise`);
+}
+
+export async function criarRequisito(
+  contratoId: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar<Contrato>(
+    novoRequisitoDoContratoSchema,
+    requisitoDoForm(v),
+    `/contratos/${contratoId}/requisitos`,
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`${CONTRATOS}/${contratoId}?aviso=requisito#requisitos`);
+}
+
+export async function atualizarRequisito(
+  id: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar<Contrato>(
+    atualizarRequisitoDoContratoSchema,
+    { versao: versaoDe(form), ...requisitoDoForm(v) },
+    `/contratos/requisitos/${id}`,
+    "PUT",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`${CONTRATOS}/${r.dados.id}?aviso=requisito-salvo#requisitos`);
+}
+
+export async function situacaoRequisito(
+  id: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar<Contrato>(
+    situacaoDoRequisitoDoContratoSchema,
+    { versao: versaoDe(form), situacao: v.situacao },
+    `/contratos/requisitos/${id}/situacao`,
+    "POST",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`${CONTRATOS}/${r.dados.id}?aviso=requisito-salvo#requisitos`);
+}
+
+export async function removerRequisito(
+  id: string,
+  _: EstadoDaAcao,
+  _form: FormData,
+): Promise<EstadoDaAcao> {
+  const r = await chamarApi<Contrato>(`/contratos/requisitos/${id}`, {
+    metodo: "DELETE",
+  });
+  if (!r.ok) return { erro: r.erro };
+  redirect(`${CONTRATOS}/${r.dados.id}?aviso=requisito-removido#requisitos`);
 }
 
 // ---------------------------------------------------------------- reclamações

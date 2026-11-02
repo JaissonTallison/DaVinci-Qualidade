@@ -32,17 +32,17 @@ import { FormularioDeFuncionario } from "../formulario";
 import { DesligarFuncionario, ReadmitirFuncionario } from "./acoes";
 import { ExamesETreinamentos } from "./exames-e-treinamentos";
 
-export const metadata: Metadata = { title: "Funcionário" };
+export const metadata: Metadata = { title: "Profissional" };
 
 const AVISOS: Record<string, string> = {
   aso: "Exame registrado.",
   "aso-anulado": "Exame anulado.",
   turma: "Treinamento registrado.",
   "treinamento-anulado": "Treinamento anulado.",
-  criado: "Funcionário cadastrado.",
-  salvo: "Funcionário salvo.",
-  desligado: "Funcionário desligado.",
-  readmitido: "Funcionário readmitido.",
+  criado: "Profissional cadastrado.",
+  salvo: "Profissional salvo.",
+  desligado: "Profissional desligado.",
+  readmitido: "Profissional readmitido.",
   entregue: "Entrega registrada na ficha.",
   devolvido: "Devolução registrada.",
   anulada: "Entrega anulada.",
@@ -105,7 +105,7 @@ export default async function DetalheDoFuncionario({
         href="/cadastros/funcionarios"
         className="dv-voltar"
       >
-        Funcionários
+        Profissionais
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="font-mono text-lg text-texto-2">{f.matricula}</span>
@@ -237,7 +237,7 @@ export default async function DetalheDoFuncionario({
             </div>
           ) : ficha.dados.itens.length === 0 ? (
             <p className="px-5 pt-2 pb-5 text-base text-texto-2">
-              Nenhum EPI entregue a este funcionário.
+              Nenhum EPI entregue a este profissional.
             </p>
           ) : (
             <div className="mt-3">
@@ -266,7 +266,7 @@ export default async function DetalheDoFuncionario({
       )}
 
       {setores?.ok && funcoes?.ok && (
-        <Recolhido titulo="Editar dados do funcionário">
+        <Recolhido titulo="Editar dados do profissional">
           <FormularioDeFuncionario
             funcionario={f}
             setores={setores.dados}

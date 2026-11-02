@@ -64,6 +64,13 @@
       "when": 1792218991014,
       "tag": "0008_nc_processo_causa",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793579475472,
+      "tag": "0009_calibracao_campos_tecnicos",
+      "breakpoints": true
     }
   ]
 }
