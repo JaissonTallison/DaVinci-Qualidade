@@ -20,6 +20,46 @@ export const SITUACOES_INSTRUMENTO = {
 } as const;
 export type SituacaoInstrumento = keyof typeof SITUACOES_INSTRUMENTO;
 
+/** Grandeza metrológica que o instrumento mede (organiza o catálogo e o relatório). */
+export const GRANDEZAS_DE_MEDICAO = {
+  dimensional: 'Dimensional',
+  massa: 'Massa',
+  temperatura: 'Temperatura',
+  pressao: 'Pressão',
+  volume: 'Volume',
+  vazao: 'Vazão',
+  eletrica: 'Elétrica',
+  fisico_quimica: 'Físico-química',
+  forca_torque: 'Força e torque',
+  tempo_rotacao: 'Tempo e rotação',
+  umidade: 'Umidade',
+  outra: 'Outra',
+} as const;
+export type GrandezaDeMedicao = keyof typeof GRANDEZAS_DE_MEDICAO;
+
+/** Ramos/segmentos do mercado brasileiro, para filtrar o catálogo de instrumentos por aplicação. */
+export const RAMOS_DE_CALIBRACAO = {
+  metalmecanica: 'Metalmecânica e usinagem',
+  automotivo: 'Automotivo e autopeças',
+  industria_geral: 'Indústria geral e manufatura',
+  alimentos: 'Alimentos e bebidas',
+  farmaceutica: 'Farmacêutica',
+  cosmeticos: 'Cosméticos e higiene pessoal',
+  laboratorio_saude: 'Laboratório e saúde',
+  quimica: 'Química e petroquímica',
+  plasticos_borracha: 'Plásticos e borracha',
+  textil: 'Têxtil e confecção',
+  construcao: 'Construção civil e materiais',
+  papel_celulose: 'Papel e celulose',
+  eletroeletronica: 'Elétrica e eletrônica',
+  oleo_gas_energia: 'Óleo, gás e energia',
+  logistica_frio: 'Logística e cadeia do frio',
+  agronegocio: 'Agronegócio',
+  agua_saneamento: 'Água e saneamento',
+  grafica_embalagens: 'Gráfica e embalagens',
+} as const;
+export type RamoDeCalibracao = keyof typeof RAMOS_DE_CALIBRACAO;
+
 /** Dias de antecedência do aviso "vence em breve". */
 export const DIAS_DE_AVISO_DE_CALIBRACAO = 30;
 
@@ -50,8 +90,15 @@ const camposDoInstrumento = {
   numeroSerie: textoOpcional(60),
   local: textoOpcional(120),
   responsavel: textoOpcional(120),
+  grandeza: enumOpcional(GRANDEZAS_DE_MEDICAO, 'Grandeza desconhecida.'),
+  unidade: textoOpcional(20),
   faixa: textoOpcional(80),
   criterioAceitacao: textoOpcional(200),
+  /** Erro máximo admissível (EMA): o limite de erro que ainda aprova. */
+  erroMaximoAdmissivel: textoOpcional(200),
+  incerteza: textoOpcional(120),
+  classeExatidao: textoOpcional(60),
+  normaReferencia: textoOpcional(160),
   frequenciaMeses: z.coerce
     .number({ error: 'Informe a frequência em meses.' })
     .int('Use um número inteiro de meses.')
@@ -136,8 +183,14 @@ export interface Instrumento {
   numeroSerie: string | null;
   local: string | null;
   responsavel: string | null;
+  grandeza: GrandezaDeMedicao | null;
+  unidade: string | null;
   faixa: string | null;
   criterioAceitacao: string | null;
+  erroMaximoAdmissivel: string | null;
+  incerteza: string | null;
+  classeExatidao: string | null;
+  normaReferencia: string | null;
   frequenciaMeses: number;
   emUso: boolean;
   situacao: SituacaoInstrumento;
@@ -156,11 +209,36 @@ export type InstrumentoResumo = Pick<
   | 'descricao'
   | 'local'
   | 'responsavel'
+  | 'grandeza'
   | 'frequenciaMeses'
   | 'situacao'
   | 'ultimaCalibracao'
   | 'proximaCalibracao'
 >;
+
+/**
+ * Item do catálogo de calibração por ramo: um instrumento típico de um segmento, já com a grandeza,
+ * a unidade, a faixa, o critério/EMA, a frequência e a norma sugeridos. Serve só de ponto de partida
+ * no cadastro (a empresa ajusta tudo). O conteúdo fica no web (apps/web); não vai para o banco.
+ */
+export interface ItemDoCatalogoDeCalibracao {
+  /** Nome/descrição do instrumento (ex.: "Paquímetro digital"). */
+  instrumento: string;
+  grandeza: GrandezaDeMedicao;
+  unidade: string;
+  /** Faixa de medição típica (ex.: "0 a 150 mm"). */
+  faixa: string;
+  /** Critério de aceitação / erro máximo admissível típico (ex.: "± 0,02 mm"). */
+  criterioAceitacao: string;
+  /** Frequência sugerida de calibração, em meses. */
+  frequenciaMeses: number;
+  /** Norma(s) de referência (ex.: "ABNT NBR ISO 10012; VIM; ISO/IEC 17025"). */
+  normaReferencia: string;
+  /** Ramos a que o instrumento se aplica. */
+  ramos: RamoDeCalibracao[];
+  /** Prefixo de TAG sugerido (ex.: "PAQ"). */
+  tagSugerida?: string;
+}
 
 export interface ResumoCalibracao {
   /** Instrumentos em uso (base dos percentuais). */

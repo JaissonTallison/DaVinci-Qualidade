@@ -5,7 +5,7 @@ import { SERVICES } from '@davinci/types';
 import { EpisController } from './epis.controller.js';
 import { EpisService } from './epis.service.js';
 
-/** Fala com o Codex (cadastro de funcionários) pela fila dele. */
+/** Fala com o Codex (cadastro de profissionais) pela fila dele. */
 @Module({
   imports: [ClientsModule.register([rmqClientOptions(SERVICES.CODEX)])],
   controllers: [EpisController],

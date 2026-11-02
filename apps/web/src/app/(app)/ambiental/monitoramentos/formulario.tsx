@@ -1,14 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { useActionState } from "react";
 import { TIPOS_MONITORAMENTO, type Monitoramento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import { botaoPrimario, botaoSecundario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 const num = (n: number | null | undefined) =>
@@ -143,12 +141,6 @@ export function FormularioDeMonitoramento({
       <div
         className={`flex gap-3 ${m ? "mt-5" : "justify-end border-t border-borda px-5 py-3"}`}
       >
-        {!m && (
-          <Link href="/ambiental/monitoramentos" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando
             ? "Salvando…"

@@ -87,7 +87,7 @@ export class EstruturaService {
     return this.setorPorId(ctx, dados?.id);
   }
 
-  /** Inativar setor com funcionário ativo é recusado: mude as pessoas de setor antes. */
+  /** Inativar setor com profissional ativo é recusado: mude as pessoas de setor antes. */
   async mudarSituacaoDoSetor(
     ctx: Contexto,
     dados: ComId,
@@ -101,7 +101,7 @@ export class EstruturaService {
       if (pessoas)
         throw new ErroDeNegocio(
           'REGRA_DE_NEGOCIO',
-          `${pessoas === 1 ? '1 funcionário ativo está' : `${pessoas} funcionários ativos estão`} neste setor. Mude de setor antes de inativá-lo.`,
+          `${pessoas === 1 ? '1 profissional ativo está' : `${pessoas} profissionais ativos estão`} neste setor. Mude de setor antes de inativá-lo.`,
         );
     }
     await this.gravarSetor(ctx, dados?.id, versao, { ativo });
@@ -174,7 +174,7 @@ export class EstruturaService {
       if (pessoas)
         throw new ErroDeNegocio(
           'REGRA_DE_NEGOCIO',
-          `${pessoas === 1 ? '1 funcionário ativo tem' : `${pessoas} funcionários ativos têm`} esta função. Mude a função antes de inativá-la.`,
+          `${pessoas === 1 ? '1 profissional ativo tem' : `${pessoas} profissionais ativos têm`} esta função. Mude a função antes de inativá-la.`,
         );
     }
     await this.gravarFuncao(ctx, dados?.id, versao, { ativo });

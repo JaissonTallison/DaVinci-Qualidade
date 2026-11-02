@@ -44,12 +44,20 @@ export default async function Nps({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
     <>
-      <h1 className={tituloDaPagina}>Satisfação do cliente (NPS)</h1>
+      <h1 className={tituloDaPagina}>
+        Satisfação do cliente (NPS — Net Promoter Score)
+      </h1>
       <p className="mt-1 max-w-2xl text-base text-texto-2">
-        “De 0 a 10, quanto você recomendaria nossos serviços?” Nota 9 e 10 são
-        promotores; 0 a 6, detratores. NPS = % promotores − % detratores, nos
-        últimos 12 meses.
+        Lealdade do cliente, medida nos últimos 12 meses.
       </p>
+      <Recolhido titulo="Como funciona o NPS">
+        <p className="max-w-2xl text-base text-texto-2">
+          O NPS (Net Promoter Score) parte de uma pergunta: “De 0 a 10, quanto
+          você recomendaria nossos serviços?”. As notas dividem os clientes em
+          três grupos: 9 e 10 são promotores; 7 e 8, neutros; 0 a 6, detratores.
+          O índice é a porcentagem de promotores menos a de detratores.
+        </p>
+      </Recolhido>
       <Aviso avisos={{ registrada: "Resposta registrada." }} chave={aviso} />
       {novo && <LinkDaPesquisa convite={novo} />}
       {podeEditar && clientes.ok && (

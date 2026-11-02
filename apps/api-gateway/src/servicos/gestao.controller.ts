@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -10,8 +11,10 @@ import {
 } from '@nestjs/common';
 import type { z } from 'zod';
 import {
+  analiseDoContratoSchema,
   analisarReclamacaoSchema,
   atualizarContratoSchema,
+  atualizarRequisitoDoContratoSchema,
   atualizarServicoDoCatalogoSchema,
   criarConviteSchema,
   encerrarContratoSchema,
@@ -19,8 +22,10 @@ import {
   filtroReclamacoesSchema,
   novaReclamacaoSchema,
   novoContratoSchema,
+  novoRequisitoDoContratoSchema,
   novoServicoDoCatalogoSchema,
   PATTERNS,
+  situacaoDoRequisitoDoContratoSchema,
   registrarExecucaoSchema,
   responderPesquisaSchema,
   responderReclamacaoSchema,
@@ -182,6 +187,71 @@ export class ContratosController extends Base {
       id,
       a,
     );
+  }
+  @Post(':id/analise')
+  @Permissao('servicos.editar')
+  @HttpCode(200)
+  analisar(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() a: unknown,
+  ) {
+    return this.alterar<Contrato>(
+      ctx,
+      analiseDoContratoSchema,
+      P.analisarContrato,
+      id,
+      a,
+    );
+  }
+  @Post(':id/requisitos')
+  @Permissao('servicos.editar')
+  criarRequisito(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() dados: Record<string, unknown>,
+  ) {
+    validarEntrada(novoRequisitoDoContratoSchema, dados, ctx.rastreioId);
+    return this.enviar<Contrato>(ctx, P.criarRequisito, {
+      ...dados,
+      contratoId: id,
+    });
+  }
+  @Put('requisitos/:id')
+  @Permissao('servicos.editar')
+  atualizarRequisito(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() a: unknown,
+  ) {
+    return this.alterar<Contrato>(
+      ctx,
+      atualizarRequisitoDoContratoSchema,
+      P.atualizarRequisito,
+      id,
+      a,
+    );
+  }
+  @Post('requisitos/:id/situacao')
+  @Permissao('servicos.editar')
+  @HttpCode(200)
+  situacaoRequisito(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() a: unknown,
+  ) {
+    return this.alterar<Contrato>(
+      ctx,
+      situacaoDoRequisitoDoContratoSchema,
+      P.situacaoRequisito,
+      id,
+      a,
+    );
+  }
+  @Delete('requisitos/:id')
+  @Permissao('servicos.editar')
+  removerRequisito(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.enviar<Contrato>(ctx, P.removerRequisito, { id });
   }
 }
 

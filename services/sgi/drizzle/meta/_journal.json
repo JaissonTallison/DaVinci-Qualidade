@@ -15,6 +15,20 @@
       "when": 1792050964431,
       "tag": "0001_sgi",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793581564801,
+      "tag": "0002_ro_controles_existentes",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793582646837,
+      "tag": "0003_inovacao_campos",
+      "breakpoints": true
     }
   ]
 }

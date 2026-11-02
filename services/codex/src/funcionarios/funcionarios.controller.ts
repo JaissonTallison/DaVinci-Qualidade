@@ -10,7 +10,7 @@ const S = PATTERNS.setoresEmpresa;
 const C = PATTERNS.funcoes;
 type ComId = { id?: unknown; alteracoes?: unknown };
 
-/** Funcionários, setores e funções, pela fila davinci.codex. Toda regra está nos services. */
+/** Profissionais, setores e funções, pela fila davinci.codex. Toda regra está nos services. */
 @Controller()
 export class FuncionariosController {
   constructor(

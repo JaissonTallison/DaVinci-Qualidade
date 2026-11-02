@@ -9,6 +9,7 @@ import { CompetenciasModule } from './competencias/competencias.module.js';
 import { EsocialModule } from './esocial/esocial.module.js';
 import { EmergenciaModule } from './emergencia/emergencia.module.js';
 import { PgrModule } from './pgr/pgr.module.js';
+import { RequisitosLegaisSstModule } from './requisitos-legais-sst/requisitos-legais-sst.module.js';
 import { PtsModule } from './pts/pts.module.js';
 import { RegistrosModule } from './registros/registros.module.js';
 import { TerceirosModule } from './terceiros/terceiros.module.js';
@@ -26,6 +27,7 @@ import { BuscaModule } from './busca/busca.module.js';
     EsocialModule,
     EmergenciaModule,
     PgrModule,
+    RequisitosLegaisSstModule,
     PtsModule,
     RegistrosModule,
     TerceirosModule,

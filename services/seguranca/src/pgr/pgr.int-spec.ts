@@ -97,6 +97,7 @@ describe('PGR', () => {
       criticos: 1,
       altos: 1,
       acoesVencidas: 1,
+      revisoesVencidas: 0,
     });
     const reavaliado = await servico.atualizar(ctx, {
       id: critico.id,

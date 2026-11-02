@@ -22,6 +22,7 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
+import { Recolhido } from "@/components/formulario-de-acao";
 import { NivelDoRisco } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
@@ -33,6 +34,7 @@ import {
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { BASE_LEGAL_PGR } from "./base-legal";
 
 export const metadata: Metadata = { title: "PGR" };
 
@@ -127,13 +129,32 @@ export default async function Pgr({
             Inventário de riscos do PGR e as ações de controle de cada um.
           </p>
         </div>
-        {podeCriar && (
-          <Link href={`${BASE}/novo`} className={botaoPrimario}>
-            <IconeDaTela href={`${BASE}/novo`} />
-            Cadastrar risco
+        <div className="flex flex-wrap gap-3">
+          <Link href={`${BASE}/documento`} className={botaoSecundario}>
+            Documento do PGR
           </Link>
-        )}
+          {podeCriar && (
+            <Link href={`${BASE}/novo`} className={botaoPrimario}>
+              <IconeDaTela href={`${BASE}/novo`} />
+              Cadastrar risco
+            </Link>
+          )}
+        </div>
       </header>
+      <Recolhido titulo="Base legal · NR-1">
+        <p className="text-base text-texto-2">
+          {BASE_LEGAL_PGR.norma}. {BASE_LEGAL_PGR.ementa}
+        </p>
+        <ul className="mt-3 space-y-1.5 text-sm text-texto-2">
+          {BASE_LEGAL_PGR.itens.map((i) => (
+            <li key={i.item}>
+              <span className="font-mono text-texto">{i.item}</span> —{" "}
+              <span className="text-texto">{i.titulo}</span>: {i.comoAtende}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-xs text-texto-3">{BASE_LEGAL_PGR.fonte}</p>
+      </Recolhido>
       <section className={`${painel} mt-6`}>
         <form
           className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3"

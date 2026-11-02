@@ -4,13 +4,13 @@ import type { Mudanca } from "@davinci/types";
 import { Campo } from "@/components/campo";
 import { Bloco, Formulario } from "@/components/formulario-de-acao";
 import { decidirMudanca, implementarMudanca } from "@/lib/acoes-sgi";
-import { campo } from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 
-export function DecidirMudanca({ mudanca }: { mudanca: Mudanca }) {
+export function DecidirInovacao({ mudanca }: { mudanca: Mudanca }) {
   return (
     <Bloco
-      titulo="Decidir"
-      descricao="Confira se os impactos foram tratados antes de aprovar."
+      titulo="Avaliar"
+      descricao="Pese o ganho esperado, a viabilidade e os recursos antes de aprovar."
     >
       <Formulario
         acao={decidirMudanca.bind(null, mudanca.id)}
@@ -40,7 +40,7 @@ export function DecidirMudanca({ mudanca }: { mudanca: Mudanca }) {
                     value="rejeitar"
                     defaultChecked={v.decisao === "rejeitar"}
                   />{" "}
-                  Rejeitar
+                  Reprovar
                 </label>
               </div>
               {erros.aprovar && (
@@ -63,11 +63,11 @@ export function DecidirMudanca({ mudanca }: { mudanca: Mudanca }) {
   );
 }
 
-export function ImplementarMudanca({ mudanca }: { mudanca: Mudanca }) {
+export function ImplementarInovacao({ mudanca }: { mudanca: Mudanca }) {
   return (
     <Bloco
       titulo="Registrar a implementação"
-      descricao="Diga como foi verificado que a mudança funcionou sem efeitos indesejados."
+      descricao="Diga os resultados obtidos: o ganho se confirmou, sem efeitos indesejados?"
     >
       <Formulario
         acao={implementarMudanca.bind(null, mudanca.id)}
@@ -75,13 +75,18 @@ export function ImplementarMudanca({ mudanca }: { mudanca: Mudanca }) {
         rotuloDoBotao="Marcar como implementada"
       >
         {(erros, v) => (
-          <Campo id="verificacao" rotulo="Verificação" erro={erros.verificacao}>
-            <input
+          <Campo
+            id="verificacao"
+            rotulo="Resultados obtidos"
+            erro={erros.verificacao}
+          >
+            <textarea
               id="verificacao"
               name="verificacao"
+              rows={2}
               maxLength={500}
               defaultValue={v.verificacao}
-              className={campo}
+              className={areaDeTexto}
             />
           </Campo>
         )}

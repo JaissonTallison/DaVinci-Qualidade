@@ -1,0 +1,1 @@
+ALTER TABLE "riscos" ADD COLUMN "hierarquia_controle" varchar(20);

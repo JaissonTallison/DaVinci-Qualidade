@@ -18,7 +18,7 @@ import { FormularioDeEntrega } from "./formulario";
 
 export const metadata: Metadata = { title: "Registrar entrega de EPI" };
 
-/** A lista de funcionários vem limitada; com muita gente, a busca acima estreita a escolha. */
+/** A lista de profissionais vem limitada; com muita gente, a busca acima estreita a escolha. */
 const LIMITE = 100;
 
 export default async function NovaEntrega({
@@ -45,7 +45,7 @@ export default async function NovaEntrega({
     : "/seguranca/entregas-de-epi";
   const erro = !lista.ok ? lista.erro : !epis.ok ? epis.erro : null;
 
-  // O funcionário que veio da ficha entra na lista mesmo fora da busca.
+  // O profissional que veio da ficha entra na lista mesmo fora da busca.
   const funcionarios = lista.ok ? lista.dados.itens : [];
   if (
     escolhido?.ok &&
@@ -57,11 +57,11 @@ export default async function NovaEntrega({
   return (
     <>
       <Link href={voltar} className="dv-voltar">
-        {funcionarioId ? "Funcionário" : "Entregas de EPI"}
+        {funcionarioId ? "Profissional" : "Entregas de EPI"}
       </Link>
       <h1 className={`${tituloDaPagina} mt-1`}>Registrar entrega de EPI</h1>
       <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Só entra EPI com CA válido na data da entrega e só para funcionário
+        Só entra EPI com CA válido na data da entrega e só para profissional
         ativo. A entrega vai para a ficha de EPI da pessoa.
       </p>
       {erro ? (
@@ -90,15 +90,15 @@ export default async function NovaEntrega({
                 name="busca"
                 defaultValue={busca}
                 placeholder="Nome, matrícula ou CPF"
-                aria-label="Buscar funcionário"
+                aria-label="Buscar profissional"
                 className={`${campoCompacto} w-64`}
               />
               <button type="submit" className={botaoSecundario}>
-                Buscar funcionário
+                Buscar profissional
               </button>
               <span className="text-sm text-texto-2">
                 {lista.dados.total > LIMITE
-                  ? `Mostrando ${LIMITE} de ${lista.dados.total} funcionários ativos.`
+                  ? `Mostrando ${LIMITE} de ${lista.dados.total} profissionais ativos.`
                   : `${lista.dados.total} ${lista.dados.total === 1 ? "encontrado" : "encontrados"}.`}
               </span>
             </form>

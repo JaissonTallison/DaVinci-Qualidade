@@ -121,13 +121,15 @@ describe('Gestão do SGI', () => {
     expect((await sgi.resumo(ana)).analiseCriticaAtrasada).toBe(false);
     const m = await sgi.criarMudanca(ana, {
       titulo: 'Novo layout da expedição',
+      tipoInovacao: 'processo',
       descricao: 'Mudar as docas de lugar para separar carga e descarga.',
       motivo: 'Cruzamento de empilhadeiras',
+      ganhoEsperado: 'Menos risco de acidente e fluxo mais rápido.',
       impactos: 'Treinar operadores; revisar o PGR da expedição.',
       responsavel: 'Logística',
       dataPrevista: somarDias(hoje, 30),
     });
-    expect(m.numero).toMatch(/^MUD-\d{4}-001$/);
+    expect(m.numero).toMatch(/^INO-\d{4}-001$/);
     expect(
       (
         await recusa(

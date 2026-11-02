@@ -91,7 +91,7 @@ export default async function EntregasDeEpi({
         <div>
           <h1 className={tituloDaPagina}>Entregas de EPI</h1>
           <p className={subtituloDaPagina}>
-            Entregas de EPI por funcionário, com o CA e o termo de
+            Entregas de EPI por profissional, com o CA e o termo de
             responsabilidade de cada uma.
           </p>
         </div>
@@ -119,7 +119,7 @@ export default async function EntregasDeEpi({
               <span className="h-9 content-center text-base">
                 Ficha de{" "}
                 <strong className="font-semibold">
-                  {funcionario?.ok ? funcionario.dados.nome : "funcionário"}
+                  {funcionario?.ok ? funcionario.dados.nome : "profissional"}
                 </strong>
               </span>
             </>
@@ -173,7 +173,7 @@ export default async function EntregasDeEpi({
             descricao={
               filtrando
                 ? "Ajuste ou limpe os filtros para ver mais registros."
-                : "Cadastre os EPIs no catálogo e registre cada entrega com o funcionário."
+                : "Cadastre os EPIs no catálogo e registre cada entrega com o profissional."
             }
             acao={
               filtrando ? (

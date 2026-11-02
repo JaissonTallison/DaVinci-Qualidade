@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { useActionState } from "react";
 import type {
   Contrato,
@@ -15,7 +13,6 @@ import { criarOs } from "@/lib/acoes-servicos";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -167,10 +164,6 @@ export function FormularioDeOs({
         </Campo>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href="/servicos/ordens" className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : "Abrir ordem de serviço"}
         </button>

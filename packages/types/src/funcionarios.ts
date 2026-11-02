@@ -1,5 +1,5 @@
 /**
- * Funcionários, setores e funções da empresa (serviço codex). docs/05-modulos/funcionarios.md
+ * Profissionais, setores e funções da empresa (serviço codex). docs/05-modulos/funcionarios.md
  */
 import { z } from 'zod';
 import { cpfValido, normalizarDocumento } from './documento.js';
@@ -68,7 +68,7 @@ export interface Funcao {
   versao: string;
 }
 
-// ---------------------------------------------------------------- funcionários
+// ---------------------------------------------------------------- profissionais
 
 const cpf = z
   .string({ error: 'Informe o CPF.' })

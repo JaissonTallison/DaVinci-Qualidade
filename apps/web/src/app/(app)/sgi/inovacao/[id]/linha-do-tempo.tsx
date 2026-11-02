@@ -4,8 +4,8 @@ import { formatarData } from "@/lib/datas";
 
 const ORDEM = ["proposta", "aprovada", "implementada"] as const;
 
-/** Linha do tempo da mudança: proposta → aprovada → implementada (ou rejeitada). ISO 9001 6.3. */
-export function LinhaDoTempoDaMudanca({ m }: { m: Mudanca }) {
+/** Linha do tempo da inovação: proposta → aprovada → implementada (ou reprovada). */
+export function LinhaDoTempoDaInovacao({ m }: { m: Mudanca }) {
   const rejeitada = m.status === "rejeitada";
   const atual = rejeitada
     ? ORDEM.indexOf("aprovada")
@@ -20,13 +20,13 @@ export function LinhaDoTempoDaMudanca({ m }: { m: Mudanca }) {
       titulo: "Aprovada",
       detalhe: m.decididaEm
         ? `Decidida em ${formatarData(m.decididaEm)}`
-        : "Aguardando decisão de um gestor",
+        : "Aguardando avaliação de um gestor",
     },
     {
       titulo: "Implementada",
       detalhe: m.implementadaEm
         ? `Implementada em ${formatarData(m.implementadaEm)}`
-        : "Implementar e verificar o resultado",
+        : "Implementar e verificar os resultados",
     },
   ];
 
@@ -90,7 +90,7 @@ export function LinhaDoTempoDaMudanca({ m }: { m: Mudanca }) {
           >
             <X size={15} strokeWidth={2.5} />
           </span>
-          <p className="text-base font-semibold text-nao-conforme">Rejeitada</p>
+          <p className="text-base font-semibold text-nao-conforme">Reprovada</p>
         </li>
       )}
     </ol>

@@ -301,7 +301,7 @@ export class SgiService {
     return this.db.transaction(async (tx) => {
       const [{ ultimo }] = await tx
         .insert(sequencias)
-        .values({ empresaId: ctx.empresaId, nome: `MUD-${ano}`, ultimo: 1 })
+        .values({ empresaId: ctx.empresaId, nome: `INO-${ano}`, ultimo: 1 })
         .onConflictDoUpdate({
           target: [sequencias.empresaId, sequencias.nome],
           set: { ultimo: sql`${sequencias.ultimo} + 1` },
@@ -311,7 +311,7 @@ export class SgiService {
         .insert(mudancas)
         .values({
           ...m,
-          numero: `MUD-${ano}-${String(ultimo).padStart(3, '0')}`,
+          numero: `INO-${ano}-${String(ultimo).padStart(3, '0')}`,
           ...autoria(ctx),
         })
         .returning();
@@ -484,6 +484,7 @@ function montarRo(
     processo: l.processo,
     descricao: l.descricao,
     contexto: l.contexto,
+    controlesExistentes: l.controlesExistentes,
     probabilidade: l.probabilidade,
     impacto: l.impacto,
     classe: classeDoRo(l.probabilidade, l.impacto),
@@ -542,8 +543,10 @@ function montarMudanca(
     id: l.id,
     numero: l.numero,
     titulo: l.titulo,
+    tipoInovacao: l.tipoInovacao as Mudanca['tipoInovacao'],
     descricao: l.descricao,
     motivo: l.motivo,
+    ganhoEsperado: l.ganhoEsperado,
     impactos: l.impactos,
     responsavel: l.responsavel,
     dataPrevista: l.dataPrevista,

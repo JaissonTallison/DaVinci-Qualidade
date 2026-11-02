@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   NIVEIS_DE_INSPECAO,
@@ -20,7 +18,6 @@ import { Selecao } from "@/components/selecao";
 import { criarInspecao, type EstadoDaAcao } from "@/lib/acoes-inspecoes";
 import {
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
   tituloDaSecao,
@@ -210,7 +207,9 @@ export function FormularioNovaInspecao({
 
       <fieldset className="border-t border-borda p-5">
         <legend className="sr-only">Amostragem</legend>
-        <h2 className={tituloDaSecao}>Amostragem (NBR 5426)</h2>
+        <h2 className={tituloDaSecao}>
+          Amostragem (NBR 5426 — planos de amostragem na inspeção por atributos)
+        </h2>
         <p className="mt-1 text-base text-texto-2">
           Opcional. Com o NQA, o sistema calcula o tamanho da amostra e quantos
           defeituosos o lote aceita (amostragem simples, inspeção normal).
@@ -298,10 +297,6 @@ export function FormularioNovaInspecao({
       )}
 
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href="/qualidade/inspecoes" className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Criando…" : "Criar e responder"}
         </button>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
   GRUPOS_DE_RISCO,
+  HIERARQUIAS_DE_CONTROLE,
   PROBABILIDADES,
   SEVERIDADES,
   type DadosDoUsuario,
@@ -73,6 +74,14 @@ export default async function DetalheDoRisco({
             {x.probabilidade} · {PROBABILIDADES[x.probabilidade as 1]}
           </Dado>
           <Dado rotulo="Última revisão">{formatarMomento(x.revisadoEm)}</Dado>
+          {x.ativo && (
+            <Dado rotulo="Próxima revisão (2 anos)">
+              <span className={x.revisaoVencida ? "text-nao-conforme" : ""}>
+                {formatarData(x.proximaRevisao)}
+                {x.revisaoVencida && " · vencida"}
+              </span>
+            </Dado>
+          )}
           {x.controles && (
             <Dado rotulo="Controles existentes" largo>
               {x.controles}
@@ -81,6 +90,11 @@ export default async function DetalheDoRisco({
           {x.acoes && (
             <Dado rotulo="Medidas a implementar" largo>
               {x.acoes}
+            </Dado>
+          )}
+          {x.hierarquiaControle && (
+            <Dado rotulo="Hierarquia de controle">
+              {HIERARQUIAS_DE_CONTROLE[x.hierarquiaControle]}
             </Dado>
           )}
           {x.responsavel && <Dado rotulo="Responsável">{x.responsavel}</Dado>}

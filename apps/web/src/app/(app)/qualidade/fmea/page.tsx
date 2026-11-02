@@ -19,7 +19,9 @@ export default async function Fmeas() {
   const podeEditar = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
   return (
     <>
-      <h1 className={tituloDaPagina}>FMEA de processo</h1>
+      <h1 className={tituloDaPagina}>
+        FMEA de processo (Análise dos Modos de Falha e seus Efeitos)
+      </h1>
       <p className="mt-1 max-w-3xl text-base text-texto-2">
         Análise de modos de falha do processo no método AIAG-VDA: cada falha com
         severidade, ocorrência e detecção, e a Prioridade de Ação (alta, média,

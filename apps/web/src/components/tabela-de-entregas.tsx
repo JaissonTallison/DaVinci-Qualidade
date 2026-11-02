@@ -5,7 +5,7 @@ import { SituacaoDaEntrega } from "@/components/marcadores";
 import { formatarData, prazoRelativo } from "@/lib/datas";
 
 /**
- * Entregas de EPI: a lista geral e a ficha do funcionário usam a mesma tabela.
+ * Entregas de EPI: a lista geral e a ficha do profissional usam a mesma tabela.
  * Na ficha (`comFuncionario` falso) a coluna da pessoa sai.
  */
 export function TabelaDeEntregas({
@@ -28,7 +28,7 @@ export function TabelaDeEntregas({
           <tr>
             <th className="px-4 py-2 font-semibold">Data</th>
             {comFuncionario && (
-              <th className="px-4 py-2 font-semibold">Funcionário</th>
+              <th className="px-4 py-2 font-semibold">Profissional</th>
             )}
             <th className="px-4 py-2 font-semibold">EPI</th>
             <th className="px-4 py-2 font-semibold">Qtd.</th>

@@ -1,22 +1,21 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
+import { TIPOS_INOVACAO } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { proporMudanca } from "@/lib/acoes-sgi";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
-export function FormularioDeMudanca() {
+export function FormularioDeInovacao() {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     proporMudanca,
     {},
@@ -35,7 +34,7 @@ export function FormularioDeMudanca() {
           id="titulo"
           rotulo="Título"
           erro={erros.titulo}
-          className="sm:col-span-3"
+          className="sm:col-span-2"
         >
           <input
             id="titulo"
@@ -47,8 +46,28 @@ export function FormularioDeMudanca() {
           />
         </Campo>
         <Campo
+          id="tipoInovacao"
+          rotulo="Tipo de inovação"
+          erro={erros.tipoInovacao}
+        >
+          <Selecao
+            id="tipoInovacao"
+            name="tipoInovacao"
+            defaultValue={v.tipoInovacao}
+            className={campo}
+            aria-invalid={Boolean(erros.tipoInovacao)}
+          >
+            <option value="">Escolha</option>
+            {Object.entries(TIPOS_INOVACAO).map(([k, n]) => (
+              <option key={k} value={k}>
+                {n}
+              </option>
+            ))}
+          </Selecao>
+        </Campo>
+        <Campo
           id="descricao"
-          rotulo="O que muda"
+          rotulo="A proposta de inovação"
           erro={erros.descricao}
           className="sm:col-span-3"
         >
@@ -64,7 +83,7 @@ export function FormularioDeMudanca() {
         </Campo>
         <Campo
           id="motivo"
-          rotulo="Motivo"
+          rotulo="Oportunidade ou motivação"
           erro={erros.motivo}
           className="sm:col-span-3"
         >
@@ -78,8 +97,25 @@ export function FormularioDeMudanca() {
           />
         </Campo>
         <Campo
+          id="ganhoEsperado"
+          rotulo="Ganho esperado"
+          erro={erros.ganhoEsperado}
+          ajuda="Benefício: produtividade, custo, qualidade, satisfação, impacto ambiental…"
+          className="sm:col-span-3"
+        >
+          <textarea
+            id="ganhoEsperado"
+            name="ganhoEsperado"
+            rows={2}
+            maxLength={500}
+            defaultValue={v.ganhoEsperado}
+            className={areaDeTexto}
+            aria-invalid={Boolean(erros.ganhoEsperado)}
+          />
+        </Campo>
+        <Campo
           id="impactos"
-          rotulo="Impactos e riscos"
+          rotulo="Impactos e recursos necessários"
           erro={erros.impactos}
           ajuda="Pessoas, processos, recursos, SST e meio ambiente: o que precisa ser feito antes."
           className="sm:col-span-3"
@@ -112,7 +148,7 @@ export function FormularioDeMudanca() {
         </Campo>
         <Campo
           id="dataPrevista"
-          rotulo="Data prevista"
+          rotulo="Previsão de implementação"
           erro={erros.dataPrevista}
         >
           <input
@@ -126,12 +162,8 @@ export function FormularioDeMudanca() {
         </Campo>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href="/sgi/mudancas" className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Propor mudança"}
+          {salvando ? "Salvando…" : "Propor inovação"}
         </button>
       </div>
     </form>

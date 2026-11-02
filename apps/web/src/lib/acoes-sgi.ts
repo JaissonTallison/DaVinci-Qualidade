@@ -20,9 +20,8 @@ import {
 import { chamar, textos, versaoDe, type EstadoDaAcao } from "./acao";
 import { chamarApi } from "./api";
 
-const RO = "/sgi/riscos-e-oportunidades";
-
 export async function salvarRo(
+  base: string,
   id: string | null,
   _: EstadoDaAcao,
   form: FormData,
@@ -45,10 +44,11 @@ export async function salvarRo(
         valores,
       );
   if ("erro" in r) return r;
-  redirect(`${RO}/${r.dados.id}?aviso=${id ? "salvo" : "criado"}`);
+  redirect(`${base}/${r.dados.id}?aviso=${id ? "salvo" : "criado"}`);
 }
 
 export async function encerrarRo(
+  base: string,
   id: string,
   _: EstadoDaAcao,
   form: FormData,
@@ -62,7 +62,7 @@ export async function encerrarRo(
     valores,
   );
   if ("erro" in r) return r;
-  redirect(`${RO}/${id}?aviso=encerrado`);
+  redirect(`${base}/${id}?aviso=encerrado`);
 }
 
 export async function criarObjetivo(
@@ -147,7 +147,7 @@ export async function proporMudanca(
     valores,
   );
   if ("erro" in r) return r;
-  redirect(`/sgi/mudancas/${r.dados.id}?aviso=proposta`);
+  redirect(`/sgi/inovacao/${r.dados.id}?aviso=proposta`);
 }
 
 export async function decidirMudanca(
@@ -170,7 +170,7 @@ export async function decidirMudanca(
     valores,
   );
   if ("erro" in r) return r;
-  redirect(`/sgi/mudancas/${id}?aviso=${aprovar ? "aprovada" : "rejeitada"}`);
+  redirect(`/sgi/inovacao/${id}?aviso=${aprovar ? "aprovada" : "rejeitada"}`);
 }
 
 export async function implementarMudanca(
@@ -187,7 +187,7 @@ export async function implementarMudanca(
     valores,
   );
   if ("erro" in r) return r;
-  redirect(`/sgi/mudancas/${id}?aviso=implementada`);
+  redirect(`/sgi/inovacao/${id}?aviso=implementada`);
 }
 
 /** Manda agora o aviso por e-mail da empresa (o automático sai todo dia às 7h). */

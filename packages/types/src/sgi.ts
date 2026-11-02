@@ -75,6 +75,7 @@ const camposRo = {
   processo: texto('o processo', 120, 2),
   descricao: texto('a descrição', 500, 5),
   contexto: textoOpcional(500),
+  controlesExistentes: textoOpcional(1000),
   probabilidade: nota('a probabilidade'),
   impacto: nota('o impacto'),
   acao: textoOpcional(1000),
@@ -102,6 +103,7 @@ export interface RiscoOuOportunidade {
   processo: string;
   descricao: string;
   contexto: string | null;
+  controlesExistentes: string | null;
   probabilidade: number;
   impacto: number;
   classe: ClasseRo;
@@ -212,7 +214,7 @@ export interface AnaliseCritica {
   proximaAnalise: string;
 }
 
-// ---------------------------------------------------------------- mudanças (6.3)
+// ---------------------------------------------------------------- inovação (gestão de ideias de melhoria)
 
 export const STATUS_MUDANCA = {
   proposta: 'Proposta',
@@ -222,17 +224,32 @@ export const STATUS_MUDANCA = {
 } as const;
 export type StatusMudanca = keyof typeof STATUS_MUDANCA;
 
+/** Natureza da inovação proposta. */
+export const TIPOS_INOVACAO = {
+  processo: 'Processo',
+  produto: 'Produto ou serviço',
+  tecnologia: 'Tecnologia',
+  modelo_negocio: 'Modelo de negócio',
+  sustentabilidade: 'Sustentabilidade e ESG',
+  gestao: 'Gestão e pessoas',
+} as const;
+export type TipoInovacao = keyof typeof TIPOS_INOVACAO;
+
 export const novaMudancaSchema = z.object({
   titulo: texto('o título', 150, 5),
-  descricao: texto('o que muda', 1000, 10),
-  motivo: texto('o motivo', 500, 5),
+  tipoInovacao: z.enum(chaves(TIPOS_INOVACAO), {
+    error: 'Escolha o tipo de inovação.',
+  }),
+  descricao: texto('a proposta de inovação', 1000, 10),
+  motivo: texto('a oportunidade ou motivação', 500, 5),
+  ganhoEsperado: texto('o ganho esperado', 500, 5),
   impactos: texto(
-    'os impactos e riscos (pessoas, processos, recursos, SST, meio ambiente)',
+    'os impactos e recursos necessários (pessoas, processos, recursos, SST, meio ambiente)',
     1000,
     10,
   ),
   responsavel: texto('o responsável', 120, 3),
-  dataPrevista: data('a data prevista'),
+  dataPrevista: data('a previsão de implementação'),
 });
 export type NovaMudanca = z.input<typeof novaMudancaSchema>;
 export const decidirMudancaSchema = z.object({
@@ -252,8 +269,10 @@ export interface Mudanca {
   id: string;
   numero: string;
   titulo: string;
+  tipoInovacao: TipoInovacao;
   descricao: string;
   motivo: string;
+  ganhoEsperado: string;
   impactos: string;
   responsavel: string;
   dataPrevista: string;

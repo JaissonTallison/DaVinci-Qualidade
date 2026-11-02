@@ -19,8 +19,13 @@ export interface GrupoDoMenu {
  */
 export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
   {
-    titulo: "Painéis",
+    titulo: "Monitoramento",
     itens: [
+      {
+        rotulo: "Indicadores gerais",
+        href: "/paineis/indicadores",
+        permissao: "paineis.ver",
+      },
       {
         rotulo: "Vencimentos",
         href: "/paineis/vencimentos",
@@ -120,8 +125,13 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
     recurso: "sgi",
     itens: [
       {
-        rotulo: "Riscos e oportunidades",
-        href: "/sgi/riscos-e-oportunidades",
+        rotulo: "Riscos",
+        href: "/sgi/riscos",
+        permissao: "sgi.ver",
+      },
+      {
+        rotulo: "Oportunidades",
+        href: "/sgi/oportunidades",
         permissao: "sgi.ver",
       },
       {
@@ -135,8 +145,8 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "sgi.ver",
       },
       {
-        rotulo: "Gestão de mudanças",
-        href: "/sgi/mudancas",
+        rotulo: "Gestão de inovação",
+        href: "/sgi/inovacao",
         permissao: "sgi.ver",
       },
     ],
@@ -194,6 +204,11 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
       {
         rotulo: "PGR · Inventário de riscos",
         href: "/seguranca/pgr",
+        permissao: "seguranca.ver",
+      },
+      {
+        rotulo: "Requisitos legais de SST",
+        href: "/seguranca/requisitos-legais",
         permissao: "seguranca.ver",
       },
       {
@@ -337,7 +352,7 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "parceiros.ver",
       },
       {
-        rotulo: "Funcionários",
+        rotulo: "Profissionais",
         href: "/cadastros/funcionarios",
         permissao: "funcionarios.ver",
       },
@@ -447,14 +462,20 @@ export const ATALHOS_DE_CRIACAO: AtalhoDeCriacao[] = [
     recurso: "ambiental",
   },
   {
-    rotulo: "Risco ou oportunidade",
-    href: "/sgi/riscos-e-oportunidades/novo",
+    rotulo: "Risco",
+    href: "/sgi/riscos/novo",
     permissao: "sgi.editar",
     recurso: "sgi",
   },
   {
-    rotulo: "Mudança",
-    href: "/sgi/mudancas/nova",
+    rotulo: "Oportunidade",
+    href: "/sgi/oportunidades/novo",
+    permissao: "sgi.editar",
+    recurso: "sgi",
+  },
+  {
+    rotulo: "Inovação",
+    href: "/sgi/inovacao/nova",
     permissao: "sgi.editar",
     recurso: "sgi",
   },
@@ -495,7 +516,7 @@ export const ATALHOS_DE_CRIACAO: AtalhoDeCriacao[] = [
     recurso: "seguranca",
   },
   {
-    rotulo: "Funcionário",
+    rotulo: "Profissional",
     href: "/cadastros/funcionarios/novo",
     permissao: "funcionarios.editar",
   },

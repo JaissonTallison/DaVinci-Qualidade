@@ -79,7 +79,7 @@ const codex = {
         ? of(f)
         : throwError(() => ({
             codigo: 'NAO_ENCONTRADO',
-            mensagem: 'Funcionário não encontrado.',
+            mensagem: 'Profissional não encontrado.',
           }))
     ) as Observable<R>;
   },
@@ -208,7 +208,7 @@ describe('catálogo', () => {
 });
 
 describe('entregas', () => {
-  it('confere o funcionário no Codex e guarda nome, matrícula e o CA do dia', async () => {
+  it('confere o profissional no Codex e guarda nome, matrícula e o CA do dia', async () => {
     codex.pedidos.length = 0;
     const e = await servico.registrarEntrega(empresaA, entrega());
     expect(codex.pedidos).toEqual([
@@ -227,7 +227,7 @@ describe('entregas', () => {
     });
   });
 
-  it('recusa CA vencido no dia, funcionário desconhecido ou desligado, data futura e anterior à admissão', async () => {
+  it('recusa CA vencido no dia, profissional desconhecido ou desligado, data futura e anterior à admissão', async () => {
     expect(
       (
         await recusa(
@@ -252,7 +252,7 @@ describe('entregas', () => {
         )
       ).detalhes,
     ).toEqual([
-      { campo: 'funcionarioId', mensagem: 'Funcionário não encontrado.' },
+      { campo: 'funcionarioId', mensagem: 'Profissional não encontrado.' },
     ]);
     expect(
       (
@@ -264,7 +264,7 @@ describe('entregas', () => {
         )
       ).detalhes?.[0]?.mensagem,
     ).toBe(
-      'Carlos Lima está desligado: EPI só é entregue a funcionário ativo.',
+      'Carlos Lima está desligado: EPI só é entregue a profissional ativo.',
     );
     expect(
       (
@@ -288,7 +288,7 @@ describe('entregas', () => {
     ).toEqual([
       {
         campo: 'data',
-        mensagem: 'A entrega não pode ser anterior à admissão do funcionário.',
+        mensagem: 'A entrega não pode ser anterior à admissão do profissional.',
       },
     ]);
   });

@@ -1,15 +1,22 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { useActionState } from "react";
-import type { Instrumento } from "@davinci/types";
+import { Sparkles } from "lucide-react";
+import { useActionState, useState } from "react";
+import {
+  GRANDEZAS_DE_MEDICAO,
+  RAMOS_DE_CALIBRACAO,
+  type Instrumento,
+  type ItemDoCatalogoDeCalibracao,
+  type RamoDeCalibracao,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { salvarInstrumento, type EstadoDaAcao } from "@/lib/acoes-calibracao";
-import { botaoPrimario, botaoSecundario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { CATALOGO_DE_CALIBRACAO } from "./catalogo";
 
+/** Campos de texto, na ordem em que aparecem. `grandeza` e `frequenciaMeses` são tratados à parte. */
 const CAMPOS = [
   {
     nome: "descricao",
@@ -18,26 +25,55 @@ const CAMPOS = [
     colunas: "sm:col-span-2",
     ajuda: "Ex.: Paquímetro digital 150 mm",
   },
-  { nome: "fabricante", rotulo: "Fabricante", max: 80 },
-  { nome: "modelo", rotulo: "Modelo", max: 80 },
-  { nome: "numeroSerie", rotulo: "Número de série", max: 60, mono: true },
-  {
-    nome: "faixa",
-    rotulo: "Faixa de medição",
-    max: 80,
-    ajuda: "Ex.: 0 a 150 mm",
-  },
-  { nome: "local", rotulo: "Local", max: 120, lista: "setores" },
-  { nome: "responsavel", rotulo: "Responsável", max: 120, lista: "pessoas" },
+  { nome: "unidade", rotulo: "Unidade", max: 20, ajuda: "Ex.: mm, °C, kg" },
+  { nome: "faixa", rotulo: "Faixa de medição", max: 80, ajuda: "Ex.: 0 a 150 mm" },
   {
     nome: "criterioAceitacao",
     rotulo: "Critério de aceitação",
     max: 200,
     colunas: "sm:col-span-2",
-    ajuda:
-      "Ex.: erro máximo ± 0,02 mm. É com ele que o certificado é aprovado ou reprovado.",
+    ajuda: "É com ele que o certificado é aprovado ou reprovado. Ex.: ± 0,02 mm.",
   },
+  {
+    nome: "erroMaximoAdmissivel",
+    rotulo: "Erro máximo admissível (EMA)",
+    max: 200,
+    ajuda: "Ex.: ± 0,02 mm",
+  },
+  { nome: "incerteza", rotulo: "Incerteza", max: 120, ajuda: "Ex.: U = 0,01 mm (k=2)" },
+  {
+    nome: "classeExatidao",
+    rotulo: "Classe de exatidão",
+    max: 60,
+    ajuda: "Ex.: Classe II (OIML R76)",
+  },
+  {
+    nome: "normaReferencia",
+    rotulo: "Norma de referência",
+    max: 160,
+    colunas: "sm:col-span-2",
+    ajuda: "Ex.: ABNT NBR ISO 10012",
+  },
+  { nome: "fabricante", rotulo: "Fabricante", max: 80 },
+  { nome: "modelo", rotulo: "Modelo", max: 80 },
+  { nome: "numeroSerie", rotulo: "Número de série", max: 60, mono: true },
+  { nome: "local", rotulo: "Local", max: 120, lista: "setores" },
+  { nome: "responsavel", rotulo: "Responsável", max: 120, lista: "pessoas" },
 ] as const;
+
+/** Preenche os campos do formulário a partir de um item do catálogo. */
+function doModelo(item: ItemDoCatalogoDeCalibracao): Record<string, string> {
+  return {
+    tag: item.tagSugerida ? `${item.tagSugerida}-` : "",
+    descricao: item.instrumento,
+    grandeza: item.grandeza,
+    unidade: item.unidade,
+    faixa: item.faixa,
+    criterioAceitacao: item.criterioAceitacao,
+    normaReferencia: item.normaReferencia,
+    frequenciaMeses: String(item.frequenciaMeses),
+  };
+}
 
 /** Cadastrar (sem `instrumento`) ou editar um instrumento. */
 export function FormularioDeInstrumento({
@@ -52,7 +88,7 @@ export function FormularioDeInstrumento({
     {},
   );
   const erros = errosPorCampo(estado.erro?.detalhes);
-  const v: Record<string, string> =
+  const base: Record<string, string> =
     estado.valores ??
     Object.fromEntries(
       Object.entries(instrumento ?? {}).map(([k, x]) => [
@@ -62,12 +98,83 @@ export function FormularioDeInstrumento({
     );
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
+
+  // Catálogo (só no cadastro novo): escolher um modelo preenche os campos.
+  const [ramo, setRamo] = useState<RamoDeCalibracao | "">("");
+  const [modelo, setModelo] = useState<Record<string, string> | null>(null);
+  const [montagem, setMontagem] = useState(0);
+  const itensDoRamo = ramo
+    ? CATALOGO_DE_CALIBRACAO.filter((i) => i.ramos.includes(ramo))
+    : [];
+  const v = modelo ? { ...base, ...modelo } : base;
+  const valor = (nome: string) => v[nome] ?? "";
+
   return (
     <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
       {instrumento && (
         <input type="hidden" name="versao" value={instrumento.versao} />
       )}
-      <div className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}>
+
+      {!instrumento && (
+        <div
+          className={`border-b border-borda ${embutido ? "mb-5 pb-5" : "px-5 pt-5 pb-5"}`}
+        >
+          <p className="flex items-center gap-2 text-sm font-semibold text-texto">
+            <Sparkles aria-hidden size={16} strokeWidth={2} className="text-acao" />
+            Começar de um modelo do seu ramo (opcional)
+          </p>
+          <p className="mt-1 text-sm text-texto-2">
+            Escolha o ramo e o instrumento: os campos abaixo são preenchidos com
+            valores típicos (grandeza, faixa, critério, frequência, norma). Você
+            ajusta tudo ao seu equipamento.
+          </p>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <select
+              aria-label="Ramo"
+              value={ramo}
+              onChange={(e) => {
+                setRamo(e.target.value as RamoDeCalibracao | "");
+                setModelo(null);
+              }}
+              className={campo}
+            >
+              <option value="">Ramo…</option>
+              {Object.entries(RAMOS_DE_CALIBRACAO).map(([k, nome]) => (
+                <option key={k} value={k}>
+                  {nome}
+                </option>
+              ))}
+            </select>
+            <select
+              aria-label="Instrumento do catálogo"
+              value=""
+              disabled={!ramo}
+              onChange={(e) => {
+                const i = itensDoRamo[Number(e.target.value)];
+                if (i) {
+                  setModelo(doModelo(i));
+                  setMontagem((m) => m + 1);
+                }
+              }}
+              className={`${campo} disabled:opacity-60`}
+            >
+              <option value="">
+                {ramo ? "Escolha o instrumento…" : "Escolha o ramo primeiro"}
+              </option>
+              {itensDoRamo.map((i, idx) => (
+                <option key={idx} value={idx}>
+                  {i.instrumento} · {GRANDEZAS_DE_MEDICAO[i.grandeza]}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+
+      <div
+        key={montagem}
+        className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}
+      >
         {erroGeral && (
           <div className="sm:col-span-3">
             <AvisoDeErro erro={erroGeral} />
@@ -82,11 +189,27 @@ export function FormularioDeInstrumento({
           <input
             id="tag"
             name="tag"
-            defaultValue={v.tag}
+            defaultValue={valor("tag")}
             maxLength={30}
             className={`${campo} font-mono uppercase`}
             aria-invalid={Boolean(erros.tag)}
           />
+        </Campo>
+        <Campo id="grandeza" rotulo="Grandeza" erro={erros.grandeza}>
+          <select
+            id="grandeza"
+            name="grandeza"
+            defaultValue={valor("grandeza")}
+            className={campo}
+            aria-invalid={Boolean(erros.grandeza)}
+          >
+            <option value="">—</option>
+            {Object.entries(GRANDEZAS_DE_MEDICAO).map(([k, nome]) => (
+              <option key={k} value={k}>
+                {nome}
+              </option>
+            ))}
+          </select>
         </Campo>
         {CAMPOS.map((c) => (
           <Campo
@@ -101,7 +224,7 @@ export function FormularioDeInstrumento({
               id={c.nome}
               name={c.nome}
               list={"lista" in c ? c.lista : undefined}
-              defaultValue={v[c.nome]}
+              defaultValue={valor(c.nome)}
               maxLength={c.max}
               className={`${campo} ${"mono" in c ? "font-mono" : ""}`}
               aria-invalid={Boolean(erros[c.nome])}
@@ -117,7 +240,7 @@ export function FormularioDeInstrumento({
             id="frequenciaMeses"
             name="frequenciaMeses"
             inputMode="numeric"
-            defaultValue={v.frequenciaMeses ?? "12"}
+            defaultValue={valor("frequenciaMeses") || "12"}
             className={campo}
             aria-invalid={Boolean(erros.frequenciaMeses)}
           />
@@ -126,12 +249,6 @@ export function FormularioDeInstrumento({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link href="/qualidade/calibracao" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando
             ? "Salvando…"

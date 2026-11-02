@@ -41,10 +41,10 @@ export class BuscaService {
         .then((ls) =>
           ls.map((l): ResultadoDaBusca => ({
             modulo: 'sgi',
-            tipo: 'Risco ou oportunidade',
+            tipo: l.tipo === 'risco' ? 'Risco' : 'Oportunidade',
             titulo: l.descricao,
             detalhe: l.processo ?? null,
-            href: `/sgi/riscos-e-oportunidades/${l.id}`,
+            href: `/sgi/${l.tipo === 'risco' ? 'riscos' : 'oportunidades'}/${l.id}`,
           })),
         ),
       this.db
@@ -60,10 +60,10 @@ export class BuscaService {
         .then((ls) =>
           ls.map((l): ResultadoDaBusca => ({
             modulo: 'sgi',
-            tipo: 'Mudança',
+            tipo: 'Inovação',
             titulo: `${l.numero} · ${l.titulo}`,
             detalhe: l.responsavel ?? null,
-            href: `/sgi/mudancas/${l.id}`,
+            href: `/sgi/inovacao/${l.id}`,
           })),
         ),
       this.db

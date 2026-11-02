@@ -133,7 +133,7 @@ export class CompetenciasService {
         ),
       );
     if (!f)
-      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Funcionário não encontrado.');
+      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Profissional não encontrado.');
     const requisitos = await this.requisitos(ctx, f.funcaoId);
     const atendidos = (await this.avaliar(ctx, [f.id], requisitos)).get(f.id)!;
     return {

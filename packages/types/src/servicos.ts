@@ -399,6 +399,79 @@ export interface Contrato {
   motivoEncerramento: string | null;
   sla: IndicadorDoSla;
   osAbertas: number;
+  /** Requisitos do cliente (ISO 9001 8.2.2). */
+  requisitos: RequisitoDoContrato[];
+  /** Análise crítica dos requisitos (ISO 9001 8.2.3). */
+  analiseData: string | null;
+  analiseResponsavel: string | null;
+  analiseConclusao: ConclusaoDaAnalise | null;
+  analiseParecer: string | null;
+  versao: string;
+}
+
+// ----- requisitos do cliente e análise crítica (ISO 9001 8.2)
+
+export const TIPOS_DE_REQUISITO_DO_CONTRATO = {
+  tecnico: 'Técnico / especificação',
+  legal: 'Legal / regulatório',
+  prazo: 'Prazo / entrega',
+  documentacao: 'Documentação / entregável',
+  transporte: 'Embalagem / transporte',
+  comunicacao: 'Comunicação / atendimento',
+  outro: 'Outro',
+} as const;
+export type TipoDeRequisitoDoContrato = keyof typeof TIPOS_DE_REQUISITO_DO_CONTRATO;
+
+export const SITUACOES_DO_REQUISITO_DO_CONTRATO = {
+  pendente: 'Pendente',
+  atendido: 'Atendido',
+  nao_se_aplica: 'Não se aplica',
+} as const;
+export type SituacaoDoRequisitoDoContrato = keyof typeof SITUACOES_DO_REQUISITO_DO_CONTRATO;
+
+export const CONCLUSOES_DA_ANALISE = {
+  pode_cumprir: 'Pode cumprir',
+  com_ressalvas: 'Pode cumprir com ressalvas',
+  nao_pode: 'Não pode cumprir',
+} as const;
+export type ConclusaoDaAnalise = keyof typeof CONCLUSOES_DA_ANALISE;
+
+const camposDoRequisito = {
+  tipo: z.enum(chaves(TIPOS_DE_REQUISITO_DO_CONTRATO), { error: 'Escolha o tipo.' }),
+  descricao: texto('a descrição do requisito', 500, 3),
+  criterioAceitacao: textoOpcional(500),
+  obrigatorio: z.coerce.boolean().default(true),
+  evidencia: textoOpcional(500),
+};
+export const novoRequisitoDoContratoSchema = z.object(camposDoRequisito);
+export type NovoRequisitoDoContrato = z.input<typeof novoRequisitoDoContratoSchema>;
+export const atualizarRequisitoDoContratoSchema = z.object({
+  ...camposDoRequisito,
+  versao,
+});
+export const situacaoDoRequisitoDoContratoSchema = z.object({
+  versao,
+  situacao: z.enum(chaves(SITUACOES_DO_REQUISITO_DO_CONTRATO), {
+    error: 'Situação inválida.',
+  }),
+});
+export const analiseDoContratoSchema = z.object({
+  versao,
+  conclusao: z.enum(chaves(CONCLUSOES_DA_ANALISE), {
+    error: 'Escolha a conclusão da análise.',
+  }),
+  responsavel: texto('o responsável pela análise', 120, 3),
+  parecer: texto('o parecer', 1000, 5),
+});
+
+export interface RequisitoDoContrato {
+  id: string;
+  tipo: TipoDeRequisitoDoContrato;
+  descricao: string;
+  criterioAceitacao: string | null;
+  obrigatorio: boolean;
+  situacao: SituacaoDoRequisitoDoContrato;
+  evidencia: string | null;
   versao: string;
 }
 

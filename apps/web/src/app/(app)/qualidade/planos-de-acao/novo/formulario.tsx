@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   MAXIMO_DE_TAREFAS,
@@ -181,10 +179,6 @@ export function FormularioNovoPlano({
       </div>
 
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href="/qualidade/planos-de-acao" className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Criando…" : "Criar plano"}
         </button>

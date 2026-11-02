@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   TIPOS_ACIDENTE,
@@ -15,7 +13,6 @@ import { salvarAcidente, type EstadoDaAcao } from "@/lib/acoes-acidentes";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -211,12 +208,6 @@ export function FormularioDeAcidente({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link href="/seguranca/acidentes" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : acidente ? "Salvar registro" : "Registrar"}
         </button>

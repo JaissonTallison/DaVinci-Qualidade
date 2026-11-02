@@ -65,7 +65,7 @@ const EPI_REPETIDO = 'Já existe este EPI com este CA no catálogo.';
 export class EpisService {
   constructor(
     @Inject(DATABASE) private readonly db: Db,
-    /** Dono do cadastro de funcionários: confere se a pessoa existe e está ativa. */
+    /** Dono do cadastro de profissionais: confere se a pessoa existe e está ativa. */
     @Inject(SERVICES.CODEX) private readonly codex: Pick<ClientProxy, 'send'>,
   ) {}
 
@@ -224,7 +224,7 @@ export class EpisService {
     };
   }
 
-  /** NR-6: só com CA válido no dia, só para funcionário ativo (conferido no codex). */
+  /** NR-6: só com CA válido no dia, só para profissional ativo (conferido no codex). */
   async registrarEntrega(ctx: Contexto, dados: unknown): Promise<EntregaEpi> {
     const e = validar(registrarEntregaSchema, dados);
     const hoje = hojeEmBrasilia();
@@ -252,18 +252,18 @@ export class EpisService {
         erro instanceof ErroDeNegocio &&
         (erro.getError() as { codigo?: string }).codigo === 'NAO_ENCONTRADO'
       )
-        throw invalido('funcionarioId', 'Funcionário não encontrado.');
+        throw invalido('funcionarioId', 'Profissional não encontrado.');
       throw erro;
     });
     if (!funcionario.ativo)
       throw invalido(
         'funcionarioId',
-        `${funcionario.nome} está desligado: EPI só é entregue a funcionário ativo.`,
+        `${funcionario.nome} está desligado: EPI só é entregue a profissional ativo.`,
       );
     if (e.data < funcionario.admissao)
       throw invalido(
         'data',
-        'A entrega não pode ser anterior à admissão do funcionário.',
+        'A entrega não pode ser anterior à admissão do profissional.',
       );
     const [l] = await this.db
       .insert(entregasEpi)

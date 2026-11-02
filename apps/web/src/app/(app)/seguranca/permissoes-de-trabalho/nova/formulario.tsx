@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
 import { DURACAO_MAXIMA_PT_HORAS, TIPOS_PT } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -12,7 +10,6 @@ import { solicitarPt } from "@/lib/acoes-pgr-pt";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -149,13 +146,6 @@ export function FormularioDePt() {
         </Campo>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link
-          href="/seguranca/permissoes-de-trabalho"
-          className={botaoSecundario}
-        >
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : "Solicitar PT"}
         </button>

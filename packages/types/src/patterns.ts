@@ -291,7 +291,7 @@ export const PATTERNS = {
     registrarInvestigacao: 'acidentes.registrar-investigacao',
     registrarDadosCat: 'acidentes.registrar-dados-cat',
   },
-  /** Codex: funcionários, setores e funções da empresa (docs/05-modulos/funcionarios.md). */
+  /** Codex: profissionais, setores e funções da empresa (docs/05-modulos/funcionarios.md). */
   funcionarios: {
     listar: 'funcionarios.listar',
     obter: 'funcionarios.obter',
@@ -362,6 +362,13 @@ export const PATTERNS = {
     resumo: 'riscos.resumo',
     definirEsocial: 'riscos.definir-esocial',
   },
+  requisitosSst: {
+    listar: 'requisitos-sst.listar',
+    obter: 'requisitos-sst.obter',
+    criar: 'requisitos-sst.criar',
+    atualizar: 'requisitos-sst.atualizar',
+    avaliar: 'requisitos-sst.avaliar',
+  },
   pts: {
     listar: 'pts.listar',
     obter: 'pts.obter',
@@ -431,6 +438,11 @@ export const PATTERNS = {
     criarContrato: 'servicos.contratos.criar',
     atualizarContrato: 'servicos.contratos.atualizar',
     encerrarContrato: 'servicos.contratos.encerrar',
+    analisarContrato: 'servicos.contratos.analisar',
+    criarRequisito: 'servicos.contratos.requisito.criar',
+    atualizarRequisito: 'servicos.contratos.requisito.atualizar',
+    situacaoRequisito: 'servicos.contratos.requisito.situacao',
+    removerRequisito: 'servicos.contratos.requisito.remover',
     listarReclamacoes: 'servicos.reclamacoes.listar',
     resumoReclamacoes: 'servicos.reclamacoes.resumo',
     obterReclamacao: 'servicos.reclamacoes.obter',

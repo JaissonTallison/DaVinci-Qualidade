@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import type { DadosDoUsuario, Instrumento } from "@davinci/types";
+import {
+  GRANDEZAS_DE_MEDICAO,
+  type DadosDoUsuario,
+  type Instrumento,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { SituacaoDoInstrumento } from "@/components/marcadores";
@@ -100,10 +104,26 @@ export default async function DetalheDoInstrumento({
             a cada {i.frequenciaMeses}{" "}
             {i.frequenciaMeses === 1 ? "mês" : "meses"}
           </Dado>
+          {i.grandeza && (
+            <Dado rotulo="Grandeza">{GRANDEZAS_DE_MEDICAO[i.grandeza]}</Dado>
+          )}
+          {i.unidade && <Dado rotulo="Unidade">{i.unidade}</Dado>}
+          {i.faixa && <Dado rotulo="Faixa">{i.faixa}</Dado>}
           {i.criterioAceitacao && (
             <Dado rotulo="Critério de aceitação">{i.criterioAceitacao}</Dado>
           )}
-          {i.faixa && <Dado rotulo="Faixa">{i.faixa}</Dado>}
+          {i.erroMaximoAdmissivel && (
+            <Dado rotulo="Erro máximo admissível (EMA)">
+              {i.erroMaximoAdmissivel}
+            </Dado>
+          )}
+          {i.incerteza && <Dado rotulo="Incerteza">{i.incerteza}</Dado>}
+          {i.classeExatidao && (
+            <Dado rotulo="Classe de exatidão">{i.classeExatidao}</Dado>
+          )}
+          {i.normaReferencia && (
+            <Dado rotulo="Norma de referência">{i.normaReferencia}</Dado>
+          )}
           {(i.fabricante || i.modelo) && (
             <Dado rotulo="Fabricante e modelo">
               {[i.fabricante, i.modelo].filter(Boolean).join(" · ")}

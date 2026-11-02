@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
 import type { FuncionarioResumo, Treinamento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -10,7 +8,7 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { registrarTurma } from "@/lib/acoes-exames-e-treinamentos";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoPrimario, botaoSecundario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 export function FormularioDeTurma({
@@ -123,10 +121,6 @@ export function FormularioDeTurma({
         </fieldset>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href={voltar} className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : "Registrar turma"}
         </button>

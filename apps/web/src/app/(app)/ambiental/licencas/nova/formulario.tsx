@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { useActionState } from "react";
 import { DIAS_PARA_RENOVAR, TIPOS_LICENCA } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -9,7 +7,7 @@ import { Campo } from "@/components/campo";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarLicenca } from "@/lib/acoes-ambiental";
-import { botaoPrimario, botaoSecundario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 export function FormularioDeLicenca() {
@@ -120,10 +118,6 @@ export function FormularioDeLicenca() {
         </Campo>
       </div>
       <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
-        <Link href="/ambiental/licencas" className={botaoSecundario}>
-          <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-          Voltar
-        </Link>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : "Cadastrar licença"}
         </button>

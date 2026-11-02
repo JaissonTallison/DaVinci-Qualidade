@@ -32,7 +32,7 @@ export function FolhaDeDocumento({
   /** Espécie do documento, ex.: "Relatório de auditoria". */
   tipo: string;
   numero?: string | null;
-  /** Nome principal: organização auditada, título do FMEA, nome do funcionário… */
+  /** Nome principal: organização auditada, título do FMEA, nome do profissional… */
   titulo: string;
   subtitulo?: ReactNode;
   /** Empresa/unidade dona do sistema (de /auth/eu). */

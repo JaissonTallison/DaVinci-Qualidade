@@ -185,7 +185,7 @@ function Janela({
               if (e.key === "Enter" && itens[marcado])
                 abrir(itens[marcado].href);
             }}
-            placeholder="NC, funcionário, instrumento, PT, terceiro, tela…"
+            placeholder="NC, profissional, instrumento, PT, terceiro, tela…"
             aria-label="Pesquisar"
             autoComplete="off"
             className="h-12 min-w-0 flex-1 bg-transparent text-base text-texto outline-none placeholder:text-texto-3"

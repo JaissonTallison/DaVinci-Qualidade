@@ -14,7 +14,7 @@ import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "Ordem de serviço de segurança" };
 
-/** Ordem de serviço de segurança (NR-1, 1.4.1 c) do funcionário, com os riscos, EPIs e treinamentos da função. */
+/** Ordem de serviço de segurança (NR-1, 1.4.1 c) do profissional, com os riscos, EPIs e treinamentos da função. */
 export default async function OrdemDeServico({
   params,
 }: PageProps<"/cadastros/funcionarios/[id]/ordem-de-servico">) {
@@ -43,11 +43,11 @@ export default async function OrdemDeServico({
       empresa={empresa}
       emitidoEm={formatarData(hojeEmBrasilia())}
       voltarHref={`/cadastros/funcionarios/${id}`}
-      voltarRotulo="Voltar ao funcionário"
+      voltarRotulo="Voltar ao profissional"
       assinaturas={
         ordem
           ? [
-              { papel: "Funcionário", nome: f.nome },
+              { papel: "Profissional", nome: f.nome },
               { papel: "Responsável pela empresa" },
             ]
           : undefined

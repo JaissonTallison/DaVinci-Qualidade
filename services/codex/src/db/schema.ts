@@ -219,7 +219,7 @@ export const bancos = pgTable('bancos', {
   nomeCurto: varchar({ length: 80 }).notNull(),
 });
 
-// ---------------------------------------------------------------- funcionários (docs/05-modulos/funcionarios.md)
+// ---------------------------------------------------------------- profissionais (docs/05-modulos/funcionarios.md)
 
 /** Setores da empresa (Produção, Expedição…). Não confundir com `setores`, as seções da CNAE. */
 export const setoresEmpresa = pgTable(
@@ -258,7 +258,7 @@ export const funcoes = pgTable(
   (t) => [unique('funcoes_nome_por_empresa').on(t.empresaId, t.nome)],
 );
 
-/** Funcionários. Não se apagam: são desligados, com data e motivo. */
+/** Profissionais. Não se apagam: são desligados, com data e motivo. */
 export const funcionarios = pgTable(
   'funcionarios',
   {
@@ -329,7 +329,7 @@ export const treinamentos = pgTable(
   (t) => [unique('treinamentos_nome_por_empresa').on(t.empresaId, t.nome)],
 );
 
-/** Participação de um funcionário num treinamento. A validade é calculada na gravação. */
+/** Participação de um profissional num treinamento. A validade é calculada na gravação. */
 export const treinamentosRealizados = pgTable(
   'treinamentos_realizados',
   {

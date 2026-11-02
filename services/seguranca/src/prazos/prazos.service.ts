@@ -193,6 +193,20 @@ export class PrazosService {
             hoje,
           ),
         ),
+      ...listaPgr
+        .filter((r) => r.ativo && r.proximaRevisao <= limite)
+        .map((r) =>
+          prazo(
+            {
+              modulo: 'seguranca',
+              tipo: 'Revisão do PGR',
+              descricao: `${r.local} · ${r.perigo}`,
+              data: r.proximaRevisao,
+              href: `/seguranca/pgr/${r.id}`,
+            },
+            hoje,
+          ),
+        ),
       ...ptsAbertas
         .filter((p) => p.fim <= agora)
         .map((p) =>

@@ -209,7 +209,7 @@ export class TreinamentosController {
   }
 }
 
-/** ASO e treinamentos que vencem, de todos os funcionários ativos. */
+/** ASO e treinamentos que vencem, de todos os profissionais ativos. */
 @Controller('vencimentos')
 export class VencimentosController {
   constructor(private readonly mensageria: MensageriaService) {}

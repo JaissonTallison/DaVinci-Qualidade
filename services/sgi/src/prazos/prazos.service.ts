@@ -52,7 +52,7 @@ export class PrazosService {
               tipo: r.tipo === 'risco' ? 'Risco' : 'Oportunidade',
               descricao: `${r.processo} · ${r.descricao}`,
               data: r.prazo!,
-              href: `/sgi/riscos-e-oportunidades/${r.id}`,
+              href: `/sgi/${r.tipo === 'risco' ? 'riscos' : 'oportunidades'}/${r.id}`,
             },
             hoje,
           ),
@@ -61,10 +61,10 @@ export class PrazosService {
         prazo(
           {
             modulo: 'sgi',
-            tipo: 'Mudança',
+            tipo: 'Inovação',
             descricao: `${m.numero} · ${m.titulo}`,
             data: m.dataPrevista,
-            href: `/sgi/mudancas/${m.id}`,
+            href: `/sgi/inovacao/${m.id}`,
           },
           hoje,
         ),

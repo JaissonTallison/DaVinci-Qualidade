@@ -65,7 +65,7 @@ const codex = {
         ? of(f)
         : throwError(() => ({
             codigo: 'NAO_ENCONTRADO',
-            mensagem: 'Funcionário não encontrado.',
+            mensagem: 'Profissional não encontrado.',
           }))
     ) as Observable<R>;
   },

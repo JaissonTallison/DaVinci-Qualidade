@@ -1,9 +1,7 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState, useState } from "react";
-import { classeDoRo, TIPOS_RO, type RiscoOuOportunidade } from "@davinci/types";
+import { classeDoRo, type RiscoOuOportunidade } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { ClasseDoRo } from "@/components/marcadores";
@@ -13,48 +11,44 @@ import { salvarRo } from "@/lib/acoes-sgi";
 import {
   areaDeTexto,
   botaoPrimario,
-  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
-
-const ESCALA = {
-  1: "1 · Muito baixa",
-  2: "2 · Baixa",
-  3: "3 · Média",
-  4: "4 · Alta",
-  5: "5 · Muito alta",
-};
+import type { ConfigRo } from "./config";
 
 export function FormularioDeRo({
+  cfg,
   ro,
   embutido = false,
 }: {
+  cfg: ConfigRo;
   ro?: RiscoOuOportunidade;
   embutido?: boolean;
 }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
-    salvarRo.bind(null, ro?.id ?? null),
+    salvarRo.bind(null, cfg.base, ro?.id ?? null),
     {},
   );
   const erros = errosPorCampo(estado.erro?.detalhes);
   const v: Record<string, string> = estado.valores ?? {
-    tipo: ro?.tipo ?? "",
     processo: ro?.processo ?? "",
     descricao: ro?.descricao ?? "",
     contexto: ro?.contexto ?? "",
+    controlesExistentes: ro?.controlesExistentes ?? "",
     probabilidade: ro ? String(ro.probabilidade) : "",
     impacto: ro ? String(ro.impacto) : "",
     acao: ro?.acao ?? "",
     responsavel: ro?.responsavel ?? "",
     prazo: ro?.prazo ?? "",
   };
-  const [p, setP] = useState(v.probabilidade ?? "");
-  const [i, setI] = useState(v.impacto ?? "");
-  const classe = p && i ? classeDoRo(Number(p), Number(i)) : null;
+  const [a, setA] = useState(v.probabilidade ?? "");
+  const [b, setB] = useState(v.impacto ?? "");
+  const classe = a && b ? classeDoRo(Number(a), Number(b)) : null;
+  const acaoObrigatoria = classe === "alta";
   return (
     <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
+      <input type="hidden" name="tipo" value={cfg.tipo} />
       {ro && <input type="hidden" name="versao" value={ro.versao} />}
       <div className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}>
         {estado.erro && !estado.erro.detalhes?.length && (
@@ -62,27 +56,11 @@ export function FormularioDeRo({
             <AvisoDeErro erro={estado.erro} />
           </div>
         )}
-        <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
-          <Selecao
-            id="tipo"
-            name="tipo"
-            defaultValue={v.tipo}
-            className={campo}
-            aria-invalid={Boolean(erros.tipo)}
-          >
-            <option value="">Escolha</option>
-            {Object.entries(TIPOS_RO).map(([k, n]) => (
-              <option key={k} value={k}>
-                {n}
-              </option>
-            ))}
-          </Selecao>
-        </Campo>
         <Campo
           id="processo"
           rotulo="Processo"
           erro={erros.processo}
-          className="sm:col-span-2"
+          className="sm:col-span-3"
         >
           <input
             id="processo"
@@ -110,7 +88,7 @@ export function FormularioDeRo({
         </Campo>
         <Campo
           id="contexto"
-          rotulo="Contexto ou causa (opcional)"
+          rotulo={`${cfg.contexto} (opcional)`}
           erro={erros.contexto}
           className="sm:col-span-3"
         >
@@ -122,38 +100,34 @@ export function FormularioDeRo({
             className={campo}
           />
         </Campo>
-        <Campo
-          id="probabilidade"
-          rotulo="Probabilidade"
-          erro={erros.probabilidade}
-        >
+        <Campo id="eixoA" rotulo={cfg.eixoA.rotulo} erro={erros.probabilidade}>
           <Selecao
-            id="probabilidade"
+            id="eixoA"
             name="probabilidade"
             defaultValue={v.probabilidade}
-            onChange={(e) => setP(e.target.value)}
+            onChange={(e) => setA(e.target.value)}
             className={campo}
             aria-invalid={Boolean(erros.probabilidade)}
           >
             <option value="">Escolha</option>
-            {Object.entries(ESCALA).map(([k, n]) => (
+            {Object.entries(cfg.eixoA.escala).map(([k, n]) => (
               <option key={k} value={k}>
                 {n}
               </option>
             ))}
           </Selecao>
         </Campo>
-        <Campo id="impacto" rotulo="Impacto" erro={erros.impacto}>
+        <Campo id="eixoB" rotulo={cfg.eixoB.rotulo} erro={erros.impacto}>
           <Selecao
-            id="impacto"
+            id="eixoB"
             name="impacto"
             defaultValue={v.impacto}
-            onChange={(e) => setI(e.target.value)}
+            onChange={(e) => setB(e.target.value)}
             className={campo}
             aria-invalid={Boolean(erros.impacto)}
           >
             <option value="">Escolha</option>
-            {Object.entries(ESCALA).map(([k, n]) => (
+            {Object.entries(cfg.eixoB.escala).map(([k, n]) => (
               <option key={k} value={k}>
                 {n}
               </option>
@@ -162,21 +136,36 @@ export function FormularioDeRo({
         </Campo>
         <div className="flex flex-col gap-1.5">
           <span className="text-sm font-semibold text-texto-2">
-            Classificação
+            {cfg.classe}
           </span>
           <span className="flex h-9 items-center">
             {classe ? (
               <ClasseDoRo classe={classe} />
             ) : (
-              <span className="text-texto-3">
-                Escolha probabilidade e impacto
-              </span>
+              <span className="text-texto-3">{cfg.classeAjuda}</span>
             )}
           </span>
         </div>
+        {cfg.controles && (
+          <Campo
+            id="controlesExistentes"
+            rotulo={`${cfg.controles} (opcional)`}
+            erro={erros.controlesExistentes}
+            className="sm:col-span-3"
+          >
+            <textarea
+              id="controlesExistentes"
+              name="controlesExistentes"
+              rows={2}
+              maxLength={1000}
+              defaultValue={v.controlesExistentes}
+              className={areaDeTexto}
+            />
+          </Campo>
+        )}
         <Campo
           id="acao"
-          rotulo={classe === "alta" ? "Ação" : "Ação (opcional)"}
+          rotulo={acaoObrigatoria ? cfg.acao : `${cfg.acao} (opcional)`}
           erro={erros.acao}
           className="sm:col-span-3"
         >
@@ -192,7 +181,7 @@ export function FormularioDeRo({
         </Campo>
         <Campo
           id="responsavel"
-          rotulo="Responsável"
+          rotulo={acaoObrigatoria ? "Responsável" : "Responsável (opcional)"}
           erro={erros.responsavel}
           className="sm:col-span-2"
         >
@@ -206,7 +195,11 @@ export function FormularioDeRo({
             aria-invalid={Boolean(erros.responsavel)}
           />
         </Campo>
-        <Campo id="prazo" rotulo="Prazo" erro={erros.prazo}>
+        <Campo
+          id="prazo"
+          rotulo={acaoObrigatoria ? "Prazo" : "Prazo (opcional)"}
+          erro={erros.prazo}
+        >
           <input
             id="prazo"
             name="prazo"
@@ -220,14 +213,8 @@ export function FormularioDeRo({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link href="/sgi/riscos-e-oportunidades" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : ro ? "Salvar" : "Registrar"}
+          {salvando ? "Salvando…" : ro ? "Salvar" : cfg.registrar}
         </button>
       </div>
     </form>

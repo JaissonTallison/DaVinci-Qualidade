@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
+  CONCLUSOES_DA_ANALISE,
   SITUACOES_DO_CONTRATO,
   STATUS_OS,
   type Contrato,
@@ -18,14 +19,28 @@ import { formatarData } from "@/lib/datas";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { COR_DA_SITUACAO } from "../situacao";
 import { EditarContrato } from "../formularios";
+import {
+  AnaliseCritica,
+  LinhaDoRequisito,
+  NovoRequisitoDoContrato,
+} from "../requisitos";
 
 export const metadata: Metadata = { title: "Contrato" };
 const AVISOS = {
   criado: "Contrato cadastrado.",
   salvo: "Contrato salvo.",
   encerrado: "Contrato encerrado.",
+  analisado: "Análise crítica registrada.",
+  requisito: "Requisito adicionado.",
+  "requisito-salvo": "Requisito salvo.",
+  "requisito-removido": "Requisito removido.",
   anexado: "Arquivo anexado.",
   "anexo-removido": "Anexo removido.",
+};
+const COR_DA_CONCLUSAO: Record<string, string> = {
+  pode_cumprir: "text-conforme",
+  com_ressalvas: "text-atencao",
+  nao_pode: "text-nao-conforme",
 };
 
 export default async function DetalheDoContrato({
@@ -49,6 +64,7 @@ export default async function DetalheDoContrato({
     : [];
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const podeEditar = permissoes.includes("servicos.editar");
+  const podeAnotar = podeEditar && c.situacao !== "encerrado";
   return (
     <article>
       <Link
@@ -110,6 +126,71 @@ export default async function DetalheDoContrato({
           </Dado>
         )}
       </section>
+
+      <section className={`${painel} mt-6`}>
+        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Requisitos do cliente</h2>
+        <p className="px-5 pt-1 text-sm text-texto-2">
+          O que o cliente exige neste contrato (ISO 9001 8.2.2).
+        </p>
+        {c.requisitos.length === 0 ? (
+          <p className="px-5 py-4 text-base text-texto-2">
+            Nenhum requisito cadastrado.
+          </p>
+        ) : (
+          <ul className="mt-3 divide-y divide-borda border-t border-borda">
+            {c.requisitos.map((r) => (
+              <LinhaDoRequisito
+                key={r.id}
+                requisito={r}
+                podeEditar={podeAnotar}
+              />
+            ))}
+          </ul>
+        )}
+        {podeAnotar && (
+          <div className="border-t border-borda px-5 py-4">
+            <NovoRequisitoDoContrato contratoId={c.id} />
+          </div>
+        )}
+      </section>
+
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Análise crítica dos requisitos</h2>
+        <p className="mt-1 text-sm text-texto-2">
+          Antes de assumir, registra-se que a empresa consegue cumprir os
+          requisitos do cliente (ISO 9001 8.2.3).
+        </p>
+        {c.analiseData && c.analiseConclusao ? (
+          <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-3">
+            <Dado rotulo="Conclusão">
+              <span
+                className={`font-semibold ${COR_DA_CONCLUSAO[c.analiseConclusao]}`}
+              >
+                {CONCLUSOES_DA_ANALISE[c.analiseConclusao]}
+              </span>
+            </Dado>
+            {c.analiseResponsavel && (
+              <Dado rotulo="Responsável">{c.analiseResponsavel}</Dado>
+            )}
+            <Dado rotulo="Data">{formatarData(c.analiseData)}</Dado>
+            {c.analiseParecer && (
+              <Dado rotulo="Parecer" largo>
+                {c.analiseParecer}
+              </Dado>
+            )}
+          </dl>
+        ) : (
+          <p className="mt-3 text-base text-texto-2">
+            Análise crítica ainda não registrada.
+          </p>
+        )}
+        {podeAnotar && (
+          <div className="mt-4">
+            <AnaliseCritica c={c} />
+          </div>
+        )}
+      </section>
+
       <section className={`${painel} mt-6`}>
         <h2 className={`${tituloDaSecao} px-5 pt-5`}>
           Ordens de serviço do contrato

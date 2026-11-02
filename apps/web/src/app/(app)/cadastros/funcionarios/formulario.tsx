@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useActionState } from "react";
 import {
   formatarDocumento,
@@ -15,7 +13,7 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarFuncionario } from "@/lib/acoes-cadastros";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoPrimario, botaoSecundario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 /** Cadastrar (sem `funcionario`) ou editar. Setor e função vêm só dos ativos (mais o atual, se inativado). */
@@ -176,18 +174,12 @@ export function FormularioDeFuncionario({
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
       >
-        {!embutido && (
-          <Link href="/cadastros/funcionarios" className={botaoSecundario}>
-            <ArrowLeft aria-hidden size={16} strokeWidth={2} />
-            Voltar
-          </Link>
-        )}
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando
             ? "Salvando…"
             : funcionario
-              ? "Salvar funcionário"
-              : "Cadastrar funcionário"}
+              ? "Salvar profissional"
+              : "Cadastrar profissional"}
         </button>
       </div>
     </form>

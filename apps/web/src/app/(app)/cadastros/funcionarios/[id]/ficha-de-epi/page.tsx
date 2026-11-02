@@ -41,9 +41,9 @@ export default async function FichaDeEpi({
       empresa={empresa}
       emitidoEm={formatarData(hojeEmBrasilia())}
       voltarHref={`/cadastros/funcionarios/${id}`}
-      voltarRotulo="Voltar ao funcionário"
+      voltarRotulo="Voltar ao profissional"
       assinaturas={[
-        { papel: "Funcionário", nome: f.nome },
+        { papel: "Profissional", nome: f.nome },
         {
           papel: `Responsável pela entrega · ${formatarData(hojeEmBrasilia())}`,
         },

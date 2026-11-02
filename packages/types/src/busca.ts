@@ -37,7 +37,7 @@ export const buscaNoPainelSchema = buscaSchema.extend({
 
 export interface ResultadoDaBusca {
   modulo: ModuloDaBusca;
-  /** "Não conformidade", "Funcionário"... */
+  /** "Não conformidade", "Profissional"... */
   tipo: string;
   titulo: string;
   detalhe: string | null;

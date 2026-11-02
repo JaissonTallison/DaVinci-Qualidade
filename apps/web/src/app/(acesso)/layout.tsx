@@ -28,7 +28,7 @@ const AREAS: { icone: LucideIcon; cor: string; nome: string; texto: string }[] =
     {
       icone: HardHat,
       cor: "#f59331",
-      nome: "Segurança",
+      nome: "Segurança do Trabalho",
       texto: "Ambientes mais seguros e pessoas protegidas.",
     },
     {
@@ -98,9 +98,9 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
             <em>seguro e sustentável.</em>
           </p>
           <p className="mt-4 max-w-md text-lg text-white/85">
-            Qualidade, Serviços, Segurança, Meio Ambiente e Agenda ESG em um
-            único sistema, com {REFERENCIAIS.length} normas auditáveis para a
-            sua empresa.
+            Qualidade, Serviços, Segurança do Trabalho, Meio Ambiente e Agenda
+            ESG em um único sistema, com {REFERENCIAIS.length} normas auditáveis
+            para a sua empresa.
           </p>
           <ul className="my-7 flex flex-col gap-3.5 tela-baixa:my-5 tela-baixa:grid tela-baixa:max-w-3xl tela-baixa:grid-cols-2 tela-baixa:gap-x-8 tela-baixa:gap-y-4">
             {AREAS.map(({ icone: Icone, cor, nome, texto }) => (
