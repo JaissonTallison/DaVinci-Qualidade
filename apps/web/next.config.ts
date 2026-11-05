@@ -9,6 +9,9 @@ const { version } = JSON.parse(
 
 const nextConfig: NextConfig = {
   env: { NEXT_PUBLIC_VERSAO: version },
+  // Em dev, aceitar o app aberto também por 127.0.0.1 (e não só localhost): sem isto, o Next
+  // bloqueia os recursos de origem cruzada e o "Entrar" não dispara requisição nenhuma.
+  allowedDevOrigins: ["127.0.0.1"],
   // Anexos de até 10 MB passam por Server Action (docs/05-modulos/anexos.md)
   experimental: { serverActions: { bodySizeLimit: "11mb" } },
   turbopack: {

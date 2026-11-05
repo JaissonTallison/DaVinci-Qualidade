@@ -1,0 +1,1 @@
+ALTER TABLE "planos_acao" ADD COLUMN "cancelado_por_nome" varchar(120);

@@ -64,6 +64,13 @@
       "when": 1793891787698,
       "tag": "0008_auditoria-interna-simples",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793910003053,
+      "tag": "0009_auditoria-cancelada-por-nome",
+      "breakpoints": true
     }
   ]
 }

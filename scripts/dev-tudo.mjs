@@ -7,7 +7,7 @@
  *   3. aplica as migrações de todos os serviços;
  *   4. roda web + gateway + serviços em modo watch, com os logs de todos no mesmo terminal (Ctrl+C encerra tudo).
  *
- *   pnpm dev:tudo --essencial              só o que as telas usam hoje (web, gateway, identidade, qualidade): ~2 GB em vez de ~6 GB
+ *   pnpm dev:tudo --essencial              só o essencial (web, gateway, identidade, qualidade, paineis, plataforma): ~2 GB em vez de ~6 GB
  *   pnpm dev:tudo --essencial auditorias   o essencial + os módulos que você vai mexer (ex.: auditorias seguranca); sobe só o necessário
  *   pnpm dev:tudo --sem-infra              pula os passos 2 e 3 (infraestrutura já no ar)
  */
@@ -16,11 +16,16 @@ import { createServer } from 'node:net';
 import { readdirSync } from 'node:fs';
 
 const PORTAS = { 3170: 'web', 3171: 'gateway' };
+// Serviços que telas de QUALQUER módulo usam (não só a casca): paineis (sino de vencimentos e Início,
+// em toda página) e plataforma (anexos e evidências, presentes em NC, auditorias, etc.). Sem eles,
+// as telas que os chamam esperam o timeout do gateway. Ver docs/05-modulos/{paineis,plataforma}.md.
 const ESSENCIAL = [
   '@davinci/web',
   '@davinci/api-gateway',
   '@davinci/identidade',
   '@davinci/qualidade',
+  '@davinci/paineis',
+  '@davinci/plataforma',
 ];
 const semInfra = process.argv.includes('--sem-infra');
 const essencial = process.argv.includes('--essencial');

@@ -96,6 +96,7 @@ export class GuardaDeAcesso implements CanActivate {
     req.contexto = {
       empresaId: c.valor!.empresaId,
       usuarioId: null,
+      usuarioNome: 'Integração (API)',
       rastreioId: req.rastreioId!,
     };
     req.permissoes = PERMISSOES_DA_API;
@@ -159,6 +160,7 @@ export class GuardaDeAcesso implements CanActivate {
     req.contexto = {
       empresaId: conteudo!.emp,
       usuarioId: conteudo!.sub,
+      usuarioNome: conteudo!.nom,
       rastreioId: req.rastreioId!,
     };
     req.permissoes = conteudo!.per;

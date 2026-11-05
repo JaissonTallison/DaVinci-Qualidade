@@ -27,6 +27,8 @@ export const anexos = pgTable(
     /** Removido some da lista, mas o arquivo fica: evidência não se apaga de verdade. */
     removidoEm: timestamp('removido_em', { withTimezone: true, precision: 3 }),
     removidoPor: uuid('removido_por'),
+    /** Nome de quem removeu, no momento da remoção (auditoria). */
+    removidoPorNome: varchar('removido_por_nome', { length: 120 }),
   },
   (t) => [
     index('anexos_registro_idx').on(t.empresaId, t.registro, t.registroId),

@@ -302,6 +302,7 @@ export default async function DetalheDaNc({
                 "Cancelada em",
                 nc.canceladaEm ? formatarMomento(nc.canceladaEm) : null,
               ],
+              ["Cancelada por", nc.canceladaPorNome],
             ]}
           />
           {nc.motivoCancelamento && (

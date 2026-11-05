@@ -281,6 +281,11 @@ export default async function DetalheDaAuditoria({
       {a.status === "cancelada" && a.motivoCancelamento && (
         <section className={`${painel} mt-6 p-5`}>
           <h2 className={tituloDaSecao}>Cancelamento</h2>
+          {a.canceladaPorNome && (
+            <p className="mt-2 text-sm text-texto-2">
+              por {a.canceladaPorNome}
+            </p>
+          )}
           <p className="mt-2 text-base">{a.motivoCancelamento}</p>
         </section>
       )}

@@ -99,6 +99,7 @@ export class AnexosService {
       .set({
         removidoEm: new Date(),
         removidoPor: ctx.usuarioId,
+        removidoPorNome: ctx.usuarioNome ?? null,
         atualizadoPor: ctx.usuarioId,
       })
       .where(and(eq(anexos.id, atual.id), eq(anexos.empresaId, ctx.empresaId)))

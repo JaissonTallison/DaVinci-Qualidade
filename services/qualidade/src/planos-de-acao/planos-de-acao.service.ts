@@ -370,6 +370,7 @@ export class PlanosDeAcaoService {
             motivoCancelamento: motivo,
             canceladoEm: new Date(),
             canceladoPor: ctx.usuarioId,
+            canceladoPorNome: ctx.usuarioNome ?? null,
             atualizadoPor: ctx.usuarioId,
           })
           .where(eq(planosAcao.id, plano.id));
@@ -517,7 +518,7 @@ export class PlanosDeAcaoService {
 
   private async conferirNc(ctx: Contexto, ncId: string): Promise<void> {
     const [nc] = await this.db
-      .select({ id: naoConformidades.id })
+      .select({ id: naoConformidades.id, status: naoConformidades.status })
       .from(naoConformidades)
       .where(
         and(
@@ -526,6 +527,12 @@ export class PlanosDeAcaoService {
         ),
       );
     if (!nc) throw invalido('ncId', 'NC não encontrada.');
+    // Não se abre plano de ação para NC cancelada (não há o que tratar).
+    if (nc.status === 'cancelada')
+      throw invalido(
+        'ncId',
+        'A NC está cancelada: não dá para ligar um plano de ação a ela.',
+      );
   }
 }
 
@@ -576,6 +583,7 @@ function montar(
     verificadoEm: l.verificadoEm?.toISOString() ?? null,
     motivoCancelamento: l.motivoCancelamento,
     canceladoEm: l.canceladoEm?.toISOString() ?? null,
+    canceladoPorNome: l.canceladoPorNome,
     criadoEm: l.criadoEm.toISOString(),
     versao: l.atualizadoEm.toISOString(),
   };

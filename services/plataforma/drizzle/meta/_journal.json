@@ -15,6 +15,13 @@
       "when": 1792047089461,
       "tag": "0001_anexos",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793908567681,
+      "tag": "0002_anexo-removido-por-nome",
+      "breakpoints": true
     }
   ]
 }

@@ -35,10 +35,15 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
     .split("|")
     .filter(Boolean);
 
-  // Prazos vencidos para o sino da barra superior
+  // Prazos vencidos para o sino da barra superior. Dado opcional: com prazo curto, para o serviço de
+  // painéis fora do ar não segurar toda página. O prazo fica ACIMA do timeout interno do painel por
+  // módulo (ver paineis.service.ts), para o sino receber a resposta em vez de desistir antes.
   const listaDeVencidos: Prazo[] = [];
   if (eu?.permissoes.includes("paineis.ver")) {
-    const painel = await chamarApi<PainelDeVencimentos>("/paineis/vencimentos");
+    const painel = await chamarApi<PainelDeVencimentos>(
+      "/paineis/vencimentos",
+      { prazoMs: 3_500 },
+    );
     if (painel.ok)
       for (const p of painel.dados.prazos) {
         if (p.situacao !== "vencido") continue;

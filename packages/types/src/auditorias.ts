@@ -233,6 +233,8 @@ export interface Auditoria {
   status: StatusAuditoria;
   conclusao: string | null;
   motivoCancelamento: string | null;
+  /** Nome de quem cancelou, no momento do cancelamento (auditoria). */
+  canceladaPorNome: string | null;
   plano: PlanoDaAuditoria;
   constatacoes: Constatacao[];
   /** Quantas constatações de cada tipo. */

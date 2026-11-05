@@ -9,6 +9,8 @@ export interface Contexto {
   empresaId: string;
   /** Nulo até o login existir (Passo 2). */
   usuarioId: string | null;
+  /** Nome de quem pede (do token), para gravar "por quem" em registros de auditoria. Ausente em rotas sem login. */
+  usuarioNome?: string;
   rastreioId: string;
 }
 

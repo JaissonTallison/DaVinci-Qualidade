@@ -71,6 +71,20 @@
       "when": 1793579475472,
       "tag": "0009_calibracao_campos_tecnicos",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1793906598403,
+      "tag": "0010_nc-cancelada-por-nome",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793908565680,
+      "tag": "0011_plano-cancelado-por-nome",
+      "breakpoints": true
     }
   ]
 }

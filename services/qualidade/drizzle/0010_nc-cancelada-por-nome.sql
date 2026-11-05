@@ -1,0 +1,1 @@
+ALTER TABLE "nao_conformidades" ADD COLUMN "cancelada_por_nome" varchar(120);
