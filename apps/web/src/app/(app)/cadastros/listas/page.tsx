@@ -11,7 +11,7 @@ import { chamarApi, type Resultado } from "@/lib/api";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { FormularioDoItem, SituacaoDoItem } from "./acoes";
 
-export const metadata: Metadata = { title: "Listas de cadastro" };
+export const metadata: Metadata = { title: "Listas de apoio" };
 
 const AVISOS: Record<string, string> = {
   "processo-criado": "Processo cadastrado.",
@@ -41,7 +41,7 @@ export default async function ListasDeCadastro({
 
   return (
     <>
-      <h1 className={tituloDaPagina}>Listas de cadastro</h1>
+      <h1 className={tituloDaPagina}>Listas de apoio</h1>
       <p className="mt-1 max-w-2xl text-base text-texto-2">
         Listas que a empresa mantém e seleciona nos registros (em vez de
         digitar). Em uso, o item não se apaga: inative-o.

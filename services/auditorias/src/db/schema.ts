@@ -206,3 +206,21 @@ export const criteriosProprios = pgTable('criterios_proprios', {
   referencia: varchar({ length: 150 }),
   requisitos: varchar({ length: 2000 }).notNull(),
 });
+
+/** Auditoria interna simples: um documento (cabeçalho + tabela por setor), à parte da auditoria completa. */
+export const auditoriasSimples = pgTable(
+  'auditorias_simples',
+  {
+    ...colunasPadrao(),
+    numero: varchar({ length: 20 }).notNull(),
+    data: date({ mode: 'string' }).notNull(),
+    horario: varchar({ length: 20 }),
+    unidade: varchar({ length: 120 }),
+    setoresEnvolvidos: varchar({ length: 300 }),
+    auditores: varchar({ length: 300 }),
+    areaFoco: varchar({ length: 1000 }),
+    /** [{ setor, comentarios, pontosPositivos, observacoes, naoConformidade }]. */
+    linhas: jsonb().notNull().default([]),
+  },
+  (t) => [unique('auditorias_simples_numero_por_empresa').on(t.empresaId, t.numero)],
+);

@@ -1,6 +1,6 @@
 # Funcionários, setores e funções
 
-> **Status:** em construção · **Serviço:** `codex` · **Atualizado em:** 15/10/2026
+> **Status:** em construção · **Serviço:** `codex` · **Atualizado em:** 05/11/2026
 > Referências: documento "QSSMA e Agenda ESG" (a Segurança cruza funcionários, exames, treinamentos e EPIs) e decisão Q3 (o cadastro mora no `codex`, sem depender de um RH externo).
 
 Quem trabalha na empresa, em qual setor e em qual função. É a base da Segurança do Trabalho: EPI é entregue a um funcionário, o risco é da função, o exame e o treinamento são da pessoa. Aqui fica só o cadastro. O que é de SST (EPIs, exames, treinamentos) fica no serviço `seguranca`, que consulta o `codex`.
@@ -24,6 +24,8 @@ Quem trabalha na empresa, em qual setor e em qual função. É a base da Seguran
 **Funcionário:** matrícula, nome, CPF, setor, função, data de admissão, e-mail e telefone (opcionais), data e motivo do desligamento.
 
 **Setor:** nome. **Função:** nome e CBO (Classificação Brasileira de Ocupações, opcional, 6 dígitos).
+
+**Descrição de cargo (ISO 9001 7.1.2 e 7.2):** na função ficam a formação desejada (escolaridade, experiência, outros requisitos), os conhecimentos e competências necessárias, a relação de atribuições e a educação e treinamentos continuados. A tela gera o documento **"Descrição de Cargo"** (A4) para imprimir e assinar (elaboração e aprovação). Complementa os treinamentos/EPIs/riscos exigidos da função ([competências](competencias.md)).
 
 ## 3. Ainda não feito
 

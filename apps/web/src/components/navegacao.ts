@@ -357,13 +357,8 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "funcionarios.ver",
       },
       {
-        rotulo: "Listas de cadastro",
+        rotulo: "Listas de apoio",
         href: "/cadastros/listas",
-        permissao: "funcionarios.ver",
-      },
-      {
-        rotulo: "Competências por função",
-        href: "/cadastros/competencias",
         permissao: "funcionarios.ver",
       },
     ],

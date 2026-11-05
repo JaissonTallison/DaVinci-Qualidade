@@ -25,7 +25,7 @@ export function AcoesDaNc({
 }: {
   nc: NaoConformidade;
   podeCancelar: boolean;
-  /** Tipos de causa cadastrados (Cadastros › Listas de cadastro). */
+  /** Tipos de causa cadastrados (Cadastros › Listas de apoio). */
   causas: string[];
 }) {
   return (
@@ -244,7 +244,7 @@ function FormularioTratamento({
                 defaultValue={(v.causaTipo as string) ?? nc.causaTipo ?? ""}
                 maxLength={100}
                 className={campo}
-                placeholder="Cadastre em Cadastros › Listas de cadastro"
+                placeholder="Cadastre em Cadastros › Listas de apoio"
               />
             )}
           </Campo>

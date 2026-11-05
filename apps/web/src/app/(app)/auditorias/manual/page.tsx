@@ -79,7 +79,7 @@ const GLOSSARIO: [string, string, string?][] = [
   [
     "Critérios de auditoria",
     "Requisitos usados como referência: normas, documentos internos, requisitos legais e do cliente.",
-    "ISO 9001:2026; PR-08; requisitos específicos do cliente (CSR).",
+    "ISO 9001; PR-08; requisitos específicos do cliente (CSR).",
   ],
   [
     "Horas de auditoria",
@@ -172,7 +172,7 @@ const FAQ: [string, ReactNode][] = [
   ],
   [
     "Quais normas estão incluídas?",
-    "ISO 9001:2026 e 2015, ISO 14001:2026 e 2015, ISO 45001:2018, ISO/IEC 27001:2022, ISO 28000:2022, ISO 31000:2018, IATF 16949:2016 e SGI integrado. Cada auditoria usa uma edição só por norma.",
+    "ISO 9001, ISO 14001, ISO 45001, ISO/IEC 27001, ISO 28000, ISO 31000, IATF 16949 e SGI integrado (sempre a edição vigente de cada uma). As edições de 2015 da 9001 e da 14001 ficam só no histórico.",
   ],
   [
     "O que posso editar no relatório?",

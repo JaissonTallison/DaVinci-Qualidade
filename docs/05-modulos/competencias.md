@@ -1,7 +1,9 @@
 # Competências por função
 
-> **Status:** em uso · **Serviços:** `codex` (treinamentos e ASO) e `seguranca` (EPIs) · **Atualizado em:** 16/10/2026
+> **Status:** em uso · **Serviços:** `codex` (treinamentos e ASO) e `seguranca` (EPIs) · **Atualizado em:** 05/11/2026
 > Referências: NR-1 (PGR: medidas de prevenção por risco), NR-6 (EPI adequado ao risco), NR-7 (PCMSO, ASO periódico) e ISO 9001/45001 cláusula 7.2 (competência). Regras decididas por nós (decisão Q9).
+
+> **05/11/2026:** a tela separada "Cadastros › Competências por função" foi **fundida em "Cadastros › Setores e funções"** (menos uma porta para a mesma função). A lista de funções já mostra "quem está com pendência"; a matriz completa e a definição dos requisitos ficam ao abrir a função.
 
 Cada função diz o que exige de quem a ocupa; o sistema mostra quem atende. Cada dado fica com o seu dono: a lista de treinamentos exigidos mora no `codex`, junto do catálogo de treinamentos; a de EPIs mora na `seguranca`, junto do catálogo de EPIs e do PGR.
 
@@ -21,8 +23,7 @@ Cada função diz o que exige de quem a ocupa; o sistema mostra quem atende. Cad
 
 ## 2. Telas
 
-- **Cadastros › Competências por função**: cada função com o número de requisitos, de pessoas e de pessoas com pendência.
-- **Cadastros › Setores e funções › Competências** (por função): matriz pessoas × requisitos e a definição dos treinamentos e EPIs exigidos.
+- **Cadastros › Setores e funções**: a lista de funções mostra, por função, o nº de profissionais e quantos estão com pendência. Abra a função para a matriz pessoas × requisitos e a definição dos treinamentos e EPIs exigidos (além da descrição de cargo).
 - **Cadastros › Funcionários › (pessoa)**: o que a função exige e a situação de cada item.
 
 ## 3. Ainda não feito

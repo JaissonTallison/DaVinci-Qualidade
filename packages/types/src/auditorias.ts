@@ -24,15 +24,15 @@ export type TipoAuditoria = keyof typeof TIPOS_AUDITORIA;
  * auditorias já registradas e para o conteúdo de referência. Cada auditoria usa uma edição só por referencial.
  */
 export const NORMAS = {
-  iso9001_2026: 'ISO 9001:2026',
-  iso9001: 'ISO 9001:2015',
-  iso14001_2026: 'ISO 14001:2026',
-  iso14001: 'ISO 14001:2015',
-  iso45001: 'ISO 45001:2018',
-  iso27001: 'ISO/IEC 27001:2022',
-  iso28000: 'ISO 28000:2022',
-  iso31000: 'ISO 31000:2018',
-  iatf16949: 'IATF 16949:2016',
+  iso9001_2026: 'ISO 9001',
+  iso9001: 'ISO 9001',
+  iso14001_2026: 'ISO 14001',
+  iso14001: 'ISO 14001',
+  iso45001: 'ISO 45001',
+  iso27001: 'ISO/IEC 27001',
+  iso28000: 'ISO 28000',
+  iso31000: 'ISO 31000',
+  iatf16949: 'IATF 16949',
   sgi: 'SGI integrado',
 } as const;
 export type Norma = keyof typeof NORMAS;

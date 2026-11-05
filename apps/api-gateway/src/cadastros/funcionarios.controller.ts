@@ -12,6 +12,7 @@ import {
   atualizarFuncaoSchema,
   atualizarFuncionarioSchema,
   atualizarSetorSchema,
+  descricaoDoCargoSchema,
   desligarFuncionarioSchema,
   filtroCadastroSimplesSchema,
   filtroFuncionariosSchema,
@@ -275,6 +276,23 @@ export class FuncoesController {
       ctx,
       situacaoDoCadastroSchema,
       PATTERNS.funcoes.mudarSituacao,
+      id,
+      alteracoes,
+    );
+  }
+
+  @Put(':id/descricao')
+  @Permissao('funcionarios.editar')
+  descricaoDoCargo(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    return acao<Funcao>(
+      this.mensageria,
+      ctx,
+      descricaoDoCargoSchema,
+      PATTERNS.funcoes.definirDescricao,
       id,
       alteracoes,
     );

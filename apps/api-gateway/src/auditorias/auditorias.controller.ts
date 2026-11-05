@@ -11,6 +11,10 @@ import {
 } from '@nestjs/common';
 import {
   alterarConstatacaoSchema,
+  atualizarAuditoriaSimplesSchema,
+  novaAuditoriaSimplesSchema,
+  type AuditoriaSimples,
+  type AuditoriaSimplesResumo,
   atualizarAuditoriaSchema,
   cancelarAuditoriaSchema,
   concluirAuditoriaSchema,
@@ -533,5 +537,69 @@ export class CriteriosDeAuditoriaController {
       { id },
       ctx,
     );
+  }
+}
+
+const PS = PATTERNS.auditoriasSimples;
+
+/** Auditoria interna simples (documento por setor). docs/05-modulos/auditorias.md */
+@Controller('auditorias-simples')
+export class AuditoriasSimplesController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('auditorias.ver')
+  listar(@ContextoHttp() ctx: Contexto) {
+    return this.mensageria.enviar<AuditoriaSimplesResumo[]>(
+      SERVICES.AUDITORIAS,
+      PS.listar,
+      {},
+      ctx,
+    );
+  }
+
+  @Get(':id')
+  @Permissao('auditorias.ver')
+  obter(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar<AuditoriaSimples>(
+      SERVICES.AUDITORIAS,
+      PS.obter,
+      { id },
+      ctx,
+    );
+  }
+
+  @Post()
+  @Permissao('auditorias.editar')
+  criar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novaAuditoriaSimplesSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<AuditoriaSimples>(
+      SERVICES.AUDITORIAS,
+      PS.criar,
+      dados,
+      ctx,
+    );
+  }
+
+  @Put(':id')
+  @Permissao('auditorias.editar')
+  atualizar(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(atualizarAuditoriaSimplesSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar<AuditoriaSimples>(
+      SERVICES.AUDITORIAS,
+      PS.atualizar,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Delete(':id')
+  @Permissao('auditorias.editar')
+  excluir(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(SERVICES.AUDITORIAS, PS.excluir, { id }, ctx);
   }
 }

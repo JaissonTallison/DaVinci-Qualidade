@@ -10,6 +10,7 @@ import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   atualizarFuncaoSchema,
   atualizarSetorSchema,
+  descricaoDoCargoSchema,
   filtroCadastroSimplesSchema,
   isUuid,
   novaFuncaoSchema,
@@ -123,14 +124,7 @@ export class EstruturaService {
         .orderBy(ordemAlfabetica(funcoes.nome)),
       this.ativosPor(ctx, 'funcao'),
     ]);
-    return linhas.map((l) => ({
-      id: l.id,
-      nome: l.nome,
-      cbo: l.cbo,
-      ativo: l.ativo,
-      funcionariosAtivos: ativos.get(l.id) ?? 0,
-      versao: l.atualizadoEm.toISOString(),
-    }));
+    return linhas.map((l) => montarFuncao(l, ativos.get(l.id) ?? 0));
   }
 
   async criarFuncao(ctx: Contexto, dados: unknown): Promise<Funcao> {
@@ -145,14 +139,21 @@ export class EstruturaService {
       })
       .returning()
       .catch(nomeRepetido('funcoes_nome_por_empresa', 'função'));
-    return {
-      id: l!.id,
-      nome: l!.nome,
-      cbo: l!.cbo,
-      ativo: l!.ativo,
-      funcionariosAtivos: 0,
-      versao: l!.atualizadoEm.toISOString(),
-    };
+    return montarFuncao(l!, 0);
+  }
+
+  /** Descrição de cargo (ISO 9001 7.2): formação desejada, competências, atribuições e treinamentos continuados. */
+  async definirDescricaoDoCargo(ctx: Contexto, dados: ComId): Promise<Funcao> {
+    const { versao, ...c } = validar(descricaoDoCargoSchema, dados?.alteracoes);
+    await this.gravarFuncao(ctx, dados?.id, versao, {
+      escolaridade: c.escolaridade ?? null,
+      experiencia: c.experiencia ?? null,
+      outrosRequisitos: c.outrosRequisitos ?? null,
+      competencias: c.competencias,
+      atribuicoes: c.atribuicoes,
+      treinamentosContinuados: c.treinamentosContinuados,
+    });
+    return this.funcaoPorId(ctx, dados?.id);
   }
 
   async atualizarFuncao(ctx: Contexto, dados: ComId): Promise<Funcao> {
@@ -276,6 +277,26 @@ export class EstruturaService {
       .groupBy(coluna);
     return new Map(linhas.map((l) => [l.id, l.total]));
   }
+}
+
+function montarFuncao(
+  l: typeof funcoes.$inferSelect,
+  funcionariosAtivos: number,
+): Funcao {
+  return {
+    id: l.id,
+    nome: l.nome,
+    cbo: l.cbo,
+    ativo: l.ativo,
+    funcionariosAtivos,
+    escolaridade: l.escolaridade,
+    experiencia: l.experiencia,
+    outrosRequisitos: l.outrosRequisitos,
+    competencias: (l.competencias as string[]) ?? [],
+    atribuicoes: (l.atribuicoes as string[]) ?? [],
+    treinamentosContinuados: (l.treinamentosContinuados as string[]) ?? [],
+    versao: l.atualizadoEm.toISOString(),
+  };
 }
 
 /** Nome repetido vira erro no campo `nome`; qualquer outro erro segue como veio. */

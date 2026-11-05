@@ -60,7 +60,7 @@ A não conformidade (NC) é o registro de que algo não atendeu a um requisito. 
 
 **Numeração:** sequencial por empresa e por ano (`NC-2026-001`, `NC-2026-002`…), por contador atômico no banco. Número usado nunca se repete, nem se a NC for cancelada.
 
-**Seleção em vez de digitação (16/10/2026):** setor vem do cadastro de Setores; processo/área e tipo de causa vêm de **Cadastros › Listas de cadastro** (listas que a empresa mantém, serviço `codex`, tabela `listas_cadastro`, API `/listas/:lista`). O responsável é autocomplete do cadastro de funcionários. O "registro de origem" é autocomplete dos registros reais da origem (auditoria, inspeção, acidente, reclamação) e, no detalhe, vira link clicável para o registro. Se a lista estiver vazia, o campo cai para texto livre com dica de onde cadastrar.
+**Seleção em vez de digitação (16/10/2026):** setor vem do cadastro de Setores; processo/área e tipo de causa vêm de **Cadastros › Listas de apoio** (listas que a empresa mantém, serviço `codex`, tabela `listas_cadastro`, API `/listas/:lista`). O responsável é autocomplete do cadastro de funcionários. O "registro de origem" é autocomplete dos registros reais da origem (auditoria, inspeção, acidente, reclamação) e, no detalhe, vira link clicável para o registro. Se a lista estiver vazia, o campo cai para texto livre com dica de onde cadastrar.
 
 **Edição:** campos descritivos podem ser corrigidos enquanto a NC não está encerrada nem cancelada. Toda gravação confere a versão lida: se outra pessoa alterou antes, a gravação é recusada.
 

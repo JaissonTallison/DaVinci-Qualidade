@@ -254,6 +254,13 @@ export const funcoes = pgTable(
     nome: varchar({ length: 100 }).notNull(),
     cbo: char({ length: 6 }),
     ativo: boolean().notNull().default(true),
+    // Descrição de cargo (ISO 9001 7.2).
+    escolaridade: varchar({ length: 200 }),
+    experiencia: varchar({ length: 200 }),
+    outrosRequisitos: varchar({ length: 300 }),
+    competencias: jsonb().notNull().default([]),
+    atribuicoes: jsonb().notNull().default([]),
+    treinamentosContinuados: jsonb().notNull().default([]),
   },
   (t) => [unique('funcoes_nome_por_empresa').on(t.empresaId, t.nome)],
 );

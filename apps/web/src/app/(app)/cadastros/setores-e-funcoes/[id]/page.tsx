@@ -18,17 +18,25 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { SituacaoDoRequisitoMarcador } from "@/components/situacao-do-requisito";
 import { chamarApi } from "@/lib/api";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import {
+  botaoSecundario,
+  painel,
+  tituloDaPagina,
+  tituloDaSecao,
+} from "@/lib/estilos";
+import {
+  DescricaoDoCargoDaFuncao,
   EpisDaFuncao,
   OrdemDeServicoDaFuncao,
   RiscosDaFuncao,
   TreinamentosDaFuncao,
 } from "./formularios";
+import { Printer } from "lucide-react";
 
 export const metadata: Metadata = { title: "Competências da função" };
 
 const AVISOS = {
+  descricao: "Descrição de cargo salva.",
   treinamentos: "Treinamentos exigidos salvos.",
   epis: "EPIs exigidos salvos.",
   riscos: "Riscos da função salvos.",
@@ -109,13 +117,19 @@ export default async function CompetenciasDaFuncao({
 
   return (
     <article>
-      <Link
-        href="/cadastros/competencias"
-        className="dv-voltar"
-      >
-        Competências por função
+      <Link href="/cadastros/setores-e-funcoes" className="dv-voltar">
+        Setores e funções
       </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>{funcao.nome}</h1>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <h1 className={`${tituloDaPagina} mt-1`}>{funcao.nome}</h1>
+        <Link
+          href={`/cadastros/setores-e-funcoes/${id}/descricao`}
+          className={botaoSecundario}
+        >
+          <Printer aria-hidden size={16} strokeWidth={2} />
+          Descrição de cargo
+        </Link>
+      </div>
       <p className="mt-1 max-w-3xl text-base text-texto-2">
         O que esta função exige de quem a ocupa e quem está em dia. O ASO vale
         para todas as funções (NR-7); os EPIs podem citar o risco do PGR que os
@@ -123,6 +137,23 @@ export default async function CompetenciasDaFuncao({
       </p>
       <Aviso avisos={AVISOS} chave={aviso} />
       {matrizE && !matrizE.ok && <AvisoDeErro erro={matrizE.erro} />}
+
+      {editaTreinos && (
+        <Recolhido titulo="Descrição do cargo (ISO 9001 7.2)">
+          <DescricaoDoCargoDaFuncao
+            funcaoId={id}
+            descricao={{
+              versao: funcao.versao,
+              escolaridade: funcao.escolaridade,
+              experiencia: funcao.experiencia,
+              outrosRequisitos: funcao.outrosRequisitos,
+              competencias: funcao.competencias,
+              atribuicoes: funcao.atribuicoes,
+              treinamentosContinuados: funcao.treinamentosContinuados,
+            }}
+          />
+        </Recolhido>
+      )}
 
       <section className={`${painel} mt-6`}>
         <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pt-5">

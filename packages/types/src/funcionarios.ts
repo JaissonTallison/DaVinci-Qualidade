@@ -42,6 +42,22 @@ export const atualizarFuncaoSchema = z.object({
   versao,
 });
 
+/** Descrição de cargo (ISO 9001 7.2): formação desejada, competências e atribuições. */
+const linhasDoCargo = z
+  .array(texto('o item', 300, 2))
+  .max(40, 'No máximo 40 itens.')
+  .default([]);
+export const descricaoDoCargoSchema = z.object({
+  versao,
+  escolaridade: textoOpcional(200),
+  experiencia: textoOpcional(200),
+  outrosRequisitos: textoOpcional(300),
+  competencias: linhasDoCargo,
+  atribuicoes: linhasDoCargo,
+  treinamentosContinuados: linhasDoCargo,
+});
+export type DescricaoDoCargo = z.input<typeof descricaoDoCargoSchema>;
+
 export const situacaoDoCadastroSchema = z.object({
   versao,
   ativo: z.boolean({ error: 'Informe se fica ativo.' }),
@@ -65,6 +81,13 @@ export interface Funcao {
   cbo: string | null;
   ativo: boolean;
   funcionariosAtivos: number;
+  /** Descrição de cargo (ISO 9001 7.2). */
+  escolaridade: string | null;
+  experiencia: string | null;
+  outrosRequisitos: string | null;
+  competencias: string[];
+  atribuicoes: string[];
+  treinamentosContinuados: string[];
   versao: string;
 }
 

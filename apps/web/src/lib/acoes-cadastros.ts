@@ -5,15 +5,24 @@ import {
   atualizarFuncaoSchema,
   atualizarFuncionarioSchema,
   atualizarSetorSchema,
+  descricaoDoCargoSchema,
   desligarFuncionarioSchema,
   novaFuncaoSchema,
   novoFuncionarioSchema,
   novoSetorSchema,
   readmitirFuncionarioSchema,
   situacaoDoCadastroSchema,
+  type Funcao,
   type Funcionario,
 } from "@davinci/types";
 import { chamar, textos, versaoDe, type EstadoDaAcao } from "./acao";
+
+/** Um item por linha, sem linhas em branco. */
+const linhas = (form: FormData, campo: string) =>
+  String(form.get(campo) ?? "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
 
 const FUNCIONARIOS = "/cadastros/funcionarios";
 const ESTRUTURA = "/cadastros/setores-e-funcoes";
@@ -123,4 +132,30 @@ export async function mudarSituacaoDaEstrutura(
   );
   if ("erro" in r) return r;
   redirect(`${ESTRUTURA}?aviso=${tipo}-${ativo ? "ativado" : "inativado"}`);
+}
+
+/** Descrição de cargo (ISO 9001 7.2) de uma função. */
+export async function salvarDescricaoDoCargo(
+  id: string,
+  _: EstadoDaAcao,
+  form: FormData,
+): Promise<EstadoDaAcao> {
+  const v = textos(form);
+  const r = await chamar<Funcao>(
+    descricaoDoCargoSchema,
+    {
+      versao: versaoDe(form),
+      escolaridade: v.escolaridade || undefined,
+      experiencia: v.experiencia || undefined,
+      outrosRequisitos: v.outrosRequisitos || undefined,
+      competencias: linhas(form, "competencias"),
+      atribuicoes: linhas(form, "atribuicoes"),
+      treinamentosContinuados: linhas(form, "treinamentosContinuados"),
+    },
+    `/funcoes/${id}/descricao`,
+    "PUT",
+    v,
+  );
+  if ("erro" in r) return r;
+  redirect(`${ESTRUTURA}/${id}?aviso=descricao`);
 }

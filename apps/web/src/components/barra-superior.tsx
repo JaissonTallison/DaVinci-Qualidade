@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useTransition } from "react";
+import { Fragment, useState, useTransition } from "react";
 import {
   MODULOS_DO_PAINEL,
   type DadosDoUsuario,
@@ -28,6 +28,14 @@ import { LinhaDePrazo, telaDoIcone, textoDoSelo } from "./linha-de-prazo";
 import { Pesquisa } from "./pesquisa";
 import type { AtalhoDeCriacao, GrupoDoMenu } from "./navegacao";
 import { Suspenso } from "./suspenso";
+
+/**
+ * Sub-telas que não têm item no menu lateral, mas aparecem na trilha do topo (nomeadas e com volta),
+ * ex.: a Auditoria interna simples, acessada por um botão dentro de Auditorias.
+ */
+const SUBTELAS: { href: string; rotulo: string }[] = [
+  { href: "/auditorias/simples", rotulo: "Auditoria interna simples" },
+];
 
 /** Botão na barra: fundo só no passar do mouse. */
 const naBarra =
@@ -141,11 +149,32 @@ function Trilha({
     ({ i }) => atual === i.href || atual.startsWith(`${i.href}/`),
   );
   if (!achada) return null;
-  const detalhe = atual !== achada.i.href;
+  // Sub-tela dentro do item (ex.: /auditorias/simples sob /auditorias), mesmo sem item no menu.
+  const sub = SUBTELAS.find(
+    (s) =>
+      (atual === s.href || atual.startsWith(`${s.href}/`)) &&
+      s.href.length > achada.i.href.length,
+  );
+  const base = sub?.href ?? achada.i.href;
+  const detalhe = atual !== base;
   const ultimoTrecho = atual.split("/").pop() ?? "";
   const rotuloDoDetalhe = /^(nova|novo)$/.test(ultimoTrecho)
     ? "Novo registro"
     : "Detalhe";
+  // Passos depois do módulo; o último (sem href) é a página atual.
+  const passos: { rotulo: string; href?: string }[] = [
+    {
+      rotulo: achada.i.rotulo,
+      href: atual === achada.i.href ? undefined : achada.i.href,
+    },
+  ];
+  if (sub)
+    passos.push({
+      rotulo: sub.rotulo,
+      href: atual === sub.href ? undefined : sub.href,
+    });
+  if (detalhe) passos.push({ rotulo: rotuloDoDetalhe });
+  const naTelaPrincipal = atual === achada.i.href;
   const favorito = favoritos.includes(achada.i.href);
   const seta = (
     <ChevronRight
@@ -166,26 +195,24 @@ function Trilha({
       >
         {achada.g.titulo}
       </Link>
-      {seta}
-      {detalhe ? (
-        <>
-          <Link
-            href={achada.i.href}
-            className="truncate hover:text-texto hover:underline"
-          >
-            {achada.i.rotulo}
-          </Link>
+      {passos.map((p, idx) => (
+        <Fragment key={idx}>
           {seta}
-          <span aria-current="page" className="truncate font-medium text-texto">
-            {rotuloDoDetalhe}
-          </span>
-        </>
-      ) : (
-        <span aria-current="page" className="truncate font-medium text-texto">
-          {achada.i.rotulo}
-        </span>
-      )}
-      {usuarioId && !detalhe && (
+          {p.href ? (
+            <Link
+              href={p.href}
+              className="truncate hover:text-texto hover:underline"
+            >
+              {p.rotulo}
+            </Link>
+          ) : (
+            <span aria-current="page" className="truncate font-medium text-texto">
+              {p.rotulo}
+            </span>
+          )}
+        </Fragment>
+      ))}
+      {usuarioId && naTelaPrincipal && (
         <button
           type="button"
           aria-pressed={favorito}

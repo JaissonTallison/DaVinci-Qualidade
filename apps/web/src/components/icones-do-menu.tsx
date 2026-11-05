@@ -101,7 +101,6 @@ export const ICONE_DA_TELA: Record<string, LucideIcon> = {
   "/qualidade/planos-de-controle": ClipboardList,
   "/qualidade/ppap": FileBadge,
   "/auditorias": ClipboardCheck,
-  "/cadastros/competencias": BadgeCheck,
   "/auditorias/biblioteca": Library,
   "/auditorias/banco-de-ncs": FileWarning,
   "/auditorias/prompts": MessageSquareText,
