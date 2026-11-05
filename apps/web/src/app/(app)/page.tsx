@@ -116,42 +116,42 @@ export default async function Inicio() {
   const componentes: Componente[] = [];
   if (ncs?.abertas)
     componentes.push({
-      nome: "NCs no prazo",
+      nome: "NCs",
       pct: pct(ncs.abertas - ncs.vencidas, ncs.abertas),
       detalhe: `${plural(ncs.vencidas, "NC vencida", "NCs vencidas")} de ${ncs.abertas} em aberto`,
       href: "/qualidade/nao-conformidades?vencidas=true",
     });
   if (planos?.emExecucao)
     componentes.push({
-      nome: "Planos sem atraso",
+      nome: "Planos de ação",
       pct: pct(planos.emExecucao - planos.atrasados, planos.emExecucao),
       detalhe: `${plural(planos.atrasados, "plano com tarefa vencida", "planos com tarefa vencida")}`,
       href: "/qualidade/planos-de-acao?atrasados=true",
     });
   if (cal?.emUso)
     componentes.push({
-      nome: "Calibração em dia",
+      nome: "Calibração",
       pct: pct(cal.emUso - cal.vencidos - cal.reprovados, cal.emUso),
       detalhe: `${plural(cal.vencidos + cal.reprovados, "instrumento vencido ou reprovado", "instrumentos vencidos ou reprovados")} de ${cal.emUso} em uso`,
       href: "/qualidade/calibracao?situacao=vencido",
     });
   if (venc?.total)
     componentes.push({
-      nome: "ASO e treinamentos em dia",
+      nome: "ASO e treinamentos",
       pct: pct(venc.total - venc.vencidos, venc.total),
       detalhe: `${plural(venc.vencidos, "vencido", "vencidos")} de ${venc.total}`,
       href: "/seguranca/vencimentos?situacao=vencido",
     });
   if (sgi?.objetivosMedidos)
     componentes.push({
-      nome: "Objetivos na meta",
+      nome: "Objetivos",
       pct: pct(sgi.objetivosMedidos - sgi.objetivosFora, sgi.objetivosMedidos),
       detalhe: `${plural(sgi.objetivosFora, "objetivo fora da meta", "objetivos fora da meta")} de ${sgi.objetivosMedidos}`,
       href: "/sgi/objetivos",
     });
   if (amb?.licencas)
     componentes.push({
-      nome: "Licenças vigentes",
+      nome: "Licenças",
       pct: pct(amb.licencas - amb.licencasVencidas, amb.licencas),
       detalhe: `${plural(amb.licencasVencidas, "licença vencida", "licenças vencidas")} de ${amb.licencas}`,
       href: "/ambiental/licencas",
@@ -235,6 +235,9 @@ export default async function Inicio() {
   );
   const saudacao =
     hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
+  // Painel de vencimentos pedido mas sem resposta (serviço fora do ar): não mostrar "0"
+  // (falso "tudo em dia") — e sim que o número está indisponível agora.
+  const painelIndisponivel = painelR !== null && !painelR.ok;
   const vencidos =
     painel?.prazos.filter((p) => p.situacao === "vencido").length ?? 0;
   const emSeteDias = diasDepois(hoje, 7);
@@ -279,27 +282,34 @@ export default async function Inicio() {
           <p className="text-xs font-semibold tracking-[0.08em] text-texto-3 uppercase">
             Resumo de hoje · {eu.empresa.nome}
           </p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-3">
-            <div className="flex items-baseline gap-2">
-              <span
-                className={`text-3xl font-bold tabular-nums ${vencidos ? "text-nao-conforme" : "text-conforme"}`}
-              >
-                {vencidos}
-              </span>
-              <span className="text-sm text-texto-2">
-                {vencidos === 1 ? "prazo vencido" : "prazos vencidos"}
-              </span>
+          {painelIndisponivel ? (
+            <p className="mt-3 text-base text-texto-2">
+              Prazos vencidos indisponíveis agora — não foi possível carregar o
+              painel de vencimentos. Tente recarregar em instantes.
+            </p>
+          ) : (
+            <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-3">
+              <div className="flex items-baseline gap-2">
+                <span
+                  className={`text-3xl font-bold tabular-nums ${vencidos ? "text-nao-conforme" : "text-conforme"}`}
+                >
+                  {vencidos}
+                </span>
+                <span className="text-sm text-texto-2">
+                  {vencidos === 1 ? "prazo vencido" : "prazos vencidos"}
+                </span>
+              </div>
+              <span aria-hidden className="h-8 w-px bg-borda" />
+              <div className="flex items-baseline gap-2">
+                <span
+                  className={`text-3xl font-bold tabular-nums ${nestaSemana ? "text-atencao" : "text-texto-2"}`}
+                >
+                  {nestaSemana}
+                </span>
+                <span className="text-sm text-texto-2">vencem em 7 dias</span>
+              </div>
             </div>
-            <span aria-hidden className="h-8 w-px bg-borda" />
-            <div className="flex items-baseline gap-2">
-              <span
-                className={`text-3xl font-bold tabular-nums ${nestaSemana ? "text-atencao" : "text-texto-2"}`}
-              >
-                {nestaSemana}
-              </span>
-              <span className="text-sm text-texto-2">vencem em 7 dias</span>
-            </div>
-          </div>
+          )}
           {pior && pior.pct < 100 ? (
             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-md border border-borda bg-campo p-3.5">
               <p className="min-w-0 flex-1 text-base text-texto">

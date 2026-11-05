@@ -258,6 +258,14 @@ export class AuditoriasService {
       versao,
       'iniciar',
       async (tx, linha) => {
+        // Não se inicia uma auditoria antes do dia planejado (a tela diz "Inicie-a no dia").
+        if (linha.dataInicio > hojeEmBrasilia())
+          throw invalido(
+            'dataInicio',
+            'A auditoria começa em ' +
+              `${linha.dataInicio.split('-').reverse().join('/')}: ` +
+              'só dá para iniciá-la nesse dia ou depois.',
+          );
         await tx
           .update(auditorias)
           .set({ status: 'em_andamento' })
@@ -446,6 +454,8 @@ export class AuditoriasService {
             status: 'cancelada',
             motivoCancelamento: motivo,
             canceladaEm: new Date(),
+            canceladaPor: ctx.usuarioId,
+            canceladaPorNome: ctx.usuarioNome ?? null,
           })
           .where(eq(auditorias.id, linha.id));
       },
@@ -672,6 +682,7 @@ function montar(l: Linha, lista: LinhaConstatacao[]): Auditoria {
     status: l.status as StatusAuditoria,
     conclusao: l.conclusao,
     motivoCancelamento: l.motivoCancelamento,
+    canceladaPorNome: l.canceladaPorNome,
     plano: {
       empresaAuditada: l.empresaAuditada,
       unidade: l.unidade,

@@ -224,11 +224,15 @@ export function FormularioNovaInspecao({
               className={campo}
             >
               <option value="">Sem amostragem (100% dos itens)</option>
-              {Object.entries(NQAS).map(([k, n]) => (
-                <option key={k} value={k}>
-                  {n}
-                </option>
-              ))}
+              {/* Ordena pelo valor numérico: a chave "10" é índice inteiro no JS e, sem isto,
+                  o Object.entries a traz na frente de "0.065". */}
+              {Object.entries(NQAS)
+                .sort(([a], [b]) => Number(a) - Number(b))
+                .map(([k, n]) => (
+                  <option key={k} value={k}>
+                    {n}
+                  </option>
+                ))}
             </select>
           </Campo>
           <Campo

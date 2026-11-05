@@ -1,7 +1,7 @@
 "use client";
 
 import { Paperclip } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { TIPOS_DE_ANEXO, type RegistroComAnexo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import type { EstadoDaAcao } from "@/lib/acao";
@@ -67,15 +67,39 @@ export function RemoverAnexo({ id, voltar }: { id: string; voltar: string }) {
     removerAnexo.bind(null, id, voltar),
     {},
   );
+  // Confirmação em dois passos (sem janela nativa): o 1º clique pede confirmação, o 2º remove.
+  // Evita apagar evidência por engano num clique só.
+  const [confirmando, setConfirmando] = useState(false);
   return (
-    <form action={enviar} className="inline">
-      <button
-        type="submit"
-        className="text-sm text-texto-2 hover:text-texto hover:underline"
-        disabled={enviando}
-      >
-        Remover
-      </button>
+    <form action={enviar} className="inline-flex items-center gap-2">
+      {confirmando ? (
+        <>
+          <span className="text-sm text-texto-2">Remover a evidência?</span>
+          <button
+            type="submit"
+            className="text-sm font-medium text-nao-conforme hover:underline"
+            disabled={enviando}
+          >
+            {enviando ? "Removendo…" : "Sim, remover"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmando(false)}
+            className="text-sm text-texto-2 hover:text-texto hover:underline"
+            disabled={enviando}
+          >
+            Não
+          </button>
+        </>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setConfirmando(true)}
+          className="text-sm text-texto-2 hover:text-texto hover:underline"
+        >
+          Remover
+        </button>
+      )}
       {estado.erro && (
         <span className="ml-2 text-sm text-nao-conforme">
           {estado.erro.mensagem}

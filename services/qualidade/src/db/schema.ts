@@ -77,6 +77,8 @@ export const naoConformidades = pgTable(
     motivoCancelamento: varchar({ length: 500 }),
     canceladaEm: timestamp({ withTimezone: true, precision: 3 }),
     canceladaPor: uuid(),
+    // Nome de quem cancelou, gravado no momento da ação (auditoria: o nome como era então).
+    canceladaPorNome: varchar({ length: 120 }),
   },
   (t) => [
     unique('nao_conformidades_numero_por_empresa').on(t.empresaId, t.numero),
@@ -119,6 +121,8 @@ export const planosAcao = pgTable(
     motivoCancelamento: varchar({ length: 500 }),
     canceladoEm: timestamp({ withTimezone: true, precision: 3 }),
     canceladoPor: uuid(),
+    // Nome de quem cancelou, gravado no momento da ação (auditoria).
+    canceladoPorNome: varchar({ length: 120 }),
   },
   (t) => [
     unique('planos_acao_numero_por_empresa').on(t.empresaId, t.numero),

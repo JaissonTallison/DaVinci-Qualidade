@@ -52,6 +52,9 @@ export const auditorias = pgTable(
     concluidaEm: timestamp({ withTimezone: true, precision: 3 }),
     motivoCancelamento: varchar({ length: 500 }),
     canceladaEm: timestamp({ withTimezone: true, precision: 3 }),
+    canceladaPor: uuid(),
+    // Nome de quem cancelou, no momento da ação (auditoria).
+    canceladaPorNome: varchar({ length: 120 }),
     // Plano e relatório (docs/06-referencias/auditexpert.md §8)
     empresaAuditada: varchar({ length: 150 }),
     unidade: varchar({ length: 120 }),

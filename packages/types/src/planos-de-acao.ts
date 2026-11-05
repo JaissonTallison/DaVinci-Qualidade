@@ -61,7 +61,7 @@ const dinheiro = opcional(
     .trim()
     .regex(
       /^\d{1,13}(\.\d{1,2})?$/,
-      'Informe o valor em reais (ex.: 1250.00).',
+      'Informe um valor em reais, como 1.250,00.',
     ),
 );
 
@@ -202,6 +202,8 @@ export interface PlanoDeAcao {
   verificadoEm: string | null;
   motivoCancelamento: string | null;
   canceladoEm: string | null;
+  /** Nome de quem cancelou, como era no momento do cancelamento (auditoria). */
+  canceladoPorNome: string | null;
   criadoEm: string;
   versao: string;
 }

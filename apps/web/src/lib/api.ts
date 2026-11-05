@@ -25,6 +25,9 @@ export async function chamarApi<T>(
     corpo?: unknown;
     publica?: boolean;
     cabecalhos?: Record<string, string>;
+    /** Teto de espera (ms). Padrão 12s. Use um valor curto em dado opcional (ex.: o sino),
+     * para que um serviço fora do ar não segure a página toda. */
+    prazoMs?: number;
   } = {},
 ): Promise<Resultado<T>> {
   // Toda chamada depende da requisição (sessão, hora): nunca entra na pré-renderização
@@ -46,6 +49,7 @@ async function requisitar<T>(
     metodo?: string;
     corpo?: unknown;
     cabecalhos?: Record<string, string>;
+    prazoMs?: number;
   },
   token?: string,
 ): Promise<Resultado<T>> {
@@ -63,7 +67,7 @@ async function requisitar<T>(
       body:
         opcoes.corpo === undefined ? undefined : JSON.stringify(opcoes.corpo),
       cache: "no-store",
-      signal: AbortSignal.timeout(12_000),
+      signal: AbortSignal.timeout(opcoes.prazoMs ?? 12_000),
     });
     const json: unknown = await res.json().catch(() => null);
     if (res.ok) return { ok: true, dados: json as T };

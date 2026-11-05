@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useState, useSyncExternalStore } from "react";
 import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
 import type { ProvedorExterno } from "@davinci/types";
 import { entrar, type EstadoDoFormulario } from "@/lib/acoes-sessao";
@@ -13,6 +13,9 @@ import { comRetentativa } from "@/lib/retentativa";
 const entrarComRetentativa = comRetentativa(entrar);
 const icone =
   "pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-texto-2";
+
+// "A página já hidratou?" sem setState em efeito: false no servidor e no 1º render do cliente, true depois.
+const semInscricao = () => () => {};
 
 export function FormularioEntrar({
   volta,
@@ -31,6 +34,14 @@ export function FormularioEntrar({
   const [verSenha, setVerSenha] = useState(false);
   // O botão do Google é um link: leva a escolha junto
   const [lembrar, setLembrar] = useState(lembrarAntes);
+  // O envio depende do JavaScript (a ação roda via useActionState, com retentativa). Enquanto a página
+  // não hidrata, o botão fica desabilitado: assim um submit nativo não recarrega a tela nem leva a senha
+  // para a URL caso os recursos do Next não tenham carregado (ex.: origem de dev não liberada).
+  const hidratado = useSyncExternalStore(
+    semInscricao,
+    () => true,
+    () => false,
+  );
   const erros = errosPorCampo(estado.erro?.detalhes);
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length
@@ -148,7 +159,8 @@ export function FormularioEntrar({
         <button
           type="submit"
           className="dv-acesso-botao mt-1"
-          disabled={entrando}
+          disabled={entrando || !hidratado}
+          aria-busy={entrando}
         >
           {entrando ? (
             "Entrando…"

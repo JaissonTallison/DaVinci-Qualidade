@@ -446,20 +446,23 @@ function ItemDeAtencao({ a, atraso }: { a: Atencao; atraso: number }) {
 
 function ListaDeAtencao({ itens }: { itens: Atencao[] }) {
   if (!itens.length) return null;
-  const vencidos = itens.filter((a) => a.tom === "vencido").length;
-  const acompanhar = itens.length - vencidos;
+  // "Urgentes" (não "vencidos"): aqui entram prazos vencidos E itens críticos (riscos do PGR,
+  // revisão/análise atrasada), então o número é maior que os "prazos vencidos" do resumo. Rótulo
+  // próprio para não parecer que os dois totais da tela se contradizem.
+  const urgentes = itens.filter((a) => a.tom === "vencido").length;
+  const acompanhar = itens.length - urgentes;
   return (
     <div className="rounded-md border border-borda bg-superficie shadow-cartao">
       <div className="flex items-center justify-between gap-3 border-b border-borda px-5 py-3.5">
         <div>
           <h2 className="text-lg text-texto">Precisa da sua atenção</h2>
           <p className="text-sm text-texto-2">
-            {vencidos > 0 && (
+            {urgentes > 0 && (
               <span className="font-semibold text-nao-conforme">
-                {vencidos} {vencidos === 1 ? "vencido" : "vencidos"}
+                {urgentes} {urgentes === 1 ? "urgente" : "urgentes"}
               </span>
             )}
-            {vencidos > 0 && acompanhar > 0 && " · "}
+            {urgentes > 0 && acompanhar > 0 && " · "}
             {acompanhar > 0 &&
               `${acompanhar} a acompanhar`}
           </p>

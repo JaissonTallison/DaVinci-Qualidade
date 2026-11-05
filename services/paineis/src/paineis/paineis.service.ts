@@ -36,6 +36,13 @@ type Cliente = Pick<ClientProxy, 'send' | 'emit'>;
 /** Hora (Brasília) a partir da qual o aviso do dia sai. */
 const HORA_DO_AVISO = 7;
 const VERIFICAR_A_CADA_MS = 10 * 60_000;
+/**
+ * Prazo curto por módulo ao montar o painel: a consulta de prazos de cada serviço é um SELECT rápido.
+ * Um módulo lento ou fora do ar não pode segurar o painel inteiro — ele entra em `indisponiveis` e o
+ * resto aparece. Fica abaixo do prazo com que o sino da casca chama o painel (ver (app)/layout.tsx),
+ * para o painel responder antes de o sino desistir. (Menor que o prazo padrão de 8 s do `pedir`.)
+ */
+const PRAZO_DO_MODULO_MS = 2_000;
 
 @Injectable()
 export class PaineisService
@@ -237,7 +244,14 @@ export class PaineisService
     };
     const respostas = await Promise.allSettled(
       modulos.map((m) =>
-        pedir<Prazo[]>(fontes[m][0], fontes[m][1], { dias }, ctx, fontes[m][2]),
+        pedir<Prazo[]>(
+          fontes[m][0],
+          fontes[m][1],
+          { dias },
+          ctx,
+          fontes[m][2],
+          PRAZO_DO_MODULO_MS,
+        ),
       ),
     );
     const prazos: Prazo[] = [];

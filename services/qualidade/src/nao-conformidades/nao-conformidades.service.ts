@@ -340,6 +340,7 @@ export class NaoConformidadesService {
         motivoCancelamento: motivo,
         canceladaEm: new Date(),
         canceladaPor: ctx.usuarioId,
+        canceladaPorNome: ctx.usuarioNome ?? null,
       }),
     );
   }
@@ -446,6 +447,7 @@ function montar(l: Linha): NaoConformidade {
     encerradaEm: l.encerradaEm?.toISOString() ?? null,
     motivoCancelamento: l.motivoCancelamento,
     canceladaEm: l.canceladaEm?.toISOString() ?? null,
+    canceladaPorNome: l.canceladaPorNome,
     criadoEm: l.criadoEm.toISOString(),
     versao: l.atualizadoEm.toISOString(),
   };

@@ -2,20 +2,20 @@
 
 import { useEffect, useState } from "react";
 
+// Sem timeZone fixo: usa o fuso do próprio navegador de quem está usando o sistema
+// (Manaus, Brasília, etc.). Antes estava preso em America/Sao_Paulo e adiantava 1h em Manaus.
 const horaFmt = new Intl.DateTimeFormat("pt-BR", {
   hour: "2-digit",
   minute: "2-digit",
-  timeZone: "America/Sao_Paulo",
 });
 const dataFmt = new Intl.DateTimeFormat("pt-BR", {
   weekday: "long",
   day: "numeric",
   month: "long",
-  timeZone: "America/Sao_Paulo",
 });
 
 /**
- * Relógio ao vivo (hora e data em Brasília) para a faixa de abertura do Início.
+ * Relógio ao vivo (hora e data no fuso do navegador) para a faixa de abertura do Início.
  * Começa com a hora que o servidor renderizou e passa a atualizar no navegador.
  */
 export function RelogioDoDia({ inicialISO }: { inicialISO: string }) {

@@ -269,6 +269,7 @@ export default async function DetalheDoPlano({
           {p.canceladoEm && (
             <p className="mt-2 text-sm text-texto-2">
               {formatarMomento(p.canceladoEm)}
+              {p.canceladoPorNome ? ` · por ${p.canceladoPorNome}` : ""}
             </p>
           )}
           <p className="mt-2 text-base">{p.motivoCancelamento}</p>

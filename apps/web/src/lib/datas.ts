@@ -4,12 +4,20 @@ export function formatarData(iso: string): string {
   return `${d}/${m}/${a}`;
 }
 
-/** Instante (ISO com hora) → "15/10/2026 14:32", no horário de Brasília. */
+/**
+ * Fuso para exibir instantes com hora. Configurável por deploy na variável de ambiente `DAVINCI_FUSO`
+ * (ex.: `DAVINCI_FUSO=America/Manaus`); padrão `America/Sao_Paulo`. Fuso por empresa é evolução futura
+ * (exigiria uma tela de admin para configurar o fuso de cada empresa). Datas civis (sem hora) não
+ * passam por fuso — ver `formatarData`.
+ */
+const FUSO = process.env.DAVINCI_FUSO ?? "America/Sao_Paulo";
+
+/** Instante (ISO com hora) → "15/10/2026 14:32", no fuso do sistema (DAVINCI_FUSO). */
 export function formatarMomento(iso: string): string {
   return new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
     timeStyle: "short",
-    timeZone: "America/Sao_Paulo",
+    timeZone: FUSO,
   }).format(new Date(iso));
 }
 

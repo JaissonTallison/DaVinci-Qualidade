@@ -1,0 +1,1 @@
+ALTER TABLE "anexos" ADD COLUMN "removido_por_nome" varchar(120);
