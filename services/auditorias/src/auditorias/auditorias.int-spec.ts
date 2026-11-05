@@ -190,7 +190,7 @@ describe('formalizar NC no serviço qualidade', () => {
     expect(padrao).toBe(PATTERNS.naoConformidades.criar);
     expect(mensagem.contexto).toEqual(empresaA);
     expect(mensagem.dados).toMatchObject({
-      titulo: `${a.numero} ISO 9001:2015 7.1.5: Instrumentos de medição em uso sem calibração válida na linha 2.`,
+      titulo: `${a.numero} ISO 9001 7.1.5: Instrumentos de medição em uso sem calibração válida na linha 2.`,
       origem: 'auditoria',
       origemRef: a.numero,
       tipo: 'sistema',
@@ -349,7 +349,7 @@ describe('normas e acesso', () => {
     expect(r.detalhes?.[0]).toEqual({
       campo: 'normas',
       mensagem:
-        'Há constatação na ISO 14001:2015: mantenha essa norma na auditoria.',
+        'Há constatação na ISO 14001: mantenha essa norma na auditoria.',
     });
   });
 
