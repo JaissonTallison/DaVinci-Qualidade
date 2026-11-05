@@ -162,9 +162,9 @@ export default async function PainelEsg() {
     });
   if (sv) {
     pilares.social.push({
-      rotulo: "NPS dos clientes (12 meses)",
-      valor: sv.nps12Meses === null ? "—" : String(sv.nps12Meses),
-      explicacao: "Promotores menos detratores",
+      rotulo: "Satisfação do cliente (12 meses)",
+      valor: sv.satisfacao12Meses === null ? "—" : `${sv.satisfacao12Meses}%`,
+      explicacao: "Índice de Satisfação do Cliente (ISC)",
       href: "/servicos/nps",
     });
     pilares.governanca.push({

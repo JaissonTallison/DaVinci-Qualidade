@@ -25,7 +25,7 @@ import {
   avaliarFornecedorSchema,
   avaliarOsSchema,
   cancelarOsSchema,
-  categoriaNps,
+  calcularIsc,
   classificarFornecedor,
   concluirOsSchema,
   filtroNpsSchema,
@@ -33,6 +33,7 @@ import {
   filtroOsSchema,
   iniciarOsSchema,
   isUuid,
+  META_ISC,
   novaOsSchema,
   PATTERNS,
   registrarExecucaoSchema,
@@ -46,13 +47,13 @@ import {
   type Pagina,
   type Papel,
   type Parceiro,
-  type ResultadoNps,
+  type PeriodoSatisfacao,
+  type ResultadoSatisfacao,
   type ResumoServicos,
   type StatusOs,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
 import {
-  catalogoServicos,
   contratos,
   avaliacoesFornecedores as avs,
   ordensServico as os,
@@ -137,7 +138,7 @@ export class ServicosService {
   }
 
   async criarOs(ctx: Contexto, dados: unknown): Promise<OrdemDeServico> {
-    const { contratoId, servicoId, ...n } = validar(novaOsSchema, dados);
+    const { contratoId, checklist, ...n } = validar(novaOsSchema, dados);
     const cliente = await this.parceiro(
       ctx,
       n.clienteId,
@@ -168,23 +169,6 @@ export class ServicosService {
           `O contrato ${contrato.numero} não está vigente.`,
         );
     }
-    let servico: typeof catalogoServicos.$inferSelect | undefined;
-    if (servicoId) {
-      [servico] = await this.db
-        .select()
-        .from(catalogoServicos)
-        .where(
-          and(
-            eq(catalogoServicos.id, servicoId),
-            eq(catalogoServicos.empresaId, ctx.empresaId),
-          ),
-        );
-      if (!servico || !servico.ativo)
-        throw invalido(
-          'servicoId',
-          'Serviço do catálogo não encontrado ou inativo.',
-        );
-    }
     const prazo = n.prazo ?? somarDias(hoje, contrato!.prazoAtendimentoDias);
     const ano = hoje.slice(0, 4);
     return this.db.transaction(async (tx) => {
@@ -203,9 +187,7 @@ export class ServicosService {
           prazo,
           contratoId: contrato?.id ?? null,
           contratoNumero: contrato?.numero ?? null,
-          servicoId: servico?.id ?? null,
-          servicoNome: servico?.nome ?? null,
-          checklist: ((servico?.checklist ?? []) as string[]).map((item) => ({
+          checklist: checklist.map((item) => ({
             item,
             status: 'pendente',
             observacao: '',
@@ -304,7 +286,7 @@ export class ServicosService {
 
   // ---------------------------------------------------------------- NPS
 
-  async listarNps(ctx: Contexto, dados: unknown): Promise<ResultadoNps> {
+  async listarNps(ctx: Contexto, dados: unknown): Promise<ResultadoSatisfacao> {
     const { ano } = validar(filtroNpsSchema, dados ?? {});
     const hoje = hojeEmBrasilia();
     const de = ano ? `${ano}-01-01` : somarMeses(hoje, -12);
@@ -326,28 +308,53 @@ export class ServicosService {
       clienteNome: l.clienteNome,
       data: l.data,
       nota: l.nota,
-      categoria: categoriaNps(l.nota),
       comentario: l.comentario,
     }));
-    const conta = (c: string) =>
-      respostas.filter((r) => r.categoria === c).length;
-    const [promotores, neutros, detratores] = [
-      conta('promotor'),
-      conta('neutro'),
-      conta('detrator'),
-    ];
+    const media = respostas.length
+      ? respostas.reduce((s, r) => s + r.nota, 0) / respostas.length
+      : null;
+    const indice = media === null ? null : calcularIsc(media);
+    // Evolução por trimestre: média de cada trimestre vira o ISC do período.
+    const grupos = new Map<
+      string,
+      { ano: number; tri: number; soma: number; total: number }
+    >();
+    for (const r of respostas) {
+      const anoR = Number(r.data.slice(0, 4));
+      const tri = Math.floor((Number(r.data.slice(5, 7)) - 1) / 3) + 1;
+      const g = grupos.get(`${anoR}-${tri}`) ?? {
+        ano: anoR,
+        tri,
+        soma: 0,
+        total: 0,
+      };
+      g.soma += r.nota;
+      g.total += 1;
+      grupos.set(`${anoR}-${tri}`, g);
+    }
+    const evolucao: PeriodoSatisfacao[] = [...grupos.values()]
+      .sort((a, b) => a.ano - b.ano || a.tri - b.tri)
+      .slice(-4)
+      .map((g) => ({
+        rotulo: `${g.tri}º tri/${String(g.ano).slice(2)}`,
+        indice: calcularIsc(g.soma / g.total),
+        total: g.total,
+      }));
     return {
       respostas,
-      promotores,
-      neutros,
-      detratores,
-      nps: respostas.length
-        ? Math.round(((promotores - detratores) / respostas.length) * 100)
-        : null,
+      total: respostas.length,
+      media: media === null ? null : Math.round(media * 10) / 10,
+      indice,
+      meta: META_ISC,
+      atingiu: indice !== null && indice >= META_ISC,
+      evolucao,
     };
   }
 
-  async registrarNps(ctx: Contexto, dados: unknown): Promise<ResultadoNps> {
+  async registrarNps(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<ResultadoSatisfacao> {
     const r = validar(registrarRespostaNpsSchema, dados);
     if (r.data > hojeEmBrasilia())
       throw invalido('data', 'A data não pode estar no futuro.');
@@ -432,7 +439,7 @@ export class ServicosService {
     return {
       osAbertas: abertas.length,
       osAtrasadas: abertas.filter((a) => a.prazo < hoje).length,
-      nps12Meses: n.nps,
+      satisfacao12Meses: n.indice,
       fornecedoresReprovados: vigentes.filter(
         (a) => a.classificacao === 'reprovado',
       ).length,
@@ -534,8 +541,6 @@ function montarOs(l: typeof os.$inferSelect, hoje: string): OrdemDeServico {
     comentario: l.comentario,
     contratoId: l.contratoId,
     contratoNumero: l.contratoNumero,
-    servicoId: l.servicoId,
-    servicoNome: l.servicoNome,
     checklist: l.checklist as OrdemDeServico['checklist'],
     apontamentos: l.apontamentos as OrdemDeServico['apontamentos'],
     materiais: l.materiais as OrdemDeServico['materiais'],

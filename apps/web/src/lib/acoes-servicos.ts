@@ -14,19 +14,16 @@ import {
   analiseDoContratoSchema,
   atualizarContratoSchema,
   atualizarRequisitoDoContratoSchema,
-  atualizarServicoDoCatalogoSchema,
   criarConviteSchema,
   encerrarContratoSchema,
   encerrarReclamacaoSchema,
   novaReclamacaoSchema,
   novoContratoSchema,
   novoRequisitoDoContratoSchema,
-  novoServicoDoCatalogoSchema,
   registrarExecucaoSchema,
   responderPesquisaSchema,
   responderReclamacaoSchema,
   situacaoDoRequisitoDoContratoSchema,
-  situacaoDoServicoSchema,
   type ConviteDePesquisa,
   type Contrato,
   type OrdemDeServico,
@@ -38,6 +35,13 @@ import { linhasDoFormulario } from "./linhas-do-formulario";
 
 const OS = "/servicos/ordens";
 
+/** Um passo do checklist por linha, sem linhas em branco. */
+const passosDoChecklist = (form: FormData) =>
+  String(form.get("checklist") ?? "")
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
 export async function criarOs(
   _: EstadoDaAcao,
   form: FormData,
@@ -47,7 +51,7 @@ export async function criarOs(
     ...valores,
     prazo: valores.prazo || undefined,
     contratoId: valores.contratoId || undefined,
-    servicoId: valores.servicoId || undefined,
+    checklist: passosDoChecklist(form),
   };
   const r = await chamar<OrdemDeServico>(
     novaOsSchema,
@@ -210,77 +214,6 @@ export async function registrarExecucao(
   );
   if ("erro" in r) return r;
   redirect(`${OS}/${id}?aviso=execucao#execucao`);
-}
-
-// ---------------------------------------------------------------- catálogo
-
-const CATALOGO = "/servicos/catalogo";
-const passos = (form: FormData) =>
-  String(form.get("checklist") ?? "")
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean);
-
-export async function criarServicoDoCatalogo(
-  _: EstadoDaAcao,
-  form: FormData,
-): Promise<EstadoDaAcao> {
-  const v = textos(form);
-  const dados = {
-    nome: v.nome,
-    descricao: vazio(v.descricao),
-    horasPadrao: vazio(v.horasPadrao),
-    checklist: passos(form),
-  };
-  const r = await chamar(
-    novoServicoDoCatalogoSchema,
-    dados,
-    "/catalogo-de-servicos",
-    "POST",
-    v,
-  );
-  if ("erro" in r) return r;
-  redirect(`${CATALOGO}?aviso=criado`);
-}
-
-export async function atualizarServicoDoCatalogo(
-  id: string,
-  _: EstadoDaAcao,
-  form: FormData,
-): Promise<EstadoDaAcao> {
-  const v = textos(form);
-  const dados = {
-    versao: versaoDe(form),
-    nome: v.nome,
-    descricao: vazio(v.descricao),
-    horasPadrao: vazio(v.horasPadrao),
-    checklist: passos(form),
-  };
-  const r = await chamar(
-    atualizarServicoDoCatalogoSchema,
-    dados,
-    `/catalogo-de-servicos/${id}`,
-    "PUT",
-    v,
-  );
-  if ("erro" in r) return r;
-  redirect(`${CATALOGO}?aviso=salvo`);
-}
-
-export async function mudarSituacaoDoServico(
-  id: string,
-  versao: string,
-  ativo: boolean,
-): Promise<string | null> {
-  if (!situacaoDoServicoSchema.safeParse({ versao, ativo }).success)
-    return "Dados inválidos.";
-  const r = await chamarApi(`/catalogo-de-servicos/${id}/situacao`, {
-    metodo: "POST",
-    corpo: { versao, ativo },
-  });
-  if (!r.ok) return r.erro.mensagem;
-  revalidatePath(CATALOGO);
-  return null;
 }
 
 // ---------------------------------------------------------------- contratos

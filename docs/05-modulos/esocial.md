@@ -1,9 +1,11 @@
 # eSocial SST
 
-> **Status:** em uso · **Serviço:** `seguranca` (com dados do `codex`) · **Atualizado em:** 16/10/2026
+> **Status:** desativado (oculto) · **Serviço:** `seguranca` (com dados do `codex`) · **Atualizado em:** 04/11/2026
 > Referências: leiautes do eSocial versão S-1.3 (eventos S-2210, S-2220 e S-2240), tabelas 13, 14, 15, 17, 24 e 27 do eSocial, NR-7 e NR-9. Regras decididas por nós (decisão Q9).
 
-O sistema **monta** os três eventos de SST no leiaute oficial e mostra o que falta para cada um. A **assinatura** com o certificado digital ICP-Brasil e o **envio** ficam com o transmissor da empresa (ou do escritório contábil); o número do recibo volta para cá.
+> ⚠️ **Módulo desativado em 04/11/2026.** A tela, o menu, as rotas, os padrões de mensageria, os tipos e os campos de eSocial embutidos em Acidentes (CAT S-2210), ASO (S-2220) e PGR (S-2240) foram **removidos do código**. A **estrutura de banco foi mantida** (tabelas `configuracao_esocial` e `eventos_esocial`, colunas `dados_cat`, `dados_esocial`, `uf_crm` e `exames`), definida nos schemas Drizzle, para **reativação futura**: nenhuma migração apaga esses dados. Para reativar, restaure o código da feature (serviço `esocial`, controllers no gateway, telas e tipos). O texto abaixo descreve como o módulo funcionava.
+
+O sistema **montava** os três eventos de SST no leiaute oficial e mostrava o que falta para cada um. A **assinatura** com o certificado digital ICP-Brasil e o **envio** ficavam com o transmissor da empresa (ou do escritório contábil); o número do recibo voltava para cá.
 
 ## 1. De onde vem cada evento
 

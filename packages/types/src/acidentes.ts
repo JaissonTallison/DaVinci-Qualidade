@@ -173,8 +173,6 @@ export interface Acidente {
   medidas: string | null;
   motivoCancelamento: string | null;
   investigacao: InvestigacaoDoAcidente;
-  /** Complemento do S-2210 (eSocial). */
-  dadosCat: import('./esocial.js').DadosDaCat | null;
   versao: string;
 }
 

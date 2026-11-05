@@ -20,7 +20,6 @@ export * from './planos-de-acao.js';
 export * from './inspecoes.js';
 export * from './amostragem.js';
 export * from './automotivo.js';
-export * from './esocial.js';
 export * from './emergencia.js';
 export * from './ambiental-gestao.js';
 export * from './calibracao.js';

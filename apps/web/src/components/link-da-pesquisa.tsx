@@ -1,7 +1,9 @@
+import { Mail, MessageCircle } from "lucide-react";
 import type { ConviteDePesquisa } from "@davinci/types";
 import { BotaoCopiar } from "@/components/botao-copiar";
 import { formatarData } from "@/lib/datas";
 import { enderecoDoSistema } from "@/lib/endereco-do-sistema";
+import { botaoSecundario } from "@/lib/estilos";
 
 /** O link do convite, com copiar, e-mail e WhatsApp prontos. */
 export async function LinkDaPesquisa({
@@ -27,17 +29,19 @@ export async function LinkDaPesquisa({
         <BotaoCopiar texto={url} rotulo="Copiar link" />
         <a
           href={`mailto:?subject=${encodeURIComponent("Pesquisa de satisfação")}&body=${encodeURIComponent(texto)}`}
-          className="text-info hover:underline"
+          className={`${botaoSecundario} h-8 text-sm`}
         >
-          Enviar por e-mail
+          <Mail aria-hidden size={14} strokeWidth={2} />
+          <span>Enviar por e-mail</span>
         </a>
         <a
           href={`https://wa.me/?text=${encodeURIComponent(texto)}`}
           target="_blank"
           rel="noreferrer"
-          className="text-info hover:underline"
+          className={`${botaoSecundario} h-8 text-sm`}
         >
-          Enviar por WhatsApp
+          <MessageCircle aria-hidden size={14} strokeWidth={2} />
+          <span>Enviar por WhatsApp</span>
         </a>
       </div>
     </div>

@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import type {
-  Contrato,
-  Pagina,
-  ParceiroResumo,
-  ServicoDoCatalogo,
-} from "@davinci/types";
+import type { Contrato, Pagina, ParceiroResumo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { botaoLink, tituloDaPagina } from "@/lib/estilos";
@@ -14,10 +9,9 @@ import { FormularioDeOs } from "./formulario";
 export const metadata: Metadata = { title: "Abrir ordem de serviço" };
 
 export default async function NovaOs() {
-  const [clientes, contratos, catalogo] = await Promise.all([
+  const [clientes, contratos] = await Promise.all([
     chamarApi<Pagina<ParceiroResumo>>("/parceiros?papel=cliente&porPagina=100"),
     chamarApi<Contrato[]>("/contratos"),
-    chamarApi<ServicoDoCatalogo[]>("/catalogo-de-servicos"),
   ]);
   return (
     <>
@@ -54,7 +48,6 @@ export default async function NovaOs() {
                 )
               : []
           }
-          catalogo={catalogo.ok ? catalogo.dados.filter((c) => c.ativo) : []}
         />
       )}
     </>

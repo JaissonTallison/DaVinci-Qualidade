@@ -1,7 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import { NORMAS, TIPOS_AUDITORIA, type Auditoria } from "@davinci/types";
+import {
+  NORMAS,
+  NORMAS_EM_TRANSICAO,
+  NORMAS_VIGENTES,
+  TIPOS_AUDITORIA,
+  type Auditoria,
+} from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { Selecao } from "@/components/selecao";
@@ -109,7 +115,10 @@ export function FormularioDeAuditoria({
             Normas auditadas
           </legend>
           <div className="flex flex-wrap gap-x-5 gap-y-2 text-base">
-            {Object.entries(NORMAS).map(([chave, nome]) => (
+            {[
+              ...NORMAS_VIGENTES,
+              ...NORMAS_EM_TRANSICAO.filter((n) => normas.includes(n as never)),
+            ].map((chave) => (
               <label key={chave} className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -118,7 +127,7 @@ export function FormularioDeAuditoria({
                   defaultChecked={normas.includes(chave as never)}
                   className="size-4 rounded-xs"
                 />{" "}
-                {nome}
+                {NORMAS[chave]}
               </label>
             ))}
           </div>
@@ -126,8 +135,7 @@ export function FormularioDeAuditoria({
             <p className="text-sm text-nao-conforme">{erros.normas}</p>
           ) : (
             <p className="text-sm text-texto-3">
-              Uma edição por norma. As de 2026 são as vigentes; a ISO 9001:2015
-              e a ISO 14001:2015 ficam em transição até 2029.
+              Uma edição por norma, sempre a mais recente.
             </p>
           )}
         </fieldset>

@@ -2,7 +2,6 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { Contexto, Dados } from '@davinci/shared';
 import { PATTERNS, type Contexto as Ctx } from '@davinci/types';
-import { CatalogoService } from './catalogo.service.js';
 import { ContratosService } from './contratos.service.js';
 import { PesquisasService } from './pesquisas.service.js';
 import { ReclamacoesService } from './reclamacoes.service.js';
@@ -11,12 +10,11 @@ import { ServicosService } from './servicos.service.js';
 const P = PATTERNS.servicos;
 type ComId = { id?: unknown; alteracoes?: unknown };
 
-/** Execução da OS, catálogo, contratos, reclamações e pesquisa por link, pela fila davinci.servicos. */
+/** Execução da OS, contratos, reclamações e pesquisa por link, pela fila davinci.servicos. */
 @Controller()
 export class GestaoDeServicosController {
   constructor(
     private readonly os: ServicosService,
-    private readonly catalogo: CatalogoService,
     private readonly contratos: ContratosService,
     private readonly reclamacoes: ReclamacoesService,
     private readonly pesquisas: PesquisasService,
@@ -25,23 +23,6 @@ export class GestaoDeServicosController {
   @MessagePattern(P.registrarExecucao)
   registrarExecucao(@Contexto() ctx: Ctx, @Dados() d: ComId) {
     return this.os.registrarExecucao(ctx, d);
-  }
-
-  @MessagePattern(P.listarCatalogo)
-  listarCatalogo(@Contexto() ctx: Ctx) {
-    return this.catalogo.listar(ctx);
-  }
-  @MessagePattern(P.criarServico)
-  criarServico(@Contexto() ctx: Ctx, @Dados() d: unknown) {
-    return this.catalogo.criar(ctx, d);
-  }
-  @MessagePattern(P.atualizarServico)
-  atualizarServico(@Contexto() ctx: Ctx, @Dados() d: ComId) {
-    return this.catalogo.atualizar(ctx, d);
-  }
-  @MessagePattern(P.situacaoServico)
-  situacaoServico(@Contexto() ctx: Ctx, @Dados() d: ComId) {
-    return this.catalogo.mudarSituacao(ctx, d);
   }
 
   @MessagePattern(P.listarContratos)

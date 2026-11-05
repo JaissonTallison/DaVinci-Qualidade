@@ -9,7 +9,6 @@ import {
 } from '@davinci/shared';
 import {
   atualizarRiscoSchema,
-  dadosEsocialDoRiscoSchema,
   filtroRiscosSchema,
   isUuid,
   MESES_REVISAO_PGR,
@@ -96,18 +95,6 @@ export class PgrService {
     return this.gravar(ctx, dados?.id, versao, campos);
   }
 
-  /** Agente nocivo (tabela 24) e avaliação do risco para o S-2240; `null` apaga. */
-  async definirEsocial(ctx: Contexto, dados: ComId): Promise<Risco> {
-    const a = (dados?.alteracoes ?? {}) as {
-      versao?: unknown;
-      dados?: unknown;
-    };
-    const versao = String(a.versao ?? '');
-    const dadosEsocial =
-      a.dados === null ? null : validar(dadosEsocialDoRiscoSchema, a.dados);
-    return this.gravar(ctx, dados?.id, versao, { dadosEsocial });
-  }
-
   async mudarSituacao(ctx: Contexto, dados: ComId): Promise<Risco> {
     const { versao, ativo } = validar(situacaoDoRiscoSchema, dados?.alteracoes);
     return this.gravar(ctx, dados?.id, versao, { ativo });
@@ -178,7 +165,6 @@ function montar(l: Linha, hoje: string): Risco {
       (nivel === 'alto' || nivel === 'critico') &&
       Boolean(l.prazo && l.prazo < hoje),
     ativo: l.ativo,
-    dadosEsocial: (l.dadosEsocial as Risco['dadosEsocial']) ?? null,
     revisadoEm: l.atualizadoEm.toISOString(),
     proximaRevisao,
     revisaoVencida: l.ativo && proximaRevisao < hoje,

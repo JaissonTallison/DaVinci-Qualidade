@@ -7,19 +7,13 @@ import {
   Param,
   Post,
   Put,
-  Res,
 } from '@nestjs/common';
-import type { Response } from 'express';
 import type { z } from 'zod';
 import {
   atualizarBrigadistaSchema,
   atualizarEquipamentoSchema,
-  configuracaoEsocialSchema,
-  dadosDaCatSchema,
   filtroTurmaSchema,
-  gerarEventoSchema,
   inspecionarEquipamentoSchema,
-  marcarEnviadoSchema,
   novoBrigadistaSchema,
   novoEquipamentoSchema,
   ordemDeServicoSstSchema,
@@ -32,12 +26,9 @@ import {
   type Brigadista,
   type Contexto,
   type Equipamento,
-  type EventoEsocial,
   type OrdemDeServicoSst,
-  type PainelEsocial,
   type PlanoDeEmergencia,
   type ResumoDaTurma,
-  type Risco,
   type ServiceName,
   type Turma,
 } from '@davinci/types';
@@ -69,7 +60,7 @@ abstract class Base {
   }
 }
 
-/** Investigação estruturada e complemento eSocial da CAT. docs/05-modulos/acidentes.md */
+/** Investigação estruturada do acidente. docs/05-modulos/acidentes.md */
 @Controller('acidentes')
 export class InvestigacaoDoAcidenteController extends Base {
   constructor(m: MensageriaService) {
@@ -89,102 +80,6 @@ export class InvestigacaoDoAcidenteController extends Base {
       id,
       a,
     );
-  }
-  @Put(':id/dados-cat')
-  @Permissao('seguranca.editar')
-  dadosCat(
-    @ContextoHttp() ctx: Contexto,
-    @Param('id') id: string,
-    @Body() a: unknown,
-  ) {
-    return this.alterar<Acidente>(
-      ctx,
-      dadosDaCatSchema,
-      PATTERNS.acidentes.registrarDadosCat,
-      id,
-      a,
-    );
-  }
-}
-
-/** Agente nocivo do risco para o S-2240. */
-@Controller('riscos')
-export class EsocialDoRiscoController extends Base {
-  constructor(m: MensageriaService) {
-    super(m);
-  }
-  @Put(':id/esocial')
-  @Permissao('seguranca.editar')
-  definir(
-    @ContextoHttp() ctx: Contexto,
-    @Param('id') id: string,
-    @Body() a: unknown,
-  ) {
-    return this.enviar<Risco>(ctx, PATTERNS.riscos.definirEsocial, {
-      id,
-      alteracoes: a,
-    });
-  }
-}
-
-/** eSocial SST. docs/05-modulos/esocial.md */
-@Controller('esocial')
-export class EsocialController extends Base {
-  constructor(m: MensageriaService) {
-    super(m);
-  }
-  @Get()
-  @Permissao('seguranca.ver')
-  painel(@ContextoHttp() ctx: Contexto) {
-    return this.enviar<PainelEsocial>(ctx, PATTERNS.esocial.painel, {});
-  }
-  @Put('configuracao')
-  @Permissao('seguranca.editar')
-  configurar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
-    validarEntrada(configuracaoEsocialSchema, dados, ctx.rastreioId);
-    return this.enviar<PainelEsocial>(
-      ctx,
-      PATTERNS.esocial.salvarConfiguracao,
-      dados,
-    );
-  }
-  @Post('eventos')
-  @Permissao('seguranca.editar')
-  gerar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
-    validarEntrada(gerarEventoSchema, dados, ctx.rastreioId);
-    return this.enviar<EventoEsocial>(ctx, PATTERNS.esocial.gerar, dados);
-  }
-  /** O XML para baixar, como arquivo. */
-  @Get('eventos/:id/xml')
-  @Permissao('seguranca.ver')
-  async xml(
-    @ContextoHttp() ctx: Contexto,
-    @Param('id') id: string,
-    @Res() res: Response,
-  ) {
-    const r = await this.enviar<{ nome: string; xml: string }>(
-      ctx,
-      PATTERNS.esocial.xml,
-      { id },
-    );
-    res.setHeader('content-type', 'application/xml; charset=utf-8');
-    res.setHeader('content-disposition', `attachment; filename="${r.nome}"`);
-    res.setHeader('x-content-type-options', 'nosniff');
-    res.send(r.xml);
-  }
-  @Post('eventos/:id/enviado')
-  @Permissao('seguranca.editar')
-  @HttpCode(200)
-  enviado(
-    @ContextoHttp() ctx: Contexto,
-    @Param('id') id: string,
-    @Body() a: unknown,
-  ) {
-    validarEntrada(marcarEnviadoSchema, a, ctx.rastreioId);
-    return this.enviar<EventoEsocial>(ctx, PATTERNS.esocial.marcarEnviado, {
-      id,
-      alteracoes: a,
-    });
   }
 }
 

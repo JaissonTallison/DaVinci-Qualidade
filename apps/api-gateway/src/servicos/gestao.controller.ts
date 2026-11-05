@@ -15,7 +15,6 @@ import {
   analisarReclamacaoSchema,
   atualizarContratoSchema,
   atualizarRequisitoDoContratoSchema,
-  atualizarServicoDoCatalogoSchema,
   criarConviteSchema,
   encerrarContratoSchema,
   encerrarReclamacaoSchema,
@@ -23,14 +22,12 @@ import {
   novaReclamacaoSchema,
   novoContratoSchema,
   novoRequisitoDoContratoSchema,
-  novoServicoDoCatalogoSchema,
   PATTERNS,
   situacaoDoRequisitoDoContratoSchema,
   registrarExecucaoSchema,
   responderPesquisaSchema,
   responderReclamacaoSchema,
   SERVICES,
-  situacaoDoServicoSchema,
   type ConviteDePesquisa,
   type Contexto,
   type Contrato,
@@ -38,7 +35,6 @@ import {
   type PesquisaPublica,
   type Reclamacao,
   type ResumoReclamacoes,
-  type ServicoDoCatalogo,
 } from '@davinci/types';
 import { Permissao, Publica } from '../auth/decoradores.js';
 import { ContextoHttp, RastreioHttp } from '../contexto.js';
@@ -83,55 +79,6 @@ export class ExecucaoDaOsController extends Base {
       P.registrarExecucao,
       id,
       alteracoes,
-    );
-  }
-}
-
-@Controller('catalogo-de-servicos')
-export class CatalogoDeServicosController extends Base {
-  constructor(mensageria: MensageriaService) {
-    super(mensageria);
-  }
-  @Get()
-  @Permissao('servicos.ver')
-  listar(@ContextoHttp() ctx: Contexto) {
-    return this.enviar<ServicoDoCatalogo[]>(ctx, P.listarCatalogo, {});
-  }
-  @Post()
-  @Permissao('servicos.editar')
-  criar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
-    validarEntrada(novoServicoDoCatalogoSchema, dados, ctx.rastreioId);
-    return this.enviar<ServicoDoCatalogo>(ctx, P.criarServico, dados);
-  }
-  @Put(':id')
-  @Permissao('servicos.editar')
-  atualizar(
-    @ContextoHttp() ctx: Contexto,
-    @Param('id') id: string,
-    @Body() a: unknown,
-  ) {
-    return this.alterar<ServicoDoCatalogo>(
-      ctx,
-      atualizarServicoDoCatalogoSchema,
-      P.atualizarServico,
-      id,
-      a,
-    );
-  }
-  @Post(':id/situacao')
-  @Permissao('servicos.editar')
-  @HttpCode(200)
-  situacao(
-    @ContextoHttp() ctx: Contexto,
-    @Param('id') id: string,
-    @Body() a: unknown,
-  ) {
-    return this.alterar<ServicoDoCatalogo>(
-      ctx,
-      situacaoDoServicoSchema,
-      P.situacaoServico,
-      id,
-      a,
     );
   }
 }

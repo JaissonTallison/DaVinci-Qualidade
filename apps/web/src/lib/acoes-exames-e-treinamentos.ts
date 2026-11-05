@@ -9,7 +9,6 @@ import {
   registrarTurmaSchema,
   situacaoDoTreinamentoSchema,
 } from "@davinci/types";
-import { linhasDoFormulario } from "./linhas-do-formulario";
 import { chamar, textos, versaoDe, type EstadoDaAcao } from "./acao";
 
 const CATALOGO = "/cadastros/treinamentos";
@@ -39,8 +38,6 @@ export async function registrarAso(
       ...valores,
       funcionarioId,
       proximoExame: valores.proximoExame || undefined,
-      ufCrm: valores.ufCrm || undefined,
-      exames: linhasDoFormulario(form, ["data", "procedimento"], "exames"),
     },
     "/asos",
     "POST",

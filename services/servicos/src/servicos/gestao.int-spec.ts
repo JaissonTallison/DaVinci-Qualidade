@@ -8,7 +8,6 @@ import {
 } from '@davinci/types';
 import { criarBancoDeTeste } from '@davinci/database/teste';
 import * as schema from '../db/schema.js';
-import { CatalogoService } from './catalogo.service.js';
 import { ContratosService } from './contratos.service.js';
 import { PesquisasService } from './pesquisas.service.js';
 import { ReclamacoesService } from './reclamacoes.service.js';
@@ -16,7 +15,6 @@ import { ServicosService } from './servicos.service.js';
 
 let banco: Awaited<ReturnType<typeof criarBancoDeTeste<typeof schema>>>;
 let os: ServicosService;
-let catalogo: CatalogoService;
 let contratos: ContratosService;
 let reclamacoes: ReclamacoesService;
 let pesquisas: PesquisasService;
@@ -78,25 +76,14 @@ async function recusa(p: Promise<unknown>): Promise<ErroPadrao> {
 beforeAll(async () => {
   banco = await criarBancoDeTeste(schema);
   os = new ServicosService(banco.db, codex);
-  catalogo = new CatalogoService(banco.db);
   contratos = new ContratosService(banco.db, os);
   reclamacoes = new ReclamacoesService(banco.db, os, qualidade);
   pesquisas = new PesquisasService(banco.db, os);
 });
 afterAll(() => banco.encerrar());
 
-describe('Catálogo, contrato e execução da OS', () => {
-  it('OS do contrato pega o prazo do SLA e o checklist do catálogo; concluir exige o checklist', async () => {
-    const svc = await catalogo.criar(ctx, {
-      nome: 'Manutenção preventiva de compressor',
-      horasPadrao: 4,
-      checklist: ['Trocar filtro de ar', 'Drenar condensado', 'Medir pressão'],
-    });
-    expect(
-      (await recusa(catalogo.criar(ctx, { nome: svc.nome }))).detalhes?.[0]
-        ?.campo,
-    ).toBe('nome');
-
+describe('Contrato e execução da OS', () => {
+  it('OS do contrato pega o prazo do SLA e o checklist digitado; concluir exige o checklist', async () => {
     const ct = await contratos.criar(ctx, {
       clienteId: cliente.id,
       objeto: 'Manutenção de compressores da planta 1',
@@ -131,12 +118,11 @@ describe('Catálogo, contrato e execução da OS', () => {
       descricao: 'Preventiva mensal do compressor 2',
       responsavel: 'Carlos',
       contratoId: ct.id,
-      servicoId: svc.id,
+      checklist: ['Trocar filtro de ar', 'Drenar condensado', 'Medir pressão'],
     });
     expect(o).toMatchObject({
       prazo: somarDias(hoje, 5),
       contratoNumero: ct.numero,
-      servicoNome: svc.nome,
     });
     expect(o.checklist.map((p) => p.status)).toEqual([
       'pendente',
@@ -370,9 +356,8 @@ describe('Pesquisa por link', () => {
     expect((await os.obterOs(ctx, { id: o.id })).nota).toBe(5);
     const n = await os.listarNps(ctx, {});
     expect(
-      n.respostas.find((x) => x.comentario === 'Rápido e organizado.')
-        ?.categoria,
-    ).toBe('promotor');
+      n.respostas.find((x) => x.comentario === 'Rápido e organizado.')?.nota,
+    ).toBe(9);
     expect(
       (await recusa(pesquisas.obterPublica({ token: 'x'.repeat(43) }))).codigo,
     ).toBe('NAO_ENCONTRADO');

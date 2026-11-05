@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  META_ISC,
   type DadosDoUsuario,
   type IndicadoresSst,
   type PainelDeVencimentos,
@@ -171,7 +172,7 @@ export default async function IndicadoresGerais() {
           itens: [
             { rotulo: "OS abertas", valor: serv?.osAbertas ?? null, href: "/servicos/ordens" },
             { rotulo: "OS atrasadas", valor: serv?.osAtrasadas ?? null, alerta: pos(serv?.osAtrasadas), href: "/servicos/ordens" },
-            { rotulo: "NPS (12 meses)", valor: serv?.nps12Meses ?? null, alerta: serv?.nps12Meses != null && serv.nps12Meses < 0, href: "/servicos/nps" },
+            { rotulo: "Satisfação ISC (%)", valor: serv?.satisfacao12Meses ?? null, alerta: serv?.satisfacao12Meses != null && serv.satisfacao12Meses < META_ISC, href: "/servicos/nps" },
             { rotulo: "Fornecedores reprovados", valor: serv?.fornecedoresReprovados ?? null, alerta: pos(serv?.fornecedoresReprovados), href: "/servicos/fornecedores" },
           ],
         }

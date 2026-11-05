@@ -135,9 +135,6 @@ export default async function DetalheDaOs({
               )}
             </Dado>
           )}
-          {o.servicoNome && (
-            <Dado rotulo="Serviço do catálogo">{o.servicoNome}</Dado>
-          )}
           {o.horasTotais > 0 && (
             <Dado rotulo="Horas trabalhadas">
               {o.horasTotais.toLocaleString("pt-BR")} h

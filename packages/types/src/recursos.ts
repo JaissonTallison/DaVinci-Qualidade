@@ -40,7 +40,7 @@ export const RECURSOS = {
   servicos: {
     nome: 'Serviços',
     descricao:
-      'Ordens de serviço, avaliação de serviços, satisfação do cliente (NPS) e avaliação de fornecedores.',
+      'Ordens de serviço, avaliação de serviços, satisfação do cliente (ISC) e avaliação de fornecedores.',
     tipo: 'modulo',
     permissoes: ['servicos.'],
   },

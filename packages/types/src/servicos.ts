@@ -1,5 +1,5 @@
 /**
- * Serviços (serviço servicos): ordens de serviço com avaliação, satisfação do cliente (NPS) e avaliação de
+ * Serviços (serviço servicos): ordens de serviço com avaliação, satisfação do cliente (ISC) e avaliação de
  * fornecedores. ISO 9001 8.5, 9.1.2 e 8.4. docs/05-modulos/servicos.md
  */
 import { z } from 'zod';
@@ -23,6 +23,12 @@ const nota = (de: number, ate: number, rotulo: string) =>
     .min(de, `De ${de} a ${ate}.`)
     .max(ate, `De ${de} a ${ate}.`);
 
+/** Passos do checklist de execução (digitados ao abrir a OS). */
+const passos = z
+  .array(texto('o passo', 200, 2))
+  .max(60, 'No máximo 60 passos.')
+  .default([]);
+
 // ---------------------------------------------------------------- ordens de serviço
 
 export const STATUS_OS = {
@@ -42,8 +48,8 @@ export const novaOsSchema = z
     /** Com contrato e sem prazo, o prazo vem do SLA do contrato. */
     prazo: opcional(data('o prazo')),
     contratoId: opcional(z.uuid('Contrato inválido.')),
-    /** Serviço do catálogo: copia o checklist de execução. */
-    servicoId: opcional(z.uuid('Serviço inválido.')),
+    /** Passos do checklist de execução, digitados ao abrir a OS. */
+    checklist: passos,
   })
   .refine((o) => o.prazo || o.contratoId, {
     path: ['prazo'],
@@ -169,8 +175,6 @@ export interface OrdemDeServico {
   comentario: string | null;
   contratoId: string | null;
   contratoNumero: string | null;
-  servicoId: string | null;
-  servicoNome: string | null;
   checklist: { item: string; status: StatusDoPasso; observacao: string }[];
   apontamentos: {
     data: string;
@@ -186,11 +190,14 @@ export interface OrdemDeServico {
   versao: string;
 }
 
-// ---------------------------------------------------------------- NPS
+// -------------------------------------------- Satisfação do cliente (ISC)
 
-/** 9–10 promotor, 7–8 neutro, 0–6 detrator. NPS = % promotores − % detratores. */
-export function categoriaNps(nota: number): 'promotor' | 'neutro' | 'detrator' {
-  return nota >= 9 ? 'promotor' : nota >= 7 ? 'neutro' : 'detrator';
+/** Meta do Índice de Satisfação do Cliente, em % (ISO 9001 9.1.2). */
+export const META_ISC = 80;
+
+/** ISC (%) = média das notas (0 a 10) × 10. Ex.: média 8,6 → 86%. */
+export function calcularIsc(media: number): number {
+  return Math.round(media * 10);
 }
 
 export const registrarRespostaNpsSchema = z.object({
@@ -205,23 +212,34 @@ export const filtroNpsSchema = z.object({
   ano: z.coerce.number().int().min(2000).max(2100).optional(),
 });
 
-export interface RespostaNps {
+export interface RespostaSatisfacao {
   id: string;
   clienteId: string;
   clienteNome: string;
   data: string;
   nota: number;
-  categoria: 'promotor' | 'neutro' | 'detrator';
   comentario: string | null;
 }
 
-export interface ResultadoNps {
-  respostas: RespostaNps[];
-  promotores: number;
-  neutros: number;
-  detratores: number;
-  /** null sem respostas. */
-  nps: number | null;
+/** Um ponto da evolução do ISC (um trimestre). */
+export interface PeriodoSatisfacao {
+  rotulo: string;
+  /** ISC do período (%); null sem respostas no período. */
+  indice: number | null;
+  total: number;
+}
+
+export interface ResultadoSatisfacao {
+  respostas: RespostaSatisfacao[];
+  total: number;
+  /** Média das notas (0 a 10); null sem respostas. */
+  media: number | null;
+  /** Índice de Satisfação do Cliente (%); null sem respostas. */
+  indice: number | null;
+  meta: number;
+  atingiu: boolean;
+  /** Evolução por trimestre, do mais antigo ao mais recente. */
+  evolucao: PeriodoSatisfacao[];
 }
 
 // ---------------------------------------------------------------- avaliação de fornecedores
@@ -280,42 +298,10 @@ export interface AvaliacaoDeFornecedor {
 export interface ResumoServicos {
   osAbertas: number;
   osAtrasadas: number;
-  /** NPS dos últimos 12 meses; null sem respostas. */
-  nps12Meses: number | null;
+  /** Índice de Satisfação do Cliente (%) nos últimos 12 meses; null sem respostas. */
+  satisfacao12Meses: number | null;
   fornecedoresReprovados: number;
   avaliacoesVencidas: number;
-}
-
-// ---------------------------------------------------------------- catálogo de serviços
-
-const passos = z
-  .array(texto('o passo', 200, 2))
-  .max(60, 'No máximo 60 passos.')
-  .default([]);
-const camposDoServico = {
-  nome: texto('o nome do serviço', 120, 3),
-  descricao: textoOpcional(1000),
-  horasPadrao: opcional(
-    z.coerce.number().positive('Horas acima de zero.').max(1000),
-  ),
-  checklist: passos,
-};
-export const novoServicoDoCatalogoSchema = z.object(camposDoServico);
-export type NovoServicoDoCatalogo = z.input<typeof novoServicoDoCatalogoSchema>;
-export const atualizarServicoDoCatalogoSchema = z.object({
-  ...camposDoServico,
-  versao,
-});
-export const situacaoDoServicoSchema = z.object({ versao, ativo: z.boolean() });
-
-export interface ServicoDoCatalogo {
-  id: string;
-  nome: string;
-  descricao: string | null;
-  horasPadrao: number | null;
-  checklist: string[];
-  ativo: boolean;
-  versao: string;
 }
 
 // ---------------------------------------------------------------- contratos e SLA

@@ -181,14 +181,6 @@ export const PATTERNS = {
     recebimentoDoFornecedor: 'inspecoes.recebimento-do-fornecedor',
   },
   /** Automotivo (IATF 16949): FMEA de processo, plano de controle e PPAP (docs/05-modulos/automotivo.md). */
-  /** eSocial SST: S-2210, S-2220 e S-2240 (docs/05-modulos/esocial.md). */
-  esocial: {
-    painel: 'esocial.painel',
-    salvarConfiguracao: 'esocial.salvar-configuracao',
-    gerar: 'esocial.gerar',
-    xml: 'esocial.xml',
-    marcarEnviado: 'esocial.marcar-enviado',
-  },
   /** Emergência: equipamentos, brigada, plano e ordem de serviço de segurança (docs/05-modulos/emergencia.md). */
   emergencia: {
     listarEquipamentos: 'emergencia.equipamentos.listar',
@@ -289,7 +281,6 @@ export const PATTERNS = {
     registrarHoras: 'acidentes.registrar-horas',
     indicadores: 'acidentes.indicadores',
     registrarInvestigacao: 'acidentes.registrar-investigacao',
-    registrarDadosCat: 'acidentes.registrar-dados-cat',
   },
   /** Codex: profissionais, setores e funções da empresa (docs/05-modulos/funcionarios.md). */
   funcionarios: {
@@ -304,7 +295,6 @@ export const PATTERNS = {
     listar: 'asos.listar',
     registrar: 'asos.registrar',
     anular: 'asos.anular',
-    paraEsocial: 'asos.para-esocial',
   },
   treinamentos: {
     listar: 'treinamentos.listar',
@@ -360,7 +350,6 @@ export const PATTERNS = {
     atualizar: 'riscos.atualizar',
     mudarSituacao: 'riscos.mudar-situacao',
     resumo: 'riscos.resumo',
-    definirEsocial: 'riscos.definir-esocial',
   },
   requisitosSst: {
     listar: 'requisitos-sst.listar',
@@ -429,10 +418,6 @@ export const PATTERNS = {
     listarAvaliacoes: 'servicos.fornecedores.listar',
     avaliarFornecedor: 'servicos.fornecedores.avaliar',
     registrarExecucao: 'servicos.os.execucao',
-    listarCatalogo: 'servicos.catalogo.listar',
-    criarServico: 'servicos.catalogo.criar',
-    atualizarServico: 'servicos.catalogo.atualizar',
-    situacaoServico: 'servicos.catalogo.situacao',
     listarContratos: 'servicos.contratos.listar',
     obterContrato: 'servicos.contratos.obter',
     criarContrato: 'servicos.contratos.criar',
