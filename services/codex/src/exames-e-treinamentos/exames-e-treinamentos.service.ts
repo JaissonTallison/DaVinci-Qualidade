@@ -4,7 +4,6 @@ import {
   asc,
   desc,
   eq,
-  gte,
   inArray,
   isNull,
   sql,
@@ -26,10 +25,8 @@ import {
   anularRegistroSchema,
   atualizarTreinamentoSchema,
   filtroCadastroSimplesSchema,
-  filtroAsosParaEsocialSchema,
   filtroDoFuncionarioSchema,
   filtroTurmaSchema,
-  type AsoParaEsocial,
   type ResumoDaTurma,
   type Turma,
   filtroVencimentosSchema,
@@ -107,37 +104,6 @@ export class ExamesETreinamentosService {
       })
       .returning();
     return montarAso(l!);
-  }
-
-  /** ASOs não anulados desde a data, com CPF e matrícula: o que o S-2220 precisa. */
-  async asosParaEsocial(
-    ctx: Contexto,
-    dados: unknown,
-  ): Promise<AsoParaEsocial[]> {
-    const { desde } = validar(filtroAsosParaEsocialSchema, dados);
-    const linhas = await this.db
-      .select({
-        a: asos,
-        nome: funcionarios.nome,
-        cpf: funcionarios.cpf,
-        matricula: funcionarios.matricula,
-      })
-      .from(asos)
-      .innerJoin(funcionarios, eq(funcionarios.id, asos.funcionarioId))
-      .where(
-        and(
-          eq(asos.empresaId, ctx.empresaId),
-          isNull(asos.motivoAnulacao),
-          gte(asos.data, desde),
-        ),
-      )
-      .orderBy(desc(asos.data));
-    return linhas.map((l) => ({
-      ...montarAso(l.a),
-      funcionarioNome: l.nome,
-      cpf: l.cpf,
-      matricula: l.matricula,
-    }));
   }
 
   async anularAso(ctx: Contexto, dados: ComId): Promise<Aso> {
@@ -634,9 +600,7 @@ function montarAso(l: typeof asos.$inferSelect): Aso {
     proximoExame: l.proximoExame,
     medico: l.medico,
     crm: l.crm,
-    ufCrm: l.ufCrm,
     observacao: l.observacao,
-    exames: l.exames as Aso['exames'],
     motivoAnulacao: l.motivoAnulacao,
   };
 }

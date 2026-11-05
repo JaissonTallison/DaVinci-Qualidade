@@ -18,11 +18,7 @@ import { errosPorCampo } from "@/lib/formularios";
 /** As entradas da 9.3.2 já vêm como roteiro: é só escrever embaixo de cada uma. */
 const ROTEIRO = ENTRADAS_ANALISE_CRITICA.map((e) => `${e}:\n`).join("\n");
 
-export function FormularioDeAnalise({
-  resumoAutomatico,
-}: {
-  resumoAutomatico: string;
-}) {
+export function FormularioDeAnalise() {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     criarAnaliseCritica,
     {},
@@ -63,10 +59,6 @@ export function FormularioDeAnalise({
             aria-invalid={Boolean(erros.participantes)}
           />
         </Campo>
-        <div className="rounded-sm border border-borda bg-superficie-2 p-3 text-sm text-texto-2 sm:col-span-3">
-          <p className="font-semibold text-texto">Números do sistema hoje</p>
-          <p className="mt-1 whitespace-pre-line">{resumoAutomatico}</p>
-        </div>
         <Campo
           id="entradas"
           rotulo="Entradas analisadas (ISO 9001, 9.3.2)"

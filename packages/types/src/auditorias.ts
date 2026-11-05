@@ -19,8 +19,9 @@ export const TIPOS_AUDITORIA = {
 export type TipoAuditoria = keyof typeof TIPOS_AUDITORIA;
 
 /**
- * Referenciais auditados. As edições 2026 da 9001 e da 14001 são as vigentes; as de 2015 ficam em transição
- * (até 30/09/2029 e 30/04/2029). Cada auditoria usa uma edição só por referencial.
+ * Referenciais auditados. As edições 2026 da 9001 e da 14001 são as vigentes. As de 2015 (iso9001, iso14001)
+ * ficam como legado: não são oferecidas em novas auditorias (ver {@link NORMAS_VIGENTES}); permanecem só para
+ * auditorias já registradas e para o conteúdo de referência. Cada auditoria usa uma edição só por referencial.
  */
 export const NORMAS = {
   iso9001_2026: 'ISO 9001:2026',
@@ -35,6 +36,17 @@ export const NORMAS = {
   sgi: 'SGI integrado',
 } as const;
 export type Norma = keyof typeof NORMAS;
+
+/**
+ * Edições anteriores (2015), mantidas só para auditorias já registradas e para o conteúdo de referência.
+ * Não são oferecidas ao criar novas auditorias.
+ */
+export const NORMAS_EM_TRANSICAO: readonly Norma[] = ['iso9001', 'iso14001'];
+
+/** Chaves das normas oferecidas em novas auditorias (edições vigentes). */
+export const NORMAS_VIGENTES: Norma[] = (Object.keys(NORMAS) as Norma[]).filter(
+  (n) => !NORMAS_EM_TRANSICAO.includes(n),
+);
 
 export const STATUS_AUDITORIA = {
   planejada: 'Planejada',

@@ -171,8 +171,8 @@ describe('Competências por função (treinamentos e ASO)', () => {
   });
 });
 
-describe('ASO para o eSocial e turmas', () => {
-  it('ASO guarda exames e UF do CRM e sai com CPF e matrícula; turma lista os participantes', async () => {
+describe('ASO e turmas', () => {
+  it('registra ASO e a turma lista os participantes', async () => {
     await exames.registrarAso(ctx, {
       funcionarioId: ana,
       tipo: 'admissional',
@@ -181,16 +181,6 @@ describe('ASO para o eSocial e turmas', () => {
       proximoExame: '2025-02-20',
       medico: 'Dra. Helena',
       crm: '1234',
-      ufCrm: 'sp',
-      exames: [{ data: '2024-02-19', procedimento: '0295' }],
-    });
-    const lista = await exames.asosParaEsocial(ctx, { desde: '2024-01-01' });
-    const daAna = lista.find((a) => a.funcionarioId === ana)!;
-    expect(daAna).toMatchObject({
-      cpf: '11144477735',
-      matricula: '11',
-      ufCrm: 'SP',
-      exames: [{ data: '2024-02-19', procedimento: '0295' }],
     });
     const turmas = await exames.turmas(ctx);
     const t = turmas.find((x) => x.treinamentoId === integracao)!;

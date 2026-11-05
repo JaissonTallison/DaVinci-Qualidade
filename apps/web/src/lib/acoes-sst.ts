@@ -3,21 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
-  configuracaoEsocialSchema,
-  dadosDaCatSchema,
-  dadosEsocialDoRiscoSchema,
   definirRiscosDaFuncaoSchema,
-  gerarEventoSchema,
   inspecionarEquipamentoSchema,
-  marcarEnviadoSchema,
   novoBrigadistaSchema,
   novoEquipamentoSchema,
   atualizarEquipamentoSchema,
   ordemDeServicoSstSchema,
   planoDeEmergenciaSchema,
   registrarInvestigacaoSchema,
-  detalhesDaValidacao,
-  type ErroPadrao,
   type Equipamento,
 } from "@davinci/types";
 import { chamar, textos, versaoDe, type EstadoDaAcao } from "./acao";
@@ -69,69 +62,7 @@ export async function registrarInvestigacao(
   redirect(`${ACIDENTE(id)}?aviso=investigacao-salva#investigacao`);
 }
 
-export async function registrarDadosCat(
-  id: string,
-  _: EstadoDaAcao,
-  form: FormData,
-): Promise<EstadoDaAcao> {
-  const v = textos(form);
-  const dados = {
-    ...v,
-    versao: versaoDe(form),
-    hrAcid: v.hrAcid?.replace(":", ""),
-    hrsTrab: v.hrsTrab?.replace(":", ""),
-    hrAtendimento: v.hrAtendimento?.replace(":", ""),
-    dscLocal: vazio(v.dscLocal),
-    codMunic: vazio(v.codMunic),
-    uf: vazio(v.uf),
-    dtObito: vazio(v.dtObito),
-    ufOC: vazio(v.ufOC),
-  };
-  const r = await chamar(
-    dadosDaCatSchema,
-    dados,
-    `/acidentes/${id}/dados-cat`,
-    "PUT",
-    v,
-  );
-  if ("erro" in r) return r;
-  redirect(`${ACIDENTE(id)}?aviso=dados-cat#cat-esocial`);
-}
-
 // ---------------------------------------------------------------- PGR e função
-
-/** O formulário do eSocial no risco manda a versão junto: o serviço confere. */
-export async function salvarEsocialDoRisco(
-  id: string,
-  _: EstadoDaAcao,
-  form: FormData,
-): Promise<EstadoDaAcao> {
-  const v = textos(form);
-  const dadosRisco = {
-    codAgNoc: v.codAgNoc,
-    tpAval: v.tpAval,
-    intConc: vazio(v.intConc?.replace(",", ".")),
-    limTol: vazio(v.limTol?.replace(",", ".")),
-    unMed: vazio(v.unMed),
-    tecMedicao: vazio(v.tecMedicao),
-  };
-  const valida = dadosEsocialDoRiscoSchema.safeParse(dadosRisco);
-  if (!valida.success)
-    return {
-      erro: {
-        codigo: "DADOS_INVALIDOS",
-        mensagem: "Verifique os campos destacados.",
-        detalhes: detalhesDaValidacao(valida.error.issues),
-      } as ErroPadrao,
-      valores: v,
-    };
-  const r = await chamarApi(`/riscos/${id}/esocial`, {
-    metodo: "PUT",
-    corpo: { versao: versaoDe(form), dados: dadosRisco },
-  });
-  if (!r.ok) return { erro: r.erro, valores: v };
-  redirect(`/seguranca/pgr/${id}?aviso=esocial`);
-}
 
 export async function definirRiscosDaFuncao(
   funcaoId: string,
@@ -172,72 +103,6 @@ export async function salvarOrdemSst(
   );
   if ("erro" in r) return r;
   redirect(`/cadastros/setores-e-funcoes/${funcaoId}?aviso=ordem`);
-}
-
-// ---------------------------------------------------------------- eSocial
-
-export async function salvarConfiguracaoEsocial(
-  _: EstadoDaAcao,
-  form: FormData,
-): Promise<EstadoDaAcao> {
-  const v = textos(form);
-  const dados = {
-    ...v,
-    medicoCpf: vazio(v.medicoCpf),
-    epiDeclaracao: Object.fromEntries(
-      [
-        "medProtecao",
-        "condFuncto",
-        "usoInint",
-        "przValid",
-        "periodicTroca",
-        "higienizacao",
-      ].map((k) => [k, form.get(`epi_${k}`) === "S" ? "S" : "N"]),
-    ),
-  };
-  const r = await chamar(
-    configuracaoEsocialSchema,
-    dados,
-    "/esocial/configuracao",
-    "PUT",
-    v,
-  );
-  if ("erro" in r) return r;
-  redirect("/seguranca/esocial?aviso=configurado");
-}
-
-/** Gera o evento e volta com o aviso; erro (pendência) volta como mensagem. */
-export async function gerarEventoEsocial(
-  evento: string,
-  referenciaId: string,
-): Promise<string | null> {
-  const dados = { evento, referenciaId };
-  if (!gerarEventoSchema.safeParse(dados).success) return "Evento inválido.";
-  const r = await chamarApi("/esocial/eventos", {
-    metodo: "POST",
-    corpo: dados,
-  });
-  if (!r.ok) return r.erro.mensagem;
-  revalidatePath("/seguranca/esocial");
-  return null;
-}
-
-export async function marcarEventoEnviado(
-  id: string,
-  _: EstadoDaAcao,
-  form: FormData,
-): Promise<EstadoDaAcao> {
-  const v = textos(form);
-  const r = await chamar(
-    marcarEnviadoSchema,
-    { recibo: v.recibo },
-    `/esocial/eventos/${id}/enviado`,
-    "POST",
-    v,
-  );
-  if ("erro" in r) return r;
-  revalidatePath("/seguranca/esocial");
-  return {};
 }
 
 // ---------------------------------------------------------------- equipamentos e brigada

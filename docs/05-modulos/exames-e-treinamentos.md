@@ -1,6 +1,6 @@
 # Exames ocupacionais (ASO) e treinamentos
 
-> **Status:** em uso · **Serviço:** `codex` (junto do funcionário) · **Atualizado em:** 15/10/2026
+> **Status:** em uso · **Serviço:** `codex` (junto do funcionário) · **Atualizado em:** 04/11/2026
 > Referências: NR-7 (PCMSO: exames admissional, periódico, de retorno, de mudança de risco e demissional) e as NRs que exigem treinamento com reciclagem (NR-10, NR-33, NR-35...). Regras decididas por nós (decisão Q9).
 
 ## 1. Regras
@@ -25,5 +25,6 @@
 ## 3. Ainda não feito
 
 - [x] Treinamentos e exames obrigatórios por função (ligado ao PGR) e a conformidade de cada pessoa ([competências](competencias.md))
-- [x] Certificado da turma e lista de presença; ASO com exames (tabela 27) e UF do CRM para o S-2220
+- [x] Certificado da turma e lista de presença
+- [~] ASO com exames (tabela 27) e UF do CRM para o S-2220 — **desativado em 04/11/2026** junto com o módulo eSocial SST ([eSocial](esocial.md)); as colunas `exames` e `uf_crm` ficaram no schema para reativação futura
 - [ ] Aviso por e-mail dos vencimentos

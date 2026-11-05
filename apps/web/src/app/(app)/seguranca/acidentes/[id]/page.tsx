@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { Printer } from "lucide-react";
 import {
   ehAcidenteComLesao,
   type Acidente,
   type DadosDoUsuario,
-  type FuncionarioResumo,
   type NaoConformidadeResumo,
   type Pagina,
 } from "@davinci/types";
@@ -36,7 +34,7 @@ import {
 } from "./acoes";
 import { Anexos } from "@/components/anexos";
 import { ArvoreDeCausas } from "./arvore";
-import { DadosDaCatEsocial, InvestigacaoEstruturada } from "./investigacao";
+import { InvestigacaoEstruturada } from "./investigacao";
 import { LinhaDoTempoDoAcidente } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Acidente" };
@@ -76,12 +74,6 @@ export default async function DetalheDoAcidente({
   );
   const ncs = ncsGeradas.ok ? ncsGeradas.dados.itens : [];
   const comLesao = ehAcidenteComLesao(a.tipo);
-  const funcionarios =
-    comLesao && podeEditar && a.status !== "cancelado"
-      ? await chamarApi<Pagina<FuncionarioResumo>>(
-          "/funcionarios?situacao=todos&porPagina=100",
-        )
-      : null;
   const temInvestigacao =
     a.investigacao.testemunhas.length +
       a.investigacao.porques.length +
@@ -250,30 +242,6 @@ export default async function DetalheDoAcidente({
       {a.status === "em_investigacao" && podeEditar && (
         <ConcluirInvestigacao acidente={a} />
       )}
-      {comLesao && funcionarios?.ok && (
-        <section id="cat-esocial" className={`${painel} mt-6 p-5`}>
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className={tituloDaSecao}>CAT para o eSocial (S-2210)</h2>
-            <Link
-              href={`/seguranca/acidentes/${a.id}/cat`}
-              className={botaoSecundario}
-            >
-              <Printer aria-hidden size={16} strokeWidth={2} />
-              CAT para imprimir
-            </Link>
-          </div>
-          <p className="mt-1 text-base text-texto-2">
-            {a.dadosCat
-              ? "Dados completos: o evento fica pronto em Segurança › eSocial SST."
-              : "Complete o que o eSocial pede além do registro do acidente."}
-          </p>
-          <DadosDaCatEsocial
-            acidente={a}
-            funcionarios={funcionarios.dados.itens}
-          />
-        </section>
-      )}
-
       {a.status === "concluido" && (
         <section className={`${painel} mt-6 p-5`}>
           <h2 className={tituloDaSecao}>Investigação</h2>

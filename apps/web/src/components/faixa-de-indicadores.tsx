@@ -2,8 +2,8 @@ import Link from "next/link";
 
 export interface Indicador {
   rotulo: string;
-  /** `null` = sem dados (ex.: taxa sem horas lançadas): mostra "—", nunca zero. */
-  valor: number | null;
+  /** `null` = sem dados (ex.: taxa sem horas lançadas): mostra "—", nunca zero. Texto (ex.: "86%", "Atingido") sai como está. */
+  valor: number | string | null;
   /** Número que pede atenção: único lugar onde a faixa ganha cor. */
   alerta?: boolean;
   href?: string;
@@ -20,7 +20,11 @@ export function FaixaDeIndicadores({ itens }: { itens: Indicador[] }) {
           <span
             className={`text-xl font-semibold ${i.alerta ? "text-nao-conforme" : "text-texto"}`}
           >
-            {i.valor === null ? "—" : i.valor.toLocaleString("pt-BR")}
+            {i.valor === null
+              ? "—"
+              : typeof i.valor === "number"
+                ? i.valor.toLocaleString("pt-BR")
+                : i.valor}
           </span>
         );
         return (

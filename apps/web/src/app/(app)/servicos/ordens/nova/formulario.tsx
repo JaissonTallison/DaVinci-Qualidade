@@ -1,11 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import type {
-  Contrato,
-  ParceiroResumo,
-  ServicoDoCatalogo,
-} from "@davinci/types";
+import type { Contrato, ParceiroResumo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import type { EstadoDaAcao } from "@/lib/acao";
@@ -23,11 +19,9 @@ import { EscolhaDeParceiro } from "../../escolha-de-parceiro";
 export function FormularioDeOs({
   clientes,
   contratos,
-  catalogo,
 }: {
   clientes: ParceiroResumo[];
   contratos: Contrato[];
-  catalogo: ServicoDoCatalogo[];
 }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
     criarOs,
@@ -124,28 +118,6 @@ export function FormularioDeOs({
             </Selecao>
           </Campo>
         )}
-        {catalogo.length > 0 && (
-          <Campo
-            id="servicoId"
-            rotulo="Serviço do catálogo"
-            erro={erros.servicoId}
-            ajuda="Traz o checklist de execução."
-          >
-            <Selecao
-              id="servicoId"
-              name="servicoId"
-              defaultValue={v.servicoId ?? ""}
-              className={campo}
-            >
-              <option value="">Sem catálogo</option>
-              {catalogo.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nome}
-                </option>
-              ))}
-            </Selecao>
-          </Campo>
-        )}
         <Campo
           id="descricao"
           rotulo="O que será feito"
@@ -160,6 +132,22 @@ export function FormularioDeOs({
             defaultValue={v.descricao}
             className={areaDeTexto}
             aria-invalid={Boolean(erros.descricao)}
+          />
+        </Campo>
+        <Campo
+          id="checklist"
+          rotulo="Checklist de execução (opcional)"
+          erro={erros.checklist}
+          ajuda="Um passo por linha. A conclusão da OS exige marcar todos."
+          className="sm:col-span-3"
+        >
+          <textarea
+            id="checklist"
+            name="checklist"
+            rows={5}
+            defaultValue={v.checklist}
+            className={areaDeTexto}
+            aria-invalid={Boolean(erros.checklist)}
           />
         </Campo>
       </div>

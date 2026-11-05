@@ -1,6 +1,6 @@
 # Acidentes e indicadores de SST
 
-> **Status:** em construção · **Serviço:** `seguranca` · **Atualizado em:** 15/10/2026
+> **Status:** em construção · **Serviço:** `seguranca` · **Atualizado em:** 04/11/2026
 > Referências: documento "QSSMA e Agenda ESG" (grupo Segurança), ISO 45001:2018 cláusula 10.2, NBR 14280 (cadastro de acidente do trabalho) e Lei 8.213/1991 art. 22 (CAT). Regras decididas por nós (decisão Q9).
 
 Todo acidente, incidente e quase-acidente é registrado, investigado e encerrado com as causas. Os indicadores (taxa de frequência, taxa de gravidade e dias sem acidente) saem dos registros e das horas trabalhadas lançadas por mês. Ninguém digita indicador.
@@ -45,7 +45,6 @@ TF = \frac{\text{acidentes com afastamento} \times 1\,000\,000}{\text{horas-home
 
 ## 4. Ainda não feito
 
-- [x] Acidentado escolhido do cadastro no complemento da CAT (o nome e a função são atualizados)
 - [ ] EPIs, PGR, permissão de trabalho, CIPA/DDS/APR, emergência e terceiros
 - [x] Investigação estruturada: testemunhas, 5 porquês e árvore de causas pelo método ITMa (fatos numerados, componente e antecedentes conferidos); plano de ação a partir do acidente
-- [x] Complemento eSocial da CAT e CAT para imprimir ([eSocial](esocial.md))
+- [~] Complemento eSocial da CAT (S-2210) e CAT para imprimir — **desativado em 04/11/2026** junto com o módulo eSocial SST ([eSocial](esocial.md)); a coluna `dados_cat` ficou no schema para reativação futura. O registro do **número da CAT** e o controle de atraso continuam.

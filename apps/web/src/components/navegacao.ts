@@ -161,7 +161,7 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "servicos.ver",
       },
       {
-        rotulo: "Satisfação do cliente (NPS)",
+        rotulo: "Satisfação do cliente",
         href: "/servicos/nps",
         permissao: "servicos.ver",
       },
@@ -178,11 +178,6 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
       {
         rotulo: "Contratos e SLA",
         href: "/servicos/contratos",
-        permissao: "servicos.ver",
-      },
-      {
-        rotulo: "Catálogo de serviços",
-        href: "/servicos/catalogo",
         permissao: "servicos.ver",
       },
     ],
@@ -239,11 +234,6 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
       {
         rotulo: "Catálogo de EPIs",
         href: "/seguranca/epis",
-        permissao: "seguranca.ver",
-      },
-      {
-        rotulo: "eSocial SST",
-        href: "/seguranca/esocial",
         permissao: "seguranca.ver",
       },
       {

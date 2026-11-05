@@ -117,15 +117,17 @@ describe('Serviços', () => {
     ).toBe('Esta OS já foi avaliada.');
   });
 
-  it('NPS = % promotores − % detratores', async () => {
+  it('ISC = média das notas × 10, comparada à meta', async () => {
     for (const nota of [10, 9, 8, 3])
       await s.registrarNps(ctx, { clienteId: cliente.id, data: hoje, nota });
     const r = await s.listarNps(ctx, {});
+    // média (10+9+8+3)/4 = 7,5 → ISC 75; meta 80 → não atingida
     expect(r).toMatchObject({
-      promotores: 2,
-      neutros: 1,
-      detratores: 1,
-      nps: 25,
+      total: 4,
+      media: 7.5,
+      indice: 75,
+      meta: 80,
+      atingiu: false,
     });
   });
 
@@ -144,7 +146,7 @@ describe('Serviços', () => {
     expect(await s.resumo(ctx)).toMatchObject({
       fornecedoresReprovados: 1,
       avaliacoesVencidas: 1,
-      nps12Meses: 25,
+      satisfacao12Meses: 75,
     });
     await s.avaliarFornecedor(ctx, {
       fornecedorId: fornecedor.id,

@@ -20,10 +20,9 @@ Brigadista vem do cadastro de funcionários (ativo), com papel (coordenador, lí
 
 ## 3. Ordem de serviço de segurança (NR-1)
 
-Por função: atividades, procedimentos seguros, proibições e o que fazer em emergência, mais os **riscos do PGR ligados à função** (Cadastros › Setores e funções › Competências). A versão do funcionário (Cadastros › Funcionários › Ordem de serviço de segurança) junta EPIs e treinamentos exigidos e a declaração de ciência para assinar. As atividades vão também para o S-2240.
+Por função: atividades, procedimentos seguros, proibições e o que fazer em emergência, mais os **riscos do PGR ligados à função** (Cadastros › Setores e funções › Competências). A versão do funcionário (Cadastros › Funcionários › Ordem de serviço de segurança) junta EPIs e treinamentos exigidos e a declaração de ciência para assinar.
 
 ## 4. Documentos para assinar
 
 - Ficha de EPI do funcionário com o termo de responsabilidade (NR-6, 6.7.1).
 - Lista de presença e certificados de cada turma de treinamento (Cadastros › Treinamentos › Turmas).
-- CAT para imprimir, com os dados do eSocial.

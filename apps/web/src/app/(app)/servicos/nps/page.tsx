@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import type {
   ConviteDePesquisa,
   DadosDoUsuario,
   Pagina,
   ParceiroResumo,
-  ResultadoNps,
+  ResultadoSatisfacao,
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -18,14 +19,11 @@ import { formatarMomento } from "@/lib/datas";
 import { NovoConvite } from "./convites";
 import { FormularioDeNps } from "./formulario";
 
-export const metadata: Metadata = { title: "Satisfação do cliente (NPS)" };
-const CATEGORIA = {
-  promotor: "Promotor",
-  neutro: "Neutro",
-  detrator: "Detrator",
+export const metadata: Metadata = {
+  title: "Satisfação do cliente (ISC)",
 };
 
-export default async function Nps({
+export default async function Satisfacao({
   searchParams,
 }: PageProps<"/servicos/nps">) {
   const { aviso, convite } = (await searchParams) as {
@@ -33,7 +31,7 @@ export default async function Nps({
     convite?: string;
   };
   const [r, eu, clientes, convites] = await Promise.all([
-    chamarApi<ResultadoNps>("/nps"),
+    chamarApi<ResultadoSatisfacao>("/nps"),
     chamarApi<DadosDoUsuario>("/auth/eu"),
     chamarApi<Pagina<ParceiroResumo>>("/parceiros?papel=cliente&porPagina=100"),
     chamarApi<ConviteDePesquisa[]>("/pesquisas"),
@@ -44,18 +42,16 @@ export default async function Nps({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
     <>
-      <h1 className={tituloDaPagina}>
-        Satisfação do cliente (NPS — Net Promoter Score)
-      </h1>
+      <h1 className={tituloDaPagina}>Índice de Satisfação do Cliente (ISC)</h1>
       <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Lealdade do cliente, medida nos últimos 12 meses.
+        Satisfação do cliente medida nos últimos 12 meses (ISO 9001, 9.1.2).
       </p>
-      <Recolhido titulo="Como funciona o NPS">
+      <Recolhido titulo="Como funciona o ISC">
         <p className="max-w-2xl text-base text-texto-2">
-          O NPS (Net Promoter Score) parte de uma pergunta: “De 0 a 10, quanto
-          você recomendaria nossos serviços?”. As notas dividem os clientes em
-          três grupos: 9 e 10 são promotores; 7 e 8, neutros; 0 a 6, detratores.
-          O índice é a porcentagem de promotores menos a de detratores.
+          O cliente dá uma nota de 0 a 10 ao serviço. O Índice de Satisfação do
+          Cliente (ISC) é a média dessas notas convertida para percentual (média
+          × 10). A meta é de pelo menos 80%; abaixo disso, abra uma ação
+          corretiva.
         </p>
       </Recolhido>
       <Aviso avisos={{ registrada: "Resposta registrada." }} chave={aviso} />
@@ -113,20 +109,52 @@ export default async function Nps({
             <FaixaDeIndicadores
               itens={[
                 {
-                  rotulo: "NPS (12 meses)",
-                  valor: r.dados.nps,
-                  alerta: r.dados.nps !== null && r.dados.nps < 0,
+                  rotulo: "Satisfação (ISC)",
+                  valor:
+                    r.dados.indice === null ? null : `${r.dados.indice}%`,
+                  alerta: r.dados.total > 0 && !r.dados.atingiu,
                 },
-                { rotulo: "Promotores", valor: r.dados.promotores },
-                { rotulo: "Neutros", valor: r.dados.neutros },
+                { rotulo: "Meta", valor: `≥ ${r.dados.meta}%` },
                 {
-                  rotulo: "Detratores",
-                  valor: r.dados.detratores,
-                  alerta: r.dados.detratores > 0,
+                  rotulo: "Status",
+                  valor:
+                    r.dados.total === 0
+                      ? "—"
+                      : r.dados.atingiu
+                        ? "Atingido"
+                        : "Não atingido",
+                  alerta: r.dados.total > 0 && !r.dados.atingiu,
                 },
+                { rotulo: "Respostas (12 meses)", valor: r.dados.total },
               ]}
             />
           </div>
+          {r.dados.total > 0 && !r.dados.atingiu && (
+            <p className="mt-3 text-sm text-nao-conforme">
+              ISC abaixo da meta de {r.dados.meta}%.{" "}
+              <Link
+                href="/qualidade/planos-de-acao"
+                className="font-medium underline"
+              >
+                Registre uma ação corretiva
+              </Link>
+              .
+            </p>
+          )}
+          {r.dados.evolucao.length > 0 && (
+            <section className="mt-6">
+              <h2 className="mb-2 text-sm font-semibold text-texto-2">
+                Evolução por trimestre
+              </h2>
+              <FaixaDeIndicadores
+                itens={r.dados.evolucao.map((p) => ({
+                  rotulo: p.rotulo,
+                  valor: p.indice === null ? null : `${p.indice}%`,
+                  alerta: p.indice !== null && p.indice < r.dados.meta,
+                }))}
+              />
+            </section>
+          )}
           <section className={`${painel} mt-6`}>
             {r.dados.respostas.length === 0 ? (
               <p className="px-4 py-8 text-base text-texto-2">
@@ -140,7 +168,6 @@ export default async function Nps({
                       <th className="px-4 py-2 font-semibold">Data</th>
                       <th className="px-4 py-2 font-semibold">Cliente</th>
                       <th className="px-4 py-2 font-semibold">Nota</th>
-                      <th className="px-4 py-2 font-semibold">Categoria</th>
                       <th className="px-4 py-2 font-semibold">Comentário</th>
                     </tr>
                   </thead>
@@ -151,11 +178,10 @@ export default async function Nps({
                           {formatarData(x.data)}
                         </td>
                         <td className="px-4 py-2">{x.clienteNome}</td>
-                        <td className="px-4 py-2 tabular-nums">{x.nota}</td>
                         <td
-                          className={`px-4 py-2 ${x.categoria === "detrator" ? "text-nao-conforme" : x.categoria === "promotor" ? "text-conforme" : "text-texto-2"}`}
+                          className={`px-4 py-2 tabular-nums ${x.nota <= 6 ? "text-nao-conforme" : x.nota >= 9 ? "text-conforme" : ""}`}
                         >
-                          {CATEGORIA[x.categoria]}
+                          {x.nota}
                         </td>
                         <td className="max-w-md px-4 py-2 text-texto-2">
                           {x.comentario}

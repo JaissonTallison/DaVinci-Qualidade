@@ -19,11 +19,6 @@ export class AcidentesController {
     return this.acidentes.registrarInvestigacao(ctx, d);
   }
 
-  @MessagePattern(PATTERNS.acidentes.registrarDadosCat)
-  registrarDadosCat(@Contexto() ctx: Ctx, @Dados() d: ComIdAcidente) {
-    return this.acidentes.registrarDadosCat(ctx, d);
-  }
-
   @MessagePattern(P.listar)
   listar(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
     return this.acidentes.listar(ctx, dados);

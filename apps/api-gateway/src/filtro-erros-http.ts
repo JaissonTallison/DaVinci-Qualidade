@@ -50,9 +50,23 @@ export class FiltroDeErrosHttp implements ExceptionFilter {
         return { codigo: 'DADOS_INVALIDOS', mensagem: 'Requisição inválida.' };
     }
     this.logger.error(
-      `Erro inesperado${rastreioId ? ` [rastreio ${rastreioId}]` : ''}: ${(exception as Error)?.message ?? String(exception)}`,
-      (exception as Error)?.stack,
+      `Erro inesperado${rastreioId ? ` [rastreio ${rastreioId}]` : ''}: ${descreverErro(exception)}`,
+      exception instanceof Error ? exception.stack : undefined,
     );
     return { codigo: 'INTERNO', mensagem: MENSAGEM_ERRO_INTERNO };
   }
+}
+
+/** Serializa qualquer coisa lançada em texto legível (um objeto cru vira o conteúdo, não `[object Object]`). */
+function descreverErro(exception: unknown): string {
+  if (exception instanceof Error)
+    return `${exception.name}: ${exception.message}`;
+  if (exception !== null && typeof exception === 'object') {
+    try {
+      return JSON.stringify(exception, Object.getOwnPropertyNames(exception));
+    } catch {
+      return Object.prototype.toString.call(exception);
+    }
+  }
+  return String(exception);
 }

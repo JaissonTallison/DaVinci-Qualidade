@@ -1,4 +1,3 @@
-import { of, throwError, type Observable } from 'rxjs';
 import { eq } from 'drizzle-orm';
 import { ErroDeNegocio, hojeEmBrasilia, somarDias } from '@davinci/shared';
 import {
@@ -59,31 +58,9 @@ const acao = (a: Acidente, alteracoes: Record<string, unknown>) => ({
   alteracoes: { versao: a.versao, ...alteracoes },
 });
 
-/** Codex falso: um profissional conhecido. */
-const funcionarioDeTeste = {
-  id: '01900000-0000-7000-8000-000000000001',
-  nome: 'João Pereira',
-  funcaoNome: 'Operador',
-  cpf: '52998224725',
-  matricula: '10',
-};
-const codexDeTeste = {
-  send<R>(_p: string, m: unknown): Observable<R> {
-    const id = (m as { dados: { id: string } }).dados.id;
-    return (
-      id === funcionarioDeTeste.id
-        ? of(funcionarioDeTeste)
-        : throwError(() => ({
-            codigo: 'NAO_ENCONTRADO',
-            mensagem: 'Profissional não encontrado.',
-          }))
-    ) as Observable<R>;
-  },
-};
-
 beforeAll(async () => {
   banco = await criarBancoDeTeste(schema);
-  servico = new AcidentesService(banco.db, codexDeTeste);
+  servico = new AcidentesService(banco.db);
 });
 afterAll(() => banco.encerrar());
 

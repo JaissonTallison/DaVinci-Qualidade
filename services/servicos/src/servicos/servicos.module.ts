@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
 import { rmqClientOptions } from '@davinci/shared';
 import { SERVICES } from '@davinci/types';
-import { CatalogoService } from './catalogo.service.js';
 import { ContratosService } from './contratos.service.js';
 import { GestaoDeServicosController } from './gestao.controller.js';
 import { PesquisasService } from './pesquisas.service.js';
@@ -21,7 +20,6 @@ import { ServicosService } from './servicos.service.js';
   controllers: [ServicosController, GestaoDeServicosController],
   providers: [
     ServicosService,
-    CatalogoService,
     ContratosService,
     ReclamacoesService,
     PesquisasService,
