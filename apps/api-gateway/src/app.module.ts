@@ -31,6 +31,7 @@ import { ReferenciasController } from './parceiros/referencias.controller.js';
 import { CalibracaoController } from './qualidade/calibracao.controller.js';
 import {
   AuditoriasController,
+  AuditoriasSimplesController,
   PerguntasDeAuditoriaController,
   EvidenciasDeAuditoriaController,
   ModelosDeNcController,
@@ -149,6 +150,7 @@ export const observeEnabled = Boolean(
     ModelosDeInspecaoController,
     CalibracaoController,
     AuditoriasController,
+    AuditoriasSimplesController,
     PerguntasDeAuditoriaController,
     EvidenciasDeAuditoriaController,
     ModelosDeNcController,

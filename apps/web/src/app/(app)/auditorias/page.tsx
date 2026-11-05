@@ -98,10 +98,15 @@ export default async function ListaDeAuditorias({
           </p>
         </div>
         {podeCriar && (
-          <Link href={`${BASE}/nova`} className={botaoPrimario}>
-            <IconeDaTela href={`${BASE}/nova`} />
-            Planejar auditoria
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link href={`${BASE}/simples`} className={botaoSecundario}>
+              Auditoria interna simples
+            </Link>
+            <Link href={`${BASE}/nova`} className={botaoPrimario}>
+              <IconeDaTela href={`${BASE}/nova`} />
+              Planejar auditoria
+            </Link>
+          </div>
         )}
       </header>
       <section className={`${painel} mt-6`}>

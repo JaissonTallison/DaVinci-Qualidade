@@ -267,6 +267,14 @@ export const PATTERNS = {
     criarCriterio: 'auditorias.criterios.criar',
     excluirCriterio: 'auditorias.criterios.excluir',
   },
+  /** Auditoria interna simples (documento por setor). */
+  auditoriasSimples: {
+    listar: 'auditorias-simples.listar',
+    obter: 'auditorias-simples.obter',
+    criar: 'auditorias-simples.criar',
+    atualizar: 'auditorias-simples.atualizar',
+    excluir: 'auditorias-simples.excluir',
+  },
   /** Segurança: acidentes e indicadores de SST (docs/05-modulos/acidentes.md). */
   acidentes: {
     listar: 'acidentes.listar',
@@ -341,6 +349,7 @@ export const PATTERNS = {
     criar: 'funcoes.criar',
     atualizar: 'funcoes.atualizar',
     mudarSituacao: 'funcoes.mudar-situacao',
+    definirDescricao: 'funcoes.definir-descricao',
   },
   /** Segurança: catálogo de EPIs e entregas (docs/05-modulos/epis.md). */
   riscos: {

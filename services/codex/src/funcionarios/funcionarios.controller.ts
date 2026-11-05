@@ -87,4 +87,9 @@ export class FuncionariosController {
   mudarSituacaoDaFuncao(@Contexto() ctx: Ctx, @Dados() dados: ComId) {
     return this.estrutura.mudarSituacaoDaFuncao(ctx, dados);
   }
+
+  @MessagePattern(C.definirDescricao)
+  definirDescricaoDoCargo(@Contexto() ctx: Ctx, @Dados() dados: ComId) {
+    return this.estrutura.definirDescricaoDoCargo(ctx, dados);
+  }
 }

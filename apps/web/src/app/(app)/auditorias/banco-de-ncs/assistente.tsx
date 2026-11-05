@@ -18,7 +18,7 @@ export function AssistenteDeNc() {
           <input
             value={requisito}
             onChange={(e) => setRequisito(e.target.value)}
-            placeholder="ISO 9001:2026 7.1.5"
+            placeholder="ISO 9001 7.1.5"
             maxLength={60}
             className={campo}
           />

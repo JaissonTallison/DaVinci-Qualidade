@@ -10,13 +10,19 @@ import type {
 import { Campo } from "@/components/campo";
 import { Formulario } from "@/components/formulario-de-acao";
 import { definirRiscosDaFuncao, salvarOrdemSst } from "@/lib/acoes-sst";
+import { salvarDescricaoDoCargo } from "@/lib/acoes-cadastros";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import {
   definirEpisDaFuncao,
   definirTreinamentosDaFuncao,
 } from "@/lib/acoes-competencias";
 import type { EstadoDaAcao } from "@/lib/acao";
-import { areaDeTexto, botaoPrimario, campoCompacto } from "@/lib/estilos";
+import {
+  areaDeTexto,
+  botaoPrimario,
+  campo,
+  campoCompacto,
+} from "@/lib/estilos";
 
 export function TreinamentosDaFuncao({
   funcaoId,
@@ -132,6 +138,127 @@ export function EpisDaFuncao({
         </button>
       </div>
     </form>
+  );
+}
+
+/** Descrição de cargo (ISO 9001 7.2): formação desejada, competências e atribuições. */
+export function DescricaoDoCargoDaFuncao({
+  funcaoId,
+  descricao,
+}: {
+  funcaoId: string;
+  descricao: {
+    versao: string;
+    escolaridade: string | null;
+    experiencia: string | null;
+    outrosRequisitos: string | null;
+    competencias: string[];
+    atribuicoes: string[];
+    treinamentosContinuados: string[];
+  };
+}) {
+  return (
+    <Formulario
+      acao={salvarDescricaoDoCargo.bind(null, funcaoId)}
+      versao={descricao.versao}
+      rotuloDoBotao="Salvar descrição do cargo"
+    >
+      {(erros, v) => (
+        <div className="grid gap-5 sm:grid-cols-3">
+          <Campo
+            id="escolaridade"
+            rotulo="Escolaridade"
+            erro={erros.escolaridade}
+          >
+            <input
+              id="escolaridade"
+              name="escolaridade"
+              maxLength={200}
+              defaultValue={v.escolaridade ?? descricao.escolaridade ?? ""}
+              className={campo}
+            />
+          </Campo>
+          <Campo
+            id="experiencia"
+            rotulo="Experiência"
+            erro={erros.experiencia}
+          >
+            <input
+              id="experiencia"
+              name="experiencia"
+              maxLength={200}
+              defaultValue={v.experiencia ?? descricao.experiencia ?? ""}
+              className={campo}
+            />
+          </Campo>
+          <Campo
+            id="outrosRequisitos"
+            rotulo="Outros requisitos"
+            erro={erros.outrosRequisitos}
+          >
+            <input
+              id="outrosRequisitos"
+              name="outrosRequisitos"
+              maxLength={300}
+              defaultValue={
+                v.outrosRequisitos ?? descricao.outrosRequisitos ?? ""
+              }
+              className={campo}
+            />
+          </Campo>
+          <Campo
+            id="competencias"
+            rotulo="Conhecimentos e competências necessárias"
+            erro={erros.competencias}
+            ajuda="Um item por linha."
+            className="sm:col-span-3"
+          >
+            <textarea
+              id="competencias"
+              name="competencias"
+              rows={5}
+              defaultValue={
+                v.competencias ?? descricao.competencias.join("\n")
+              }
+              className={areaDeTexto}
+            />
+          </Campo>
+          <Campo
+            id="atribuicoes"
+            rotulo="Relação de atribuições"
+            erro={erros.atribuicoes}
+            ajuda="Um item por linha."
+            className="sm:col-span-3"
+          >
+            <textarea
+              id="atribuicoes"
+              name="atribuicoes"
+              rows={6}
+              defaultValue={v.atribuicoes ?? descricao.atribuicoes.join("\n")}
+              className={areaDeTexto}
+            />
+          </Campo>
+          <Campo
+            id="treinamentosContinuados"
+            rotulo="Educação e treinamentos continuados"
+            erro={erros.treinamentosContinuados}
+            ajuda="Um item por linha."
+            className="sm:col-span-3"
+          >
+            <textarea
+              id="treinamentosContinuados"
+              name="treinamentosContinuados"
+              rows={4}
+              defaultValue={
+                v.treinamentosContinuados ??
+                descricao.treinamentosContinuados.join("\n")
+              }
+              className={areaDeTexto}
+            />
+          </Campo>
+        </div>
+      )}
+    </Formulario>
   );
 }
 

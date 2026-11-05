@@ -50,6 +50,13 @@
       "when": 1792218491710,
       "tag": "0006_listas_cadastro",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793851787758,
+      "tag": "0007_descricao-de-cargo-na-funcao",
+      "breakpoints": true
     }
   ]
 }

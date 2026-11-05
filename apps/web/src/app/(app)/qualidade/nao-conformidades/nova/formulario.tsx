@@ -31,7 +31,7 @@ export function FormularioNovaNc({
   inicial?: Record<string, string>;
   /** Setores cadastrados, para selecionar em vez de digitar. */
   setores: string[];
-  /** Processos ou áreas cadastrados (Cadastros › Listas de cadastro). */
+  /** Processos ou áreas cadastrados (Cadastros › Listas de apoio). */
   processos: string[];
   /** Registros de cada origem vinculável, para selecionar o "Registro de origem". */
   registrosPorOrigem: Partial<
@@ -205,7 +205,7 @@ export function FormularioNovaNc({
                 defaultValue={v.processo}
                 maxLength={100}
                 className={campo}
-                placeholder="Cadastre em Cadastros › Listas de cadastro"
+                placeholder="Cadastre em Cadastros › Listas de apoio"
               />
             )}
           </Campo>

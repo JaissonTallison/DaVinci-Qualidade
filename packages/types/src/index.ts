@@ -24,6 +24,7 @@ export * from './emergencia.js';
 export * from './ambiental-gestao.js';
 export * from './calibracao.js';
 export * from './auditorias.js';
+export * from './auditoria-simples.js';
 export * from './relatorio-de-auditoria.js';
 export * from './acidentes.js';
 export * from './funcionarios.js';

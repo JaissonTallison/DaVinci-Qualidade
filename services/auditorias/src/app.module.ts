@@ -4,6 +4,7 @@ import { requireEnv } from '@davinci/shared';
 import * as schema from './db/schema.js';
 import { HealthController } from './health.controller.js';
 import { AuditoriasModule } from './auditorias/auditorias.module.js';
+import { AuditoriaSimplesModule } from './auditoria-simples/auditoria-simples.module.js';
 import { BuscaModule } from './busca/busca.module.js';
 import { EvidenciasModule } from './evidencias/evidencias.module.js';
 import { KitModule } from './kit/kit.module.js';
@@ -16,6 +17,7 @@ import { RoteiroModule } from './roteiro/roteiro.module.js';
     BuscaModule,
     DatabaseModule.forRoot({ url: requireEnv('DATABASE_URL'), schema }),
     AuditoriasModule,
+    AuditoriaSimplesModule,
     KitModule,
     RoteiroModule,
     EvidenciasModule,

@@ -334,7 +334,7 @@ describe('normas e acesso', () => {
     ).toEqual([
       {
         campo: 'constatacao.norma',
-        mensagem: 'A ISO 45001:2018 não está entre as normas desta auditoria.',
+        mensagem: 'A ISO 45001 não está entre as normas desta auditoria.',
       },
     ]);
     a = await servico.registrarConstatacao(
