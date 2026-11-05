@@ -7,11 +7,13 @@
  *   3. aplica as migrações de todos os serviços;
  *   4. roda web + gateway + serviços em modo watch, com os logs de todos no mesmo terminal (Ctrl+C encerra tudo).
  *
- *   pnpm dev:tudo --essencial   só o que as telas usam hoje (web, gateway, identidade, qualidade): ~2 GB em vez de ~6 GB
- *   pnpm dev:tudo --sem-infra   pula os passos 2 e 3 (infraestrutura já no ar)
+ *   pnpm dev:tudo --essencial              só o que as telas usam hoje (web, gateway, identidade, qualidade): ~2 GB em vez de ~6 GB
+ *   pnpm dev:tudo --essencial auditorias   o essencial + os módulos que você vai mexer (ex.: auditorias seguranca); sobe só o necessário
+ *   pnpm dev:tudo --sem-infra              pula os passos 2 e 3 (infraestrutura já no ar)
  */
 import { spawn, spawnSync } from 'node:child_process';
 import { createServer } from 'node:net';
+import { readdirSync } from 'node:fs';
 
 const PORTAS = { 3170: 'web', 3171: 'gateway' };
 const ESSENCIAL = [
@@ -22,6 +24,32 @@ const ESSENCIAL = [
 ];
 const semInfra = process.argv.includes('--sem-infra');
 const essencial = process.argv.includes('--essencial');
+
+// Módulos extras passados na linha (ex.: `--essencial auditorias seguranca`): sobem junto do essencial.
+// Assim você usa as telas desses módulos sem subir os 12 serviços (evita "o módulo X não respondeu a tempo").
+const MODULOS = new Set([
+  ...readdirSync(new URL('../services', import.meta.url), { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name),
+  'web',
+  'api-gateway',
+]);
+const extras = [];
+for (const arg of process.argv.slice(2)) {
+  if (arg.startsWith('-')) continue;
+  const nome = arg.replace(/^@davinci\//, '');
+  if (MODULOS.has(nome)) extras.push(`@davinci/${nome}`);
+  else {
+    console.error(
+      `✖ Módulo desconhecido: "${arg}".\n  Opções: ${[...MODULOS].sort().join(', ')}`,
+    );
+    process.exit(1);
+  }
+}
+if (extras.length && !essencial)
+  console.log(
+    'ℹ Módulos extras só valem com --essencial. Sem ele, os 12 serviços já sobem.',
+  );
 
 const livre = (porta) =>
   new Promise((ok) => {
@@ -69,9 +97,14 @@ if (!semInfra) {
   ]);
 }
 
-const filtros = essencial ? ESSENCIAL.map((p) => `--filter=${p}`) : [];
+const pacotes = [...new Set([...ESSENCIAL, ...extras])];
+const filtros = essencial ? pacotes.map((p) => `--filter=${p}`) : [];
 console.log(
-  `\n▸ ${essencial ? 'Web, gateway, identidade e qualidade' : 'Web, gateway e os 12 serviços'}`,
+  `\n▸ ${
+    essencial
+      ? pacotes.map((p) => p.replace('@davinci/', '')).join(', ')
+      : 'Web, gateway e os 12 serviços'
+  }`,
 );
 console.log(
   '  Web http://localhost:3170 · Gateway http://localhost:3171 · E-mails http://localhost:5554 · Ctrl+C encerra tudo\n',
