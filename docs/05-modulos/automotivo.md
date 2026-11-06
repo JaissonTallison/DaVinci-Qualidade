@@ -1,6 +1,7 @@
 # Automotivo (IATF 16949)
 
-> **Status:** em uso · **Serviço:** `qualidade` · **Atualizado em:** 16/10/2026
+> **Status:** desativado (oculto) · **Serviço:** `qualidade` · **Atualizado em:** 06/11/2026
+> Desativado em 06/11/2026: o público do sistema não é fornecedor da cadeia automotiva (IATF 16949). Saíram do menu e das rotas da web as três telas — **FMEA de processo**, **Planos de controle** e **PPAP** — e o `apps/web/src/lib/acoes-automotivo.ts`. O serviço `qualidade` (controllers/services) e as **tabelas no banco foram mantidos** para reativação futura: basta recriar as rotas e os itens de menu (`navegacao.ts`, `icones-do-menu.tsx`).
 > Referências: IATF 16949:2016 (8.3.3.3, 8.5.1.1 e anexo A), manual de FMEA AIAG-VDA (2019) e manual PPAP da AIAG (4ª edição). Regras decididas por nós (decisão Q9).
 
 Três documentos ligados: o **FMEA de processo** analisa o que pode falhar; o **plano de controle** diz como controlar; o **PPAP** reúne as evidências para o cliente aprovar a peça.

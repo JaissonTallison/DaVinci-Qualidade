@@ -56,6 +56,7 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
       ? estado.erro
       : undefined;
   const respondidos = Object.values(respostas).filter(Boolean).length;
+  const pendentes = inspecao.itens.length - respondidos;
   const nok = Object.values(respostas).filter((r) => r === "nok").length;
 
   return (
@@ -69,6 +70,12 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
         <h2 className="text-xl text-texto">Itens</h2>
         <p className="text-sm text-texto-2">
           {respondidos} de {inspecao.itens.length} respondidos
+          {pendentes > 0 && (
+            <span className="text-atencao">
+              {" "}
+              · faltam {pendentes}
+            </span>
+          )}
           {nok > 0 && !inspecao.plano && (
             <span className="text-nao-conforme">
               {" "}
@@ -129,6 +136,9 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
                     ),
                   )}
                 </div>
+                {!resposta && (
+                  <span className="text-xs text-atencao">A responder</span>
+                )}
                 {erroResposta && (
                   <span className={erroDoCampo}>{erroResposta}</span>
                 )}
@@ -202,9 +212,17 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
         </div>
       )}
       <div className="flex flex-wrap items-center justify-end gap-3 border-t border-borda px-5 py-3">
-        <p className="mr-auto text-sm text-texto-3">
-          Concluída, a inspeção vira registro e não muda mais.
-        </p>
+        {pendentes > 0 ? (
+          <p className="mr-auto text-sm text-texto-2">
+            Responda {pendentes}{" "}
+            {pendentes === 1 ? "item pendente" : "itens pendentes"} para
+            concluir. As respostas já marcadas podem ser salvas antes.
+          </p>
+        ) : (
+          <p className="mr-auto text-sm text-texto-3">
+            Concluída, a inspeção vira registro e não muda mais.
+          </p>
+        )}
         <button type="submit" className={botaoSecundario} disabled={salvando}>
           Salvar respostas
         </button>
@@ -213,7 +231,7 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
           name="concluir"
           value="sim"
           className={botaoPrimario}
-          disabled={salvando}
+          disabled={salvando || pendentes > 0}
         >
           {salvando ? "Salvando…" : "Salvar e concluir"}
         </button>

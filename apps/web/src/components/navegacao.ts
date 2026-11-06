@@ -53,30 +53,19 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "qualidade.ver",
       },
       {
-        rotulo: "Calibração",
+        rotulo: "Equipamentos e calibração",
         href: "/qualidade/calibracao",
         permissao: "qualidade.ver",
       },
+      // Modelos de inspeção saiu do menu principal e passou a viver em "Configurações da
+      // qualidade" (a rota /qualidade/modelos-de-inspecao continua a mesma).
       {
-        rotulo: "Modelos de inspeção",
-        href: "/qualidade/modelos-de-inspecao",
+        rotulo: "Configurações da qualidade",
+        href: "/qualidade/configuracoes",
         permissao: "qualidade.ver",
       },
-      {
-        rotulo: "FMEA de processo",
-        href: "/qualidade/fmea",
-        permissao: "qualidade.ver",
-      },
-      {
-        rotulo: "Planos de controle",
-        href: "/qualidade/planos-de-controle",
-        permissao: "qualidade.ver",
-      },
-      {
-        rotulo: "PPAP",
-        href: "/qualidade/ppap",
-        permissao: "qualidade.ver",
-      },
+      // Módulo automotivo (FMEA, Planos de controle, PPAP) desativado em 06/11/2026:
+      // público não é fornecedor automotivo (IATF 16949). Back e tabelas mantidos.
     ],
   },
   {

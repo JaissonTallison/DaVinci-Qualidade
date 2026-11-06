@@ -21,12 +21,13 @@ import {
   type DadosDoUsuario,
   type InspecaoResumo,
   type Pagina,
+  type ResumoInspecoes,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaInspecao } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
-import { formatarData } from "@/lib/datas";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
@@ -50,14 +51,17 @@ export default async function ListaDeInspecoes({
   >;
   const consulta = new URLSearchParams();
   for (const f of FILTROS) if (params[f]) consulta.set(f, params[f]!);
-  const [lista, eu] = await Promise.all([
+  const [lista, eu, resumo] = await Promise.all([
     chamarApi<Pagina<InspecaoResumo>>(`/inspecoes?${consulta}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<ResumoInspecoes>("/inspecoes/resumo"),
   ]);
   const podeCriar = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
   const filtrando = FILTROS.some((f) => !NAO_FILTRAM.has(f) && params[f]);
   const ordenar = params.ordenar;
   const ordem = params.ordem as Ordem | undefined;
+  // Inspeção em andamento com a data já passada está atrasada (a execução não foi concluída na data prevista).
+  const hoje = hojeEmBrasilia();
 
   const semFiltro = (nome: string) => {
     const q = new URLSearchParams(consulta);
@@ -91,9 +95,36 @@ export default async function ListaDeInspecoes({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Inspeções</h1>
-          <p className={subtituloDaPagina}>
-            Inspeções de produto e processo, com o resultado de cada uma.
-          </p>
+          {resumo.ok ? (
+            <>
+              <p className={subtituloDaPagina}>
+                <Link
+                  href={`${BASE}?status=em_andamento`}
+                  className="hover:underline"
+                >
+                  {resumo.dados.emAndamento} em andamento
+                </Link>
+                {resumo.dados.taxaDeAprovacao30Dias !== null &&
+                  ` · aprovação em 30 dias: ${resumo.dados.taxaDeAprovacao30Dias}%`}
+              </p>
+              {resumo.dados.reprovadas30Dias > 0 && (
+                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
+                  <Link
+                    href={`${BASE}?status=reprovada`}
+                    className="hover:underline"
+                  >
+                    {resumo.dados.reprovadas30Dias === 1
+                      ? "1 reprovada em 30 dias"
+                      : `${resumo.dados.reprovadas30Dias} reprovadas em 30 dias`}
+                  </Link>
+                </p>
+              )}
+            </>
+          ) : (
+            <p className={subtituloDaPagina}>
+              Inspeções de produto e processo, com o resultado de cada uma.
+            </p>
+          )}
         </div>
         {podeCriar && (
           <Link href={`${BASE}/nova`} className={botaoPrimario}>
@@ -207,6 +238,7 @@ export default async function ListaDeInspecoes({
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
+                      className="sm:hidden lg:table-cell"
                     >
                       Tipo
                     </ThOrdenavel>
@@ -219,7 +251,9 @@ export default async function ListaDeInspecoes({
                     >
                       Data
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Inspetor</th>
+                    <th className="px-4 py-2 font-semibold sm:hidden lg:table-cell">
+                      Inspetor
+                    </th>
                     <th className="px-4 py-2 font-semibold">Itens</th>
                     <ThOrdenavel
                       campo="status"
@@ -245,7 +279,7 @@ export default async function ListaDeInspecoes({
                       <td className="px-4 py-2 whitespace-nowrap">
                         <Link
                           href={`${BASE}/${i.id}`}
-                          aria-label={`Abrir a inspeção ${i.numero}`}
+                          aria-label={`${i.status === "em_andamento" ? "Continuar" : "Abrir"} a inspeção ${i.numero}`}
                           className="font-mono text-sm font-medium text-info after:absolute after:inset-0 after:content-[''] hover:underline"
                         >
                           {i.numero}
@@ -259,13 +293,18 @@ export default async function ListaDeInspecoes({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                      <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                         {TIPOS_INSPECAO[i.tipo]}
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap">
                         {formatarData(i.data)}
+                        {i.status === "em_andamento" && i.data < hoje && (
+                          <span className="block text-xs font-medium text-nao-conforme">
+                            Atrasada
+                          </span>
+                        )}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                      <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                         {i.inspetor}
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-sm text-texto-2">
@@ -284,7 +323,9 @@ export default async function ListaDeInspecoes({
                       <td className="relative z-10 px-2 py-2 text-right">
                         <AcoesDaLinha rotulo={`Ações da inspeção ${i.numero}`}>
                           <Link href={`${BASE}/${i.id}`} className={itemDeAcao}>
-                            Abrir
+                            {i.status === "em_andamento"
+                              ? "Continuar inspeção"
+                              : "Ver detalhes"}
                           </Link>
                           <a
                             href={`${BASE}/${i.id}`}

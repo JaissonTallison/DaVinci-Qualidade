@@ -33,18 +33,28 @@ const TIPO_DA_NC: Record<TipoInspecao, TipoNc> = {
   outra: "processo",
 };
 
-/** Vinda de uma inspeção reprovada: origem, referência, objeto, lote e os itens NOK com o que foi encontrado. */
+/** Vinda de uma inspeção reprovada: origem, referência, objeto, lote e o motivo da reprovação (amostragem e/ou itens NOK). */
 function aPartirDaInspecao(i: Inspecao): Record<string, string> {
-  const encontrados = i.itens
-    .filter((item) => item.resposta === "nok")
+  const data = i.data.split("-").reverse().join("/");
+  const itensNok = i.itens.filter((item) => item.resposta === "nok");
+  const listaNok = itensNok
     .map(
       (item) =>
         `- Item ${item.ordem + 1} (${item.verificar}): ${item.observacao ?? RESPOSTAS_ITEM.nok}`,
     )
     .join("\n");
+  // Por que foi reprovada: pela amostragem (defeituosos no lote) e/ou pelos itens não conformes do checklist.
+  // Com plano de amostragem o lote pode ser reprovado sem nenhum item NOK, então a descrição não pode ficar vazia.
+  const motivos: string[] = [];
+  if (i.plano && i.defeituosos !== null)
+    motivos.push(
+      `Reprovada pela amostragem: ${i.defeituosos} ${i.defeituosos === 1 ? "defeituoso" : "defeituosos"} na amostra de ${i.plano.amostra} (aceita com até ${i.plano.aceita}).`,
+    );
+  if (itensNok.length > 0) motivos.push(`Itens não conformes:\n${listaNok}`);
+  if (motivos.length === 0) motivos.push("Reprovada na inspeção.");
   return {
     titulo: `Reprovação na ${i.numero}: ${i.objeto}`.slice(0, 150),
-    descricao: `Inspeção ${i.numero} de ${i.data.split("-").reverse().join("/")}, por ${i.inspetor}, reprovada nos itens:\n${encontrados}`,
+    descricao: `Inspeção ${i.numero} de ${data}, por ${i.inspetor}.\n${motivos.join("\n")}`,
     origem: "inspecao",
     origemRef: i.numero,
     tipo: TIPO_DA_NC[i.tipo],

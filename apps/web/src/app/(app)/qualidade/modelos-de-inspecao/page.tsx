@@ -44,7 +44,10 @@ export default async function ListaDeModelos({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
+      <Link href="/qualidade/configuracoes" className="dv-voltar">
+        Configurações da qualidade
+      </Link>
+      <header className="mt-1 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Modelos de inspeção</h1>
           <p className="mt-1 max-w-2xl text-base text-texto-2">

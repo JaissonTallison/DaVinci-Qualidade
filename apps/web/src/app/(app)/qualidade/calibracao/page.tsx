@@ -20,6 +20,7 @@ import {
   type DadosDoUsuario,
   type InstrumentoResumo,
   type Pagina,
+  type ResumoCalibracao,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
@@ -49,14 +50,28 @@ export default async function ListaDeInstrumentos({
   >;
   const consulta = new URLSearchParams();
   for (const f of FILTROS) if (params[f]) consulta.set(f, params[f]!);
-  const [lista, eu] = await Promise.all([
+  const [lista, eu, resumo] = await Promise.all([
     chamarApi<Pagina<InstrumentoResumo>>(`/instrumentos?${consulta}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<ResumoCalibracao>("/instrumentos/resumo"),
   ]);
   const podeCriar = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
   const filtrando = FILTROS.some((f) => !NAO_FILTRAM.has(f) && params[f]);
   const ordenar = params.ordenar;
   const ordem = params.ordem as Ordem | undefined;
+  const plural = (n: number, um: string, varios: string) =>
+    `${n} ${n === 1 ? um : varios}`;
+  // Em dia = em uso menos os que pedem alguma ação (vencido, vence em breve, reprovado, sem calibração).
+  const emDia = resumo.ok
+    ? Math.max(
+        resumo.dados.emUso -
+          resumo.dados.vencidos -
+          resumo.dados.vencemEmBreve -
+          resumo.dados.reprovados -
+          resumo.dados.semCalibracao,
+        0,
+      )
+    : 0;
 
   const semFiltro = (nome: string) => {
     const q = new URLSearchParams(consulta);
@@ -83,9 +98,55 @@ export default async function ListaDeInstrumentos({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Calibração</h1>
-          <p className={subtituloDaPagina}>
-            Instrumentos de medição e a situação de calibração de cada um.
-          </p>
+          {resumo.ok ? (
+            <>
+              <p className={subtituloDaPagina}>
+                {plural(resumo.dados.emUso, "em uso", "em uso")}
+                {emDia > 0 && ` · ${emDia} em dia`}
+              </p>
+              {resumo.dados.vencemEmBreve > 0 && (
+                <p className="mt-0.5 text-sm text-atencao">
+                  <Link
+                    href={`${BASE}?situacao=vence_em_breve`}
+                    className="hover:underline"
+                  >
+                    {plural(
+                      resumo.dados.vencemEmBreve,
+                      "vence em até 30 dias",
+                      "vencem em até 30 dias",
+                    )}
+                  </Link>
+                </p>
+              )}
+              {(resumo.dados.vencidos > 0 || resumo.dados.reprovados > 0) && (
+                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
+                  {resumo.dados.vencidos > 0 && (
+                    <Link
+                      href={`${BASE}?situacao=vencido`}
+                      className="hover:underline"
+                    >
+                      {plural(resumo.dados.vencidos, "vencido", "vencidos")}
+                    </Link>
+                  )}
+                  {resumo.dados.vencidos > 0 &&
+                    resumo.dados.reprovados > 0 &&
+                    " · "}
+                  {resumo.dados.reprovados > 0 && (
+                    <Link
+                      href={`${BASE}?situacao=reprovado`}
+                      className="hover:underline"
+                    >
+                      {plural(resumo.dados.reprovados, "reprovado", "reprovados")}
+                    </Link>
+                  )}
+                </p>
+              )}
+            </>
+          ) : (
+            <p className={subtituloDaPagina}>
+              Instrumentos de medição e a situação de calibração de cada um.
+            </p>
+          )}
         </div>
         {podeCriar && (
           <Link href={`${BASE}/novo`} className={botaoPrimario}>
@@ -193,6 +254,7 @@ export default async function ListaDeInstrumentos({
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
+                      className="sm:hidden lg:table-cell"
                     >
                       Local
                     </ThOrdenavel>
@@ -202,6 +264,7 @@ export default async function ListaDeInstrumentos({
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
+                      className="sm:hidden lg:table-cell"
                     >
                       Última
                     </ThOrdenavel>
@@ -251,8 +314,10 @@ export default async function ListaDeInstrumentos({
                           {i.frequenciaMeses === 1 ? "mês" : "meses"}
                         </span>
                       </td>
-                      <td className="px-4 py-2 text-texto-2">{i.local}</td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-2 text-texto-2 sm:hidden lg:table-cell">
+                        {i.local}
+                      </td>
+                      <td className="px-4 py-2 whitespace-nowrap sm:hidden lg:table-cell">
                         {i.ultimaCalibracao
                           ? formatarData(i.ultimaCalibracao)
                           : "—"}
@@ -265,7 +330,7 @@ export default async function ListaDeInstrumentos({
                           i.situacao !== "fora_de_uso" &&
                           i.situacao !== "reprovado" && (
                             <span
-                              className={`block text-xs ${i.situacao === "vencido" ? "text-nao-conforme" : "text-texto-3"}`}
+                              className={`block text-xs ${i.situacao === "vence_em_breve" ? "text-atencao" : "text-texto-3"}`}
                             >
                               {prazoRelativo(i.proximaCalibracao)}
                             </span>

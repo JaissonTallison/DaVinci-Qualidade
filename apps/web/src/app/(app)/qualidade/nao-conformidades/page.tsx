@@ -24,12 +24,18 @@ import {
   type DadosDoUsuario,
   type NaoConformidadeResumo,
   type Pagina,
+  type ResumoNcs,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { GravidadeDaNc, StatusDaNc } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
-import { formatarData, prazoRelativo } from "@/lib/datas";
+import {
+  diasEntre,
+  formatarData,
+  hojeEmBrasilia,
+  prazoRelativo,
+} from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
@@ -62,12 +68,16 @@ export default async function ListaDeNcs({
   >;
   const consulta = new URLSearchParams();
   for (const f of FILTROS) if (params[f]) consulta.set(f, params[f]!);
-  const [lista, eu] = await Promise.all([
+  const [lista, eu, resumo] = await Promise.all([
     // BASE é a rota da tela (links); a API das NCs é /nao-conformidades.
     chamarApi<Pagina<NaoConformidadeResumo>>(`/nao-conformidades?${consulta}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<ResumoNcs>("/nao-conformidades/resumo"),
   ]);
   const podeAbrir = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
+  const hoje = hojeEmBrasilia();
+  const plural = (n: number, um: string, varios: string) =>
+    `${n} ${n === 1 ? um : varios}`;
   const filtrando = FILTROS.some((f) => !NAO_FILTRAM.has(f) && params[f]);
   const ordenar = params.ordenar;
   const ordem = params.ordem as Ordem | undefined;
@@ -110,10 +120,32 @@ export default async function ListaDeNcs({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Não conformidades</h1>
-          <p className={subtituloDaPagina}>
-            Não conformidades registradas e o andamento do tratamento de cada
-            uma.
-          </p>
+          {resumo.ok ? (
+            <>
+              <p className={subtituloDaPagina}>
+                {resumo.dados.abertas === 1
+                  ? "1 em aberto"
+                  : `${resumo.dados.abertas} em aberto`}
+                {resumo.dados.graves > 0 &&
+                  ` · ${plural(resumo.dados.graves, "grave", "graves")} (alta ou crítica)`}
+              </p>
+              {resumo.dados.vencidas > 0 && (
+                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
+                  <Link
+                    href={`${BASE}?vencidas=true`}
+                    className="hover:underline"
+                  >
+                    {plural(resumo.dados.vencidas, "vencida", "vencidas")}
+                  </Link>
+                </p>
+              )}
+            </>
+          ) : (
+            <p className={subtituloDaPagina}>
+              Não conformidades registradas e o andamento do tratamento de cada
+              uma.
+            </p>
+          )}
         </div>
         {podeAbrir && (
           <Link href={`${BASE}/nova`} className={botaoPrimario}>
@@ -243,11 +275,14 @@ export default async function ListaDeNcs({
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
+                      className="sm:hidden lg:table-cell"
                     >
                       Origem
                     </ThOrdenavel>
                     <th className="px-4 py-2 font-semibold">Gravidade</th>
-                    <th className="px-4 py-2 font-semibold">Responsável</th>
+                    <th className="px-4 py-2 font-semibold sm:hidden lg:table-cell">
+                      Responsável
+                    </th>
                     <ThOrdenavel
                       campo="prazo"
                       ordenar={ordenar}
@@ -263,6 +298,7 @@ export default async function ListaDeNcs({
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
+                      className="min-w-40"
                     >
                       Status
                     </ThOrdenavel>
@@ -298,26 +334,32 @@ export default async function ListaDeNcs({
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {ORIGENS_NC[nc.origem]}
                         </td>
                         <td className="px-4 py-2">
                           <GravidadeDaNc gravidade={nc.gravidade} />
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {nc.responsavel}
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap">
                           {formatarData(nc.prazo)}
                           {!terminada && (
                             <span
-                              className={`block text-xs ${nc.vencida ? "text-nao-conforme" : "text-texto-3"}`}
+                              className={`block text-xs ${
+                                nc.vencida
+                                  ? "text-nao-conforme"
+                                  : diasEntre(hoje, nc.prazo) <= 30
+                                    ? "text-atencao"
+                                    : "text-texto-3"
+                              }`}
                             >
-                              {prazoRelativo(nc.prazo)}
+                              {prazoRelativo(nc.prazo, hoje)}
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-2 [&_span]:whitespace-normal">
                           <StatusDaNc
                             status={nc.status}
                             vencida={nc.vencida}
