@@ -169,12 +169,23 @@ export class CalibracaoService {
     );
     if (cal.data > hojeEmBrasilia())
       throw invalido('data', 'A data da calibração não pode estar no futuro.');
-    return this.alterar(ctx, dados?.id, versao, async (tx, linha) => {
+    return this.alterar(ctx, dados?.id, versao, async (tx, linha, historico) => {
       if (!linha.emUso)
         throw new ErroDeNegocio(
           'REGRA_DE_NEGOCIO',
           'O instrumento está fora de uso. Volte-o para uso antes de registrar uma calibração.',
         );
+      if (cal.certificado) {
+        const alvo = cal.certificado.trim().toUpperCase();
+        const repetido = historico.some(
+          (c) => !c.anulada && c.certificado?.trim().toUpperCase() === alvo,
+        );
+        if (repetido)
+          throw invalido(
+            'certificado',
+            'Já existe uma calibração com este número de certificado neste instrumento.',
+          );
+      }
       await tx.insert(calibracoes).values({
         ...cal,
         instrumentoId: linha.id,

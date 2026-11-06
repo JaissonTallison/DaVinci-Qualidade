@@ -32,6 +32,9 @@ function Cabecalho({
   fmeas: FmeaResumo[];
   fmeaInicial?: string;
 }) {
+  // Gerado do FMEA: título, peça e revisão já vêm do FMEA de origem (QUA-08).
+  const idFmea = v.fmeaId ?? p?.fmeaId ?? fmeaInicial ?? "";
+  const fmeaDeOrigem = fmeas.find((f) => f.id === idFmea);
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
       <Campo
@@ -43,7 +46,7 @@ function Cabecalho({
         <input
           id="titulo"
           name="titulo"
-          defaultValue={v.titulo ?? p?.titulo}
+          defaultValue={v.titulo ?? p?.titulo ?? fmeaDeOrigem?.titulo ?? ""}
           maxLength={150}
           className={campo}
         />
@@ -52,7 +55,7 @@ function Cabecalho({
         <input
           id="item"
           name="item"
-          defaultValue={v.item ?? p?.item}
+          defaultValue={v.item ?? p?.item ?? fmeaDeOrigem?.item ?? ""}
           maxLength={150}
           className={campo}
         />
@@ -75,7 +78,7 @@ function Cabecalho({
         <input
           id="revisao"
           name="revisao"
-          defaultValue={v.revisao ?? p?.revisao ?? ""}
+          defaultValue={v.revisao ?? p?.revisao ?? fmeaDeOrigem?.revisao ?? ""}
           maxLength={20}
           className={campo}
         />

@@ -199,13 +199,16 @@ export default async function ListaDeAuditorias({
                       Número
                     </ThOrdenavel>
                     <th className="px-4 py-2 font-semibold">Escopo</th>
-                    <th className="px-4 py-2 font-semibold">Normas</th>
+                    <th className="hidden px-4 py-2 font-semibold lg:table-cell">
+                      Normas
+                    </th>
                     <ThOrdenavel
                       campo="auditorLider"
                       ordenar={ordenar}
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
+                      className="hidden lg:table-cell"
                     >
                       Auditor líder
                     </ThOrdenavel>
@@ -255,10 +258,10 @@ export default async function ListaDeAuditorias({
                           {TIPOS_AUDITORIA[a.tipo]}
                         </span>
                       </td>
-                      <td className="px-4 py-2 text-sm text-texto-2">
+                      <td className="hidden px-4 py-2 text-sm text-texto-2 lg:table-cell">
                         {a.normas.map((n) => NORMAS[n]).join(", ")}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                      <td className="hidden px-4 py-2 whitespace-nowrap text-texto-2 lg:table-cell">
                         {a.auditorLider}
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap">

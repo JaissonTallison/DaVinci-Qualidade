@@ -214,24 +214,34 @@ export default async function DetalheDoAcidente({
           <section id="investigacao" className={`${painel} mt-6 p-5`}>
             <h2 className={tituloDaSecao}>Investigação</h2>
             {a.investigacao.testemunhas.length > 0 && (
-              <ul className="mt-3 flex flex-col gap-2 text-base">
-                {a.investigacao.testemunhas.map((t, i) => (
-                  <li key={i}>
-                    <span className="font-semibold">{t.nome}</span>
-                    {t.funcao && (
-                      <span className="text-texto-2"> · {t.funcao}</span>
-                    )}
-                    : {t.relato}
-                  </li>
-                ))}
-              </ul>
+              <>
+                <h3 className="mt-4 text-sm font-semibold text-texto-2">
+                  Relatos
+                </h3>
+                <ul className="mt-2 flex flex-col gap-2 text-base">
+                  {a.investigacao.testemunhas.map((t, i) => (
+                    <li key={i}>
+                      <span className="font-semibold">{t.nome}</span>
+                      {t.funcao && (
+                        <span className="text-texto-2"> · {t.funcao}</span>
+                      )}
+                      : {t.relato}
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
             {a.investigacao.porques.length > 0 && (
-              <ol className="mt-3 list-decimal pl-5 text-base">
-                {a.investigacao.porques.map((p, i) => (
-                  <li key={i}>{p}</li>
-                ))}
-              </ol>
+              <>
+                <h3 className="mt-4 text-sm font-semibold text-texto-2">
+                  5 porquês
+                </h3>
+                <ol className="mt-2 list-decimal pl-5 text-base">
+                  {a.investigacao.porques.map((p, i) => (
+                    <li key={i}>{p}</li>
+                  ))}
+                </ol>
+              </>
             )}
             <div className="mt-3">
               <ArvoreDeCausas fatos={a.investigacao.fatos} />
@@ -244,7 +254,7 @@ export default async function DetalheDoAcidente({
       )}
       {a.status === "concluido" && (
         <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Investigação</h2>
+          <h2 className={tituloDaSecao}>Conclusão da investigação</h2>
           {a.causas && <Texto rotulo="Causas" texto={a.causas} />}
           {a.medidas && (
             <Texto rotulo="Medidas para evitar a repetição" texto={a.medidas} />

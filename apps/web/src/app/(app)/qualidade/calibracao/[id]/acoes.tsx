@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import type { Instrumento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
@@ -89,6 +89,7 @@ export function RegistrarCalibracao({
                     type="radio"
                     name="aprovada"
                     value="sim"
+                    aria-label="Aprovada"
                     defaultChecked={v.aprovada === "sim"}
                   />{" "}
                   Aprovada
@@ -98,6 +99,7 @@ export function RegistrarCalibracao({
                     type="radio"
                     name="aprovada"
                     value="nao"
+                    aria-label="Reprovada"
                     defaultChecked={v.aprovada === "nao"}
                   />{" "}
                   Reprovada
@@ -162,38 +164,58 @@ export function AnularCalibracao({
     anularCalibracao.bind(null, instrumento.id),
     {},
   );
+  const [confirmando, setConfirmando] = useState(false);
   const erro =
     estado.erro &&
     (estado.erro.detalhes?.[0]?.mensagem ?? estado.erro.mensagem);
-  return (
-    <details className="relative inline-block text-left">
-      <summary className="cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
-        Anular
-      </summary>
-      <form
-        action={enviar}
-        className="absolute right-0 z-10 mt-1 flex w-72 flex-col gap-2 rounded-md border border-borda bg-superficie p-3 shadow-sm"
+
+  if (!confirmando)
+    return (
+      <button
+        type="button"
+        onClick={() => setConfirmando(true)}
+        className="cursor-pointer text-sm text-texto-2 hover:text-texto hover:underline"
       >
-        <input type="hidden" name="versao" value={instrumento.versao} />
-        <input type="hidden" name="calibracaoId" value={calibracaoId} />
-        <label
-          htmlFor={`motivo-${calibracaoId}`}
-          className="text-sm font-semibold text-texto-2"
-        >
-          Por que anular este registro?
-        </label>
-        <input
-          id={`motivo-${calibracaoId}`}
-          name="motivo"
-          maxLength={300}
-          className={`${campoCompacto} w-full`}
-        />
-        {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
+        Anular
+      </button>
+    );
+
+  // Confirmação inline (não é pop-over absoluto: cresce dentro da célula sem ser cortado pela tabela).
+  return (
+    <form
+      action={enviar}
+      className="flex w-64 max-w-[16rem] flex-col gap-2 text-left"
+    >
+      <input type="hidden" name="versao" value={instrumento.versao} />
+      <input type="hidden" name="calibracaoId" value={calibracaoId} />
+      <label
+        htmlFor={`motivo-${calibracaoId}`}
+        className="text-sm font-semibold text-texto-2"
+      >
+        Por que anular este registro?
+      </label>
+      <input
+        id={`motivo-${calibracaoId}`}
+        name="motivo"
+        maxLength={300}
+        autoFocus
+        className={`${campoCompacto} w-full`}
+      />
+      {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
+      <div className="flex gap-2">
         <button type="submit" className={botaoPerigo} disabled={enviando}>
           Anular registro
         </button>
-      </form>
-    </details>
+        <button
+          type="button"
+          className={botaoSecundario}
+          onClick={() => setConfirmando(false)}
+          disabled={enviando}
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
   );
 }
 

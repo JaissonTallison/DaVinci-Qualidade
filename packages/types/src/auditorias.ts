@@ -158,6 +158,10 @@ export const constatacaoSchema = z.object({
   causaRaiz: textoOpcional(500),
   acaoCorretiva: textoOpcional(500),
   evidenciaFechamento: textoOpcional(500),
+}).refine((c) => !ehConstatacaoDeNc(c.tipo) || Boolean(c.evidencia), {
+  path: ['evidencia'],
+  error:
+    'Toda NC (maior ou menor) precisa de evidência objetiva: registre o fato observado.',
 });
 export type NovaConstatacao = z.input<typeof constatacaoSchema>;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   TIPOS_ACIDENTE,
   type Acidente,
@@ -47,6 +47,20 @@ export function FormularioDeAcidente({
   const comLesao = tipo === "com_afastamento" || tipo === "sem_afastamento";
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
+  // Depois de um envio com erro, leva a tela até o primeiro campo com problema:
+  // em formulário longo, o aviso no topo passava despercebido (SST-01).
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (!estado.erro) return;
+    const alvo = formRef.current?.querySelector<HTMLElement>(
+      '[aria-invalid="true"]',
+    );
+    (alvo ?? formRef.current)?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+    alvo?.focus?.({ preventScroll: true });
+  }, [estado]);
   const texto = (
     nome: string,
     rotulo: string,
@@ -72,7 +86,12 @@ export function FormularioDeAcidente({
     </Campo>
   );
   return (
-    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
+    <form
+      ref={formRef}
+      action={acao}
+      noValidate
+      className={embutido ? "" : `${painel} mt-6`}
+    >
       {acidente && (
         <input type="hidden" name="versao" value={acidente.versao} />
       )}

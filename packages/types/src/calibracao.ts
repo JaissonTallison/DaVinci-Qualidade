@@ -66,11 +66,17 @@ export const DIAS_DE_AVISO_DE_CALIBRACAO = 30;
 const versao = z
   .string({ error: 'Versão do registro ausente: recarregue a página.' })
   .min(1);
+// Aceita o formato brasileiro (1.250,50) e também o cru (1250.50); guarda sempre com ponto decimal.
 const dinheiro = opcional(
   z
     .string()
     .trim()
-    .regex(/^\d{1,13}(\.\d{1,2})?$/, 'Informe o valor em reais (ex.: 250.00).'),
+    .transform((s) => (s.includes(',') ? s.replace(/\./g, '').replace(',', '.') : s))
+    .pipe(
+      z
+        .string()
+        .regex(/^\d{1,13}(\.\d{1,2})?$/, 'Informe o valor em reais (ex.: 250,00).'),
+    ),
 );
 
 const camposDoInstrumento = {

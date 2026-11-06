@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   DIAS_DE_PRAZO_DA_NC_DE_AUDITORIA,
   NORMAS,
@@ -177,50 +177,67 @@ export function FormalizarNc({
   const erro =
     estado.erro &&
     (estado.erro.detalhes?.[0]?.mensagem ?? estado.erro.mensagem);
-  return (
-    <details className="relative inline-block text-left" open={Boolean(erro)}>
-      <summary
-        className={`${botaoSecundario} h-8 cursor-pointer list-none text-sm`}
+  const [aberto, setAberto] = useState(false);
+
+  if (!aberto && !erro)
+    return (
+      <button
+        type="button"
+        onClick={() => setAberto(true)}
+        className={`${botaoSecundario} h-8 text-sm`}
       >
         Formalizar NC
-      </summary>
-      <form
-        action={enviar}
-        className="absolute right-0 z-10 mt-1 flex w-80 flex-col gap-3 rounded-md border border-borda bg-superficie p-4 shadow-sm"
-      >
-        <input type="hidden" name="versao" value={auditoria.versao} />
-        <input type="hidden" name="constatacaoId" value={constatacaoId} />
-        {voltar && <input type="hidden" name="voltar" value={voltar} />}
-        <label className="flex flex-col gap-1 text-sm font-semibold text-texto-2">
-          Responsável pela NC
-          <input
-            name="responsavel"
-            list="pessoas"
-            defaultValue={
-              estado.valores?.responsavel ?? auditoria.representante ?? ""
-            }
-            maxLength={120}
-            className={`${campoCompacto} w-full font-normal`}
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm font-semibold text-texto-2">
-          Prazo
-          <input
-            name="prazo"
-            type="date"
-            min={hojeEmBrasilia()}
-            defaultValue={
-              estado.valores?.prazo ?? prazoPadrao.toISOString().slice(0, 10)
-            }
-            className={`${campoCompacto} w-full font-normal`}
-          />
-        </label>
-        {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
+      </button>
+    );
+
+  // Confirmação inline (não é pop-over absoluto: não abre fora da tela em larguras pequenas).
+  return (
+    <form
+      action={enviar}
+      className="flex w-80 max-w-full flex-col gap-3 rounded-md border border-borda bg-superficie p-4 text-left shadow-sm"
+    >
+      <input type="hidden" name="versao" value={auditoria.versao} />
+      <input type="hidden" name="constatacaoId" value={constatacaoId} />
+      {voltar && <input type="hidden" name="voltar" value={voltar} />}
+      <label className="flex flex-col gap-1 text-sm font-semibold text-texto-2">
+        Responsável pela NC
+        <input
+          name="responsavel"
+          list="pessoas"
+          defaultValue={
+            estado.valores?.responsavel ?? auditoria.representante ?? ""
+          }
+          maxLength={120}
+          className={`${campoCompacto} w-full font-normal`}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm font-semibold text-texto-2">
+        Prazo
+        <input
+          name="prazo"
+          type="date"
+          min={hojeEmBrasilia()}
+          defaultValue={
+            estado.valores?.prazo ?? prazoPadrao.toISOString().slice(0, 10)
+          }
+          className={`${campoCompacto} w-full font-normal`}
+        />
+      </label>
+      {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
+      <div className="flex gap-2">
         <button type="submit" className={botaoPrimario} disabled={enviando}>
           {enviando ? "Abrindo NC…" : "Abrir NC na Qualidade"}
         </button>
-      </form>
-    </details>
+        <button
+          type="button"
+          className={botaoSecundario}
+          onClick={() => setAberto(false)}
+          disabled={enviando}
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
   );
 }
 

@@ -132,11 +132,16 @@ export default async function Achados({
       <section id="constatacoes" className={`${painel} mt-6`}>
         <div className="px-5 pt-5">
           <h2 className={tituloDaSecao}>Constatações registradas</h2>
-          <p className="mt-1 text-base text-texto-2">
-            {aud.ncsPendentes > 0
-              ? `${aud.ncsPendentes} NC a formalizar na Qualidade antes de concluir.`
-              : "Todas as NCs formalizadas."}
-          </p>
+          {(aud.ncsPendentes > 0 ||
+            aud.constatacoes.some(
+              (c) => c.tipo === "nc_maior" || c.tipo === "nc_menor",
+            )) && (
+            <p className="mt-1 text-base text-texto-2">
+              {aud.ncsPendentes > 0
+                ? `${aud.ncsPendentes} NC a formalizar na Qualidade antes de concluir.`
+                : "Todas as NCs formalizadas."}
+            </p>
+          )}
         </div>
         {aud.constatacoes.length === 0 ? (
           <p className="px-5 py-5 text-base text-texto-2">
