@@ -86,7 +86,8 @@ export default async function DetalheDoInstrumento({
       )}
 
       <section className={`${painel} mt-6 p-5`}>
-        <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
+        <h2 className={tituloDaSecao}>Situação da calibração</h2>
+        <dl className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-3">
           <Dado rotulo="Última calibração">
             {i.ultimaCalibracao ? formatarData(i.ultimaCalibracao) : "Nenhuma"}
           </Dado>
@@ -94,7 +95,13 @@ export default async function DetalheDoInstrumento({
             {i.proximaCalibracao ? formatarData(i.proximaCalibracao) : "—"}
             {i.proximaCalibracao && i.emUso && i.situacao !== "reprovado" && (
               <span
-                className={`ml-1 text-sm ${i.situacao === "vencido" ? "text-nao-conforme" : "text-texto-2"}`}
+                className={`ml-1 text-sm ${
+                  i.situacao === "vencido"
+                    ? "text-nao-conforme"
+                    : i.situacao === "vence_em_breve"
+                      ? "text-atencao"
+                      : "text-texto-2"
+                }`}
               >
                 · {prazoRelativo(i.proximaCalibracao)}
               </span>
@@ -104,6 +111,12 @@ export default async function DetalheDoInstrumento({
             a cada {i.frequenciaMeses}{" "}
             {i.frequenciaMeses === 1 ? "mês" : "meses"}
           </Dado>
+        </dl>
+      </section>
+
+      <section className={`${painel} mt-6 p-5`}>
+        <h2 className={tituloDaSecao}>Dados do instrumento</h2>
+        <dl className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
           {i.grandeza && (
             <Dado rotulo="Grandeza">{GRANDEZAS_DE_MEDICAO[i.grandeza]}</Dado>
           )}
@@ -232,6 +245,12 @@ export default async function DetalheDoInstrumento({
 
       {podeEditar && (
         <Recolhido titulo="Editar dados do instrumento">
+          <p className="mb-4 max-w-2xl text-base text-texto-2">
+            Altere a identificação, as características de medição, a localização e
+            a frequência. As calibrações não se editam aqui — são registradas no
+            histórico. Ao salvar, a situação é recalculada e aparece em
+            “Situação da calibração”, no topo.
+          </p>
           <FormularioDeInstrumento instrumento={i} embutido />
         </Recolhido>
       )}
