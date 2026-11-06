@@ -38,7 +38,7 @@ export function RegistrarCalibracao({
         {(erros, v) => (
           <>
             <div className="grid gap-5 sm:grid-cols-3">
-              <Campo id="data" rotulo="Data" erro={erros.data}>
+              <Campo id="data" rotulo="Data *" erro={erros.data}>
                 <input
                   id="data"
                   name="data"
@@ -51,7 +51,7 @@ export function RegistrarCalibracao({
               </Campo>
               <Campo
                 id="laboratorio"
-                rotulo="Laboratório"
+                rotulo="Laboratório *"
                 erro={erros.laboratorio}
               >
                 <input
@@ -77,32 +77,44 @@ export function RegistrarCalibracao({
                 />
               </Campo>
             </div>
-            <fieldset className="flex flex-col gap-1.5">
+            <fieldset className="flex flex-col gap-2">
               <legend className="text-sm font-semibold text-texto-2">
-                Resultado
+                Resultado *
                 {instrumento.criterioAceitacao &&
                   `, pelo critério: ${instrumento.criterioAceitacao}`}
               </legend>
-              <div className="flex gap-6 text-base">
-                <label className="flex items-center gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+                <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
                   <input
                     type="radio"
                     name="aprovada"
                     value="sim"
-                    aria-label="Aprovada"
                     defaultChecked={v.aprovada === "sim"}
-                  />{" "}
-                  Aprovada
+                    className="mt-1"
+                  />
+                  <span>
+                    <span className="font-medium text-texto">Aprovada</span>
+                    <span className="block text-sm text-texto-2">
+                      Atende ao critério. A próxima calibração é agendada pela
+                      frequência.
+                    </span>
+                  </span>
                 </label>
-                <label className="flex items-center gap-2">
+                <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
                   <input
                     type="radio"
                     name="aprovada"
                     value="nao"
-                    aria-label="Reprovada"
                     defaultChecked={v.aprovada === "nao"}
-                  />{" "}
-                  Reprovada
+                    className="mt-1"
+                  />
+                  <span>
+                    <span className="font-medium text-texto">Reprovada</span>
+                    <span className="block text-sm text-texto-2">
+                      Não atende. O instrumento fica bloqueado até uma nova
+                      calibração aprovada; avalie as medições feitas com ele.
+                    </span>
+                  </span>
                 </label>
               </div>
               {erros.aprovada && (
@@ -114,6 +126,7 @@ export function RegistrarCalibracao({
                 id="erroEncontrado"
                 rotulo="Erro ou incerteza encontrados"
                 erro={erros.erroEncontrado}
+                ajuda="Opcional. Quando reprovada, registre o desvio medido."
                 className="sm:col-span-2"
               >
                 <input
@@ -145,6 +158,9 @@ export function RegistrarCalibracao({
                 className={areaDeTexto}
               />
             </Campo>
+            <p className="text-sm text-texto-3">
+              Os campos com <span aria-hidden>*</span> são obrigatórios.
+            </p>
           </>
         )}
       </Formulario>
@@ -238,10 +254,10 @@ export function UsoDoInstrumento({
           value={instrumento.emUso ? "nao" : "sim"}
         />
         {estado.erro && <AvisoDeErro erro={estado.erro} />}
-        <p className="text-base text-texto-2">
+        <p className="max-w-2xl text-base text-texto-2">
           {instrumento.emUso
-            ? "Fora de uso, o instrumento sai dos alertas de vencimento. O histórico continua guardado."
-            : "De volta ao uso, a situação volta a seguir a última calibração."}
+            ? "Use quando o instrumento for descartado, emprestado ou sair de operação. Fora de uso, ele sai dos alertas e das contagens de vencimento; o histórico de calibrações continua guardado e a ação é reversível. Não é preciso informar justificativa. A situação passa a “Fora de uso”, no topo."
+            : "De volta ao uso, a situação volta a seguir a última calibração e o instrumento retorna aos alertas de vencimento. A nova situação aparece no topo."}
         </p>
         <button
           type="submit"

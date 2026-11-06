@@ -1,7 +1,7 @@
 "use client";
 
 import { Sparkles } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState, useState, type ReactNode } from "react";
 import {
   GRANDEZAS_DE_MEDICAO,
   RAMOS_DE_CALIBRACAO,
@@ -16,20 +16,46 @@ import { botaoPrimario, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { CATALOGO_DE_CALIBRACAO } from "./catalogo";
 
-/** Campos de texto, na ordem em que aparecem. `grandeza` e `frequenciaMeses` são tratados à parte. */
+/**
+ * Campos de texto, na ordem em que aparecem, agrupados por etapa (`grupo`).
+ * `tag`, `grandeza` e `frequenciaMeses` são tratados à parte, nas suas etapas.
+ */
 const CAMPOS = [
   {
     nome: "descricao",
-    rotulo: "Descrição",
+    rotulo: "Descrição *",
+    grupo: "identificacao",
     max: 150,
     colunas: "sm:col-span-2",
     ajuda: "Ex.: Paquímetro digital 150 mm",
   },
-  { nome: "unidade", rotulo: "Unidade", max: 20, ajuda: "Ex.: mm, °C, kg" },
-  { nome: "faixa", rotulo: "Faixa de medição", max: 80, ajuda: "Ex.: 0 a 150 mm" },
+  { nome: "fabricante", rotulo: "Fabricante", grupo: "identificacao", max: 80 },
+  { nome: "modelo", rotulo: "Modelo", grupo: "identificacao", max: 80 },
+  {
+    nome: "numeroSerie",
+    rotulo: "Número de série",
+    grupo: "identificacao",
+    max: 60,
+    mono: true,
+  },
+  {
+    nome: "unidade",
+    rotulo: "Unidade",
+    grupo: "medicao",
+    max: 20,
+    ajuda: "Ex.: mm, °C, kg",
+  },
+  {
+    nome: "faixa",
+    rotulo: "Faixa de medição",
+    grupo: "medicao",
+    max: 80,
+    ajuda: "Ex.: 0 a 150 mm",
+  },
   {
     nome: "criterioAceitacao",
     rotulo: "Critério de aceitação",
+    grupo: "medicao",
     max: 200,
     colunas: "sm:col-span-2",
     ajuda: "É com ele que o certificado é aprovado ou reprovado. Ex.: ± 0,02 mm.",
@@ -37,29 +63,68 @@ const CAMPOS = [
   {
     nome: "erroMaximoAdmissivel",
     rotulo: "Erro máximo admissível (EMA)",
+    grupo: "medicao",
     max: 200,
     ajuda: "Ex.: ± 0,02 mm",
   },
-  { nome: "incerteza", rotulo: "Incerteza", max: 120, ajuda: "Ex.: U = 0,01 mm (k=2)" },
+  {
+    nome: "incerteza",
+    rotulo: "Incerteza",
+    grupo: "medicao",
+    max: 120,
+    ajuda: "Ex.: U = 0,01 mm (k=2)",
+  },
   {
     nome: "classeExatidao",
     rotulo: "Classe de exatidão",
+    grupo: "medicao",
     max: 60,
     ajuda: "Ex.: Classe II (OIML R76)",
   },
   {
     nome: "normaReferencia",
     rotulo: "Norma de referência",
+    grupo: "medicao",
     max: 160,
     colunas: "sm:col-span-2",
     ajuda: "Ex.: ABNT NBR ISO 10012",
   },
-  { nome: "fabricante", rotulo: "Fabricante", max: 80 },
-  { nome: "modelo", rotulo: "Modelo", max: 80 },
-  { nome: "numeroSerie", rotulo: "Número de série", max: 60, mono: true },
-  { nome: "local", rotulo: "Local", max: 120, lista: "setores" },
-  { nome: "responsavel", rotulo: "Responsável", max: 120, lista: "pessoas" },
+  {
+    nome: "local",
+    rotulo: "Local",
+    grupo: "local",
+    max: 120,
+    lista: "setores",
+  },
+  {
+    nome: "responsavel",
+    rotulo: "Responsável",
+    grupo: "local",
+    max: 120,
+    lista: "pessoas",
+  },
 ] as const;
+
+/** Agrupa campos relacionados sob um subtítulo sóbrio, com uma orientação curta. */
+function Secao({
+  titulo,
+  descricao,
+  children,
+}: {
+  titulo: string;
+  descricao: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="flex flex-col gap-4">
+      <div>
+        <h2 className="text-sm font-semibold text-texto-2">{titulo}</h2>
+        <p className="mt-0.5 text-sm text-texto-3">{descricao}</p>
+      </div>
+      <div className="grid gap-5 sm:grid-cols-3">{children}</div>
+    </section>
+  );
+}
 
 /** Preenche os campos do formulário a partir de um item do catálogo. */
 function doModelo(item: ItemDoCatalogoDeCalibracao): Record<string, string> {
@@ -116,6 +181,28 @@ export function FormularioDeInstrumento({
     : [];
   const v = modeloAtivo ? { ...base, ...modelo } : base;
   const valor = (nome: string) => v[nome] ?? "";
+
+  const renderCampos = (grupo: string) =>
+    CAMPOS.filter((c) => c.grupo === grupo).map((c) => (
+      <Campo
+        key={c.nome}
+        id={c.nome}
+        rotulo={c.rotulo}
+        erro={erros[c.nome]}
+        ajuda={"ajuda" in c ? c.ajuda : undefined}
+        className={"colunas" in c ? c.colunas : ""}
+      >
+        <input
+          id={c.nome}
+          name={c.nome}
+          list={"lista" in c ? c.lista : undefined}
+          defaultValue={valor(c.nome)}
+          maxLength={c.max}
+          className={`${campo} ${"mono" in c ? "font-mono" : ""}`}
+          aria-invalid={Boolean(erros[c.nome])}
+        />
+      </Campo>
+    ));
 
   return (
     <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
@@ -182,78 +269,85 @@ export function FormularioDeInstrumento({
 
       <div
         key={montagem}
-        className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}
+        className={`flex flex-col gap-8 ${embutido ? "" : "p-5"}`}
       >
-        {erroGeral && (
-          <div className="sm:col-span-3">
-            <AvisoDeErro erro={erroGeral} />
-          </div>
-        )}
-        <Campo
-          id="tag"
-          rotulo="TAG"
-          erro={erros.tag}
-          ajuda="Única na empresa. Ex.: PAQ-0042"
+        {erroGeral && <AvisoDeErro erro={erroGeral} />}
+
+        <Secao
+          titulo="Identificação do instrumento"
+          descricao="Como o instrumento é identificado na empresa."
         >
-          <input
-            id="tag"
-            name="tag"
-            defaultValue={valor("tag")}
-            maxLength={30}
-            className={`${campo} font-mono uppercase`}
-            aria-invalid={Boolean(erros.tag)}
-          />
-        </Campo>
-        <Campo id="grandeza" rotulo="Grandeza" erro={erros.grandeza}>
-          <select
-            id="grandeza"
-            name="grandeza"
-            defaultValue={valor("grandeza")}
-            className={campo}
-            aria-invalid={Boolean(erros.grandeza)}
-          >
-            <option value="">—</option>
-            {Object.entries(GRANDEZAS_DE_MEDICAO).map(([k, nome]) => (
-              <option key={k} value={k}>
-                {nome}
-              </option>
-            ))}
-          </select>
-        </Campo>
-        {CAMPOS.map((c) => (
           <Campo
-            key={c.nome}
-            id={c.nome}
-            rotulo={c.rotulo}
-            erro={erros[c.nome]}
-            ajuda={"ajuda" in c ? c.ajuda : undefined}
-            className={"colunas" in c ? c.colunas : ""}
+            id="tag"
+            rotulo="TAG *"
+            erro={erros.tag}
+            ajuda="Única na empresa. Ex.: PAQ-0042"
           >
             <input
-              id={c.nome}
-              name={c.nome}
-              list={"lista" in c ? c.lista : undefined}
-              defaultValue={valor(c.nome)}
-              maxLength={c.max}
-              className={`${campo} ${"mono" in c ? "font-mono" : ""}`}
-              aria-invalid={Boolean(erros[c.nome])}
+              id="tag"
+              name="tag"
+              defaultValue={valor("tag")}
+              maxLength={30}
+              className={`${campo} font-mono uppercase`}
+              aria-invalid={Boolean(erros.tag)}
             />
           </Campo>
-        ))}
-        <Campo
-          id="frequenciaMeses"
-          rotulo="Frequência de calibração (meses)"
-          erro={erros.frequenciaMeses}
+          {renderCampos("identificacao")}
+        </Secao>
+
+        <Secao
+          titulo="Características e critérios de medição"
+          descricao="O que ele mede e o critério que aprova ou reprova a calibração."
         >
-          <input
+          <Campo id="grandeza" rotulo="Grandeza" erro={erros.grandeza}>
+            <select
+              id="grandeza"
+              name="grandeza"
+              defaultValue={valor("grandeza")}
+              className={campo}
+              aria-invalid={Boolean(erros.grandeza)}
+            >
+              <option value="">—</option>
+              {Object.entries(GRANDEZAS_DE_MEDICAO).map(([k, nome]) => (
+                <option key={k} value={k}>
+                  {nome}
+                </option>
+              ))}
+            </select>
+          </Campo>
+          {renderCampos("medicao")}
+        </Secao>
+
+        <Secao
+          titulo="Localização e responsável"
+          descricao="Onde o instrumento fica e quem responde por ele."
+        >
+          {renderCampos("local")}
+        </Secao>
+
+        <Secao
+          titulo="Frequência e dados de calibração"
+          descricao="A última e a próxima calibração são registradas depois, na tela do instrumento."
+        >
+          <Campo
             id="frequenciaMeses"
-            name="frequenciaMeses"
-            inputMode="numeric"
-            defaultValue={valor("frequenciaMeses") || "12"}
-            className={campo}
-            aria-invalid={Boolean(erros.frequenciaMeses)}
-          />
-        </Campo>
+            rotulo="Frequência de calibração (meses) *"
+            erro={erros.frequenciaMeses}
+          >
+            <input
+              id="frequenciaMeses"
+              name="frequenciaMeses"
+              inputMode="numeric"
+              defaultValue={valor("frequenciaMeses") || "12"}
+              className={campo}
+              aria-invalid={Boolean(erros.frequenciaMeses)}
+            />
+          </Campo>
+        </Secao>
+
+        <p className="text-sm text-texto-3">
+          Os campos com <span aria-hidden>*</span> são obrigatórios.
+        </p>
       </div>
       <div
         className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}

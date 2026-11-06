@@ -39,11 +39,16 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
       {modelo && <input type="hidden" name="versao" value={modelo.versao} />}
       <div className="flex flex-col gap-5 p-5">
         {erroGeral && <AvisoDeErro erro={erroGeral} />}
+        <p className="max-w-2xl text-base text-texto-2">
+          Ao criar uma inspeção com este modelo, os itens abaixo são copiados
+          para ela. Mudar o modelo depois não altera as inspeções já feitas.
+        </p>
         <div className="grid gap-5 sm:grid-cols-3">
           <Campo
             id="nome"
-            rotulo="Nome"
+            rotulo="Nome *"
             erro={erros.nome}
+            ajuda="Como o modelo aparece na escolha. Ex.: Recebimento de eixos"
             className="sm:col-span-2"
           >
             <input
@@ -55,7 +60,7 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
               aria-invalid={Boolean(erros.nome)}
             />
           </Campo>
-          <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
+          <Campo id="tipo" rotulo="Tipo *" erro={erros.tipo}>
             <Selecao
               id="tipo"
               name="tipo"
@@ -77,6 +82,10 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
       </div>
       <div className="border-t border-borda p-5">
         <h2 className={tituloDaSecao}>Itens a verificar</h2>
+        <p className="mt-1 max-w-2xl text-base text-texto-2">
+          O que o inspetor confere em cada item e, quando houver, o critério que
+          decide aprovado ou reprovado. Inclua ao menos um item.
+        </p>
         {erros.itens && (
           <p className="mt-1 text-sm text-nao-conforme">{erros.itens}</p>
         )}
@@ -84,7 +93,10 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
           <LinhasDeItem valores={itens} erros={erros} />
         </div>
       </div>
-      <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
+      <div className="flex flex-wrap items-center justify-end gap-3 border-t border-borda px-5 py-3">
+        <p className="mr-auto text-sm text-texto-3">
+          Os campos com <span aria-hidden>*</span> são obrigatórios.
+        </p>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Salvando…" : modelo ? "Salvar modelo" : "Criar modelo"}
         </button>

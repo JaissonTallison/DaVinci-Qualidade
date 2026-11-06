@@ -50,7 +50,19 @@ export default async function ListaDeModelos({
       <header className="mt-1 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Modelos de inspeção</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
+          {lista.ok && lista.dados.length > 0 && (
+            <p className="mt-1 text-base text-texto-2">
+              {lista.dados.length}{" "}
+              {verInativos
+                ? lista.dados.length === 1
+                  ? "inativo"
+                  : "inativos"
+                : lista.dados.length === 1
+                  ? "ativo"
+                  : "ativos"}
+            </p>
+          )}
+          <p className="mt-0.5 max-w-2xl text-sm text-texto-3">
             Listas de itens que se repetem. Ao criar a inspeção, os itens são
             copiados: mudar o modelo depois não altera inspeções já feitas.
           </p>
@@ -113,7 +125,7 @@ export default async function ListaDeModelos({
             </thead>
             <tbody className="divide-y divide-borda">
               {lista.dados.map((m) => (
-                <tr key={m.id} className="">
+                <tr key={m.id} className="hover:bg-campo">
                   <td className="px-4 py-2">
                     <Link
                       href={`/qualidade/modelos-de-inspecao/${m.id}`}
