@@ -17,6 +17,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
 import {
   botaoPrimario,
+  botaoSecundario,
   painel,
   tituloDaPagina,
   tituloDaSecao,
@@ -59,6 +60,10 @@ export default async function DetalheDaInspecao({
   const i = r.dados;
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const emAndamento = i.status === "em_andamento";
+  const concluida = i.status === "aprovada" || i.status === "reprovada";
+  const conformes = i.itens.filter((x) => x.resposta === "ok").length;
+  const naoConformes = i.itens.filter((x) => x.resposta === "nok").length;
+  const naoSeAplica = i.itens.filter((x) => x.resposta === "na").length;
   const ncs =
     i.status === "reprovada"
       ? await chamarApi<Pagina<NaoConformidadeResumo>>(
@@ -133,6 +138,81 @@ export default async function DetalheDaInspecao({
         </dl>
       </section>
 
+      {concluida && (
+        <section className={`${painel} mt-6 p-5`}>
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h2 className={tituloDaSecao}>Resultado</h2>
+            <StatusDaInspecao status={i.status} />
+            {i.concluidaEm && (
+              <span className="text-sm text-texto-2">
+                Concluída em {formatarMomento(i.concluidaEm)}
+              </span>
+            )}
+          </div>
+          <p className="mt-3 max-w-[72ch] text-base">
+            {i.plano ? (
+              <>
+                Lote{" "}
+                <span className="font-semibold">
+                  {i.status === "aprovada" ? "aceito" : "rejeitado"} pela
+                  amostragem
+                </span>
+                : {i.defeituosos}{" "}
+                {i.defeituosos === 1 ? "defeituoso" : "defeituosos"} na amostra
+                de {i.plano.amostra} (aceita com até {i.plano.aceita}; rejeita
+                com {i.plano.rejeita} ou mais).
+              </>
+            ) : (
+              <>
+                Resultado{" "}
+                <span className="font-semibold">pelo checklist</span>:{" "}
+                {naoConformes}{" "}
+                {naoConformes === 1
+                  ? "item não conforme"
+                  : "itens não conformes"}{" "}
+                de {i.itens.length}.
+              </>
+            )}
+          </p>
+          <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
+            <Dado rotulo="Conformes (OK)">{conformes}</Dado>
+            <Dado rotulo="Não conformes (NOK)">
+              <span
+                className={
+                  naoConformes > 0 ? "font-medium text-nao-conforme" : ""
+                }
+              >
+                {naoConformes}
+              </span>
+            </Dado>
+            {naoSeAplica > 0 && (
+              <Dado rotulo="Não se aplica (N/A)">{naoSeAplica}</Dado>
+            )}
+            {i.plano && (
+              <Dado rotulo="Defeituosos na amostra">
+                {i.defeituosos} de {i.plano.amostra}
+              </Dado>
+            )}
+          </dl>
+          {i.plano && i.status === "reprovada" && naoConformes === 0 && (
+            <p className="mt-4 max-w-[72ch] text-sm text-texto-2">
+              Os itens do checklist estão todos conformes, mas o lote foi
+              reprovado pela amostragem. Com plano de amostragem, o resultado do
+              lote vem do número de defeituosos (Ac/Re), não das respostas do
+              checklist.
+            </p>
+          )}
+          {i.plano && i.status === "aprovada" && naoConformes > 0 && (
+            <p className="mt-4 max-w-[72ch] text-sm text-texto-2">
+              Há {naoConformes}{" "}
+              {naoConformes === 1 ? "item não conforme" : "itens não conformes"}{" "}
+              no checklist, mas o lote foi aprovado pela amostragem (defeituosos
+              dentro do aceite). O resultado do lote vem da amostragem.
+            </p>
+          )}
+        </section>
+      )}
+
       {emAndamento && permissoes.includes("qualidade.editar") ? (
         <RespostasDaInspecao inspecao={i} />
       ) : (
@@ -185,8 +265,12 @@ export default async function DetalheDaInspecao({
           Fotos e evidências por item
         </h2>
         <p className="px-5 text-base text-texto-2">
-          Foto do defeito, leitura do instrumento, etiqueta do lote. Item NOK
-          com foto vira evidência pronta da NC.
+          Priorize os itens{" "}
+          <span className="font-medium text-nao-conforme">
+            Não conforme (NOK)
+          </span>
+          : a foto do defeito vira evidência pronta da NC. Nos conformes, a
+          evidência (leitura do instrumento, etiqueta do lote) é opcional.
         </p>
         <ol className="mt-3 divide-y divide-borda border-t border-borda">
           {i.itens.map((item) => (
@@ -223,44 +307,67 @@ export default async function DetalheDaInspecao({
 
       {i.status === "reprovada" && (
         <section className={`${painel} mt-6 p-5`}>
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className={tituloDaSecao}>Não conformidades</h2>
-            {permissoes.includes("qualidade.editar") && (
-              <Link
-                href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
-                className={botaoPrimario}
-              >
-                Abrir NC
-              </Link>
-            )}
-          </div>
+          <h2 className={tituloDaSecao}>Não conformidades</h2>
           {ncs?.ok && ncs.dados.itens.length > 0 ? (
-            <ul className="mt-3 divide-y divide-borda">
-              {ncs.dados.itens.map((nc) => (
-                <li
-                  key={nc.id}
-                  className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
-                >
-                  <Link
-                    href={`/qualidade/nao-conformidades/${nc.id}`}
-                    className="font-mono text-sm font-medium text-info hover:underline"
+            <>
+              <p className="mt-1 text-base text-texto-2">
+                Esta inspeção já gerou{" "}
+                {ncs.dados.itens.length === 1
+                  ? "uma NC"
+                  : `${ncs.dados.itens.length} NCs`}
+                . Consulte o andamento do tratamento:
+              </p>
+              <ul className="mt-3 divide-y divide-borda">
+                {ncs.dados.itens.map((nc) => (
+                  <li
+                    key={nc.id}
+                    className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
                   >
-                    {nc.numero}
+                    <Link
+                      href={`/qualidade/nao-conformidades/${nc.id}`}
+                      className="font-mono text-sm font-medium text-info hover:underline"
+                    >
+                      {nc.numero}
+                    </Link>
+                    <span className="min-w-48 flex-1">{nc.titulo}</span>
+                    <StatusDaNc
+                      status={nc.status}
+                      vencida={nc.vencida}
+                      prazo={nc.prazo}
+                    />
+                  </li>
+                ))}
+              </ul>
+              {permissoes.includes("qualidade.editar") && (
+                <div className="mt-4">
+                  <Link
+                    href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
+                    className={botaoSecundario}
+                  >
+                    Abrir outra NC
                   </Link>
-                  <span className="min-w-48 flex-1">{nc.titulo}</span>
-                  <StatusDaNc
-                    status={nc.status}
-                    vencida={nc.vencida}
-                    prazo={nc.prazo}
-                  />
-                </li>
-              ))}
-            </ul>
+                </div>
+              )}
+            </>
           ) : (
-            <p className="mt-2 text-base text-texto-2">
-              Nenhuma NC aberta a partir desta inspeção. A NC já vem com os
-              itens NOK e as observações.
-            </p>
+            <div className="mt-1 flex flex-wrap items-start justify-between gap-3">
+              <p className="max-w-[60ch] text-base text-texto-2">
+                Nenhuma NC foi aberta a partir desta inspeção. Abra uma para
+                tratar o que foi encontrado — ela já vem ligada a esta inspeção
+                {naoConformes > 0
+                  ? ", com os itens não conformes e as observações"
+                  : ""}
+                .
+              </p>
+              {permissoes.includes("qualidade.editar") && (
+                <Link
+                  href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
+                  className={botaoPrimario}
+                >
+                  Abrir NC
+                </Link>
+              )}
+            </div>
           )}
         </section>
       )}

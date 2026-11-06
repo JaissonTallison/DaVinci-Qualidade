@@ -1,3 +1,4 @@
+import { Check, ChevronDown } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -27,12 +28,10 @@ import {
   botaoSecundario,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
 } from "@/lib/estilos";
-import { AcoesDaNc } from "./acoes";
+import { AcaoDaEtapa, CancelarNc } from "./acoes";
 import { Anexos } from "@/components/anexos";
 import { linkDaOrigem } from "@/lib/origem-nc";
-import { LinhaDoTempoNc } from "./linha-do-tempo";
 
 export const metadata: Metadata = { title: "Não conformidade" };
 
@@ -47,6 +46,8 @@ const AVISOS: Record<string, string> = {
     "Ação ineficaz. A NC voltou para tratamento: revise a causa e a ação.",
   cancelada: "NC cancelada.",
 };
+
+type EstadoDaEtapa = "concluida" | "atual" | "a_seguir";
 
 export default async function DetalheDaNc({
   params,
@@ -67,6 +68,24 @@ export default async function DetalheDaNc({
   const nc = r.dados;
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const terminada = nc.status === "encerrada" || nc.status === "cancelada";
+  const cancelada = nc.status === "cancelada";
+  const encerrada = nc.status === "encerrada";
+  const podeEditar = permissoes.includes("qualidade.editar");
+  const listaDePlanos =
+    planos.ok && planos.dados.itens.length > 0 ? planos.dados.itens : [];
+
+  // Etapa atual da jornada pelo status real. A ocorrência (0) está sempre feita.
+  const indiceAtual =
+    { aberta: 1, em_tratamento: 1, em_verificacao: 2, encerrada: 3 }[
+      nc.status as "aberta" | "em_tratamento" | "em_verificacao" | "encerrada"
+    ] ?? 1;
+  const estadoDa = (i: number): EstadoDaEtapa =>
+    encerrada || i < indiceAtual
+      ? "concluida"
+      : i === indiceAtual
+        ? "atual"
+        : "a_seguir";
+
   // Outras NCs abertas do mesmo registro de origem (recorrência do mesmo problema)
   const relacionadas =
     nc.origemRef && linkDaOrigem(nc.origem, nc.origemRef)
@@ -74,17 +93,151 @@ export default async function DetalheDaNc({
           `/nao-conformidades?origemRef=${encodeURIComponent(nc.origemRef)}&porPagina=50`,
         )
       : null;
-  const outras =
-    relacionadas?.ok
-      ? relacionadas.dados.itens.filter((n) => n.id !== nc.id)
-      : [];
+  const outras = relacionadas?.ok
+    ? relacionadas.dados.itens.filter((n) => n.id !== nc.id)
+    : [];
+
+  const ocorrencia = (
+    <>
+      <p className="max-w-[72ch] text-md whitespace-pre-line">{nc.descricao}</p>
+      <Dados
+        itens={[
+          [
+            "Origem",
+            (() => {
+              const href = linkDaOrigem(nc.origem, nc.origemRef);
+              return href ? (
+                <span>
+                  {ORIGENS_NC[nc.origem]} ·{" "}
+                  <Link
+                    href={href}
+                    className="font-medium text-acao hover:underline"
+                  >
+                    {nc.origemRef}
+                  </Link>
+                </span>
+              ) : (
+                `${ORIGENS_NC[nc.origem]}${nc.origemRef ? ` · ${nc.origemRef}` : ""}`
+              );
+            })(),
+          ],
+          ["Tipo", TIPOS_NC[nc.tipo]],
+          ["Setor", nc.setor],
+          ["Processo ou área", nc.processo],
+          ["Produto ou serviço", nc.produto],
+          ["Lote", nc.lote],
+          ["Aberta em", formatarData(nc.dataAbertura)],
+          [
+            "Custo estimado",
+            nc.custoEstimado
+              ? Number(nc.custoEstimado).toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })
+              : null,
+          ],
+        ]}
+      />
+      {nc.contencao && <Texto rotulo="Contenção imediata" texto={nc.contencao} />}
+    </>
+  );
+
+  const analise = nc.causaRaiz ? (
+    <>
+      <Dados
+        itens={[
+          ["Método", nc.metodoAnalise ? METODOS_ANALISE[nc.metodoAnalise] : null],
+          ["Categoria 6M", nc.categoria6m ? CATEGORIAS_6M[nc.categoria6m] : null],
+          ["Tipo de causa", nc.causaTipo],
+          [
+            "Implantada em",
+            nc.dataImplantacao ? formatarData(nc.dataImplantacao) : null,
+          ],
+        ]}
+      />
+      {nc.porques.length > 0 && (
+        <div className="mt-4">
+          <p className="text-sm font-semibold text-texto-2">Porquês</p>
+          <ol className="mt-1 list-decimal space-y-1 pl-5 text-base">
+            {nc.porques.map((p, i) => (
+              <li key={i}>{p}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+      <Texto rotulo="Causa raiz" texto={nc.causaRaiz} />
+      {nc.acaoCorretiva && (
+        <Texto rotulo="Ação corretiva" texto={nc.acaoCorretiva} />
+      )}
+    </>
+  ) : null;
+
+  const planosDaNc = (
+    <div className="mt-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-3">
+        <p className="text-sm font-semibold text-texto-2">Planos de ação</p>
+        {!terminada && podeEditar && (
+          <Link
+            href={`/qualidade/planos-de-acao/novo?nc=${nc.id}`}
+            className={botaoSecundario}
+          >
+            Criar plano de ação
+          </Link>
+        )}
+      </div>
+      {listaDePlanos.length > 0 ? (
+        <ul className="mt-2 divide-y divide-borda">
+          {listaDePlanos.map((p) => (
+            <li
+              key={p.id}
+              className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
+            >
+              <Link
+                href={`/qualidade/planos-de-acao/${p.id}`}
+                className="font-mono text-sm font-medium text-info hover:underline"
+              >
+                {p.numero}
+              </Link>
+              <span className="min-w-48 flex-1">{p.titulo}</span>
+              <Progresso valor={p.progresso} />
+              <StatusDoPlano
+                status={p.status}
+                atrasado={p.atrasado}
+                prazo={p.prazo}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-base text-texto-2">
+          Nenhum plano ligado. Quando a ação corretiva tiver mais de um passo,
+          organize as tarefas num plano.
+        </p>
+      )}
+    </div>
+  );
+
+  const verificacao =
+    nc.eficaz !== null ? (
+      <>
+        <Dados
+          itens={[
+            ["Resultado da última verificação", nc.eficaz ? "Eficaz" : "Ineficaz"],
+            [
+              "Verificada em",
+              nc.verificadoEm ? formatarMomento(nc.verificadoEm) : null,
+            ],
+          ]}
+        />
+        {nc.parecerEficacia && (
+          <Texto rotulo="Parecer" texto={nc.parecerEficacia} />
+        )}
+      </>
+    ) : null;
 
   return (
     <article>
-      <Link
-        href="/qualidade/nao-conformidades"
-        className="dv-voltar"
-      >
+      <Link href="/qualidade/nao-conformidades" className="dv-voltar">
         Não conformidades
       </Link>
       <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -98,10 +251,19 @@ export default async function DetalheDaNc({
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{nc.titulo}</h1>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoNc nc={nc} />
-      </section>
+      {/* Resumo rápido da situação */}
+      <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
+        <GravidadeDaNc gravidade={nc.gravidade} />
+        <span>
+          Responsável:{" "}
+          <span className="font-medium text-texto">{nc.responsavel}</span>
+        </span>
+        <span>
+          Prazo:{" "}
+          <span className="font-medium text-texto">{formatarData(nc.prazo)}</span>
+          {!terminada && !nc.vencida && ` · ${prazoRelativo(nc.prazo)}`}
+        </span>
+      </div>
 
       {aviso && AVISOS[aviso] && (
         <p
@@ -112,166 +274,108 @@ export default async function DetalheDaNc({
         </p>
       )}
 
-      <Secao titulo="O que aconteceu">
-        <p className="max-w-[72ch] text-md whitespace-pre-line">
-          {nc.descricao}
-        </p>
-        <Dados
-          itens={[
-[
-              "Origem",
-              (() => {
-                const href = linkDaOrigem(nc.origem, nc.origemRef);
-                return href ? (
-                  <span>
-                    {ORIGENS_NC[nc.origem]} ·{" "}
-                    <Link
-                      href={href}
-                      className="font-medium text-acao hover:underline"
-                    >
-                      {nc.origemRef}
-                    </Link>
-                  </span>
-                ) : (
-                  `${ORIGENS_NC[nc.origem]}${nc.origemRef ? ` · ${nc.origemRef}` : ""}`
-                );
-              })(),
-            ],
-            ["Tipo", TIPOS_NC[nc.tipo]],
-            ["Gravidade", <GravidadeDaNc key="g" gravidade={nc.gravidade} />],
-            ["Setor", nc.setor],
-            ["Processo ou área", nc.processo],
-            ["Produto ou serviço", nc.produto],
-            ["Lote", nc.lote],
-            ["Responsável", nc.responsavel],
-            ["Aberta em", formatarData(nc.dataAbertura)],
-            [
-              "Prazo",
-              `${formatarData(nc.prazo)}${terminada ? "" : ` · ${prazoRelativo(nc.prazo)}`}`,
-            ],
-            [
-              "Custo estimado",
-              nc.custoEstimado
-                ? Number(nc.custoEstimado).toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })
-                : null,
-            ],
-          ]}
-        />
-        {nc.contencao && (
-          <Texto rotulo="Contenção imediata" texto={nc.contencao} />
-        )}
-      </Secao>
-
-      {nc.causaRaiz && (
-        <Secao titulo="Análise e tratamento">
-          <Dados
-            itens={[
-              [
-                "Método",
-                nc.metodoAnalise ? METODOS_ANALISE[nc.metodoAnalise] : null,
-              ],
-              [
-                "Categoria 6M",
-                nc.categoria6m ? CATEGORIAS_6M[nc.categoria6m] : null,
-              ],
-              ["Tipo de causa", nc.causaTipo],
-              [
-                "Implantada em",
-                nc.dataImplantacao ? formatarData(nc.dataImplantacao) : null,
-              ],
-            ]}
-          />
-          {nc.porques.length > 0 && (
-            <div className="mt-4">
-              <p className="text-sm font-semibold text-texto-2">Porquês</p>
-              <ol className="mt-1 list-decimal space-y-1 pl-5 text-base">
-                {nc.porques.map((p, i) => (
-                  <li key={i}>{p}</li>
-                ))}
-              </ol>
-            </div>
-          )}
-          <Texto rotulo="Causa raiz" texto={nc.causaRaiz} />
-          {nc.acaoCorretiva && (
-            <Texto rotulo="Ação corretiva" texto={nc.acaoCorretiva} />
-          )}
-        </Secao>
-      )}
-
-      {nc.eficaz !== null && (
-        <Secao titulo="Verificação de eficácia">
-          <Dados
-            itens={[
-              [
-                "Resultado da última verificação",
-                nc.eficaz ? "Eficaz" : "Ineficaz",
-              ],
-              [
-                "Verificada em",
-                nc.verificadoEm ? formatarMomento(nc.verificadoEm) : null,
-              ],
-            ]}
-          />
-          {nc.parecerEficacia && (
-            <Texto rotulo="Parecer" texto={nc.parecerEficacia} />
-          )}
-        </Secao>
-      )}
-
-      <section className={`${painel} mt-6 p-5`}>
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <h2 className={tituloDaSecao}>Planos de ação</h2>
-          {!terminada && permissoes.includes("qualidade.editar") && (
-            <Link
-              href={`/qualidade/planos-de-acao/novo?nc=${nc.id}`}
-              className={botaoSecundario}
-            >
-              Criar plano de ação
-            </Link>
-          )}
-        </div>
-        {planos.ok && planos.dados.itens.length > 0 ? (
-          <ul className="mt-3 divide-y divide-borda">
-            {planos.dados.itens.map((p) => (
-              <li
-                key={p.id}
-                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
-              >
-                <Link
-                  href={`/qualidade/planos-de-acao/${p.id}`}
-                  className="font-mono text-sm font-medium text-info hover:underline"
-                >
-                  {p.numero}
-                </Link>
-                <span className="min-w-48 flex-1">{p.titulo}</span>
-                <Progresso valor={p.progresso} />
-                <StatusDoPlano
-                  status={p.status}
-                  atrasado={p.atrasado}
-                  prazo={p.prazo}
-                />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-2 text-base text-texto-2">
-            Nenhum plano ligado. Quando a ação corretiva tiver mais de um passo,
-            organize as tarefas num plano.
+      {cancelada && (
+        <section className="mt-6 rounded-md border border-nao-conforme/40 bg-superficie p-5">
+          <p className="font-semibold text-nao-conforme">NC cancelada</p>
+          <p className="mt-1 text-base text-texto-2">
+            {nc.canceladaEm ? formatarMomento(nc.canceladaEm) : ""}
+            {nc.canceladaPorNome ? ` · por ${nc.canceladaPorNome}` : ""}
           </p>
-        )}
-      </section>
+          {nc.motivoCancelamento && (
+            <p className="mt-2 max-w-[72ch] text-base whitespace-pre-line">
+              {nc.motivoCancelamento}
+            </p>
+          )}
+        </section>
+      )}
+
+      <nav className="mt-6" aria-label="Etapas da não conformidade">
+        <Etapa
+          n={1}
+          titulo="Registrar ocorrência"
+          estado={cancelada ? "concluida" : estadoDa(0)}
+          resumo={`Aberta em ${formatarData(nc.dataAbertura)}`}
+        >
+          {ocorrencia}
+        </Etapa>
+
+        <Etapa
+          n={2}
+          titulo="Analisar e tratar"
+          estado={cancelada ? (analise ? "concluida" : "a_seguir") : estadoDa(1)}
+          resumo={
+            nc.dataImplantacao
+              ? `Ação implantada em ${formatarData(nc.dataImplantacao)}`
+              : nc.causaRaiz
+                ? "Causa e ação definidas"
+                : undefined
+          }
+          orientacao={
+            nc.status === "aberta"
+              ? "Analise a causa raiz e defina a ação corretiva para começar o tratamento."
+              : nc.status === "em_tratamento"
+                ? "Implante a ação corretiva e informe a data para enviar à verificação."
+                : "Depois de registrar a ocorrência, a causa é analisada e a ação corretiva definida."
+          }
+        >
+          {!terminada && podeEditar && estadoDa(1) === "atual" && (
+            <AcaoDaEtapa nc={nc} causas={causas.ok ? causas.dados.map((c) => c.nome) : []} />
+          )}
+          {analise}
+          {planosDaNc}
+        </Etapa>
+
+        <Etapa
+          n={3}
+          titulo="Verificar eficácia"
+          estado={cancelada ? "a_seguir" : estadoDa(2)}
+          resumo={
+            nc.eficaz !== null && nc.verificadoEm
+              ? `${nc.eficaz ? "Eficaz" : "Ineficaz"} · ${formatarMomento(nc.verificadoEm)}`
+              : undefined
+          }
+          orientacao="Confirme, com base em evidência objetiva, se a ação corretiva eliminou a causa."
+        >
+          {!terminada && podeEditar && estadoDa(2) === "atual" && (
+            <AcaoDaEtapa nc={nc} causas={causas.ok ? causas.dados.map((c) => c.nome) : []} />
+          )}
+          {verificacao}
+        </Etapa>
+
+        <Etapa
+          n={4}
+          titulo="Encerrar não conformidade"
+          estado={cancelada ? "a_seguir" : estadoDa(3)}
+          resumo={
+            encerrada && nc.encerradaEm
+              ? `Encerrada em ${formatarMomento(nc.encerradaEm)}`
+              : undefined
+          }
+          orientacao="Com a eficácia confirmada, a NC é encerrada. Ação ineficaz volta ao tratamento."
+        >
+          {encerrada && (
+            <p className="text-base text-texto-2">
+              A ação foi considerada eficaz e a NC foi encerrada.
+            </p>
+          )}
+        </Etapa>
+      </nav>
+
+      <Anexos
+        registro="nao_conformidade"
+        registroId={nc.id}
+        voltar={`/qualidade/nao-conformidades/${nc.id}`}
+        podeEditar={podeEditar}
+      />
 
       {outras.length > 0 && (
         <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>
+          <h2 className="text-sm font-semibold text-texto-2">
             Outras NCs do mesmo registro de origem
           </h2>
           <p className="mt-1 text-sm text-texto-2">
-            Abertas a partir de {nc.origemRef}. Pode indicar recorrência do
-            mesmo problema.
+            Abertas a partir de {nc.origemRef}. Pode indicar recorrência do mesmo
+            problema.
           </p>
           <ul className="mt-3 divide-y divide-borda">
             {outras.map((n) => (
@@ -294,45 +398,107 @@ export default async function DetalheDaNc({
         </section>
       )}
 
-      {nc.status === "cancelada" && (
-        <Secao titulo="Cancelamento">
-          <Dados
-            itens={[
-              [
-                "Cancelada em",
-                nc.canceladaEm ? formatarMomento(nc.canceladaEm) : null,
-              ],
-              ["Cancelada por", nc.canceladaPorNome],
-            ]}
-          />
-          {nc.motivoCancelamento && (
-            <Texto rotulo="Motivo" texto={nc.motivoCancelamento} />
-          )}
-        </Secao>
+      {!terminada && permissoes.includes("qualidade.excluir") && (
+        <div className="mt-6">
+          <CancelarNc nc={nc} />
+        </div>
       )}
-
-      {!terminada && permissoes.includes("qualidade.editar") && (
-        <AcoesDaNc
-          nc={nc}
-          podeCancelar={permissoes.includes("qualidade.excluir")}
-          causas={causas.ok ? causas.dados.map((c) => c.nome) : []}
-        />
-      )}
-      <Anexos
-        registro="nao_conformidade"
-        registroId={nc.id}
-        voltar={`/qualidade/nao-conformidades/${nc.id}`}
-        podeEditar={permissoes.includes("qualidade.editar")}
-      />
     </article>
   );
 }
 
-function Secao({ titulo, children }: { titulo: string; children: ReactNode }) {
+/** Uma etapa da jornada: atual destacada e aberta; concluída recolhida; a seguir só indicada. */
+function Etapa({
+  n,
+  titulo,
+  estado,
+  resumo,
+  orientacao,
+  children,
+}: {
+  n: number;
+  titulo: string;
+  estado: EstadoDaEtapa;
+  resumo?: string;
+  orientacao?: string;
+  children?: ReactNode;
+}) {
+  const marca = (
+    <span
+      className={`flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
+        estado === "atual"
+          ? "bg-marinho text-primaria-texto"
+          : estado === "concluida"
+            ? "bg-conforme/15 text-conforme"
+            : "border border-borda-campo text-texto-3"
+      }`}
+    >
+      {estado === "concluida" ? <Check aria-hidden size={14} strokeWidth={2.5} /> : n}
+    </span>
+  );
+  const cabecalho = (
+    <span className="flex flex-1 flex-wrap items-center gap-x-3 gap-y-0.5">
+      <span
+        className={`font-semibold ${estado === "a_seguir" ? "text-texto-3" : "text-texto"}`}
+      >
+        {titulo}
+      </span>
+      {estado === "atual" && (
+        <span className="text-sm font-medium text-marinho">Etapa atual</span>
+      )}
+      {estado === "a_seguir" && (
+        <span className="text-sm text-texto-3">A seguir</span>
+      )}
+      {resumo && <span className="text-sm text-texto-2">{resumo}</span>}
+    </span>
+  );
+
+  // Concluída: recolhida por padrão, acessível para consulta.
+  if (estado === "concluida" && children) {
+    return (
+      <details className={`${painel} mt-4`}>
+        <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4">
+          {marca}
+          {cabecalho}
+          <ChevronDown
+            aria-hidden
+            size={18}
+            strokeWidth={2}
+            className="text-texto-3"
+          />
+        </summary>
+        <div className="border-t border-borda px-5 py-4">{children}</div>
+      </details>
+    );
+  }
+
+  // Etapa atual: destacada e aberta, com a orientação e a ação.
+  if (estado === "atual") {
+    return (
+      <section className={`${painel} mt-4 border-marinho p-5`}>
+        <div className="flex items-center gap-3">
+          {marca}
+          {cabecalho}
+        </div>
+        {orientacao && (
+          <p className="mt-2 text-base text-texto-2">{orientacao}</p>
+        )}
+        {children && <div className="mt-4">{children}</div>}
+      </section>
+    );
+  }
+
+  // A seguir (ou concluída sem conteúdo): só a indicação, sem ação.
   return (
-    <section className={`${painel} mt-6 p-5`}>
-      <h2 className={tituloDaSecao}>{titulo}</h2>
-      <div className="mt-3">{children}</div>
+    <section className={`${painel} mt-4 px-5 py-4`}>
+      <div className="flex items-center gap-3">
+        {marca}
+        {cabecalho}
+      </div>
+      {estado === "a_seguir" && orientacao && (
+        <p className="mt-2 text-sm text-texto-3">{orientacao}</p>
+      )}
+      {estado === "concluida" && children && <div className="mt-3">{children}</div>}
     </section>
   );
 }

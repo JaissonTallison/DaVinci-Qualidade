@@ -6,7 +6,7 @@ import {
   type NaoConformidade,
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario, Recolhido } from "@/components/formulario-de-acao";
 import { Selecao as SelecaoDeFormulario } from "@/components/selecao";
 import {
   cancelarNc,
@@ -14,63 +14,51 @@ import {
   registrarTratamento,
   verificarEficacia,
 } from "@/lib/acoes-nc";
-import { hojeEmBrasilia } from "@/lib/datas";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { areaDeTexto, campo } from "@/lib/estilos";
 
-/** O próximo passo da NC, conforme o status (docs/05-modulos/nao-conformidades.md §1). */
-export function AcoesDaNc({
+/** A ação da etapa atual da NC, conforme o status (docs/05-modulos/nao-conformidades.md §1). O cancelamento fica à parte (secundário). */
+export function AcaoDaEtapa({
   nc,
-  podeCancelar,
   causas,
 }: {
   nc: NaoConformidade;
-  podeCancelar: boolean;
   /** Tipos de causa cadastrados (Cadastros › Listas de apoio). */
   causas: string[];
 }) {
   return (
-    <>
+    <div className="flex flex-col gap-5">
       {nc.status === "aberta" && (
-        <Bloco
-          titulo="Registrar tratamento"
-          descricao="Analise a causa raiz e defina a ação corretiva. A NC passa para “Em tratamento”."
-        >
-          <FormularioTratamento nc={nc} causas={causas} />
-        </Bloco>
+        <FormularioTratamento nc={nc} causas={causas} />
       )}
 
       {nc.status === "em_tratamento" && (
         <>
-          <Bloco
-            titulo="Enviar para verificação"
-            descricao="Depois de implantar a ação corretiva, informe a data. A eficácia é verificada em seguida."
+          <Formulario
+            acao={enviarParaVerificacao.bind(null, nc.id)}
+            versao={nc.versao}
+            rotuloDoBotao="Enviar para verificação"
           >
-            <Formulario
-              acao={enviarParaVerificacao.bind(null, nc.id)}
-              versao={nc.versao}
-              rotuloDoBotao="Enviar para verificação"
-            >
-              {(erros, v) => (
-                <Campo
+            {(erros, v) => (
+              <Campo
+                id="dataImplantacao"
+                rotulo="Implantada em"
+                erro={erros.dataImplantacao}
+                className="sm:w-56"
+              >
+                <input
                   id="dataImplantacao"
-                  rotulo="Implantada em"
-                  erro={erros.dataImplantacao}
-                  className="sm:w-56"
-                >
-                  <input
-                    id="dataImplantacao"
-                    name="dataImplantacao"
-                    type="date"
-                    min={nc.dataAbertura}
-                    max={hojeEmBrasilia()}
-                    defaultValue={v.dataImplantacao}
-                    className={campo}
-                    aria-invalid={Boolean(erros.dataImplantacao)}
-                  />
-                </Campo>
-              )}
-            </Formulario>
-          </Bloco>
+                  name="dataImplantacao"
+                  type="date"
+                  min={nc.dataAbertura}
+                  max={hojeEmBrasilia()}
+                  defaultValue={v.dataImplantacao}
+                  className={campo}
+                  aria-invalid={Boolean(erros.dataImplantacao)}
+                />
+              </Campo>
+            )}
+          </Formulario>
           <Recolhido titulo="Revisar a análise e a ação corretiva">
             <FormularioTratamento nc={nc} causas={causas} />
           </Recolhido>
@@ -78,10 +66,24 @@ export function AcoesDaNc({
       )}
 
       {nc.status === "em_verificacao" && (
-        <Bloco
-          titulo="Verificar eficácia"
-          descricao="A ação eliminou a causa? Eficaz encerra a NC. Ineficaz devolve para tratamento e conta um novo ciclo."
-        >
+        <>
+          {(nc.acaoCorretiva || nc.dataImplantacao) && (
+            <div className="rounded-md border border-borda bg-superficie-2 p-3">
+              <p className="text-sm font-semibold text-texto-2">
+                O que verificar
+              </p>
+              {nc.acaoCorretiva && (
+                <p className="mt-1 text-base whitespace-pre-line">
+                  {nc.acaoCorretiva}
+                </p>
+              )}
+              {nc.dataImplantacao && (
+                <p className="mt-1 text-sm text-texto-2">
+                  Ação implantada em {formatarData(nc.dataImplantacao)}.
+                </p>
+              )}
+            </div>
+          )}
           <Formulario
             acao={verificarEficacia.bind(null, nc.id)}
             versao={nc.versao}
@@ -89,28 +91,41 @@ export function AcoesDaNc({
           >
             {(erros, v) => (
               <>
-                <fieldset className="flex flex-col gap-1.5">
+                <fieldset className="flex flex-col gap-2">
                   <legend className="text-sm font-semibold text-texto-2">
-                    Resultado
+                    Resultado da verificação
                   </legend>
-                  <div className="flex gap-6 text-base">
-                    <label className="flex items-center gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+                    <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
                       <input
                         type="radio"
                         name="eficaz"
                         value="sim"
                         defaultChecked={v.eficaz === "sim"}
-                      />{" "}
-                      Eficaz
+                        className="mt-1"
+                      />
+                      <span>
+                        <span className="font-medium text-texto">Eficaz</span>
+                        <span className="block text-sm text-texto-2">
+                          A causa foi eliminada. A NC é encerrada.
+                        </span>
+                      </span>
                     </label>
-                    <label className="flex items-center gap-2">
+                    <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
                       <input
                         type="radio"
                         name="eficaz"
                         value="nao"
                         defaultChecked={v.eficaz === "nao"}
-                      />{" "}
-                      Ineficaz
+                        className="mt-1"
+                      />
+                      <span>
+                        <span className="font-medium text-texto">Ineficaz</span>
+                        <span className="block text-sm text-texto-2">
+                          A causa não foi eliminada. Volta para tratamento e
+                          conta um novo ciclo.
+                        </span>
+                      </span>
                     </label>
                   </div>
                   {erros.eficaz && (
@@ -121,7 +136,7 @@ export function AcoesDaNc({
                   id="parecer"
                   rotulo="Parecer"
                   erro={erros.parecer}
-                  ajuda="Que evidência mostra o resultado? Ex.: 30 dias de medições sem desvio."
+                  ajuda="Descreva a evidência que comprova o resultado (ex.: 30 dias de medições sem desvio). Fotos e documentos são anexados abaixo, em Evidências."
                 >
                   <textarea
                     id="parecer"
@@ -135,41 +150,40 @@ export function AcoesDaNc({
               </>
             )}
           </Formulario>
-        </Bloco>
+        </>
       )}
+    </div>
+  );
+}
 
-      {podeCancelar && (
-        <Recolhido titulo="Cancelar esta NC">
-          <p className="text-base text-texto-2">
-            Use só para NC aberta por engano ou em duplicidade. A NC não é
-            apagada: fica cancelada, com o motivo e quem cancelou.
-          </p>
-          <Formulario
-            acao={cancelarNc.bind(null, nc.id)}
-            versao={nc.versao}
-            rotuloDoBotao={`Cancelar ${nc.numero}`}
-            perigo
-          >
-            {(erros, v) => (
-              <Campo
-                id="motivo"
-                rotulo="Motivo do cancelamento"
-                erro={erros.motivo}
-              >
-                <textarea
-                  id="motivo"
-                  name="motivo"
-                  rows={2}
-                  defaultValue={v.motivo}
-                  className={areaDeTexto}
-                  aria-invalid={Boolean(erros.motivo)}
-                />
-              </Campo>
-            )}
-          </Formulario>
-        </Recolhido>
-      )}
-    </>
+/** Cancelar a NC: ação administrativa, fica em posição secundária. */
+export function CancelarNc({ nc }: { nc: NaoConformidade }) {
+  return (
+    <Recolhido titulo="Cancelar esta NC">
+      <p className="text-base text-texto-2">
+        Use só para NC aberta por engano ou em duplicidade. A NC não é apagada:
+        fica cancelada, com o motivo e quem cancelou.
+      </p>
+      <Formulario
+        acao={cancelarNc.bind(null, nc.id)}
+        versao={nc.versao}
+        rotuloDoBotao={`Cancelar ${nc.numero}`}
+        perigo
+      >
+        {(erros, v) => (
+          <Campo id="motivo" rotulo="Motivo do cancelamento" erro={erros.motivo}>
+            <textarea
+              id="motivo"
+              name="motivo"
+              rows={2}
+              defaultValue={v.motivo}
+              className={areaDeTexto}
+              aria-invalid={Boolean(erros.motivo)}
+            />
+          </Campo>
+        )}
+      </Formulario>
+    </Recolhido>
   );
 }
 

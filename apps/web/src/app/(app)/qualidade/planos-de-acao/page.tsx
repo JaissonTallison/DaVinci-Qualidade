@@ -24,6 +24,7 @@ import {
   type DadosDoUsuario,
   type Pagina,
   type PlanoResumo,
+  type ResumoPlanos,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
@@ -61,14 +62,17 @@ export default async function ListaDePlanos({
   >;
   const consulta = new URLSearchParams();
   for (const f of FILTROS) if (params[f]) consulta.set(f, params[f]!);
-  const [lista, eu] = await Promise.all([
+  const [lista, eu, resumo] = await Promise.all([
     chamarApi<Pagina<PlanoResumo>>(`/planos-de-acao?${consulta}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<ResumoPlanos>("/planos-de-acao/resumo"),
   ]);
   const podeCriar = eu.ok && eu.dados.permissoes.includes("qualidade.editar");
   const filtrando = FILTROS.some((f) => !NAO_FILTRAM.has(f) && params[f]);
   const ordenar = params.ordenar;
   const ordem = params.ordem as Ordem | undefined;
+  const plural = (n: number, um: string, varios: string) =>
+    `${n} ${n === 1 ? um : varios}`;
 
   const semFiltro = (nome: string) => {
     const q = new URLSearchParams(consulta);
@@ -104,9 +108,29 @@ export default async function ListaDePlanos({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Planos de ação</h1>
-          <p className={subtituloDaPagina}>
-            Planos de ação e o acompanhamento de cada prazo e da eficácia.
-          </p>
+          {resumo.ok ? (
+            <>
+              <p className={subtituloDaPagina}>
+                {plural(resumo.dados.emExecucao, "em execução", "em execução")}
+                {resumo.dados.aguardandoEficacia > 0 &&
+                  ` · ${resumo.dados.aguardandoEficacia} aguardando eficácia`}
+              </p>
+              {resumo.dados.atrasados > 0 && (
+                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
+                  <Link
+                    href={`${BASE}?atrasados=true`}
+                    className="hover:underline"
+                  >
+                    {plural(resumo.dados.atrasados, "atrasado", "atrasados")}
+                  </Link>
+                </p>
+              )}
+            </>
+          ) : (
+            <p className={subtituloDaPagina}>
+              Planos de ação e o acompanhamento de cada prazo e da eficácia.
+            </p>
+          )}
         </div>
         {podeCriar && (
           <Link href={`${BASE}/novo`} className={botaoPrimario}>
@@ -230,11 +254,13 @@ export default async function ListaDePlanos({
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
+                      className="sm:hidden lg:table-cell"
                     >
                       Origem
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Responsável</th>
-                    <th className="px-4 py-2 font-semibold">Progresso</th>
+                    <th className="px-4 py-2 font-semibold sm:hidden lg:table-cell">
+                      Responsável
+                    </th>
                     <th className="px-4 py-2 font-semibold">Prazo</th>
                     <ThOrdenavel
                       campo="status"
@@ -245,6 +271,7 @@ export default async function ListaDePlanos({
                     >
                       Status
                     </ThOrdenavel>
+                    <th className="px-4 py-2 font-semibold">Progresso</th>
                     <th className="w-10 px-2 py-2" />
                   </tr>
                 </thead>
@@ -275,7 +302,7 @@ export default async function ListaDePlanos({
                             {TIPOS_PLANO[p.tipo]}
                           </span>
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {ORIGENS_PLANO[p.origem]}
                           {p.origemRef && (
                             <span className="block font-mono text-xs">
@@ -283,8 +310,23 @@ export default async function ListaDePlanos({
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {p.responsavel}
+                        </td>
+                        <td className="px-4 py-2 whitespace-nowrap">
+                          {formatarData(p.prazo)}
+                          {!terminado && !p.atrasado && (
+                            <span className="block text-xs text-texto-3">
+                              {prazoRelativo(p.prazo)}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-2">
+                          <StatusDoPlano
+                            status={p.status}
+                            atrasado={p.atrasado}
+                            prazo={p.prazo}
+                          />
                         </td>
                         <td className="px-4 py-2">
                           <Progresso valor={p.progresso} />
@@ -296,25 +338,6 @@ export default async function ListaDePlanos({
                                 : "tarefas pendentes"}
                             </span>
                           )}
-                        </td>
-                        <td className="px-4 py-2 whitespace-nowrap">
-                          {formatarData(p.prazo)}
-                          {!terminado && (
-                            <span
-                              className={`block text-xs ${p.atrasado ? "text-nao-conforme" : "text-texto-3"}`}
-                            >
-                              {p.atrasado
-                                ? "tarefa vencida"
-                                : prazoRelativo(p.prazo)}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2">
-                          <StatusDoPlano
-                            status={p.status}
-                            atrasado={p.atrasado}
-                            prazo={p.prazo}
-                          />
                         </td>
                         <td className="relative z-10 px-2 py-2 text-right">
                           <AcoesDaLinha rotulo={`Ações do plano ${p.numero}`}>

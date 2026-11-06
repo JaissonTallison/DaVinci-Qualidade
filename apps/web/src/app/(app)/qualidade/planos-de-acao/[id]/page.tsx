@@ -52,6 +52,8 @@ export default async function DetalheDoPlano({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   const terminado = p.status === "encerrado" || p.status === "cancelado";
   const podeEditar = !terminado && permissoes.includes("qualidade.editar");
+  const pendentes = p.tarefas.filter((t) => t.situacao === "pendente").length;
+  const atrasadas = p.tarefas.filter((t) => t.atrasada).length;
 
   return (
     <article>
@@ -76,6 +78,19 @@ export default async function DetalheDoPlano({
       </header>
       <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
 
+      {/* Resumo rápido: responsável e prazo do plano logo abaixo do título. */}
+      <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
+        <span>
+          Responsável:{" "}
+          <span className="font-medium text-texto">{p.responsavel}</span>
+        </span>
+        <span>
+          Prazo:{" "}
+          <span className="font-medium text-texto">{formatarData(p.prazo)}</span>
+          {!terminado && ` · ${prazoRelativo(p.prazo)}`}
+        </span>
+      </div>
+
       <section className={`${painel} mt-6 p-5`}>
         <h2 className={tituloDaSecao}>Linha do tempo</h2>
         <LinhaDoTempoDoPlano p={p} />
@@ -95,7 +110,7 @@ export default async function DetalheDoPlano({
         <p className="mt-3 max-w-[72ch] text-md whitespace-pre-line">
           {p.objetivo}
         </p>
-        <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
           <Dado rotulo="Tipo">{TIPOS_PLANO[p.tipo]}</Dado>
           <Dado rotulo="Origem">
             {ORIGENS_PLANO[p.origem]}
@@ -114,13 +129,6 @@ export default async function DetalheDoPlano({
                 );
               })()}
           </Dado>
-          <Dado rotulo="Responsável">{p.responsavel}</Dado>
-          <Dado rotulo="Prazo">
-            {formatarData(p.prazo)}
-            {!terminado && (
-              <span className="text-texto-2"> · {prazoRelativo(p.prazo)}</span>
-            )}
-          </Dado>
           {p.custoPrevisto && (
             <Dado rotulo="Custo previsto">
               {formatarReais(p.custoPrevisto)}
@@ -131,6 +139,17 @@ export default async function DetalheDoPlano({
 
       <section className={`${painel} mt-6`}>
         <h2 className={`${tituloDaSecao} px-5 pt-5`}>Tarefas</h2>
+        <p className="px-5 pt-1 text-base text-texto-2">
+          {pendentes === 0
+            ? "Todas as tarefas concluídas."
+            : `${pendentes} ${pendentes === 1 ? "tarefa pendente" : "tarefas pendentes"}`}
+          {atrasadas > 0 && (
+            <span className="font-medium text-nao-conforme">
+              {" · "}
+              {atrasadas} {atrasadas === 1 ? "atrasada" : "atrasadas"}
+            </span>
+          )}
+        </p>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-superficie-2 text-sm text-texto-2">
@@ -185,7 +204,17 @@ export default async function DetalheDoPlano({
                     )}
                   </td>
                   <td className="px-4 py-2.5 whitespace-nowrap">
-                    {SITUACOES_TAREFA[t.situacao]}
+                    <span
+                      className={
+                        t.situacao === "concluida"
+                          ? "font-medium text-conforme"
+                          : t.atrasada
+                            ? "font-medium text-nao-conforme"
+                            : ""
+                      }
+                    >
+                      {SITUACOES_TAREFA[t.situacao]}
+                    </span>
                     {t.concluidaEm && (
                       <span className="block text-xs text-texto-3">
                         {formatarMomento(t.concluidaEm)}
@@ -207,6 +236,13 @@ export default async function DetalheDoPlano({
           </table>
         </div>
       </section>
+
+      {podeEditar && (
+        <AcoesDoPlano
+          plano={p}
+          podeCancelar={permissoes.includes("qualidade.excluir")}
+        />
+      )}
 
       <section className={`${painel} mt-6`}>
         <h2 className={`${tituloDaSecao} px-5 pt-5`}>Evidências das tarefas</h2>
@@ -276,12 +312,6 @@ export default async function DetalheDoPlano({
         </section>
       )}
 
-      {podeEditar && (
-        <AcoesDoPlano
-          plano={p}
-          podeCancelar={permissoes.includes("qualidade.excluir")}
-        />
-      )}
       <Anexos
         registro="plano_de_acao"
         registroId={p.id}

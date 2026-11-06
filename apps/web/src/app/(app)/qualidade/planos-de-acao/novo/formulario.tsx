@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, type ReactNode } from "react";
 import {
   MAXIMO_DE_TAREFAS,
   ORIGENS_PLANO,
@@ -26,6 +26,16 @@ import { ORIGEM_PLANO_VINCULAVEL } from "@/lib/origem-plano";
 export interface Inicial {
   valores: Record<string, string>;
   tarefas?: Record<string, string>[];
+}
+
+/** Agrupa campos relacionados sob um subtítulo sóbrio, para o cadastro ler como etapas. */
+function Secao({ titulo, children }: { titulo: string; children: ReactNode }) {
+  return (
+    <section className="flex flex-col gap-5">
+      <h2 className="text-sm font-semibold text-texto-2">{titulo}</h2>
+      {children}
+    </section>
+  );
 }
 
 export function FormularioNovoPlano({
@@ -58,106 +68,126 @@ export function FormularioNovoPlano({
 
   return (
     <form action={acao} noValidate className={`${painel} mt-6`}>
-      <div className="flex flex-col gap-5 p-5">
+      <div className="flex flex-col gap-8 p-5">
         {erroGeral && <AvisoDeErro erro={erroGeral} />}
         {v.ncId && <input type="hidden" name="ncId" value={v.ncId} />}
-        <Campo id="titulo" rotulo="Título" erro={erros.titulo}>
-          <input
+
+        <Secao titulo="O plano">
+          <Campo
             id="titulo"
-            name="titulo"
-            defaultValue={v.titulo}
-            maxLength={150}
-            className={campo}
-            {...invalido("titulo")}
-          />
-        </Campo>
-        <Campo
-          id="objetivo"
-          rotulo="Objetivo"
-          erro={erros.objetivo}
-          ajuda="O resultado que mostra que o plano funcionou. Ex.: nenhuma etiqueta ilegível por 60 dias."
-        >
-          <textarea
-            id="objetivo"
-            name="objetivo"
-            rows={2}
-            defaultValue={v.objetivo}
-            className={areaDeTexto}
-            {...invalido("objetivo")}
-          />
-        </Campo>
-        <div className="grid gap-5 sm:grid-cols-4">
-          <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
-            <Opcoes id="tipo" opcoes={TIPOS_PLANO} valor={v.tipo} />
-          </Campo>
-          <Campo id="origem" rotulo="Origem" erro={erros.origem}>
-            <Opcoes
-              id="origem"
-              opcoes={ORIGENS_PLANO}
-              valor={v.origem}
-              onChange={(e) => setOrigem(e.target.value)}
-            />
-          </Campo>
-          <Campo
-            id="origemRef"
-            rotulo={vinc ? vinc.rotuloCampo : "Registro de origem"}
-            erro={erros.origemRef}
+            rotulo="Título *"
+            erro={erros.titulo}
+            ajuda="Uma frase que identifique o plano na lista."
           >
             <input
-              id="origemRef"
-              name="origemRef"
-              defaultValue={v.origemRef}
-              maxLength={60}
-              className={`${campo} font-mono`}
-              list={
-                vinc && registros.length > 0 ? "registros-origem" : undefined
-              }
-              autoComplete="off"
-            />
-            {vinc && registros.length > 0 && (
-              <datalist id="registros-origem">
-                {registros.map((rg) => (
-                  <option key={rg.numero} value={rg.numero} label={rg.desc} />
-                ))}
-              </datalist>
-            )}
-          </Campo>
-          <Campo
-            id="responsavel"
-            rotulo="Responsável pelo plano"
-            erro={erros.responsavel}
-          >
-            <input
-              id="responsavel"
-              name="responsavel"
-              list="pessoas"
-              defaultValue={v.responsavel}
-              maxLength={120}
+              id="titulo"
+              name="titulo"
+              defaultValue={v.titulo}
+              maxLength={150}
               className={campo}
-              {...invalido("responsavel")}
+              {...invalido("titulo")}
             />
           </Campo>
-        </div>
-        <Campo
-          id="custoPrevisto"
-          rotulo="Custo previsto (R$)"
-          erro={erros.custoPrevisto}
-          className="sm:w-1/4"
-        >
-          <input
+          <Campo
+            id="objetivo"
+            rotulo="Objetivo *"
+            erro={erros.objetivo}
+            ajuda="O resultado que mostra que o plano funcionou. Ex.: nenhuma etiqueta ilegível por 60 dias."
+          >
+            <textarea
+              id="objetivo"
+              name="objetivo"
+              rows={2}
+              defaultValue={v.objetivo}
+              className={areaDeTexto}
+              {...invalido("objetivo")}
+            />
+          </Campo>
+        </Secao>
+
+        <Secao titulo="Classificação e vínculo">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <Campo id="tipo" rotulo="Tipo *" erro={erros.tipo}>
+              <Opcoes id="tipo" opcoes={TIPOS_PLANO} valor={v.tipo} />
+            </Campo>
+            <Campo id="origem" rotulo="Origem *" erro={erros.origem}>
+              <Opcoes
+                id="origem"
+                opcoes={ORIGENS_PLANO}
+                valor={v.origem}
+                onChange={(e) => setOrigem(e.target.value)}
+              />
+            </Campo>
+            <Campo
+              id="origemRef"
+              rotulo={`${vinc ? vinc.rotuloCampo : "Registro de origem"} (opcional)`}
+              erro={erros.origemRef}
+            >
+              <input
+                id="origemRef"
+                name="origemRef"
+                defaultValue={v.origemRef}
+                maxLength={60}
+                className={`${campo} font-mono`}
+                list={
+                  vinc && registros.length > 0 ? "registros-origem" : undefined
+                }
+                autoComplete="off"
+              />
+              {vinc && registros.length > 0 && (
+                <datalist id="registros-origem">
+                  {registros.map((rg) => (
+                    <option key={rg.numero} value={rg.numero} label={rg.desc} />
+                  ))}
+                </datalist>
+              )}
+            </Campo>
+            <Campo
+              id="responsavel"
+              rotulo="Responsável pelo plano *"
+              erro={erros.responsavel}
+            >
+              <input
+                id="responsavel"
+                name="responsavel"
+                list="pessoas"
+                defaultValue={v.responsavel}
+                maxLength={120}
+                className={campo}
+                {...invalido("responsavel")}
+              />
+            </Campo>
+          </div>
+          <Campo
             id="custoPrevisto"
-            name="custoPrevisto"
-            inputMode="decimal"
-            placeholder="0,00"
-            defaultValue={v.custoPrevisto}
-            className={campo}
-            {...invalido("custoPrevisto")}
-          />
-        </Campo>
+            rotulo="Custo previsto (R$) (opcional)"
+            erro={erros.custoPrevisto}
+            className="sm:w-1/3"
+          >
+            <input
+              id="custoPrevisto"
+              name="custoPrevisto"
+              inputMode="decimal"
+              placeholder="0,00"
+              defaultValue={v.custoPrevisto}
+              className={campo}
+              {...invalido("custoPrevisto")}
+            />
+          </Campo>
+        </Secao>
+
+        <p className="text-sm text-texto-3">
+          Os campos com <span aria-hidden>*</span> são obrigatórios.
+        </p>
       </div>
 
       <div className="border-t border-borda p-5">
         <h2 className={tituloDaSecao}>Tarefas</h2>
+        <p className="mt-1 text-base text-texto-2">
+          O que o plano vai executar. “O que fazer”, “Quem” e “Até quando” são
+          obrigatórios em cada tarefa; “Onde” e “Como” (5W2H) são opcionais.
+          Inclua ao menos uma tarefa.
+        </p>
         {erros.tarefas && (
           <p className="mt-1 text-sm text-nao-conforme">{erros.tarefas}</p>
         )}
@@ -178,7 +208,11 @@ export function FormularioNovoPlano({
         )}
       </div>
 
-      <div className="flex justify-end gap-3 border-t border-borda px-5 py-3">
+      <div className="flex flex-wrap items-center justify-end gap-3 border-t border-borda px-5 py-3">
+        <p className="mr-auto text-sm text-texto-2">
+          Ao criar, o plano entra em execução e o acompanhamento das tarefas
+          começa.
+        </p>
         <button type="submit" className={botaoPrimario} disabled={salvando}>
           {salvando ? "Criando…" : "Criar plano"}
         </button>
