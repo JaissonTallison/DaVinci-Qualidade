@@ -87,7 +87,17 @@ export function FormularioDeInstrumento({
     salvarInstrumento.bind(null, instrumento?.id ?? null),
     {},
   );
-  const erros = errosPorCampo(estado.erro?.detalhes);
+  // Catálogo (só no cadastro novo): escolher um modelo preenche os campos.
+  const [ramo, setRamo] = useState<RamoDeCalibracao | "">("");
+  const [modelo, setModelo] = useState<Record<string, string> | null>(null);
+  const [montagem, setMontagem] = useState(0);
+  // Em qual envio o modelo foi aplicado: enquanto não houver um envio novo, o modelo
+  // preenche os campos e os erros antigos ficam ocultos. Depois de enviar, o que a pessoa
+  // digitou passa a valer mais que o modelo (QUA-01/QUA-04).
+  const [envioDoModelo, setEnvioDoModelo] = useState<EstadoDaAcao | null>(null);
+  const modeloAtivo = modelo !== null && envioDoModelo === estado;
+
+  const erros = errosPorCampo(modeloAtivo ? [] : estado.erro?.detalhes);
   const base: Record<string, string> =
     estado.valores ??
     Object.fromEntries(
@@ -97,16 +107,14 @@ export function FormularioDeInstrumento({
       ]),
     );
   const erroGeral =
-    estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
+    !modeloAtivo && estado.erro && !estado.erro.detalhes?.length
+      ? estado.erro
+      : undefined;
 
-  // Catálogo (só no cadastro novo): escolher um modelo preenche os campos.
-  const [ramo, setRamo] = useState<RamoDeCalibracao | "">("");
-  const [modelo, setModelo] = useState<Record<string, string> | null>(null);
-  const [montagem, setMontagem] = useState(0);
   const itensDoRamo = ramo
     ? CATALOGO_DE_CALIBRACAO.filter((i) => i.ramos.includes(ramo))
     : [];
-  const v = modelo ? { ...base, ...modelo } : base;
+  const v = modeloAtivo ? { ...base, ...modelo } : base;
   const valor = (nome: string) => v[nome] ?? "";
 
   return (
@@ -154,6 +162,7 @@ export function FormularioDeInstrumento({
                 if (i) {
                   setModelo(doModelo(i));
                   setMontagem((m) => m + 1);
+                  setEnvioDoModelo(estado);
                 }
               }}
               className={`${campo} disabled:opacity-60`}

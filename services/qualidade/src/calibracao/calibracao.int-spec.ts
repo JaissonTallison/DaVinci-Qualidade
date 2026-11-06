@@ -47,6 +47,8 @@ async function recusa(promessa: Promise<unknown>): Promise<ErroPadrao> {
   throw new Error('Era esperada uma recusa.');
 }
 
+// Certificado único por chamada: o mesmo número não se repete no instrumento (QUA-06).
+let seqCertificado = 0;
 const registrar = (
   ctx: Contexto,
   i: Instrumento,
@@ -59,7 +61,7 @@ const registrar = (
       versao: i.versao,
       data,
       laboratorio: 'Lab Metrologia Alfa',
-      certificado: 'CERT-8812',
+      certificado: `CERT-${++seqCertificado}`,
       aprovada,
     },
   });
@@ -186,6 +188,33 @@ describe('calibrações', () => {
     expect((await recusa(servico.obter(empresaB, { id: i.id }))).codigo).toBe(
       'NAO_ENCONTRADO',
     );
+  });
+
+  it('não aceita o mesmo certificado duas vezes no instrumento (QUA-06)', async () => {
+    let i = await servico.criar(empresaA, { ...paquimetro, tag: 'CERT-DUP' });
+    i = await servico.registrar(empresaA, {
+      id: i.id,
+      alteracoes: {
+        versao: i.versao,
+        data: mesesAtras(2),
+        laboratorio: 'Lab Metrologia Alfa',
+        certificado: 'CERT-REPETIDO',
+        aprovada: true,
+      },
+    });
+    const erro = await recusa(
+      servico.registrar(empresaA, {
+        id: i.id,
+        alteracoes: {
+          versao: i.versao,
+          data: hoje,
+          laboratorio: 'Lab Metrologia Alfa',
+          certificado: 'CERT-REPETIDO',
+          aprovada: true,
+        },
+      }),
+    );
+    expect(erro.detalhes?.[0]?.campo).toBe('certificado');
   });
 });
 

@@ -156,8 +156,6 @@ export class AcidentesService {
 
   async criar(ctx: Contexto, dados: unknown): Promise<Acidente> {
     const novo = validar(novoAcidenteSchema, dados);
-    if (novo.data > hojeEmBrasilia())
-      throw invalido('data', 'A data do acidente não pode estar no futuro.');
     const ano = Number(novo.data.slice(0, 4));
     return this.db.transaction(async (tx) => {
       const [{ ultimo }] = await tx
@@ -187,8 +185,6 @@ export class AcidentesService {
       atualizarAcidenteSchema,
       dados?.alteracoes,
     );
-    if (campos.data > hojeEmBrasilia())
-      throw invalido('data', 'A data do acidente não pode estar no futuro.');
     return this.alterar(ctx, dados?.id, versao, 'editar', (tx, l) =>
       tx.update(acidentes).set(campos).where(eq(acidentes.id, l.id)),
     );
@@ -340,16 +336,22 @@ export class AcidentesService {
         tg: taxaPorMilhaoDeHoras(dias, h),
       };
     });
-    // O total usa só os meses com horas lançadas: um acidente num mês sem horas inflaria a taxa
+    // Contagem anual inclui todos os acidentes e dias, mesmo em meses sem horas lançadas (SST-04).
+    const acidentesDoAno = meses.reduce(
+      (s, m) => s + m.acidentesComAfastamento,
+      0,
+    );
+    const diasDoAno = meses.reduce((s, m) => s + m.diasPerdidosEDebitados, 0);
+    // As taxas (TF/TG) usam só os meses com horas: um acidente em mês sem horas inflaria a taxa.
     const comHoras = meses.filter((m) => m.horas !== null);
     const horasDoAno = comHoras.length
       ? comHoras.reduce((s, m) => s + m.horas!, 0)
       : null;
-    const acidentesDoAno = comHoras.reduce(
+    const acidentesComHoras = comHoras.reduce(
       (s, m) => s + m.acidentesComAfastamento,
       0,
     );
-    const diasDoAno = comHoras.reduce(
+    const diasComHoras = comHoras.reduce(
       (s, m) => s + m.diasPerdidosEDebitados,
       0,
     );
@@ -360,8 +362,8 @@ export class AcidentesService {
         horas: horasDoAno,
         acidentesComAfastamento: acidentesDoAno,
         diasPerdidosEDebitados: diasDoAno,
-        tf: taxaPorMilhaoDeHoras(acidentesDoAno, horasDoAno),
-        tg: taxaPorMilhaoDeHoras(diasDoAno, horasDoAno),
+        tf: taxaPorMilhaoDeHoras(acidentesComHoras, horasDoAno),
+        tg: taxaPorMilhaoDeHoras(diasComHoras, horasDoAno),
       },
       diasSemAcidente: ultimo ? diasEntre(ultimo, hojeEmBrasilia()) : null,
       ultimoAcidenteComAfastamento: ultimo,

@@ -246,6 +246,9 @@ describe('indicadores (NBR 14280)', () => {
       tg: null,
     });
     expect(ind.total.tf).toBeNull();
+    // Sem horas não há taxa, mas os acidentes e dias contam no total do ano (SST-04).
+    expect(ind.total.acidentesComAfastamento).toBe(2);
+    expect(ind.total.diasPerdidosEDebitados).toBe(15);
 
     await servico.registrarHoras(ctx, { competencia: mes, horas: 400_000 });
     ind = await servico.indicadores(ctx, { ano });

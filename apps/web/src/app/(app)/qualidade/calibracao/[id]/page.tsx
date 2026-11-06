@@ -178,7 +178,7 @@ export default async function DetalheDoInstrumento({
                   <th className="px-4 py-2 font-semibold">Erro encontrado</th>
                   <th className="px-4 py-2 font-semibold">Custo</th>
                   {gestor && (
-                    <th className="px-4 py-2">
+                    <th className="sticky right-0 bg-superficie-2 px-4 py-2">
                       <span className="sr-only">Ações</span>
                     </th>
                   )}
@@ -213,7 +213,7 @@ export default async function DetalheDoInstrumento({
                       {formatarReais(c.custo)}
                     </td>
                     {gestor && (
-                      <td className="px-4 py-2.5 text-right">
+                      <td className="sticky right-0 bg-superficie px-4 py-2.5 text-right">
                         {!c.anulada && (
                           <AnularCalibracao
                             instrumento={i}

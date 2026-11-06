@@ -214,4 +214,11 @@ describe('Próximo passo', () => {
       proximoPasso({ ...registrada, ncsPendentes: 0 }, nc, null).destino,
     ).toBe('relatorio');
   });
+
+  it('iniciada sem roteiro nem achados aponta o roteiro, não o relatório', () => {
+    const andamento = { ...base, status: 'em_andamento' } as Auditoria;
+    const passo = proximoPasso(andamento, vazio, null);
+    expect(passo.destino).toBe('roteiro');
+    expect(passo.titulo).not.toBe('Feche o relatório');
+  });
 });

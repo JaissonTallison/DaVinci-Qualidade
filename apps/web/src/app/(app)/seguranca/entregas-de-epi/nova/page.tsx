@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type {
+  EntregaEpi,
   Epi,
   Funcionario,
   FuncionarioResumo,
@@ -33,13 +34,23 @@ export default async function NovaEntrega({
     porPagina: String(LIMITE),
   });
   if (busca) consulta.set("busca", busca);
-  const [lista, epis, escolhido] = await Promise.all([
+  const [lista, epis, escolhido, entregasDele] = await Promise.all([
     chamarApi<Pagina<FuncionarioResumo>>(`/funcionarios?${consulta}`),
     chamarApi<Epi[]>("/epis"),
     funcionarioId
       ? chamarApi<Funcionario>(`/funcionarios/${funcionarioId}`)
       : null,
+    funcionarioId
+      ? chamarApi<Pagina<EntregaEpi>>(
+          `/epis/entregas?funcionarioId=${funcionarioId}&porPagina=100`,
+        )
+      : null,
   ]);
+  // EPIs que a pessoa já recebeu: usado só para avisar sobre "Primeira entrega" repetida (SST-06).
+  const episRecebidos =
+    entregasDele?.ok === true
+      ? [...new Set(entregasDele.dados.itens.map((e) => e.epiId))]
+      : [];
   const voltar = funcionarioId
     ? `/cadastros/funcionarios/${funcionarioId}`
     : "/seguranca/entregas-de-epi";
@@ -107,6 +118,7 @@ export default async function NovaEntrega({
             funcionarios={funcionarios}
             epis={epis.ok ? epis.dados : []}
             funcionarioId={funcionarioId}
+            episRecebidos={episRecebidos}
             voltar={voltar}
           />
         </>

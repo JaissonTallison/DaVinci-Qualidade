@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import {
   MOTIVOS_ENTREGA,
   type Epi,
@@ -25,11 +25,14 @@ export function FormularioDeEntrega({
   funcionarios,
   epis,
   funcionarioId,
+  episRecebidos = [],
   voltar,
 }: {
   funcionarios: FuncionarioResumo[];
   epis: Epi[];
   funcionarioId?: string;
+  /** EPIs que o profissional escolhido já recebeu: usado só para avisar, não bloqueia (SST-06). */
+  episRecebidos?: string[];
   voltar: string;
 }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
@@ -41,6 +44,16 @@ export function FormularioDeEntrega({
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
   const hoje = hojeEmBrasilia();
+  // O CA precisa valer na data da entrega (NR-6), não hoje: entrega retroativa libera
+  // um EPI cujo CA ainda era válido naquela data (SST-05).
+  const [data, setData] = useState(v.data ?? hoje);
+  // Aviso (não bloqueia): "Primeira entrega" para quem já recebeu aquele EPI costuma ser troca/reposição (SST-06).
+  const [epiId, setEpiId] = useState(v.epiId ?? "");
+  const [motivo, setMotivo] = useState(v.motivo ?? "");
+  const jaRecebeu =
+    motivo === "primeira_entrega" &&
+    epiId !== "" &&
+    episRecebidos.includes(epiId);
   return (
     <form action={acao} noValidate className={`${painel} mt-6`}>
       <input type="hidden" name="voltar" value={voltar} />
@@ -81,18 +94,22 @@ export function FormularioDeEntrega({
             id="epiId"
             name="epiId"
             defaultValue={v.epiId ?? ""}
+            onChange={(e) => setEpiId(e.target.value)}
             className={campo}
             aria-invalid={Boolean(erros.epiId)}
           >
             <option value="">Escolha</option>
-            {epis.map((e) => (
-              <option key={e.id} value={e.id} disabled={e.caVencido}>
-                {e.nome} · CA {e.ca}
-                {e.caVencido
-                  ? ` · CA vencido em ${formatarData(e.validadeCa)}`
-                  : ""}
-              </option>
-            ))}
+            {epis.map((e) => {
+              const vencidoNaData = e.validadeCa < data;
+              return (
+                <option key={e.id} value={e.id} disabled={vencidoNaData}>
+                  {e.nome} · CA {e.ca}
+                  {vencidoNaData
+                    ? ` · CA vencido em ${formatarData(e.validadeCa)}`
+                    : ""}
+                </option>
+              );
+            })}
           </Selecao>
         </Campo>
         <Campo id="quantidade" rotulo="Quantidade" erro={erros.quantidade}>
@@ -111,7 +128,8 @@ export function FormularioDeEntrega({
             name="data"
             type="date"
             max={hoje}
-            defaultValue={v.data ?? hoje}
+            value={data}
+            onChange={(ev) => setData(ev.target.value)}
             className={campo}
             aria-invalid={Boolean(erros.data)}
           />
@@ -126,6 +144,7 @@ export function FormularioDeEntrega({
             id="motivo"
             name="motivo"
             defaultValue={v.motivo ?? ""}
+            onChange={(e) => setMotivo(e.target.value)}
             className={campo}
             aria-invalid={Boolean(erros.motivo)}
           >
@@ -137,6 +156,15 @@ export function FormularioDeEntrega({
             ))}
           </Selecao>
         </Campo>
+        {jaRecebeu && (
+          <p
+            role="status"
+            className="text-sm text-atencao sm:col-span-3"
+          >
+            Este profissional já recebeu este EPI antes. Se for reposição ou
+            troca, troque o motivo — a entrega não fica bloqueada.
+          </p>
+        )}
         <label className="flex items-center gap-2 text-base sm:col-span-3">
           <input
             type="checkbox"

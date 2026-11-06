@@ -61,11 +61,26 @@ const camposDoAcidente = {
   testemunhas: textoOpcional(500),
 };
 
-/** Afastamento coerente com o tipo; acidente com lesão identifica a pessoa. */
+/** Hoje em São Paulo (YYYY-MM-DD): base da regra "a data não pode ser futura", junto com os demais erros. */
+const hojeSaoPaulo = () =>
+  new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' });
+
+/** Afastamento coerente com o tipo; acidente com lesão identifica a pessoa; a data não pode ser futura. */
 function coerencia(
-  d: { tipo: TipoAcidente; diasPerdidos: number; acidentado: string | null },
+  d: {
+    tipo: TipoAcidente;
+    diasPerdidos: number;
+    acidentado: string | null;
+    data: string;
+  },
   ctx: z.RefinementCtx,
 ) {
+  if (d.data > hojeSaoPaulo())
+    ctx.addIssue({
+      code: 'custom',
+      path: ['data'],
+      message: 'A data do acidente não pode estar no futuro.',
+    });
   if (d.tipo === 'com_afastamento' && d.diasPerdidos < 1)
     ctx.addIssue({
       code: 'custom',

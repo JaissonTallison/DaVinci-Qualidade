@@ -264,6 +264,14 @@ export function proximoPasso(
       'resumo',
     );
   }
+  // Iniciada sem roteiro e sem achados: o passo real é montar o roteiro (ou registrar
+  // uma constatação avulsa), não fechar o relatório.
+  if (r.perguntas.length === 0 && a.constatacoes.length === 0)
+    return passo(
+      'Monte o roteiro ou registre achados',
+      'A auditoria começou sem roteiro. Escolha as perguntas do roteiro ou registre as constatações encontradas.',
+      'roteiro',
+    );
   if (r.contagem.pendente > 0)
     return passo(
       'Responda as perguntas',
