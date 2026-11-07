@@ -725,6 +725,9 @@ function montar(l: Linha, lista: LinhaConstatacao[]): Auditoria {
     contagem: contagemPorTipo(lista),
     ncsPendentes: ncsPendentes(lista),
     concluidaEm: l.concluidaEm?.toISOString() ?? null,
+    programacaoId: l.programacaoId ?? null,
+    registroPorSetor: (l.registroPorSetor ??
+      []) as Auditoria['registroPorSetor'],
     versao: l.atualizadoEm.toISOString(),
   };
 }

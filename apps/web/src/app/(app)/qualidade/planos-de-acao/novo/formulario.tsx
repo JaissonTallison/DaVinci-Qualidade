@@ -57,6 +57,7 @@ export function FormularioNovoPlano({
   const erros = errosPorCampo(estado.erro?.detalhes);
   const v = estado.valores ?? inicial?.valores ?? {};
   const [origem, setOrigem] = useState(v.origem ?? "");
+  const semOrigem = !origem;
   const vinc = ORIGEM_PLANO_VINCULAVEL[origem as OrigemPlano];
   const registros = registrosPorOrigem[origem as OrigemPlano] ?? [];
   const [linhas, setLinhas] = useState(
@@ -122,13 +123,24 @@ export function FormularioNovoPlano({
               id="origemRef"
               rotulo={`${vinc ? vinc.rotuloCampo : "Registro de origem"} (opcional)`}
               erro={erros.origemRef}
+              ajuda={
+                semOrigem
+                  ? "Escolha a origem primeiro."
+                  : vinc
+                    ? registros.length > 0
+                      ? "Selecione ou digite o número."
+                      : "Digite o número do registro."
+                    : "Número ou código do registro."
+              }
             >
               <input
                 id="origemRef"
                 name="origemRef"
                 defaultValue={v.origemRef}
                 maxLength={60}
-                className={`${campo} font-mono`}
+                disabled={semOrigem}
+                placeholder={semOrigem ? "Escolha a origem primeiro" : undefined}
+                className={`${campo} font-mono disabled:cursor-not-allowed disabled:opacity-60`}
                 list={
                   vinc && registros.length > 0 ? "registros-origem" : undefined
                 }

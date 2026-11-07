@@ -1,0 +1,1 @@
+ALTER TABLE "auditorias" ADD COLUMN "registro_por_setor" jsonb DEFAULT '[]'::jsonb NOT NULL;

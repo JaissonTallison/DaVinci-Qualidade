@@ -31,13 +31,13 @@ import { ReferenciasController } from './parceiros/referencias.controller.js';
 import { CalibracaoController } from './qualidade/calibracao.controller.js';
 import {
   AuditoriasController,
-  AuditoriasSimplesController,
   PerguntasDeAuditoriaController,
   EvidenciasDeAuditoriaController,
   ModelosDeNcController,
   PromptsDeIaController,
   LogDoAuditorController,
   CriteriosDeAuditoriaController,
+  ProgramacaoDeAuditoriasController,
 } from './auditorias/auditorias.controller.js';
 import { AcidentesController } from './seguranca/acidentes.controller.js';
 import { EpisController } from './seguranca/epis.controller.js';
@@ -150,13 +150,13 @@ export const observeEnabled = Boolean(
     ModelosDeInspecaoController,
     CalibracaoController,
     AuditoriasController,
-    AuditoriasSimplesController,
     PerguntasDeAuditoriaController,
     EvidenciasDeAuditoriaController,
     ModelosDeNcController,
     PromptsDeIaController,
     LogDoAuditorController,
     CriteriosDeAuditoriaController,
+    ProgramacaoDeAuditoriasController,
     AcidentesController,
     EpisController,
     RegistrosDeSegurancaController,

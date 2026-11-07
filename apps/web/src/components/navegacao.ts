@@ -78,33 +78,18 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "auditorias.ver",
       },
       {
-        rotulo: "Biblioteca de evidências",
-        href: "/auditorias/biblioteca",
+        rotulo: "Programação de auditorias",
+        href: "/auditorias/programacao",
         permissao: "auditorias.ver",
       },
       {
-        rotulo: "Banco de NCs",
-        href: "/auditorias/banco-de-ncs",
-        permissao: "auditorias.ver",
-      },
-      {
-        rotulo: "Prompts de IA",
-        href: "/auditorias/prompts",
-        permissao: "auditorias.ver",
-      },
-      {
-        rotulo: "Minha biblioteca",
-        href: "/auditorias/minha-biblioteca",
+        rotulo: "Biblioteca do Auditor",
+        href: "/auditorias/biblioteca-do-auditor",
         permissao: "auditorias.ver",
       },
       {
         rotulo: "Log do Auditor",
         href: "/auditorias/log",
-        permissao: "auditorias.ver",
-      },
-      {
-        rotulo: "Manual de uso",
-        href: "/auditorias/manual",
         permissao: "auditorias.ver",
       },
     ],

@@ -22,12 +22,13 @@ import {
   type AuditoriaResumo,
   type DadosDoUsuario,
   type Pagina,
+  type ResumoAuditorias,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaAuditoria } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
-import { formatarData } from "@/lib/datas";
+import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
@@ -51,14 +52,26 @@ export default async function ListaDeAuditorias({
   >;
   const consulta = new URLSearchParams();
   for (const f of FILTROS) if (params[f]) consulta.set(f, params[f]!);
-  const [lista, eu] = await Promise.all([
+  const [lista, eu, resumo] = await Promise.all([
     chamarApi<Pagina<AuditoriaResumo>>(`${BASE}?${consulta}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
+    chamarApi<ResumoAuditorias>(`${BASE}/resumo`),
   ]);
   const podeCriar = eu.ok && eu.dados.permissoes.includes("auditorias.editar");
   const filtrando = FILTROS.some((f) => !NAO_FILTRAM.has(f) && params[f]);
   const ordenar = params.ordenar;
   const ordem = params.ordem as Ordem | undefined;
+  const plural = (n: number, um: string, varios: string) =>
+    `${n} ${n === 1 ? um : varios}`;
+  // Atrasada: planejada ou em andamento com a data de fim já no passado. Derivado dos campos do resumo
+  // (sem alterar a API). As contagens de atenção abaixo refletem as auditorias carregadas nesta página.
+  const hoje = hojeEmBrasilia();
+  const itens = lista.ok ? lista.dados.itens : [];
+  const estaAtrasada = (a: AuditoriaResumo) =>
+    (a.status === "planejada" || a.status === "em_andamento") &&
+    a.dataFim < hoje;
+  const atrasadasNaPagina = itens.filter(estaAtrasada).length;
+  const aFormalizarNaPagina = itens.reduce((s, a) => s + a.ncsPendentes, 0);
 
   const semFiltro = (nome: string) => {
     const q = new URLSearchParams(consulta);
@@ -92,21 +105,43 @@ export default async function ListaDeAuditorias({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className={tituloDaPagina}>Auditorias</h1>
-          <p className={subtituloDaPagina}>
-            Programação e resultado das auditorias internas e externas do
-            sistema de gestão.
-          </p>
+          {resumo.ok ? (
+            <>
+              <p className={subtituloDaPagina}>
+                {plural(resumo.dados.planejadas, "planejada", "planejadas")}
+                {" · "}
+                {resumo.dados.emAndamento} em andamento
+              </p>
+              {(atrasadasNaPagina > 0 || aFormalizarNaPagina > 0) && (
+                <p className="mt-0.5 text-sm font-semibold">
+                  {atrasadasNaPagina > 0 && (
+                    <span className="text-nao-conforme">
+                      {plural(atrasadasNaPagina, "atrasada", "atrasadas")}
+                    </span>
+                  )}
+                  {atrasadasNaPagina > 0 && aFormalizarNaPagina > 0 && (
+                    <span className="text-texto-3"> · </span>
+                  )}
+                  {aFormalizarNaPagina > 0 && (
+                    <span className="text-atencao">
+                      {aFormalizarNaPagina} NC a formalizar
+                    </span>
+                  )}
+                </p>
+              )}
+            </>
+          ) : (
+            <p className={subtituloDaPagina}>
+              Programação e resultado das auditorias internas e externas do
+              sistema de gestão.
+            </p>
+          )}
         </div>
         {podeCriar && (
-          <div className="flex flex-wrap gap-2">
-            <Link href={`${BASE}/simples`} className={botaoSecundario}>
-              Auditoria interna simples
-            </Link>
-            <Link href={`${BASE}/nova`} className={botaoPrimario}>
-              <IconeDaTela href={`${BASE}/nova`} />
-              Planejar auditoria
-            </Link>
-          </div>
+          <Link href={`${BASE}/nova`} className={botaoPrimario}>
+            <IconeDaTela href={`${BASE}/nova`} />
+            Planejar auditoria
+          </Link>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -268,6 +303,11 @@ export default async function ListaDeAuditorias({
                         {a.dataInicio === a.dataFim
                           ? formatarData(a.dataInicio)
                           : `${formatarData(a.dataInicio)} a ${formatarData(a.dataFim)}`}
+                        {estaAtrasada(a) && (
+                          <span className="block text-xs text-nao-conforme">
+                            Atrasada
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-sm">
                         {a.constatacoesDeNc}

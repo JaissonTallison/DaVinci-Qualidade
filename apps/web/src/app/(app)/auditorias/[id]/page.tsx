@@ -302,6 +302,48 @@ export default async function DetalheDaAuditoria({
       {aberta && permissoes.includes("auditorias.excluir") && (
         <CancelarAuditoria auditoria={a} />
       )}
+      {a.registroPorSetor.length > 0 && (
+        <section className={`${painel} mt-6 p-5`}>
+          <h2 className={tituloDaSecao}>Registro por setor</h2>
+          <ul className="mt-3 divide-y divide-borda">
+            {a.registroPorSetor.map((l, i) => (
+              <li key={i} className="py-3">
+                <p className="font-semibold text-texto">{l.setor}</p>
+                <dl className="mt-1 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                  {l.comentarios && (
+                    <div>
+                      <dt className="text-texto-3">Comentários</dt>
+                      <dd className="whitespace-pre-line">{l.comentarios}</dd>
+                    </div>
+                  )}
+                  {l.pontosPositivos && (
+                    <div>
+                      <dt className="text-texto-3">Pontos positivos</dt>
+                      <dd className="whitespace-pre-line">
+                        {l.pontosPositivos}
+                      </dd>
+                    </div>
+                  )}
+                  {l.observacoes && (
+                    <div>
+                      <dt className="text-texto-3">Observações</dt>
+                      <dd className="whitespace-pre-line">{l.observacoes}</dd>
+                    </div>
+                  )}
+                  {l.naoConformidade && (
+                    <div>
+                      <dt className="text-texto-3">Não conformidade</dt>
+                      <dd className="whitespace-pre-line text-nao-conforme">
+                        {l.naoConformidade}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <Anexos
         registro="auditoria"
         registroId={a.id}

@@ -32,6 +32,8 @@ export type EstadoDaAcao = {
   erro?: ErroPadrao;
   valores?: Record<string, string>;
   normas?: string[];
+  /** Linhas do registro por setor, para repor a tabela quando a validação recusa. */
+  linhas?: Record<string, string>[];
 };
 
 const BASE = "/auditorias";
@@ -40,9 +42,35 @@ const CONFIRA = "Verifique os campos destacados.";
 function textos(form: FormData): Record<string, string> {
   const valores: Record<string, string> = {};
   for (const [chave, valor] of form.entries())
-    if (typeof valor === "string" && chave !== "versao" && chave !== "normas")
+    if (
+      typeof valor === "string" &&
+      chave !== "versao" &&
+      chave !== "normas" &&
+      !chave.startsWith("linha_")
+    )
       valores[chave] = valor;
   return valores;
+}
+
+/** Linhas do registro por setor (`linha_<campo>` repetidos), sem as linhas totalmente vazias. */
+function linhasPorSetor(form: FormData): Record<string, string>[] {
+  const campos = [
+    "setor",
+    "comentarios",
+    "pontosPositivos",
+    "observacoes",
+    "naoConformidade",
+  ] as const;
+  const colunas = campos.map((c) => form.getAll(`linha_${c}`).map(String));
+  const total = Math.max(0, ...colunas.map((c) => c.length));
+  const linhas: Record<string, string>[] = [];
+  for (let i = 0; i < total; i++) {
+    const linha = Object.fromEntries(
+      campos.map((c, j) => [c, colunas[j]![i] ?? ""]),
+    );
+    if (campos.some((c) => linha[c]!.trim())) linhas.push(linha);
+  }
+  return linhas;
 }
 const versaoDe = (form: FormData) => String(form.get("versao") ?? "");
 /** Tela da jornada para onde voltar depois da ação (só dentro da própria auditoria). */
@@ -79,23 +107,23 @@ export async function salvarAuditoria(
 ): Promise<EstadoDaAcao> {
   const valores = textos(form);
   const normas = form.getAll("normas").map(String);
+  const linhas = linhasPorSetor(form);
   const dados = {
     ...valores,
     normas,
+    registroPorSetor: linhas,
     ...(id ? { versao: versaoDe(form) } : {}),
   };
+  const extra = { valores, normas, linhas };
   const r = id
     ? await chamar(
         atualizarAuditoriaSchema,
         dados,
         `/auditorias/${id}`,
         "PUT",
-        { valores, normas },
+        extra,
       )
-    : await chamar(novaAuditoriaSchema, dados, "/auditorias", "POST", {
-        valores,
-        normas,
-      });
+    : await chamar(novaAuditoriaSchema, dados, "/auditorias", "POST", extra);
   if ("erro" in r) return r;
   redirect(`${BASE}/${r.auditoria.id}?aviso=${id ? "salva" : "planejada"}`);
 }

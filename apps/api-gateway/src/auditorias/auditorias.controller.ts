@@ -11,14 +11,14 @@ import {
 } from '@nestjs/common';
 import {
   alterarConstatacaoSchema,
-  atualizarAuditoriaSimplesSchema,
-  novaAuditoriaSimplesSchema,
-  type AuditoriaSimples,
-  type AuditoriaSimplesResumo,
   atualizarAuditoriaSchema,
   cancelarAuditoriaSchema,
   concluirAuditoriaSchema,
   filtroAuditoriasSchema,
+  filtroProgramacaoSchema,
+  novoItemProgramacaoSchema,
+  atualizarItemProgramacaoSchema,
+  type ItemDaProgramacao,
   formalizarNcSchema,
   iniciarAuditoriaSchema,
   novaAuditoriaSchema,
@@ -540,20 +540,23 @@ export class CriteriosDeAuditoriaController {
   }
 }
 
-const PS = PATTERNS.auditoriasSimples;
 
-/** Auditoria interna simples (documento por setor). docs/05-modulos/auditorias.md */
-@Controller('auditorias-simples')
-export class AuditoriasSimplesController {
+/** Programação anual de auditorias (planejamento por setor + vínculo manual). */
+@Controller('programacao-de-auditorias')
+export class ProgramacaoDeAuditoriasController {
   constructor(private readonly mensageria: MensageriaService) {}
 
   @Get()
   @Permissao('auditorias.ver')
-  listar(@ContextoHttp() ctx: Contexto) {
-    return this.mensageria.enviar<AuditoriaSimplesResumo[]>(
+  listar(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroProgramacaoSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<ItemDaProgramacao[]>(
       SERVICES.AUDITORIAS,
-      PS.listar,
-      {},
+      P.listarProgramacao,
+      filtro,
       ctx,
     );
   }
@@ -561,9 +564,9 @@ export class AuditoriasSimplesController {
   @Get(':id')
   @Permissao('auditorias.ver')
   obter(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
-    return this.mensageria.enviar<AuditoriaSimples>(
+    return this.mensageria.enviar<ItemDaProgramacao>(
       SERVICES.AUDITORIAS,
-      PS.obter,
+      P.obterItemProgramacao,
       { id },
       ctx,
     );
@@ -572,10 +575,10 @@ export class AuditoriasSimplesController {
   @Post()
   @Permissao('auditorias.editar')
   criar(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
-    validarEntrada(novaAuditoriaSimplesSchema, dados, ctx.rastreioId);
-    return this.mensageria.enviar<AuditoriaSimples>(
+    validarEntrada(novoItemProgramacaoSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<ItemDaProgramacao>(
       SERVICES.AUDITORIAS,
-      PS.criar,
+      P.criarItemProgramacao,
       dados,
       ctx,
     );
@@ -588,18 +591,23 @@ export class AuditoriasSimplesController {
     @Param('id') id: string,
     @Body() alteracoes: unknown,
   ) {
-    validarEntrada(atualizarAuditoriaSimplesSchema, alteracoes, ctx.rastreioId);
-    return this.mensageria.enviar<AuditoriaSimples>(
+    validarEntrada(atualizarItemProgramacaoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar<ItemDaProgramacao>(
       SERVICES.AUDITORIAS,
-      PS.atualizar,
+      P.atualizarItemProgramacao,
       { id, alteracoes },
       ctx,
     );
   }
 
   @Delete(':id')
-  @Permissao('auditorias.editar')
+  @Permissao('auditorias.excluir')
   excluir(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
-    return this.mensageria.enviar(SERVICES.AUDITORIAS, PS.excluir, { id }, ctx);
+    return this.mensageria.enviar(
+      SERVICES.AUDITORIAS,
+      P.excluirItemProgramacao,
+      { id },
+      ctx,
+    );
   }
 }

@@ -31,11 +31,9 @@ import { Suspenso } from "./suspenso";
 
 /**
  * Sub-telas que não têm item no menu lateral, mas aparecem na trilha do topo (nomeadas e com volta),
- * ex.: a Auditoria interna simples, acessada por um botão dentro de Auditorias.
+ * acessadas por um botão ou link dentro de outra tela.
  */
-const SUBTELAS: { href: string; rotulo: string }[] = [
-  { href: "/auditorias/simples", rotulo: "Auditoria interna simples" },
-];
+const SUBTELAS: { href: string; rotulo: string }[] = [];
 
 /** Botão na barra: fundo só no passar do mouse. */
 const naBarra =
@@ -149,7 +147,7 @@ function Trilha({
     ({ i }) => atual === i.href || atual.startsWith(`${i.href}/`),
   );
   if (!achada) return null;
-  // Sub-tela dentro do item (ex.: /auditorias/simples sob /auditorias), mesmo sem item no menu.
+  // Sub-tela dentro de um item do menu, nomeada na trilha do topo mesmo sem ter item próprio.
   const sub = SUBTELAS.find(
     (s) =>
       (atual === s.href || atual.startsWith(`${s.href}/`)) &&
