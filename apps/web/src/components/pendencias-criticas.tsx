@@ -24,7 +24,7 @@ export function PendenciasCriticas({
   prazos: Prazo[];
   hoje: string;
 }) {
-  const itens = prazos
+  const vencidos = prazos
     .filter((p) => p.situacao === "vencido")
     .map((p) => {
       const partes = p.descricao.split(" · ");
@@ -37,7 +37,9 @@ export function PendenciasCriticas({
         href: p.href,
       };
     });
-  if (itens.length === 0) return null;
+  if (vencidos.length === 0) return null;
+  // Mostra no máximo 5 por tela (uma faixa); o restante fica em "Ver todos".
+  const itens = vencidos.slice(0, 5);
 
   return (
     <div
@@ -75,7 +77,7 @@ export function PendenciasCriticas({
           <div className="flex items-center gap-3">
             <span aria-hidden className="h-9 w-px bg-borda" />
             <span className="text-3xl font-bold text-nao-conforme tabular-nums">
-              {String(itens.length).padStart(2, "0")}
+              {String(vencidos.length).padStart(2, "0")}
             </span>
             <span className="text-sm leading-tight text-texto-2">
               itens

@@ -42,7 +42,9 @@ export default async function Obrigacoes({
     <>
       <h1 className={tituloDaPagina}>Obrigações legais</h1>
       <p className="mt-1 max-w-3xl text-base text-texto-2">
-        RAPP, TCFA, certificado do CTF, inventário de resíduos,
+        RAPP (relatório anual de atividades potencialmente poluidoras), TCFA
+        (taxa de controle e fiscalização ambiental), certificado do CTF
+        (cadastro técnico federal), inventário de resíduos,
         automonitoramento, outorga: cada obrigação com o órgão, a periodicidade
         e o responsável. Registrar a entrega guarda o comprovante e agenda o
         próximo vencimento, que entra no painel.
