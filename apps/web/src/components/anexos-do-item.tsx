@@ -1,4 +1,4 @@
-import { Paperclip } from "lucide-react";
+import { Paperclip } from "@/components/icones";
 import type { Anexo, RegistroComAnexo } from "@davinci/types";
 import { EnviarAnexo, RemoverAnexo } from "@/components/enviar-anexo";
 import { chamarApi } from "@/lib/api";

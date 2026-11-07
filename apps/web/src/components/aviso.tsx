@@ -1,4 +1,4 @@
-import { CircleCheck } from "lucide-react";
+import { CircleCheck } from "@/components/icones";
 
 /** Confirmação depois de uma ação (vem na URL como ?aviso=). Chave desconhecida não mostra nada. */
 export function Aviso({

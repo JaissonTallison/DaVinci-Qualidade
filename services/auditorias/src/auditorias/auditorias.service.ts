@@ -45,6 +45,7 @@ import {
   type NovaNc,
   type Norma,
   type Pagina,
+  type PanoramaAuditorias,
   type ResumoAuditorias,
   type StatusAuditoria,
   type TipoAuditoria,
@@ -186,6 +187,85 @@ export class AuditoriasService {
       planejadas: status!.planejadas,
       emAndamento: status!.emAndamento,
       ncsUltimos12Meses: ncs!.total,
+    };
+  }
+
+  /** Painel analítico do Início: conformidade por tipo, carga por auditor, situação e recentes. */
+  async panorama(ctx: Contexto): Promise<PanoramaAuditorias> {
+    const emp = eq(auditorias.empresaId, ctx.empresaId);
+    const [confRows, auditorRows, statusRows, recentesRows] = await Promise.all([
+      this.db
+        .select({
+          tipo: auditorias.tipo,
+          constatacao: constatacoes.tipo,
+          total: count(),
+        })
+        .from(constatacoes)
+        .innerJoin(auditorias, eq(auditorias.id, constatacoes.auditoriaId))
+        .where(emp)
+        .groupBy(auditorias.tipo, constatacoes.tipo),
+      this.db
+        .select({ auditor: auditorias.auditorLider, total: count() })
+        .from(auditorias)
+        .where(emp)
+        .groupBy(auditorias.auditorLider)
+        .orderBy(desc(count()))
+        .limit(6),
+      this.db
+        .select({ status: auditorias.status, total: count() })
+        .from(auditorias)
+        .where(emp)
+        .groupBy(auditorias.status),
+      this.db
+        .select({
+          id: auditorias.id,
+          numero: auditorias.numero,
+          tipo: auditorias.tipo,
+          escopo: auditorias.escopo,
+          dataInicio: auditorias.dataInicio,
+          status: auditorias.status,
+        })
+        .from(auditorias)
+        .where(emp)
+        .orderBy(desc(auditorias.dataInicio))
+        .limit(6),
+    ]);
+
+    const porTipo = new Map<
+      string,
+      PanoramaAuditorias['conformidadePorTipo'][number]
+    >();
+    for (const r of confRows) {
+      const atual = porTipo.get(r.tipo) ?? {
+        tipo: r.tipo as TipoAuditoria,
+        conformidade: 0,
+        nc_maior: 0,
+        nc_menor: 0,
+        observacao: 0,
+        oportunidade: 0,
+      };
+      atual[r.constatacao as TipoConstatacao] = r.total;
+      porTipo.set(r.tipo, atual);
+    }
+
+    return {
+      conformidadePorTipo: [...porTipo.values()],
+      porAuditor: auditorRows.map((r) => ({
+        auditor: r.auditor,
+        total: r.total,
+      })),
+      porSituacao: statusRows.map((r) => ({
+        status: r.status as StatusAuditoria,
+        total: r.total,
+      })),
+      recentes: recentesRows.map((r) => ({
+        id: r.id,
+        numero: r.numero,
+        tipo: r.tipo as TipoAuditoria,
+        escopo: r.escopo,
+        dataInicio: r.dataInicio,
+        status: r.status as StatusAuditoria,
+      })),
     };
   }
 

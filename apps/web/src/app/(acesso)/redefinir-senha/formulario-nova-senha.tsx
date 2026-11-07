@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { Lock } from "lucide-react";
+import { Lock } from "@/components/icones";
 import { SENHA_MINIMO } from "@davinci/types";
 import { redefinirSenha, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import { errosPorCampo } from "@/lib/formularios";

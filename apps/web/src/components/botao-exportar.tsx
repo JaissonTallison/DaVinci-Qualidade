@@ -1,4 +1,4 @@
-import { Download } from "lucide-react";
+import { Download } from "@/components/icones";
 import Link from "next/link";
 import { botaoSecundario } from "@/lib/estilos";
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useState, useSyncExternalStore } from "react";
-import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from "@/components/icones";
 import type { ProvedorExterno } from "@davinci/types";
 import { entrar, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import { erroDoCampo } from "@/lib/estilos";

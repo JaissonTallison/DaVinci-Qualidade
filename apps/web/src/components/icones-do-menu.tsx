@@ -66,10 +66,10 @@ import {
   Users,
   Wrench,
   type LucideIcon,
-} from "lucide-react";
+} from "@/components/icones";
 
 /*
- * Ícones do sistema: Lucide (um conjunto só, mesmo traço). Grupos: 18 px em ouro claro (o menu é marinho).
+ * Ícones do sistema: Lucide (um conjunto só, mesmo traço). Grupos: 18 px em branco (mais claro que os rótulos).
  * Telas: 16 px na cor do texto
  * (interface.md §4: ícone pequeno, alinhado ao rótulo, nunca dentro de círculo colorido).
  */
@@ -163,7 +163,7 @@ export function IconeDoGrupo({ titulo }: { titulo: string }) {
       aria-hidden
       size={18}
       strokeWidth={1.75}
-      className="shrink-0 text-ouro-claro"
+      className="shrink-0 text-white"
     />
   );
 }

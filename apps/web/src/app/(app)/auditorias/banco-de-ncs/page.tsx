@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ListFilter } from "lucide-react";
+import { ListFilter } from "@/components/icones";
 import { NORMAS, TIPOS_DE_DESVIO, type ModeloDeNc } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { BotaoCopiar } from "@/components/botao-copiar";

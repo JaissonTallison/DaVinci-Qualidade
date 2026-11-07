@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { DadosDoUsuario, Permissao } from "@davinci/types";

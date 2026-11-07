@@ -14,6 +14,7 @@ import {
   concluirInspecaoSchema,
   filtroInspecoesSchema,
   filtroModelosSchema,
+  inspecoesPorMesSchema,
   novaInspecaoSchema,
   novoModeloSchema,
   PATTERNS,
@@ -23,6 +24,7 @@ import {
   type Contexto,
   type Inspecao,
   type InspecaoResumo,
+  type InspecoesDoMes,
   type ModeloDeInspecao,
   type Pagina,
   type RecebimentoDoFornecedor,
@@ -64,6 +66,21 @@ export class InspecoesController {
       SERVICES.QUALIDADE,
       I.resumo,
       {},
+      ctx,
+    );
+  }
+
+  @Get('por-mes')
+  @Permissao('qualidade.ver')
+  porMes(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(inspecoesPorMesSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar<InspecoesDoMes[]>(
+      SERVICES.QUALIDADE,
+      I.porMes,
+      filtro,
       ctx,
     );
   }

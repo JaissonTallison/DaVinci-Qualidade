@@ -1,5 +1,5 @@
 import type { InputHTMLAttributes } from "react";
-import type { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "@/components/icones";
 import { ajudaDoCampo, erroDoCampo } from "@/lib/estilos";
 
 /** Campo das telas de acesso: o mesmo do cartão de entrar (ícone à esquerda, rótulo só para leitor de tela). */

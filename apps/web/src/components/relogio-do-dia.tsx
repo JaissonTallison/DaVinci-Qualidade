@@ -34,13 +34,13 @@ export function RelogioDoDia({ inicialISO }: { inicialISO: string }) {
     <div className="text-right">
       <p
         suppressHydrationWarning
-        className="text-3xl font-semibold text-primaria-texto tabular-nums"
+        className="text-3xl font-semibold text-primaria-texto tabular-nums [text-shadow:0_1px_6px_rgb(2_8_40/0.55)]"
       >
         {horaFmt.format(agora)}
       </p>
       <p
         suppressHydrationWarning
-        className="mt-0.5 text-sm text-primaria-texto/75 first-letter:uppercase"
+        className="mt-0.5 text-sm text-primaria-texto/90 first-letter:uppercase [text-shadow:0_1px_5px_rgb(2_8_40/0.5)]"
       >
         {dataFmt.format(agora)}
       </p>

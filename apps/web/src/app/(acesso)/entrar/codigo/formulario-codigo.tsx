@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
-import { ArrowLeft, KeyRound } from "lucide-react";
+import { ArrowLeft, KeyRound } from "@/components/icones";
 import { verificarCodigo, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import { errosPorCampo } from "@/lib/formularios";
 import { CampoDeAcesso } from "../../campo-de-acesso";

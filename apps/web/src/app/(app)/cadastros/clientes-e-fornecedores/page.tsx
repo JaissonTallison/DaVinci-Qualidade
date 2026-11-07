@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IconeDaTela } from "@/components/icones-do-menu";
-import { ListFilter } from "lucide-react";
+import { ListFilter } from "@/components/icones";
 import {
   formatarDocumento,
   type DadosDoUsuario,

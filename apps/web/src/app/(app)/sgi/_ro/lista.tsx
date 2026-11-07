@@ -1,4 +1,4 @@
-import { ListFilter } from "lucide-react";
+import { ListFilter } from "@/components/icones";
 import Link from "next/link";
 import {
   CLASSES_RO,

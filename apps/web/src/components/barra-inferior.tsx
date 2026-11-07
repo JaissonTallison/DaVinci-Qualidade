@@ -1,7 +1,7 @@
 "use client";
 
-import { CalendarClock, TriangleAlert, House, Menu, Plus } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { CalendarClock, TriangleAlert, House, Menu, Plus } from "@/components/icones";
+import type { LucideIcon } from "@/components/icones";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ListFilter } from "lucide-react";
+import { ListFilter } from "@/components/icones";
 import {
   NORMAS,
   PROCESSOS_AUDITADOS,

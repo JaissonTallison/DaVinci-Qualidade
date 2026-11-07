@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, CircleAlert } from "lucide-react";
+import { ChevronLeft, ChevronRight, CircleAlert } from "@/components/icones";
 import {
   FONTES_DE_CONSUMO,
   type DadosDoUsuario,

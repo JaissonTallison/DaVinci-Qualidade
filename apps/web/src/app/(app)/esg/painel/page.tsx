@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert } from "@/components/icones";
 import type {
   ConsumoDoMes,
   Permissao,

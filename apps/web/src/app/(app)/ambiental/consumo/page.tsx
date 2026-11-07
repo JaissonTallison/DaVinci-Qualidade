@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "@/components/icones";
 import {
   FONTES_DE_CONSUMO,
   UNIDADE_DA_FONTE,

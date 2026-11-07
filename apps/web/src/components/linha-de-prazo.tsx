@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@/components/icones";
 import Link from "next/link";
 import { IconeDaTela } from "./icones-do-menu";
 

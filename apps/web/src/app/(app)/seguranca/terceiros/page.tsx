@@ -1,4 +1,4 @@
-import { Building2, ListFilter } from "lucide-react";
+import { Building2, ListFilter } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";

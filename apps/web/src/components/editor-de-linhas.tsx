@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, X } from "@/components/icones";
 import { botaoLink, campoCompacto, erroDoCampo } from "@/lib/estilos";
 
 export interface ColunaDoEditor {

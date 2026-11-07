@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Lock } from "lucide-react";
+import { Lock } from "@/components/icones";
 import { SENHA_MINIMO } from "@davinci/types";
 import { trocarSenha, type EstadoDoFormulario } from "@/lib/acoes-sessao";
 import { errosPorCampo } from "@/lib/formularios";

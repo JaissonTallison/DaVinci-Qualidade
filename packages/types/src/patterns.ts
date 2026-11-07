@@ -173,6 +173,7 @@ export const PATTERNS = {
   inspecoes: {
     listar: 'inspecoes.listar',
     resumo: 'inspecoes.resumo',
+    porMes: 'inspecoes.por-mes',
     obter: 'inspecoes.obter',
     criar: 'inspecoes.criar',
     responder: 'inspecoes.responder',
@@ -237,6 +238,7 @@ export const PATTERNS = {
   auditorias: {
     listar: 'auditorias.listar',
     resumo: 'auditorias.resumo',
+    panorama: 'auditorias.panorama',
     obter: 'auditorias.obter',
     criar: 'auditorias.criar',
     atualizar: 'auditorias.atualizar',

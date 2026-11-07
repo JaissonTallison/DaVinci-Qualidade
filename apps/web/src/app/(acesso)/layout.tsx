@@ -8,7 +8,7 @@ import {
   Sprout,
   Users,
   type LucideIcon,
-} from "lucide-react";
+} from "@/components/icones";
 import { NORMAS } from "@davinci/types";
 
 const AREAS: { icone: LucideIcon; cor: string; nome: string; texto: string }[] =

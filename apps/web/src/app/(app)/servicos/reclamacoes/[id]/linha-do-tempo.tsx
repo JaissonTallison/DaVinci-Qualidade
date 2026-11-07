@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check } from "@/components/icones";
 import type { Reclamacao } from "@davinci/types";
 import { formatarData } from "@/lib/datas";
 

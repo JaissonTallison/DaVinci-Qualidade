@@ -1,4 +1,4 @@
-import { ClipboardList, ListFilter } from "lucide-react";
+import { ClipboardList, ListFilter } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";

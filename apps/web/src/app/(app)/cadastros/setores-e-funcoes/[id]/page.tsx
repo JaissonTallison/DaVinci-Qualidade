@@ -31,7 +31,7 @@ import {
   RiscosDaFuncao,
   TreinamentosDaFuncao,
 } from "./formularios";
-import { Printer } from "lucide-react";
+import { Printer } from "@/components/icones";
 
 export const metadata: Metadata = { title: "Competências da função" };
 
