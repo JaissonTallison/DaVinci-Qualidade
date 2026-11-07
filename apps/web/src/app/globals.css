@@ -2,6 +2,39 @@
 /* Sistema visual da DaVinci Qualidade (docs/04-design/interface.md) */
 @import "@davinci/tokens/tema.css";
 
+/*
+ * Visual de aplicativo: esconde a barra de rolagem da página (o scroll continua por toque e pela roda do
+ * mouse), evita o "efeito elástico" encadear para fora e faz a área de arrasto usar o fundo do sistema,
+ * em vez de mostrar uma faixa branca. As barras de rolagem internas (tabela larga) continuam normais.
+ */
+html {
+  background: var(--color-fundo);
+  overscroll-behavior-y: none;
+}
+/* Em telas de toque (celular, tablet): esconde a barra de rolagem da página para o visual de app.
+   No desktop (ponteiro fino) a barra continua, que é o esperado em sistema de gestão. */
+@media (pointer: coarse) {
+  html {
+    scrollbar-width: none; /* Firefox */
+  }
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none; /* WebKit (Chrome, Safari) */
+  }
+}
+
+/*
+ * Campos nunca passam da largura disponível. Corrige o estouro no iOS Safari: lá os campos de data,
+ * hora e número têm uma largura mínima própria e não encolhem em grades/linhas apertadas, quebrando a
+ * tela no iPhone (não reproduz no Chrome do desktop). `min-width: 0` deixa encolher; `max-width: 100%` limita.
+ */
+main :is(input, select, textarea) {
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* Altura da janela (telas de acesso): o que é secundário sai antes de aparecer barra de rolagem */
 @custom-variant tela-media (@media (max-height: 60rem));
 @custom-variant tela-baixa (@media (max-height: 50rem));
