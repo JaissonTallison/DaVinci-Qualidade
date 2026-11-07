@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Source_Code_Pro,
   Source_Sans_3,
@@ -27,6 +27,16 @@ export const metadata: Metadata = {
   title: { default: "DaVinci Qualidade", template: "%s · DaVinci Qualidade" },
   description: "Gestão da qualidade, saúde, segurança e meio ambiente",
   applicationName: "DaVinci Qualidade",
+  // Instalado na tela de início (iOS/Android), abre em tela cheia, sem a interface do navegador.
+  appleWebApp: {
+    capable: true,
+    title: "DaVinci Qualidade",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#102A43",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
