@@ -272,8 +272,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
           <table className="w-full">
             <thead>
               <tr className="border-b border-borda text-left text-xs text-texto-2">
-                <th className="w-8 py-2.5 pl-5" />
-                <th className="px-3 py-2.5 font-semibold">Código</th>
+                <th className="py-2.5 pr-3 pl-5 font-semibold">Código</th>
                 <th className="px-3 py-2.5 font-semibold">Tipo</th>
                 <th className="px-3 py-2.5 font-semibold">Escopo</th>
                 <th className="px-3 py-2.5 font-semibold">Período</th>
@@ -286,14 +285,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                   key={a.id}
                   className="border-b border-borda last:border-0 odd:bg-superficie-2/40"
                 >
-                  <td className="py-2.5 pl-5">
-                    <span
-                      aria-hidden
-                      className="inline-block size-2.5 rounded-full"
-                      style={{ background: COR_STATUS[a.status] }}
-                    />
-                  </td>
-                  <td className="px-3 py-2.5">
+                  <td className="py-2.5 pr-3 pl-5">
                     <Link
                       href={`/auditorias/${a.id}`}
                       className="font-mono text-sm font-semibold text-acao hover:underline"

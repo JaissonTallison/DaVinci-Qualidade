@@ -255,9 +255,10 @@ export default async function Inicio() {
         />
 
         <section
-          className="relative flex flex-wrap items-center gap-x-5 gap-y-4 rounded-md border border-borda bg-superficie py-4 pr-6 pl-7 shadow-cartao"
+          className="relative flex flex-col gap-4 rounded-md border border-borda bg-superficie py-4 pr-6 pl-7 shadow-cartao lg:flex-row lg:flex-wrap lg:items-center lg:gap-x-5"
           aria-label="Resumo do dia"
         >
+          <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-4">
           <div className="min-w-[8.5rem]">
             <span className="text-[0.7rem] font-bold tracking-[0.1em] text-texto-3 uppercase">
               Resumo de hoje
@@ -327,6 +328,7 @@ export default async function Inicio() {
               <ArrowRight aria-hidden size={16} strokeWidth={2} />
             </Link>
           )}
+          </div>
 
           {componentes.length > 0 && (
             <div className="flex items-center gap-3.5 lg:ml-auto">
