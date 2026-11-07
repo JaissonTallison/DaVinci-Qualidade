@@ -1,7 +1,7 @@
 import { somarDias } from '@davinci/shared';
 import {
   DOCS_OBRIGATORIOS_TERCEIRO,
-  TIPOS_DOC_TERCEIRO,
+  SIGLA_DOC_TERCEIRO,
   type SituacaoTerceiro,
   type TipoDocTerceiro,
 } from '@davinci/types';
@@ -31,11 +31,11 @@ export function situacaoDoTerceiro(
   const pendencias: string[] = [];
   for (const tipo of DOCS_OBRIGATORIOS_TERCEIRO)
     if (!v.has(tipo))
-      pendencias.push(`${TIPOS_DOC_TERCEIRO[tipo]} não enviado`);
+      pendencias.push(`${SIGLA_DOC_TERCEIRO[tipo]} não enviado`);
   for (const [tipo, d] of v)
     if (d.validade < hoje)
       pendencias.push(
-        `${TIPOS_DOC_TERCEIRO[tipo as TipoDocTerceiro]} vencido em ${br(d.validade)}`,
+        `${SIGLA_DOC_TERCEIRO[tipo as TipoDocTerceiro]} vencido em ${br(d.validade)}`,
       );
   return { situacao: pendencias.length ? 'pendente' : 'liberada', pendencias };
 }

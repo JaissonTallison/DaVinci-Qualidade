@@ -7,6 +7,21 @@ import { cnpjValido, normalizarDocumento } from './documento.js';
 import { chaves, data, opcional, texto, textoOpcional } from './validadores.js';
 
 export const TIPOS_DOC_TERCEIRO = {
+  pgr: 'PGR (programa de gerenciamento de riscos)',
+  pcmso: 'PCMSO (programa de controle médico de saúde ocupacional)',
+  aso: 'ASO (atestado de saúde ocupacional) dos trabalhadores',
+  treinamentos: 'Certificados de treinamento (NRs)',
+  ficha_epi: 'Fichas de entrega de EPI',
+  seguro: 'Seguro de vida',
+  outros: 'Outro documento',
+} as const;
+export type TipoDocTerceiro = keyof typeof TIPOS_DOC_TERCEIRO;
+
+/**
+ * Forma curta (só a sigla) para mensagens e listas de pendência, onde o nome completo entre parênteses
+ * pesaria. O significado da sigla aparece no rótulo de exibição ({@link TIPOS_DOC_TERCEIRO}).
+ */
+export const SIGLA_DOC_TERCEIRO: Record<TipoDocTerceiro, string> = {
   pgr: 'PGR',
   pcmso: 'PCMSO',
   aso: 'ASO dos trabalhadores',
@@ -14,8 +29,7 @@ export const TIPOS_DOC_TERCEIRO = {
   ficha_epi: 'Fichas de entrega de EPI',
   seguro: 'Seguro de vida',
   outros: 'Outro documento',
-} as const;
-export type TipoDocTerceiro = keyof typeof TIPOS_DOC_TERCEIRO;
+};
 
 /** Sem estes três válidos, a terceira não entra para trabalhar. */
 export const DOCS_OBRIGATORIOS_TERCEIRO: TipoDocTerceiro[] = [

@@ -12,7 +12,7 @@ import {
   horizonteSchema,
   DIAS_DO_PAINEL,
   prazo,
-  TIPOS_DOC_TERCEIRO,
+  SIGLA_DOC_TERCEIRO,
   CATEGORIAS_DE_EQUIPAMENTO,
   MESES_DE_VALIDADE_DA_BRIGADA,
   type CategoriaDeEquipamento,
@@ -231,7 +231,7 @@ export class PrazosService {
               {
                 modulo: 'seguranca',
                 tipo: 'Documento de terceiro',
-                descricao: `${t.razaoSocial} · ${TIPOS_DOC_TERCEIRO[d.tipo as TipoDocTerceiro]}`,
+                descricao: `${t.razaoSocial} · ${SIGLA_DOC_TERCEIRO[d.tipo as TipoDocTerceiro]}`,
                 data: d.validade,
                 href: `/seguranca/terceiros/${id}`,
               },
