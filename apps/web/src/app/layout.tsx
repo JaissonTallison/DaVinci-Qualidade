@@ -33,6 +33,7 @@ export const metadata: Metadata = {
     title: "DaVinci Qualidade",
     statusBarStyle: "default",
   },
+  other: { "mobile-web-app-capable": "yes" },
 };
 
 export const viewport: Viewport = {
