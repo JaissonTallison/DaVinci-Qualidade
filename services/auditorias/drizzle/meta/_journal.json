@@ -71,6 +71,20 @@
       "when": 1793910003053,
       "tag": "0009_auditoria-cancelada-por-nome",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794002276194,
+      "tag": "0010_moaning_invaders",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794006028170,
+      "tag": "0011_curious_praxagora",
+      "breakpoints": true
     }
   ]
 }

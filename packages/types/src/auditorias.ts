@@ -84,6 +84,16 @@ const versao = z
   .string({ error: 'Versão do registro ausente: recarregue a página.' })
   .min(1);
 
+/** Linha do registro rápido por setor (anotações da auditoria, texto livre; não vira NC formal). */
+export const linhaDoSetorSchema = z.object({
+  setor: texto('o setor', 150, 1),
+  comentarios: textoOpcional(2000),
+  pontosPositivos: textoOpcional(2000),
+  observacoes: textoOpcional(2000),
+  naoConformidade: textoOpcional(2000),
+});
+export type LinhaDoSetor = z.infer<typeof linhaDoSetorSchema>;
+
 const camposDaAuditoria = {
   tipo: z.enum(chaves(TIPOS_AUDITORIA), { error: 'Escolha o tipo.' }),
   escopo: texto('o escopo', 1000, 10),
@@ -104,6 +114,14 @@ const camposDaAuditoria = {
   representante: textoOpcional(120),
   dataInicio: data('a data de início'),
   dataFim: data('a data de fim'),
+  /** Item da programação anual que esta auditoria cumpre (vínculo manual, opcional). */
+  programacaoId: opcional(z.uuid('Item da programação inválido.')),
+  /** Registro rápido por setor (opcional): anotações por setor auditado. */
+  registroPorSetor: z
+    .array(linhaDoSetorSchema)
+    .max(50, 'Use no máximo 50 setores.')
+    .optional()
+    .default([]),
 };
 const fimDepoisDoInicio = (d: { dataInicio: string; dataFim: string }) =>
   d.dataFim >= d.dataInicio;
@@ -246,6 +264,10 @@ export interface Auditoria {
   /** NCs (maior e menor) ainda sem NC formalizada: impedem concluir. */
   ncsPendentes: number;
   concluidaEm: string | null;
+  /** Item da programação anual vinculado (vínculo manual, opcional). */
+  programacaoId: string | null;
+  /** Registro rápido por setor (anotações da auditoria interna). */
+  registroPorSetor: LinhaDoSetor[];
   versao: string;
 }
 

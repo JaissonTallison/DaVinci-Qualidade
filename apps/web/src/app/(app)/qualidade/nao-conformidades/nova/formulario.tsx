@@ -59,6 +59,7 @@ export function FormularioNovaNc({
   const v = estado.valores ?? inicial ?? {};
   // Origem escolhida: define o autocomplete do "Registro de origem"
   const [origem, setOrigem] = useState(v.origem ?? "");
+  const semOrigem = !origem;
   const vinc = ORIGEM_VINCULAVEL[origem as OrigemNc];
   const registros = registrosPorOrigem[origem as OrigemNc] ?? [];
   const erroGeral =
@@ -154,12 +155,15 @@ export function FormularioNovaNc({
             id="origemRef"
             rotulo={vinc ? vinc.rotuloCampo : "Registro de origem"}
             erro={erros.origemRef}
+            className="sm:w-1/2"
             ajuda={
-              vinc
-                ? registros.length > 0
-                  ? "Selecione ou digite o número."
-                  : "Digite o número do registro."
-                : "Ex.: AUD-2026-003"
+              semOrigem
+                ? "Escolha a origem primeiro."
+                : vinc
+                  ? registros.length > 0
+                    ? "Selecione ou digite o número."
+                    : "Digite o número do registro."
+                  : "Número ou código do registro."
             }
           >
             <input
@@ -167,7 +171,9 @@ export function FormularioNovaNc({
               name="origemRef"
               defaultValue={v.origemRef}
               maxLength={60}
-              className={`${campo} font-mono`}
+              disabled={semOrigem}
+              placeholder={semOrigem ? "Escolha a origem primeiro" : undefined}
+              className={`${campo} font-mono disabled:cursor-not-allowed disabled:opacity-60`}
               list={vinc && registros.length > 0 ? "registros-origem" : undefined}
               autoComplete="off"
             />

@@ -99,6 +99,8 @@ export const ICONE_DA_TELA: Record<string, LucideIcon> = {
   "/qualidade/modelos-de-inspecao": LayoutTemplate,
   "/qualidade/configuracoes": Settings,
   "/auditorias": ClipboardCheck,
+  "/auditorias/programacao": CalendarClock,
+  "/auditorias/biblioteca-do-auditor": Library,
   "/auditorias/biblioteca": Library,
   "/auditorias/banco-de-ncs": FileWarning,
   "/auditorias/prompts": MessageSquareText,

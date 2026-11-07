@@ -72,6 +72,10 @@ export const auditorias = pgTable(
     emissor: varchar({ length: 120 }),
     papel: varchar({ length: 12 }).notNull().default('lider'),
     horas: doublePrecision(),
+    /** Item da programação anual que esta auditoria cumpre (vínculo manual, opcional). */
+    programacaoId: uuid().references(() => programacaoAuditorias.id),
+    /** Registro rápido por setor: [{ setor, comentarios, pontosPositivos, observacoes, naoConformidade }]. */
+    registroPorSetor: jsonb().notNull().default([]),
   },
   (t) => [
     unique('auditorias_numero_por_empresa').on(t.empresaId, t.numero),
@@ -226,4 +230,36 @@ export const auditoriasSimples = pgTable(
     linhas: jsonb().notNull().default([]),
   },
   (t) => [unique('auditorias_simples_numero_por_empresa').on(t.empresaId, t.numero)],
+);
+
+/**
+ * Programação anual de auditorias: cada item é um setor/processo a auditar no ano, com as normas,
+ * a frequência e os meses planejados. As auditorias realizadas se vinculam por `auditorias.programacaoId`
+ * (vínculo manual); o acompanhamento é calculado a partir desse vínculo.
+ */
+export const programacaoAuditorias = pgTable(
+  'programacao_auditorias',
+  {
+    ...colunasPadrao(),
+    ano: integer().notNull(),
+    setor: varchar({ length: 150 }).notNull(),
+    normas: text()
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    frequencia: varchar({ length: 15 }).notNull(),
+    meses: integer()
+      .array()
+      .notNull()
+      .default(sql`'{}'::int[]`),
+    responsavel: varchar({ length: 120 }).notNull(),
+    observacoes: text(),
+  },
+  (t) => [
+    index('programacao_auditorias_empresa_ano_idx').on(t.empresaId, t.ano),
+    check(
+      'programacao_auditorias_frequencia',
+      sql`${t.frequencia} IN ('mensal', 'bimestral', 'trimestral', 'semestral', 'anual', 'pontual')`,
+    ),
+  ],
 );

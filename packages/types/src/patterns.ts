@@ -266,15 +266,13 @@ export const PATTERNS = {
     listarCriterios: 'auditorias.criterios.listar',
     criarCriterio: 'auditorias.criterios.criar',
     excluirCriterio: 'auditorias.criterios.excluir',
+    listarProgramacao: 'auditorias.programacao.listar',
+    obterItemProgramacao: 'auditorias.programacao.obter',
+    criarItemProgramacao: 'auditorias.programacao.criar',
+    atualizarItemProgramacao: 'auditorias.programacao.atualizar',
+    excluirItemProgramacao: 'auditorias.programacao.excluir',
   },
   /** Auditoria interna simples (documento por setor). */
-  auditoriasSimples: {
-    listar: 'auditorias-simples.listar',
-    obter: 'auditorias-simples.obter',
-    criar: 'auditorias-simples.criar',
-    atualizar: 'auditorias-simples.atualizar',
-    excluir: 'auditorias-simples.excluir',
-  },
   /** Segurança: acidentes e indicadores de SST (docs/05-modulos/acidentes.md). */
   acidentes: {
     listar: 'acidentes.listar',
