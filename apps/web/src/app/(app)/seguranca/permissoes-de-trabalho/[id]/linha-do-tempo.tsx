@@ -1,4 +1,4 @@
-import { Check, X } from "lucide-react";
+import { Check, X } from "@/components/icones";
 import type { PermissaoDeTrabalho } from "@davinci/types";
 import { formatarMomento } from "@/lib/datas";
 import { periodoDaPt } from "../periodo";

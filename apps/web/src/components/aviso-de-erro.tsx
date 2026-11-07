@@ -1,4 +1,4 @@
-import { CircleAlert } from "lucide-react";
+import { CircleAlert } from "@/components/icones";
 import type { ErroPadrao } from "@davinci/types";
 
 /** Erro geral de uma ação (o de campo fica embaixo do campo). Mostra o código de rastreio para o suporte. */

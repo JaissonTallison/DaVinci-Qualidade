@@ -22,6 +22,11 @@ export class AuditoriasController {
     return this.auditorias.resumo(ctx);
   }
 
+  @MessagePattern(P.panorama)
+  panorama(@Contexto() ctx: Ctx) {
+    return this.auditorias.panorama(ctx);
+  }
+
   @MessagePattern(P.obter)
   obter(@Contexto() ctx: Ctx, @Dados() dados: { id?: unknown }) {
     return this.auditorias.obter(ctx, dados);

@@ -1,4 +1,4 @@
-import { ListFilter, ShieldAlert } from "lucide-react";
+import { ListFilter, ShieldAlert } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";

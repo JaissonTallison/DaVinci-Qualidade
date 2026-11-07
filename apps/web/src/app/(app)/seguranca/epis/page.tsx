@@ -1,4 +1,4 @@
-import { ListFilter } from "lucide-react";
+import { ListFilter } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { DadosDoUsuario, Epi } from "@davinci/types";

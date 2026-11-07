@@ -1,4 +1,4 @@
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail, MessageCircle } from "@/components/icones";
 import type { ConviteDePesquisa } from "@davinci/types";
 import { BotaoCopiar } from "@/components/botao-copiar";
 import { formatarData } from "@/lib/datas";

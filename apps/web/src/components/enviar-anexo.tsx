@@ -1,6 +1,6 @@
 "use client";
 
-import { Paperclip } from "lucide-react";
+import { Paperclip } from "@/components/icones";
 import { useActionState, useState } from "react";
 import { TIPOS_DE_ANEXO, type RegistroComAnexo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";

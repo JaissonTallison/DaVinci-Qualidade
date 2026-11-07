@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Printer } from "lucide-react";
+import { Printer } from "@/components/icones";
 import {
   PAPEIS_NA_BRIGADA,
   type Brigadista,

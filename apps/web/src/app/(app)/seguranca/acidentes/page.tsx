@@ -1,4 +1,4 @@
-import { ListFilter, Siren } from "lucide-react";
+import { ListFilter, Siren } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";

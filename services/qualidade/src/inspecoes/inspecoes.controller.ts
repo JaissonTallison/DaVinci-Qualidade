@@ -32,6 +32,11 @@ export class InspecoesController {
     return this.inspecoes.resumo(ctx);
   }
 
+  @MessagePattern(I.porMes)
+  porMes(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.inspecoes.porMes(ctx, dados);
+  }
+
   @MessagePattern(I.obter)
   obter(@Contexto() ctx: Ctx, @Dados() dados: { id?: unknown }) {
     return this.inspecoes.obter(ctx, dados);

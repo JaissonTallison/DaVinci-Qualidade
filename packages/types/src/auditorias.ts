@@ -294,6 +294,28 @@ export interface ResumoAuditorias {
   ncsUltimos12Meses: number;
 }
 
+/** Painel analítico do Início: conformidade por tipo, carga por auditor, situação e auditorias recentes. */
+export interface PanoramaAuditorias {
+  conformidadePorTipo: {
+    tipo: TipoAuditoria;
+    conformidade: number;
+    nc_maior: number;
+    nc_menor: number;
+    observacao: number;
+    oportunidade: number;
+  }[];
+  porAuditor: { auditor: string; total: number }[];
+  porSituacao: { status: StatusAuditoria; total: number }[];
+  recentes: {
+    id: string;
+    numero: string;
+    tipo: TipoAuditoria;
+    escopo: string;
+    dataInicio: string;
+    status: StatusAuditoria;
+  }[];
+}
+
 // ---------------------------------------------------------------- jornada e kit pré-auditoria
 
 /** Jornada da auditoria em 5 etapas (material de referência do AuditExpert, docs/06-referencias/auditexpert.md). */

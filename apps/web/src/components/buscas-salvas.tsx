@@ -3,7 +3,7 @@
 import { useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { X } from "lucide-react";
+import { X } from "@/components/icones";
 import { botaoLink, campoCompacto } from "@/lib/estilos";
 
 type Busca = { nome: string; consulta: string };

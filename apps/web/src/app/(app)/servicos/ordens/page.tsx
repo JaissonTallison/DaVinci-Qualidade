@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ListFilter, Wrench } from "lucide-react";
+import { ListFilter, Wrench } from "@/components/icones";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
 import { AtribuirResponsavelEmLote } from "@/components/atribuir-responsavel-em-lote";
 import { BotaoExportar } from "@/components/botao-exportar";

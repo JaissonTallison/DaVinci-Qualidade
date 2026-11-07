@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X } from "@/components/icones";
 import Link from "next/link";
 
 export interface ChipDeFiltro {

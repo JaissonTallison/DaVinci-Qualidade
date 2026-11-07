@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronsUpDown } from "@/components/icones";
 import Link from "next/link";
 import type { ReactNode } from "react";
 

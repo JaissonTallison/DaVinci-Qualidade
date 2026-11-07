@@ -1,6 +1,6 @@
 "use client";
 
-import { UserPlus } from "lucide-react";
+import { UserPlus } from "@/components/icones";
 import { useState, useTransition } from "react";
 import { botaoPrimario, botaoSecundario, campoCompacto } from "@/lib/estilos";
 import { useSelecao } from "./selecao-de-linhas";

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ListFilter, Printer } from "lucide-react";
+import { ListFilter, Printer } from "@/components/icones";
 import {
   NORMAS,
   PROCESSOS_AUDITADOS,

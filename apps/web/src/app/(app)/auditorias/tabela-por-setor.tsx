@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X } from "@/components/icones";
 import { useState } from "react";
 import { botaoSecundario, campoCompacto, erroDoCampo } from "@/lib/estilos";
 

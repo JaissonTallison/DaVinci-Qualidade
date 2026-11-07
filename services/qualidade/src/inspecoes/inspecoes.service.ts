@@ -13,11 +13,12 @@ import {
   type SQL,
 } from 'drizzle-orm';
 import { DATABASE, type Database } from '@davinci/database';
-import { ErroDeNegocio, pedir, validar } from '@davinci/shared';
+import { ErroDeNegocio, pedir, somarMeses, validar } from '@davinci/shared';
 import {
   cancelarInspecaoSchema,
   concluirInspecaoSchema,
   filtroDoFornecedorSchema,
+  inspecoesPorMesSchema,
   loteAceito,
   PATTERNS,
   planoDeAmostragem,
@@ -34,6 +35,7 @@ import {
   type Contexto,
   type Inspecao,
   type InspecaoResumo,
+  type InspecoesDoMes,
   type Pagina,
   type RespostaItem,
   type ResumoInspecoes,
@@ -158,6 +160,36 @@ export class InspecoesService {
         ? Math.round((r!.aprovadas / concluidas) * 100)
         : null,
     };
+  }
+
+  /** Inspeções aprovadas e reprovadas por mês (gráfico do Início), nos últimos `meses` meses. */
+  async porMes(ctx: Contexto, dados: unknown): Promise<InspecoesDoMes[]> {
+    const { meses } = validar(inspecoesPorMesSchema, dados ?? {});
+    const inicio = somarMeses(`${hojeEmBrasilia().slice(0, 7)}-01`, -(meses - 1));
+    const mes = sql<string>`to_char(${inspecoes.data}, 'YYYY-MM')`;
+    const linhas = await this.db
+      .select({
+        mes,
+        aprovadas: sql<number>`count(*) FILTER (WHERE ${inspecoes.status} = 'aprovada')::int`,
+        reprovadas: sql<number>`count(*) FILTER (WHERE ${inspecoes.status} = 'reprovada')::int`,
+      })
+      .from(inspecoes)
+      .where(
+        and(
+          eq(inspecoes.empresaId, ctx.empresaId),
+          sql`${inspecoes.data} >= ${inicio}`,
+        ),
+      )
+      .groupBy(mes);
+    return Array.from({ length: meses }, (_, i) => {
+      const chave = somarMeses(inicio, i).slice(0, 7);
+      const linha = linhas.find((l) => l.mes === chave);
+      return {
+        mes: chave,
+        aprovadas: linha?.aprovadas ?? 0,
+        reprovadas: linha?.reprovadas ?? 0,
+      };
+    });
   }
 
   async obter(ctx: Contexto, dados: { id?: unknown }): Promise<Inspecao> {

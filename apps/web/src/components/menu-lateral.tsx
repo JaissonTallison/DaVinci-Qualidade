@@ -112,9 +112,8 @@ export function MenuLateral({
         key={href}
         href={href}
         aria-current={marcado ? "page" : undefined}
-        className={`flex items-center gap-2 border-l-[3px] py-1.5 pr-3 text-base ${FOCO} pl-[calc(1.75rem-3px)] ${marcado ? MARCADO : NORMAL}`}
+        className={`flex items-center border-l-[3px] py-1.5 pr-3 pl-3.5 text-base ${FOCO} ${marcado ? MARCADO : NORMAL}`}
       >
-        <IconeDaTela href={href} />
         <span className="min-w-0 truncate">{rotulo}</span>
       </Link>
     );
@@ -259,7 +258,10 @@ export function MenuLateral({
                   </button>
                 </h2>
                 {aberto && (
-                  <div id={id}>
+                  <div
+                    id={id}
+                    className="ml-[1.4rem] border-l border-primaria-texto/25"
+                  >
                     {g.itens.map((i) => item(i.href, i.rotulo))}
                   </div>
                 )}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { Printer } from "lucide-react";
+import { Printer } from "@/components/icones";
 import {
   STATUS_DO_PASSO,
   type ConviteDePesquisa,

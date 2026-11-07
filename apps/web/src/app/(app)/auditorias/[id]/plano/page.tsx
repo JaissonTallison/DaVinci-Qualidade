@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Printer } from "lucide-react";
+import { Printer } from "@/components/icones";
 import {
   METODOLOGIA_PADRAO,
   criteriosSugeridos,

@@ -1,4 +1,4 @@
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";

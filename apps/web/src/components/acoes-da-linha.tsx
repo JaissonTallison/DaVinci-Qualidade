@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "@/components/icones";
 import type { ReactNode } from "react";
 import { Suspenso } from "./suspenso";
 

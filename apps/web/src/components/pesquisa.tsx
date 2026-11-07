@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { Search, X } from "@/components/icones";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MODULOS_DA_BUSCA, type ResultadoDaBusca } from "@davinci/types";

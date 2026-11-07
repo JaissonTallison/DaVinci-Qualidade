@@ -9,7 +9,7 @@ import {
   KeyRound,
   LogOut,
   Star,
-} from "lucide-react";
+} from "@/components/icones";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

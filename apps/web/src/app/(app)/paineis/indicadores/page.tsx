@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {

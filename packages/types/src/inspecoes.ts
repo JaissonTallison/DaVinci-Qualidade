@@ -253,3 +253,15 @@ export interface ResumoInspecoes {
   /** Aprovadas ÷ concluídas (aprovadas + reprovadas) nos últimos 30 dias, 0–100; null sem inspeção concluída. */
   taxaDeAprovacao30Dias: number | null;
 }
+
+/** Filtro do gráfico de inspeções por mês (nº de meses no horizonte). */
+export const inspecoesPorMesSchema = z.object({
+  meses: z.coerce.number().int().min(1).max(24).default(12),
+});
+
+/** Inspeções aprovadas e reprovadas em cada mês (gráfico do Início). */
+export interface InspecoesDoMes {
+  mes: string;
+  aprovadas: number;
+  reprovadas: number;
+}

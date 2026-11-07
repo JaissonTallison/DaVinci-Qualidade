@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CircleAlert, CircleCheck, Circle, CircleDashed } from "lucide-react";
+import { CircleAlert, CircleCheck, Circle, CircleDashed } from "@/components/icones";
 import {
   MOMENTOS_DO_KIT,
   NORMAS,

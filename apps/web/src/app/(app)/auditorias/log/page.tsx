@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FileText, Search } from "lucide-react";
+import { FileText, Search } from "@/components/icones";
 import {
   NORMAS,
   PAPEIS_DO_AUDITOR,

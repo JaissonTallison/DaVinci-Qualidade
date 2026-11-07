@@ -1,6 +1,6 @@
 "use client";
 
-import { Printer } from "lucide-react";
+import { Printer } from "@/components/icones";
 import { botaoPrimario } from "@/lib/estilos";
 
 /** Abre a impressão do navegador, onde dá para salvar em PDF. */

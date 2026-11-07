@@ -1,4 +1,4 @@
-import { HardHat, ListFilter } from "lucide-react";
+import { HardHat, ListFilter } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";

@@ -3,15 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { AtalhosDeModulos } from "@/components/atalhos-de-modulos";
 import { RelogioDoDia } from "@/components/relogio-do-dia";
-import { botaoPrimario } from "@/lib/estilos";
 import type { CSSProperties } from "react";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight } from "@/components/icones";
 import {
-  MODULOS_DO_PAINEL,
   type DadosDoUsuario,
   type IndicadoresSst,
-  type NcsDoMes,
+  type InspecoesDoMes,
   type PainelDeVencimentos,
+  type PanoramaAuditorias,
   type ResumoAmbiental,
   type ResumoCalibracao,
   type ResumoNcs,
@@ -21,10 +20,11 @@ import {
   type ResumoSgi,
   type ResumoVencimentos,
 } from "@davinci/types";
-import { PainelDoInicio, type Atencao } from "@/components/painel-do-inicio";
+import { PainelDoInicio } from "@/components/painel-do-inicio";
+import { AuditoriasPanorama } from "@/components/auditorias-panorama";
+import { PendenciasCriticas } from "@/components/pendencias-criticas";
 import { chamarApi, type Resultado } from "@/lib/api";
-import { hojeEmBrasilia, prazoRelativo } from "@/lib/datas";
-import { telaDoIcone, textoDoSelo } from "@/components/linha-de-prazo";
+import { hojeEmBrasilia } from "@/lib/datas";
 
 export const metadata: Metadata = { title: "Início" };
 
@@ -55,7 +55,7 @@ export default async function Inicio() {
   const hoje = hojeEmBrasilia();
   const [
     painelR,
-    ncsMesR,
+    inspecoesMesR,
     ncsR,
     planosR,
     calR,
@@ -65,12 +65,13 @@ export default async function Inicio() {
     ptsR,
     vencR,
     ambR,
+    auditoriasPanoramaR,
   ] = await Promise.all([
     pode("paineis.ver")
       ? chamarApi<PainelDeVencimentos>("/paineis/vencimentos?dias=30")
       : null,
     pode("qualidade.ver")
-      ? chamarApi<NcsDoMes[]>("/nao-conformidades/por-mes?meses=3")
+      ? chamarApi<InspecoesDoMes[]>("/inspecoes/por-mes?meses=3")
       : null,
     pode("qualidade.ver")
       ? chamarApi<ResumoNcs>("/nao-conformidades/resumo")
@@ -97,10 +98,14 @@ export default async function Inicio() {
     pode("ambiental.ver")
       ? chamarApi<ResumoAmbiental>("/ambiental/resumo")
       : null,
+    pode("auditorias.ver")
+      ? chamarApi<PanoramaAuditorias>("/auditorias/panorama")
+      : null,
   ]);
-  const [painel, ncsMes, ncs, planos, cal, sgi, sst, pgr, pts, venc, amb] = [
+  const auditoriasPanorama = ok(auditoriasPanoramaR);
+  const [painel, inspecoesMes, ncs, planos, cal, sgi, sst, pgr, pts, venc, amb] = [
     ok(painelR),
-    ok(ncsMesR),
+    ok(inspecoesMesR),
     ok(ncsR),
     ok(planosR),
     ok(calR),
@@ -163,69 +168,6 @@ export default async function Inicio() {
     : null;
   const pior = [...componentes].sort((a, b) => a.pct - b.pct)[0];
 
-  // ---------------------------------------------------------------- precisa da sua atenção
-  const atencao: Atencao[] = [];
-  for (const p of painel?.prazos ?? [])
-    if (p.situacao === "vencido")
-      atencao.push({
-        titulo: `${p.tipo}: ${p.descricao}`,
-        detalhe: MODULOS_DO_PAINEL[p.modulo],
-        href: p.href,
-        icone: telaDoIcone(p.tipo, p.href),
-        selo: textoDoSelo(prazoRelativo(p.data)),
-        tom: "vencido",
-      });
-  if (pts?.aguardandoLiberacao && pode("seguranca.liberar-pt"))
-    atencao.push({
-      titulo: `${plural(pts.aguardandoLiberacao, "permissão de trabalho aguardando", "permissões de trabalho aguardando")} liberação`,
-      detalhe: "Segurança do Trabalho · o serviço só começa depois de liberar",
-      href: "/seguranca/permissoes-de-trabalho?status=solicitada",
-      icone: telaDoIcone(
-        undefined,
-        "/seguranca/permissoes-de-trabalho?status=solicitada",
-      ),
-      selo: "Aguardando",
-      tom: "aguardando",
-    });
-  if (sgi?.mudancasAguardandoDecisao && pode("sgi.excluir"))
-    atencao.push({
-      titulo: `${plural(sgi.mudancasAguardandoDecisao, "inovação aguardando", "inovações aguardando")} decisão`,
-      detalhe: "Gestão de inovação · avaliar",
-      href: "/sgi/inovacao?status=proposta",
-      icone: telaDoIcone(undefined, "/sgi/inovacao?status=proposta"),
-      selo: "Aguardando",
-      tom: "aguardando",
-    });
-  if (pgr?.criticos)
-    atencao.push({
-      titulo: `${plural(pgr.criticos, "risco crítico", "riscos críticos")} no PGR`,
-      detalhe: "Segurança do Trabalho · acompanhe as medidas",
-      href: "/seguranca/pgr?nivel=critico",
-      icone: telaDoIcone(undefined, "/seguranca/pgr?nivel=critico"),
-      selo: "Crítico",
-      tom: "vencido",
-    });
-  if (pgr?.revisoesVencidas)
-    atencao.push({
-      titulo: `${plural(pgr.revisoesVencidas, "risco com revisão vencida", "riscos com revisão vencida")} no PGR`,
-      detalhe: "Segurança do Trabalho · reavalie (NR-1: a cada 2 anos)",
-      href: "/seguranca/pgr",
-      icone: telaDoIcone(undefined, "/seguranca/pgr"),
-      selo: "Vencida",
-      tom: "vencido",
-    });
-  if (sgi?.analiseCriticaAtrasada)
-    atencao.push({
-      titulo: sgi.proximaAnaliseCritica
-        ? "Análise crítica pela direção atrasada"
-        : "Análise crítica pela direção ainda não registrada",
-      detalhe: "Gestão do SGI · ISO 9001, 9.3",
-      href: "/sgi/analises-criticas",
-      icone: telaDoIcone(undefined, "/sgi/analises-criticas"),
-      selo: Boolean(sgi.proximaAnaliseCritica) ? "Atrasada" : "Pendente",
-      tom: Boolean(sgi.proximaAnaliseCritica) ? "vencido" : "aguardando",
-    });
-
 
   const agora = new Date();
   const hora = Number(
@@ -259,7 +201,22 @@ export default async function Inicio() {
           sizes="100vw"
           className="-z-10 object-cover object-[30%_center]"
         />
-        <div aria-hidden className="absolute inset-0 -z-10 bg-marinho/85" />
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "linear-gradient(100deg, color-mix(in srgb, var(--color-menu) 94%, transparent) 0%, color-mix(in srgb, var(--color-menu) 82%, transparent) 42%, color-mix(in srgb, var(--color-menu) 42%, transparent) 72%, color-mix(in srgb, var(--color-menu) 12%, transparent) 100%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "linear-gradient(270deg, color-mix(in srgb, var(--color-menu) 80%, transparent) 0%, color-mix(in srgb, var(--color-menu) 45%, transparent) 18%, transparent 38%)",
+          }}
+        />
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 p-5">
           <div className="min-w-0 max-w-xl">
             <h1 className="text-2xl font-semibold text-primaria-texto">
@@ -274,130 +231,173 @@ export default async function Inicio() {
         </div>
       </section>
 
-      <section
-        className="dv-entrar overflow-hidden rounded-md border border-borda bg-superficie shadow-cartao md:grid md:grid-cols-[minmax(0,1fr)_auto]"
-        aria-label="Resumo do dia"
+      <div
+        className="dv-entrar relative"
+        style={{ "--atraso": "60ms" } as CSSProperties}
       >
-        <div className="flex min-w-0 flex-col p-5">
-          <p className="text-xs font-semibold tracking-[0.08em] text-texto-3 uppercase">
-            Resumo de hoje · {eu.empresa.nome}
-          </p>
+        {/* aba azul em fita à esquerda, com dobra (decisão de design do Início) */}
+        <span
+          aria-hidden
+          className="absolute top-1 -bottom-0 -left-1.5 w-28 max-w-[32%] rounded-md"
+          style={{
+            background:
+              "linear-gradient(180deg, var(--color-menu) 0%, color-mix(in srgb, var(--color-menu) 62%, #000) 100%)",
+            boxShadow: "0 10px 22px rgb(16 31 120/.3)",
+          }}
+        />
+        <span
+          aria-hidden
+          className="absolute -bottom-1.5 -left-1.5 size-5"
+          style={{
+            background: "color-mix(in srgb, var(--color-menu) 55%, #000)",
+            clipPath: "polygon(0 0,100% 100%,0 100%)",
+          }}
+        />
+
+        <section
+          className="relative flex flex-wrap items-center gap-x-5 gap-y-4 rounded-md border border-borda bg-superficie py-4 pr-6 pl-7 shadow-cartao"
+          aria-label="Resumo do dia"
+        >
+          <div className="min-w-[8.5rem]">
+            <span className="text-[0.7rem] font-bold tracking-[0.1em] text-texto-3 uppercase">
+              Resumo de hoje
+            </span>
+            <strong className="mt-0.5 block font-bold text-texto">
+              {eu.empresa.nome}
+            </strong>
+            <span
+              aria-hidden
+              className="mt-1.5 block h-[3px] w-11 rounded-full"
+              style={{ background: "var(--color-menu)" }}
+            />
+          </div>
+
           {painelIndisponivel ? (
-            <p className="mt-3 text-base text-texto-2">
-              Prazos vencidos indisponíveis agora — não foi possível carregar o
-              painel de vencimentos. Tente recarregar em instantes.
+            <p className="text-sm text-texto-2">
+              Prazos vencidos indisponíveis agora — recarregue em instantes.
             </p>
           ) : (
-            <div className="mt-3 flex flex-wrap items-center gap-x-8 gap-y-3">
-              <div className="flex items-baseline gap-2">
+            <div className="flex gap-3.5">
+              <div className="flex flex-col items-center gap-1.5">
                 <span
-                  className={`text-3xl font-bold tabular-nums ${vencidos ? "text-nao-conforme" : "text-conforme"}`}
+                  className={`flex h-12 w-[3.25rem] items-center justify-center rounded-md text-2xl font-bold tabular-nums ${vencidos ? "bg-nao-conforme/10 text-nao-conforme" : "bg-conforme/10 text-conforme"}`}
                 >
                   {vencidos}
                 </span>
-                <span className="text-sm text-texto-2">
+                <span className="text-xs text-texto-2">
                   {vencidos === 1 ? "prazo vencido" : "prazos vencidos"}
                 </span>
               </div>
-              <span aria-hidden className="h-8 w-px bg-borda" />
-              <div className="flex items-baseline gap-2">
+              <div className="flex flex-col items-center gap-1.5">
                 <span
-                  className={`text-3xl font-bold tabular-nums ${nestaSemana ? "text-atencao" : "text-texto-2"}`}
+                  className={`flex h-12 w-[3.25rem] items-center justify-center rounded-md text-2xl font-bold tabular-nums ${nestaSemana ? "bg-atencao/10 text-atencao" : "bg-campo text-texto-2"}`}
                 >
                   {nestaSemana}
                 </span>
-                <span className="text-sm text-texto-2">vencem em 7 dias</span>
+                <span className="text-xs text-texto-2">vencem em 7 dias</span>
               </div>
             </div>
           )}
+
           {pior && pior.pct < 100 ? (
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3 rounded-md border border-borda bg-campo p-3.5">
-              <p className="min-w-0 flex-1 text-base text-texto">
-                <span className="mr-2 text-xs font-semibold tracking-[0.08em] text-acao uppercase">
-                  Prioridade
-                </span>
+            <div className="max-w-[13rem] max-sm:max-w-none">
+              <span className="inline-block rounded-md bg-nao-conforme/10 px-2.5 py-1 text-[0.65rem] font-bold tracking-[0.07em] text-nao-conforme uppercase">
+                Prioridade
+              </span>
+              <p className="mt-1.5 text-sm text-texto">
                 {pior.nome}: {pior.detalhe}.
               </p>
-              <Link href={pior.href} className={botaoPrimario}>
-                Resolver
-                <ArrowRight aria-hidden size={16} strokeWidth={2} />
-              </Link>
             </div>
           ) : (
-            <p className="mt-4 rounded-md border border-conforme/30 bg-conforme/8 p-3.5 text-base text-conforme">
+            <p className="text-sm font-medium text-conforme">
               Todos os indicadores em 100%. Nada pede ação agora.
             </p>
           )}
-        </div>
 
-        {componentes.length > 0 && (
-          <div className="flex items-center gap-5 border-t border-borda bg-campo p-5 md:border-t-0 md:border-l">
-            <Anel valor={saude} />
-            <div className="min-w-48">
-              <p className="text-sm font-semibold text-texto">
-                Saúde do sistema de gestão
-              </p>
-              <ul className="mt-1.5 space-y-0.5 text-sm">
-                {componentes.map((c) => (
-                  <li key={c.nome}>
-                    <Link
-                      href={c.href}
-                      className="group -mx-2 flex items-center justify-between gap-4 rounded-sm px-2 py-0.5 text-texto-2 transition-colors hover:bg-superficie hover:text-texto"
-                    >
-                      <span className="truncate">{c.nome}</span>
-                      <span className="flex items-center gap-1">
+          {pior && pior.pct < 100 && (
+            <Link
+              href={pior.href}
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-campo px-4 text-base font-semibold text-white transition hover:brightness-110 max-sm:w-full max-sm:justify-center"
+              style={{
+                background: "var(--color-menu)",
+                boxShadow: "0 6px 14px rgb(16 31 120/.3)",
+              }}
+            >
+              Resolver
+              <ArrowRight aria-hidden size={16} strokeWidth={2} />
+            </Link>
+          )}
+
+          {componentes.length > 0 && (
+            <div className="flex items-center gap-3.5 lg:ml-auto">
+              <AnelCompacto valor={saude} />
+              <div className="min-w-[9.5rem]">
+                <p className="text-sm font-bold text-texto">
+                  Saúde do sistema de gestão
+                </p>
+                <ul className="mt-1.5 space-y-1">
+                  {componentes.map((c) => (
+                    <li key={c.nome}>
+                      <Link
+                        href={c.href}
+                        className="flex items-center justify-between gap-6 text-sm transition-opacity hover:opacity-80"
+                      >
+                        <span className="text-texto">{c.nome}</span>
                         <span
-                          className={`font-semibold tabular-nums ${c.pct < 100 ? "text-nao-conforme" : "text-texto"}`}
+                          className={`font-bold tabular-nums ${c.pct < 100 ? "text-nao-conforme" : "text-texto"}`}
                         >
                           {c.pct}%
                         </span>
-                        <ChevronRight
-                          aria-hidden
-                          size={14}
-                          strokeWidth={2}
-                          className="text-texto-3 opacity-0 transition-opacity group-hover:opacity-100"
-                        />
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
-        )}
-      </section>
+          )}
+        </section>
+      </div>
 
       <AtalhosDeModulos permissoes={eu.permissoes} />
 
+      {auditoriasPanorama && (
+        <AuditoriasPanorama dados={auditoriasPanorama} />
+      )}
+
+      <PendenciasCriticas prazos={painel?.prazos ?? []} hoje={hoje} />
+
       <PainelDoInicio
         hoje={hoje}
-        temNcs={pode("qualidade.ver")}
-        inicial={{ prazos: painel?.prazos ?? [], ncsPorMes: ncsMes }}
+        inspecoesPorMes={inspecoesMes}
         sst={
           sst?.meses.filter((m) => m.competencia <= hoje.slice(0, 7)) ?? null
         }
-        atencao={atencao}
       />
     </div>
   );
 }
 
-/** Saúde em anel compacto: verde a partir de 90%, âmbar de 70 a 89%, vermelho abaixo; preenche ao abrir. */
-function Anel({ valor }: { valor: number | null }) {
-  const r = 34;
+/**
+ * Saúde em anel (faixa do resumo): anel encorpado com trilho em degradê suave, progresso com relevo
+ * (degradê + sombra), "47%" em destaque e um risquinho na cor do estado. Verde ≥90%, âmbar 70–89%,
+ * vermelho abaixo; preenche ao abrir.
+ */
+function AnelCompacto({ valor }: { valor: number | null }) {
+  const r = 38;
   const c = 2 * Math.PI * r;
   const v = valor ?? 0;
-  const cor =
+  const tema =
     valor === null
-      ? "stroke-borda"
+      ? { a: "#cfd6e0", b: "#cfd6e0", sombra: "#aeb8c6", risco: "var(--color-texto-3)" }
       : v >= 90
-        ? "stroke-conforme"
+        ? { a: "#16a07a", b: "#0b6a50", sombra: "#0b5a43", risco: "var(--color-conforme)" }
         : v >= 70
-          ? "stroke-ambar"
-          : "stroke-nao-conforme";
+          ? { a: "#e0952b", b: "#b45309", sombra: "#8a3f07", risco: "var(--color-atencao)" }
+          : { a: "#d9463d", b: "#a01f1a", sombra: "#8c1c17", risco: "var(--color-nao-conforme)" };
   return (
     <div
-      className="relative size-28 shrink-0"
+      className="relative size-[4.5rem] shrink-0"
+      style={{ filter: "drop-shadow(0 6px 14px rgb(16 42 67 / 0.14))" }}
       role="img"
       aria-label={
         valor === null
@@ -405,34 +405,69 @@ function Anel({ valor }: { valor: number | null }) {
           : `Saúde do sistema de gestão: ${valor}%`
       }
     >
-      <svg viewBox="0 0 88 88" className="size-full -rotate-90" aria-hidden>
+      <svg viewBox="0 0 100 100" className="size-full" aria-hidden>
+        <defs>
+          <linearGradient id="anel-trilho" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#eef1f6" />
+            <stop offset="1" stopColor="#dde2ea" />
+          </linearGradient>
+          <linearGradient id="anel-progresso" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor={tema.a} />
+            <stop offset="1" stopColor={tema.b} />
+          </linearGradient>
+          <filter
+            id="anel-sombra"
+            x="-40%"
+            y="-40%"
+            width="180%"
+            height="180%"
+          >
+            <feDropShadow
+              dx="0"
+              dy="1.4"
+              stdDeviation="1.6"
+              floodColor={tema.sombra}
+              floodOpacity="0.4"
+            />
+          </filter>
+        </defs>
         <circle
-          cx={44}
-          cy={44}
+          cx={50}
+          cy={50}
           r={r}
           fill="none"
-          strokeWidth={15}
-          className="stroke-borda"
+          stroke="url(#anel-trilho)"
+          strokeWidth={11}
         />
-        <circle
-          cx={44}
-          cy={44}
-          r={r}
-          fill="none"
-          strokeWidth={15}
-          strokeDasharray={c}
-          strokeDashoffset={c * (1 - v / 100)}
-          className={`dv-anel ${cor}`}
-          style={{ "--circunferencia": c } as CSSProperties}
-        />
+        <g transform="rotate(-90 50 50)">
+          <circle
+            cx={50}
+            cy={50}
+            r={r}
+            fill="none"
+            stroke="url(#anel-progresso)"
+            strokeWidth={11}
+            strokeLinecap="round"
+            strokeDasharray={c}
+            strokeDashoffset={c * (1 - v / 100)}
+            filter="url(#anel-sombra)"
+            className="dv-anel"
+            style={{ "--circunferencia": c } as CSSProperties}
+          />
+        </g>
       </svg>
       <span className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-        <span className="text-2xl font-bold text-texto tabular-nums">
+        <span className="text-[1.05rem] font-extrabold tracking-tight text-texto tabular-nums">
           {valor === null ? "—" : `${valor}%`}
         </span>
-        <span className="mt-1 text-[0.625rem] font-semibold tracking-[0.1em] text-texto-3 uppercase">
+        <span className="mt-0.5 text-[0.5rem] font-semibold tracking-[0.12em] text-texto-3 uppercase">
           saúde
         </span>
+        <span
+          aria-hidden
+          className="mt-[3px] h-[1.5px] w-3.5 rounded-full"
+          style={{ background: tema.risco }}
+        />
       </span>
     </div>
   );

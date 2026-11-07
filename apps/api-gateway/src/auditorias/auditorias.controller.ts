@@ -50,6 +50,7 @@ import {
   type AuditoriaResumo,
   type Contexto,
   type Pagina,
+  type PanoramaAuditorias,
   type ResumoAuditorias,
 } from '@davinci/types';
 import type { z } from 'zod';
@@ -90,6 +91,17 @@ export class AuditoriasController {
     return this.mensageria.enviar<ResumoAuditorias>(
       SERVICES.AUDITORIAS,
       P.resumo,
+      {},
+      ctx,
+    );
+  }
+
+  @Get('panorama')
+  @Permissao('auditorias.ver')
+  panorama(@ContextoHttp() ctx: Contexto) {
+    return this.mensageria.enviar<PanoramaAuditorias>(
+      SERVICES.AUDITORIAS,
+      P.panorama,
       {},
       ctx,
     );

@@ -82,3 +82,4 @@ __pycache__/
 
 # Relatórios de pentest (Strix) — contêm PoCs, não versionar
 strix_runs/
+.claude/settings.json

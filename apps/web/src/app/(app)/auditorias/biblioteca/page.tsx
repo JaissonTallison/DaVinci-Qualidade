@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ListFilter, Printer } from "lucide-react";
+import { ListFilter, Printer } from "@/components/icones";
 import {
   NORMAS,
   TEMAS_DO_ANEXO_A,

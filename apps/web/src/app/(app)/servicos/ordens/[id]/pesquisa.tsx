@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Send } from "lucide-react";
+import { Send } from "@/components/icones";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarConvite } from "@/lib/acoes-servicos";

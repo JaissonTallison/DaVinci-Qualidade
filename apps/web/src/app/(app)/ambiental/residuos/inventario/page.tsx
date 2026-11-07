@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Download } from "lucide-react";
+import { Download } from "@/components/icones";
 import {
   CLASSES_RESIDUO,
   UNIDADES_RESIDUO,

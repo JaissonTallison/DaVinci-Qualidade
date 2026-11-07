@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ListFilter } from "lucide-react";
+import { ListFilter } from "@/components/icones";
 import {
   CATALOGO_ESG,
   PILARES,

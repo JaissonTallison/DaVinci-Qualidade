@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { Check, Copy } from "@/components/icones";
 import { botaoSecundario } from "@/lib/estilos";
 
 /** Copia o texto para a área de transferência e confirma por 2 segundos. */

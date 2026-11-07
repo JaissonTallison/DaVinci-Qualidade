@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ChartColumn, Leaf, Settings } from "lucide-react";
+import { ChartColumn, Leaf, Settings } from "@/components/icones";
 import { lerCookie } from "@/lib/cookie";
 import { COOKIE_LEMBRAR, COOKIE_RECUSA } from "@/lib/sessao";
 import { FormularioEntrar } from "./formulario-entrar";

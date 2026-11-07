@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/icones";
 import { useActionState, useState, type ReactNode } from "react";
 import {
   GRANDEZAS_DE_MEDICAO,

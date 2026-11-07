@@ -1,4 +1,4 @@
-import { ListFilter, ShieldCheck } from "lucide-react";
+import { ListFilter, ShieldCheck } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BotaoExportar } from "@/components/botao-exportar";

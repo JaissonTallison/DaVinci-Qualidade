@@ -11,6 +11,7 @@ html {
   background: var(--color-fundo);
   overscroll-behavior-y: none;
 }
+
 /* Em telas de toque (celular, tablet): esconde a barra de rolagem da página para o visual de app.
    No desktop (ponteiro fino) a barra continua, que é o esperado em sistema de gestão. */
 @media (pointer: coarse) {
