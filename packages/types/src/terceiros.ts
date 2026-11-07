@@ -7,9 +7,9 @@ import { cnpjValido, normalizarDocumento } from './documento.js';
 import { chaves, data, opcional, texto, textoOpcional } from './validadores.js';
 
 export const TIPOS_DOC_TERCEIRO = {
-  pgr: 'PGR',
-  pcmso: 'PCMSO',
-  aso: 'ASO dos trabalhadores',
+  pgr: 'PGR (programa de gerenciamento de riscos)',
+  pcmso: 'PCMSO (programa de controle médico de saúde ocupacional)',
+  aso: 'ASO (atestado de saúde ocupacional) dos trabalhadores',
   treinamentos: 'Certificados de treinamento (NRs)',
   ficha_epi: 'Fichas de entrega de EPI',
   seguro: 'Seguro de vida',
