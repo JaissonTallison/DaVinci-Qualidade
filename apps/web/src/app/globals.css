@@ -34,6 +34,29 @@ main :is(input, select, textarea) {
   min-width: 0;
   max-width: 100%;
 }
+/*
+ * iOS Safari: campos de data/hora têm um tamanho interno próprio e ignoram a largura, estourando a
+ * grade no iPhone. Em telas de toque, tira a aparência nativa (o toque continua abrindo o seletor) para
+ * o campo respeitar a largura da coluna. No desktop (ponteiro fino) mantém o ícone de calendário/relógio.
+ */
+@media (pointer: coarse) {
+  main
+    :is(
+      input[type="date"],
+      input[type="time"],
+      input[type="datetime-local"],
+      input[type="month"],
+      input[type="week"]
+    ) {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+  }
+  main input::-webkit-date-and-time-value {
+    text-align: left;
+    min-width: 0;
+  }
+}
 
 /* Altura da janela (telas de acesso): o que é secundário sai antes de aparecer barra de rolagem */
 @custom-variant tela-media (@media (max-height: 60rem));
