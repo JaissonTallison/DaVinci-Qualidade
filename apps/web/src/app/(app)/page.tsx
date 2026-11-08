@@ -25,9 +25,12 @@ import { PendenciasCriticas } from "@/components/pendencias-criticas";
 import { chamarApi, type Resultado } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { Selo } from "@/components/selo";
-import { painel, sobretitulo } from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
-import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
+import {
+  CabecalhoDaPagina,
+  type ItemDaRegua,
+} from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Início" };
 
@@ -107,7 +110,7 @@ export default async function Inicio() {
   ]);
   const auditoriasPanorama = ok(auditoriasPanoramaR);
   const [
-    painel,
+    vencimentos,
     inspecoesMes,
     ncs,
     planos,
@@ -195,12 +198,66 @@ export default async function Inicio() {
   // (falso "tudo em dia") — e sim que o número está indisponível agora.
   const painelIndisponivel = painelR !== null && !painelR.ok;
   const vencidos =
-    painel?.prazos.filter((p) => p.situacao === "vencido").length ?? 0;
+    vencimentos?.prazos.filter((p) => p.situacao === "vencido").length ?? 0;
   const emSeteDias = diasDepois(hoje, 7);
   const nestaSemana =
-    painel?.prazos.filter(
+    vencimentos?.prazos.filter(
       (p) => p.situacao !== "vencido" && p.data <= emSeteDias,
     ).length ?? 0;
+
+  const temRegua = !painelIndisponivel && vencimentos !== null;
+  const regua: ItemDaRegua[] = [
+    ...(temRegua
+      ? [
+          {
+            rotulo: "Prazos vencidos",
+            valor: vencidos,
+            tom: vencidos ? ("perigo" as const) : ("sucesso" as const),
+            href: "/paineis/vencimentos",
+          },
+          {
+            rotulo: "Vencem em 7 dias",
+            valor: nestaSemana,
+            tom: nestaSemana ? ("atencao" as const) : undefined,
+            href: "/paineis/vencimentos",
+          },
+        ]
+      : []),
+    ...(ncs
+      ? [
+          {
+            rotulo: "NCs em aberto",
+            valor: ncs.abertas,
+            detalhe: ncs.vencidas
+              ? plural(ncs.vencidas, "vencida", "vencidas")
+              : "nenhuma vencida",
+            href: "/qualidade/nao-conformidades",
+          },
+        ]
+      : []),
+    ...(planos
+      ? [
+          {
+            rotulo: "Planos em execução",
+            valor: planos.emExecucao,
+            detalhe: planos.atrasados
+              ? plural(planos.atrasados, "atrasado", "atrasados")
+              : "nenhum atrasado",
+            href: "/qualidade/planos-de-acao",
+          },
+        ]
+      : []),
+    ...(saude !== null
+      ? [
+          {
+            rotulo: "Saúde do SGI",
+            valor: `${saude}%`,
+            tom: tomDaSaude(saude),
+            detalhe: `média de ${plural(componentes.length, "componente", "componentes")}`,
+          },
+        ]
+      : []),
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -208,111 +265,129 @@ export default async function Inicio() {
         titulo={`${saudacao}, ${eu.usuario.nome.split(" ")[0]}`}
         descricao={`${eu.empresa.nome} · resumo do que pede ação hoje`}
         acoes={<RelogioDoDia inicialISO={agora.toISOString()} />}
-      />
-
-      <div
-        className="dv-entrar"
-        style={{ "--atraso": "60ms" } as CSSProperties}
+        regua={regua.length ? regua : undefined}
       >
-        <section
-          className={`${painel} flex flex-col gap-4 px-5 py-4 lg:flex-row lg:flex-wrap lg:items-center lg:gap-x-5`}
-          aria-label="Resumo do dia"
+        {painelIndisponivel && (
+          <p className="mt-2 text-sm text-texto-2">
+            Prazos indisponíveis agora; recarregue em instantes.
+          </p>
+        )}
+      </CabecalhoDaPagina>
+
+      {componentes.length > 0 && (
+        <div
+          className="dv-entrar grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]"
+          style={{ "--atraso": "60ms" } as CSSProperties}
         >
-          <div className="flex flex-1 flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-4">
-            <div className="min-w-[8.5rem]">
-              <span className={sobretitulo}>Resumo de hoje</span>
-              <strong className="mt-0.5 block font-semibold text-texto">
-                {eu.empresa.nome}
-              </strong>
-            </div>
-
-            {painelIndisponivel ? (
-              <p className="text-sm text-texto-2">
-                Prazos vencidos indisponíveis agora — recarregue em instantes.
-              </p>
-            ) : (
-              <div className="flex gap-3.5">
-                <div className="flex flex-col items-center gap-1.5">
-                  <span
-                    className={`flex h-12 w-[3.25rem] items-center justify-center rounded-md border text-2xl font-semibold tabular-nums ${vencidos ? "border-nao-conforme-borda bg-nao-conforme-suave text-nao-conforme-texto" : "border-conforme-borda bg-conforme-suave text-conforme-texto"}`}
-                  >
-                    {vencidos}
-                  </span>
-                  <span className="text-xs text-texto-2">
-                    {vencidos === 1 ? "prazo vencido" : "prazos vencidos"}
-                  </span>
-                </div>
-                <div className="flex flex-col items-center gap-1.5">
-                  <span
-                    className={`flex h-12 w-[3.25rem] items-center justify-center rounded-md border text-2xl font-semibold tabular-nums ${nestaSemana ? "border-atencao-borda bg-atencao-suave text-atencao-texto" : "border-borda bg-superficie-2 text-texto-2"}`}
-                  >
-                    {nestaSemana}
-                  </span>
-                  <span className="text-xs text-texto-2">vencem em 7 dias</span>
-                </div>
-              </div>
-            )}
-
-            {pior && pior.pct < 100 ? (
-              <div className="max-w-[13rem] max-sm:max-w-none">
-                <Selo tom="perigo">Prioridade</Selo>
-                <p className="mt-1.5 text-sm text-texto">
-                  {pior.nome}: {pior.detalhe}.
-                </p>
-              </div>
-            ) : (
-              <p className="text-sm font-medium text-conforme-texto">
-                Todos os indicadores em 100%. Nada pede ação agora.
-              </p>
-            )}
-
-            {pior && pior.pct < 100 && (
-              <Botao
-                href={pior.href}
-                variante="primario"
-                iconeDireita={ArrowRight}
-                className="shrink-0 max-sm:w-full"
-              >
-                Resolver
-              </Botao>
-            )}
-          </div>
-
-          {componentes.length > 0 && (
-            <div className="flex items-center gap-3.5 lg:ml-auto">
-              <AnelCompacto valor={saude} />
-              <div className="min-w-[9.5rem]">
-                <p className="text-sm font-semibold text-texto">
+          <section className={painel} aria-labelledby="saude-titulo">
+            <header className={`${cabecalhoDoPainel} justify-between`}>
+              <div className="min-w-0">
+                <h2 id="saude-titulo" className={tituloDoPainel}>
                   Saúde do sistema de gestão
+                </h2>
+                <p className="text-sm text-texto-2">
+                  Quanto de cada componente está em dia. Abaixo de 90%, pede
+                  atenção; abaixo de 70%, ação.
                 </p>
-                <ul className="mt-1.5 space-y-1">
-                  {componentes.map((c) => (
-                    <li key={c.nome}>
-                      <Link
-                        href={c.href}
-                        className="flex items-center justify-between gap-6 text-sm transition-opacity hover:opacity-80"
-                      >
-                        <span className="text-texto">{c.nome}</span>
-                        <span
-                          className={`font-semibold tabular-nums ${c.pct < 100 ? "text-nao-conforme" : "text-texto"}`}
-                        >
-                          {c.pct}%
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
               </div>
+            </header>
+            <div className="flex flex-col gap-6 p-5 sm:flex-row sm:items-center">
+              <AnelDaSaude valor={saude} />
+              <ul className="min-w-0 flex-1 divide-y divide-borda">
+                {componentes.map((c) => (
+                  <li key={c.nome}>
+                    <Link
+                      href={c.href}
+                      className="group grid grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3rem] items-center gap-x-4 gap-y-1 py-2.5"
+                    >
+                      <span className="truncate text-base font-medium text-texto group-hover:underline">
+                        {c.nome}
+                      </span>
+                      <span
+                        aria-hidden
+                        className="h-2 overflow-hidden rounded-full bg-afundado"
+                      >
+                        <span
+                          className={`block h-full rounded-full ${FUNDO_DO_TOM[tomDaSaude(c.pct)]}`}
+                          style={{ width: `${c.pct}%` }}
+                        />
+                      </span>
+                      <span
+                        className={`text-right font-semibold tabular-nums ${COR_DO_TOM[tomDaSaude(c.pct)]}`}
+                      >
+                        {c.pct}%
+                      </span>
+                      <span className="col-span-3 truncate text-sm text-texto-2 sm:col-span-1 sm:col-start-2">
+                        {c.detalhe}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          )}
-        </section>
-      </div>
+          </section>
+
+          <section className={painel} aria-labelledby="prioridade-titulo">
+            <header className={cabecalhoDoPainel}>
+              <h2 id="prioridade-titulo" className={tituloDoPainel}>
+                Prioridade agora
+              </h2>
+            </header>
+            <div className="p-5">
+              {pior && pior.pct < 100 ? (
+                <>
+                  <Selo tom={pior.pct < 70 ? "perigo" : "atencao"}>
+                    {pior.nome} · {pior.pct}% em dia
+                  </Selo>
+                  <p className="mt-3 text-md text-texto">
+                    {pior.detalhe.charAt(0).toUpperCase() +
+                      pior.detalhe.slice(1)}
+                    .
+                  </p>
+                  <p className="mt-1 text-sm text-texto-2">
+                    É o componente mais baixo da saúde do sistema de gestão.
+                    Resolver aqui sobe a média mais depressa.
+                  </p>
+                  <Botao
+                    href={pior.href}
+                    variante="primario"
+                    tamanho="grande"
+                    iconeDireita={ArrowRight}
+                    className="mt-5 w-full"
+                  >
+                    Resolver {pior.nome.toLowerCase()}
+                  </Botao>
+                </>
+              ) : (
+                <>
+                  <Selo tom="sucesso">Tudo em dia</Selo>
+                  <p className="mt-3 text-md text-texto">
+                    Todos os componentes estão em 100%.
+                  </p>
+                  <p className="mt-1 text-sm text-texto-2">
+                    Nada pede ação agora. Os próximos prazos aparecem no painel
+                    de vencimentos.
+                  </p>
+                  <Botao
+                    href="/paineis/vencimentos"
+                    tamanho="grande"
+                    iconeDireita={ArrowRight}
+                    className="mt-5 w-full"
+                  >
+                    Ver vencimentos
+                  </Botao>
+                </>
+              )}
+            </div>
+          </section>
+        </div>
+      )}
 
       <AtalhosDeModulos permissoes={eu.permissoes} />
 
       {auditoriasPanorama && <AuditoriasPanorama dados={auditoriasPanorama} />}
 
-      <PendenciasCriticas prazos={painel?.prazos ?? []} hoje={hoje} />
+      <PendenciasCriticas prazos={vencimentos?.prazos ?? []} hoje={hoje} />
 
       <PainelDoInicio
         hoje={hoje}
@@ -325,25 +400,34 @@ export default async function Inicio() {
   );
 }
 
-/**
- * Saúde em anel (faixa do resumo): trilho cinza e progresso na cor do estado, sem degradê nem relevo.
- * Sucesso ≥ 90 %, atenção 70–89 %, perigo abaixo; preenche ao abrir.
- */
-function AnelCompacto({ valor }: { valor: number | null }) {
-  const r = 40;
+type Tom = "perigo" | "atencao" | "sucesso";
+/** Sucesso a partir de 90 %, atenção de 70 a 89 %, perigo abaixo de 70 %. */
+function tomDaSaude(v: number): Tom {
+  return v >= 90 ? "sucesso" : v >= 70 ? "atencao" : "perigo";
+}
+const COR_DO_TOM: Record<Tom, string> = {
+  sucesso: "text-conforme-texto",
+  atencao: "text-atencao-texto",
+  perigo: "text-nao-conforme-texto",
+};
+const FUNDO_DO_TOM: Record<Tom, string> = {
+  sucesso: "bg-conforme",
+  atencao: "bg-atencao",
+  perigo: "bg-nao-conforme",
+};
+
+/** Saúde em anel: trilho cinza e o progresso na cor do estado, sem degradê nem relevo. */
+function AnelDaSaude({ valor }: { valor: number | null }) {
+  const r = 42;
   const c = 2 * Math.PI * r;
   const v = valor ?? 0;
   const cor =
     valor === null
       ? "var(--color-borda-forte)"
-      : v >= 90
-        ? "var(--color-conforme)"
-        : v >= 70
-          ? "var(--color-atencao)"
-          : "var(--color-nao-conforme)";
+      : `var(--color-${{ sucesso: "conforme", atencao: "atencao", perigo: "nao-conforme" }[tomDaSaude(v)]})`;
   return (
     <div
-      className="relative size-[4.5rem] shrink-0"
+      className="relative mx-auto size-32 shrink-0 sm:mx-0"
       role="img"
       aria-label={
         valor === null
@@ -358,7 +442,7 @@ function AnelCompacto({ valor }: { valor: number | null }) {
           r={r}
           fill="none"
           stroke="var(--color-afundado)"
-          strokeWidth={9}
+          strokeWidth={8}
         />
         <g transform="rotate(-90 50 50)">
           <circle
@@ -367,7 +451,7 @@ function AnelCompacto({ valor }: { valor: number | null }) {
             r={r}
             fill="none"
             stroke={cor}
-            strokeWidth={9}
+            strokeWidth={8}
             strokeDasharray={c}
             strokeDashoffset={c * (1 - v / 100)}
             className="dv-anel"
@@ -376,10 +460,10 @@ function AnelCompacto({ valor }: { valor: number | null }) {
         </g>
       </svg>
       <span className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-        <span className="text-md font-semibold text-texto tabular-nums">
+        <span className="text-3xl font-semibold text-texto tabular-nums">
           {valor === null ? "—" : `${valor}%`}
         </span>
-        <span className="mt-1 text-xs text-texto-2">saúde</span>
+        <span className="mt-1.5 text-xs text-texto-2">em dia</span>
       </span>
     </div>
   );

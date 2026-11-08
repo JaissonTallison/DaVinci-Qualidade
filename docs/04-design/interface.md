@@ -202,6 +202,8 @@ Menus suspensos: largura fixa, 6 px abaixo do botão, itens de 36 px com canto d
 4. **Régua**: os números e dados que resumem a tela, lado a lado, com divisória vertical; rótulo em caixa alta de 12 px e o valor embaixo (número em 18 px, texto em 14 px). Valor que pede ação vai em vermelho e vira link para a lista filtrada. Listagem: contagens (Em aberto · Graves · Vencidas). Detalhe: dados do registro (Gravidade · Origem · Responsável · Prazo · Aberta em).
 5. **Abas**, quando há, encostadas na linha de baixo.
 
+**Início (cartão de visita do sistema):** o cabeçalho traz a saudação, a empresa, o relógio e a régua do dia (Prazos vencidos · Vencem em 7 dias · NCs em aberto · Planos em execução · Saúde do SGI). Logo abaixo, dois cards: **Saúde do sistema de gestão** (anel com a média e uma barra por componente, na cor da faixa: 90% ou mais em dia, 70 a 89% atenção, abaixo de 70% ação) e **Prioridade agora** (o componente mais baixo, o que falta e o botão que resolve). Depois, os atalhos dos módulos, o panorama das auditorias, "Precisa da sua atenção" e os gráficos, todos em card com cabeçalho e linha.
+
 Aviso de confirmação e alerta de bloqueio ficam logo abaixo da faixa, não dentro. Telas antigas com cabeçalho próprio usam `CabecalhoComVoltar` (mesma faixa, com `regua` opcional).
 
 ```text

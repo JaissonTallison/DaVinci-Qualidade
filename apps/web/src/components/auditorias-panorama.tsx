@@ -6,6 +6,7 @@ import {
   type PanoramaAuditorias,
   type StatusAuditoria,
 } from "@davinci/types";
+import { Botao } from "@/components/botao";
 
 const MESES = [
   "jan",
@@ -64,10 +65,12 @@ function Quadro({
   classe?: string;
 }) {
   return (
-    <div className={`rounded-md bg-superficie p-5 shadow-cartao ${classe}`}>
-      <h3 className="text-base font-semibold text-texto">{titulo}</h3>
-      <p className="mb-4 text-sm text-texto-2">{subtitulo}</p>
-      {children}
+    <div className={`rounded-md bg-superficie shadow-cartao ${classe}`}>
+      <div className="min-h-14 border-b border-borda px-5 py-3">
+        <h3 className="text-md font-semibold text-texto">{titulo}</h3>
+        <p className="text-sm text-texto-2">{subtitulo}</p>
+      </div>
+      <div className="p-5">{children}</div>
     </div>
   );
 }
@@ -99,20 +102,16 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-md font-semibold text-texto">
-            Auditorias — panorama
+          <h2 className="text-xl font-semibold text-texto">
+            Panorama das auditorias
           </h2>
           <p className="text-sm text-texto-2">
             Conformidade, carga por auditor, situação e andamento.
           </p>
         </div>
-        <Link
-          href="/auditorias"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-acao hover:underline"
-        >
+        <Botao href="/auditorias" iconeDireita={ChevronRight}>
           Ver auditorias
-          <ChevronRight aria-hidden size={14} strokeWidth={1.75} />
-        </Link>
+        </Botao>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr_1fr_0.9fr]">
@@ -271,8 +270,8 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
       {/* Acompanhamento (tabela) */}
       {recentes.length > 0 && (
         <div className="overflow-hidden rounded-md bg-superficie shadow-cartao">
-          <div className="border-b border-borda px-5 py-3.5">
-            <h3 className="text-base font-semibold text-texto">
+          <div className="min-h-14 border-b border-borda px-5 py-3">
+            <h3 className="text-md font-semibold text-texto">
               Auditorias recentes
             </h3>
             <p className="text-sm text-texto-2">
@@ -280,8 +279,8 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
             </p>
           </div>
           <table className="w-full">
-            <thead>
-              <tr className="border-b border-borda text-left text-xs text-texto-2">
+            <thead className="bg-superficie-2 text-xs tracking-[0.04em] text-texto-2 uppercase">
+              <tr className="border-b border-borda text-left">
                 <th className="py-2.5 pr-3 pl-5 font-semibold">Código</th>
                 <th className="px-3 py-2.5 font-semibold">Tipo</th>
                 <th className="px-3 py-2.5 font-semibold">Escopo</th>
