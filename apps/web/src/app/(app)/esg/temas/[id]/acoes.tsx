@@ -2,7 +2,8 @@
 
 import type { TemaEsg } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Bloco, Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { registrarAndamento, situacaoDoTema } from "@/lib/acoes-esg";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { campo } from "@/lib/estilos";

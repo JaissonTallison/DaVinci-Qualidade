@@ -4,7 +4,8 @@ import { useActionState } from "react";
 import type { Perfil, UsuarioDaEmpresa } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { Selecao } from "@/components/selecao";
 import {
   alterarPerfilDoUsuario,

@@ -1,7 +1,8 @@
 "use client";
 
 import type { ProdutoQuimico } from "@davinci/types";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { situacaoDoProduto } from "@/lib/acoes-ambiental";
 
 /** Inativar tira o produto do inventário sem apagar o histórico. Gestor (ambiental.excluir). */

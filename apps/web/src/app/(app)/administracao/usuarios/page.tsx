@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { Perfil, UsuarioDaEmpresa } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarMomento } from "@/lib/datas";
 import { painel } from "@/lib/estilos";

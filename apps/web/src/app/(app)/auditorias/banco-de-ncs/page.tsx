@@ -6,7 +6,7 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { BotaoCopiar } from "@/components/botao-copiar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { SelecaoDeFiltro } from "@/components/filtros";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { campoCompacto, painel } from "@/lib/estilos";
 import { CAPITULOS, PACKS } from "../biblioteca/filtros";
@@ -100,7 +100,7 @@ export default async function BancoDeNcs({
               {r.dados.map((m) => (
                 <li key={m.codigo} className="px-4 py-2.5">
                   <details>
-                    <summary className="flex cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1">
+                    <summary className="flex dv-abrir cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1">
                       <span className="w-28 shrink-0 text-sm font-semibold text-texto-2">
                         {NORMAS[m.norma]}
                       </span>

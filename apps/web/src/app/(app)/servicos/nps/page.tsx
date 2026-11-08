@@ -10,7 +10,7 @@ import type {
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { FaixaDeIndicadores } from "@/components/faixa-de-indicadores";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import { painel } from "@/lib/estilos";
@@ -47,7 +47,7 @@ export default async function Satisfacao({
         titulo="Índice de Satisfação do Cliente (ISC)"
         descricao="Satisfação do cliente medida nos últimos 12 meses (ISO 9001, 9.1.2)."
       />
-      <Recolhido titulo="Como funciona o ISC">
+      <Recolhido fixo titulo="Como funciona o ISC">
         <p className="max-w-2xl text-base text-texto-2">
           O cliente dá uma nota de 0 a 10 ao serviço. O Índice de Satisfação do
           Cliente (ISC) é a média dessas notas convertida para percentual (média

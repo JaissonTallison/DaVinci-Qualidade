@@ -10,7 +10,7 @@ import {
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
@@ -188,7 +188,7 @@ export default async function Fornecedores({
           )}
           {historico.length > 0 && (
             <details className="border-t border-borda px-5 py-3">
-              <summary className="cursor-pointer text-sm font-semibold text-texto-2">
+              <summary className="dv-abrir cursor-pointer text-sm font-semibold text-texto-2">
                 Avaliações anteriores ({historico.length})
               </summary>
               <ul className="mt-2 divide-y divide-borda text-sm">

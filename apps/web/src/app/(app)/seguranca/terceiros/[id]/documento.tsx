@@ -2,7 +2,8 @@
 
 import { TIPOS_DOC_TERCEIRO } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { Selecao } from "@/components/selecao";
 import { registrarDocumentoDoTerceiro } from "@/lib/acoes-terceiros";
 import { campo } from "@/lib/estilos";

@@ -2,7 +2,8 @@
 
 import type { Parceiro } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { inativarParceiro, reativarParceiro } from "@/lib/acoes-parceiros";
 import { campo } from "@/lib/estilos";
 

@@ -6,7 +6,7 @@ import {
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
@@ -38,7 +38,10 @@ export default async function Destinadores({
           destaque e no painel.
         </p>
         {podeEditar && (
-          <Recolhido titulo="Cadastrar transportador ou destinador">
+          <Recolhido
+            titulo="Cadastrar transportador ou destinador"
+            aberto={r.ok && r.dados.length === 0}
+          >
             <NovoDestinador />
           </Recolhido>
         )}
@@ -79,7 +82,7 @@ export default async function Destinadores({
                 )}
                 {podeEditar && (
                   <details className="mt-1">
-                    <summary className="cursor-pointer text-sm text-info">
+                    <summary className="dv-abrir cursor-pointer text-sm text-info">
                       Editar ou renovar a licença
                     </summary>
                     <div className="mt-2">

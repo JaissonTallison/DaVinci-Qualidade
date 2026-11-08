@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { DadosDoUsuario, Treinamento } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { painel } from "@/lib/estilos";
 import { FormularioDeTreinamento, SituacaoDoTreinamento } from "./formulario";
@@ -56,7 +56,10 @@ export default async function Treinamentos({
       />
       <Aviso avisos={AVISOS} chave={aviso} />
       {podeEditar && (
-        <Recolhido titulo="Cadastrar treinamento">
+        <Recolhido
+          titulo="Cadastrar treinamento"
+          aberto={lista.ok && lista.dados.length === 0}
+        >
           <FormularioDeTreinamento />
         </Recolhido>
       )}
@@ -96,7 +99,7 @@ export default async function Treinamentos({
                 </div>
                 {podeEditar && (
                   <details className="w-full sm:w-auto">
-                    <summary className="cursor-pointer text-sm text-texto-2 hover:text-texto hover:underline sm:text-right">
+                    <summary className="dv-abrir cursor-pointer text-sm text-texto-2 hover:text-texto hover:underline sm:text-right">
                       Editar
                     </summary>
                     <div className="mt-3 rounded-md border border-borda p-4 sm:w-[36rem]">

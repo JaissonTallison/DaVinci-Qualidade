@@ -10,7 +10,7 @@ import {
   type Pagina,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import {
   GravidadeDaNc,
   StatusDaNc,

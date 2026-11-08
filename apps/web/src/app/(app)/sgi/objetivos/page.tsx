@@ -6,7 +6,7 @@ import {
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { linkDiscreto, painel } from "@/lib/estilos";
@@ -44,7 +44,10 @@ export default async function Objetivos({
       />
       <Aviso avisos={AVISOS} chave={aviso} />
       {podeEditar && (
-        <Recolhido titulo="Cadastrar objetivo">
+        <Recolhido
+          titulo="Cadastrar objetivo"
+          aberto={lista.ok && lista.dados.length === 0}
+        >
           <NovoObjetivo />
         </Recolhido>
       )}
@@ -125,7 +128,9 @@ export default async function Objetivos({
               )}
               {permissoes.includes("sgi.excluir") && (
                 <details className="mt-3">
-                  <summary className={`cursor-pointer ${linkDiscreto}`}>
+                  <summary
+                    className={`dv-abrir cursor-pointer ${linkDiscreto}`}
+                  >
                     {o.ativo ? "Inativar" : "Reativar"}
                   </summary>
                   <SituacaoDoObjetivo objetivo={o} />

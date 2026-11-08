@@ -6,9 +6,9 @@ import { Campo } from "@/components/campo";
 import {
   Bloco,
   Formulario,
-  Recolhido,
   type EstadoDeFormulario,
 } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { LinhasDeTarefa } from "@/components/linhas-de-tarefa";
 import {
   cancelarPlano,
@@ -55,7 +55,7 @@ export function AcoesDaTarefa({
             Concluir
           </Botao>
           <details className="relative">
-            <summary className="cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
+            <summary className="dv-abrir cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
               Cancelar
             </summary>
             <div className="absolute right-0 z-10 mt-1 flex w-72 flex-col gap-2 rounded-md bg-superficie p-3 text-left shadow-sm">

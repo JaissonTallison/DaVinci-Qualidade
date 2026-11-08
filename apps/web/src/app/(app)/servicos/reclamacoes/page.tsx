@@ -12,7 +12,7 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { painel } from "@/lib/estilos";
@@ -77,7 +77,10 @@ export default async function Reclamacoes({
         </section>
       )}
       {podeEditar && clientes.ok && (
-        <Recolhido titulo="Registrar reclamação">
+        <Recolhido
+          titulo="Registrar reclamação"
+          aberto={r.ok && r.dados.length === 0}
+        >
           <NovaReclamacao
             clientes={clientes.dados.itens}
             ordens={ordens.ok ? ordens.dados.itens : []}

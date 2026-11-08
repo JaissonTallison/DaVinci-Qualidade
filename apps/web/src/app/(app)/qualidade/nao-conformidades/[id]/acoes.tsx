@@ -6,7 +6,8 @@ import {
   type NaoConformidade,
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { Selecao as SelecaoDeFormulario } from "@/components/selecao";
 import {
   cancelarNc,

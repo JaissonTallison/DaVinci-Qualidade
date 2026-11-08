@@ -77,7 +77,7 @@ export function TabelaDosDados({
 }) {
   return (
     <details className="mt-3 text-sm">
-      <summary className="cursor-pointer text-texto-2 hover:text-texto">
+      <summary className="dv-abrir cursor-pointer text-texto-2 hover:text-texto">
         Ver dados
       </summary>
       <div className="relative mt-2 overflow-x-auto">

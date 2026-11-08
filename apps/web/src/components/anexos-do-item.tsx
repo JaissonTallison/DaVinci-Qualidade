@@ -48,7 +48,7 @@ export async function AnexosDoItem({
       )}
       {podeEditar && r.ok && (
         <details>
-          <summary className="cursor-pointer text-sm text-info">
+          <summary className="dv-abrir cursor-pointer text-sm text-info">
             {lista.length ? "Anexar outra evidência" : "Anexar evidência"}
           </summary>
           <div className="mt-2">

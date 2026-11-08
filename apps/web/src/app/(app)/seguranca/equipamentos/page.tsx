@@ -7,7 +7,7 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { painel } from "@/lib/estilos";
@@ -49,7 +49,10 @@ export default async function Equipamentos({
         </span>
       </p>
       {podeEditar && (
-        <Recolhido titulo="Cadastrar equipamento">
+        <Recolhido
+          titulo="Cadastrar equipamento"
+          aberto={r.ok && lista.length === 0}
+        >
           <NovoEquipamento hoje={hojeEmBrasilia()} />
         </Recolhido>
       )}

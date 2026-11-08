@@ -105,7 +105,7 @@ export default async function Prompts({
               {lista.map((p) => (
                 <li key={p.codigo} className="px-4 py-2.5">
                   <details>
-                    <summary className="flex cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1">
+                    <summary className="flex dv-abrir cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1">
                       <span className="w-28 shrink-0 text-sm font-semibold text-texto-2">
                         {NORMAS[p.norma]}
                       </span>

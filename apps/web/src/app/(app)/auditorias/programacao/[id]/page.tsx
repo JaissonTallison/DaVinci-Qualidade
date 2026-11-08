@@ -7,7 +7,7 @@ import {
   type ItemDaProgramacao,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { StatusDaAuditoria } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { excluirItemProgramacao } from "@/lib/acoes-programacao";

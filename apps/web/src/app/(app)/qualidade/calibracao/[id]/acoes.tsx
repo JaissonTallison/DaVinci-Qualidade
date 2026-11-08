@@ -4,7 +4,8 @@ import { useActionState, useState } from "react";
 import type { Instrumento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
-import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Bloco, Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import {
   anularCalibracao,
   mudarUsoDoInstrumento,

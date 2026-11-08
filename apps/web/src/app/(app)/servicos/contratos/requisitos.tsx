@@ -9,7 +9,8 @@ import {
   type SituacaoDoRequisitoDoContrato,
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { Selecao } from "@/components/selecao";
 import {
   analisarContrato,
@@ -69,7 +70,11 @@ function CamposDoRequisito({
           </Selecao>
         </Campo>
       </div>
-      <Campo id="descricao" rotulo="Requisito do cliente" erro={erros.descricao}>
+      <Campo
+        id="descricao"
+        rotulo="Requisito do cliente"
+        erro={erros.descricao}
+      >
         <textarea
           id="descricao"
           name="descricao"
@@ -110,7 +115,11 @@ function CamposDoRequisito({
   );
 }
 
-export function NovoRequisitoDoContrato({ contratoId }: { contratoId: string }) {
+export function NovoRequisitoDoContrato({
+  contratoId,
+}: {
+  contratoId: string;
+}) {
   return (
     <Recolhido titulo="Adicionar requisito do cliente">
       <Formulario
@@ -141,7 +150,9 @@ export function LinhaDoRequisito({
             <span className="ml-2 text-sm text-texto-2">· desejável</span>
           )}
         </span>
-        <span className={`text-sm font-semibold ${COR_DA_SITUACAO[r.situacao]}`}>
+        <span
+          className={`text-sm font-semibold ${COR_DA_SITUACAO[r.situacao]}`}
+        >
           {SITUACOES_DO_REQUISITO_DO_CONTRATO[r.situacao]}
         </span>
       </div>

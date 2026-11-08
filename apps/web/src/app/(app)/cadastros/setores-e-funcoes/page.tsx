@@ -190,7 +190,7 @@ function Lista({
                   <div className="flex items-start gap-3">
                     {item.ativo && (
                       <details className="relative">
-                        <summary className="h-8 cursor-pointer list-none content-center text-sm text-texto-2 hover:text-texto hover:underline">
+                        <summary className="h-8 dv-abrir cursor-pointer list-none content-center text-sm text-texto-2 hover:text-texto hover:underline">
                           Renomear
                         </summary>
                         <div className="absolute right-0 z-10 mt-1 w-80 rounded-md bg-superficie p-3 shadow-sm">

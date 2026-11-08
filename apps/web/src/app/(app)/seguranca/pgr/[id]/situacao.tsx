@@ -1,7 +1,8 @@
 "use client";
 
 import type { Risco } from "@davinci/types";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { mudarSituacaoDoRisco } from "@/lib/acoes-pgr-pt";
 
 export function SituacaoDoRisco({ risco }: { risco: Risco }) {

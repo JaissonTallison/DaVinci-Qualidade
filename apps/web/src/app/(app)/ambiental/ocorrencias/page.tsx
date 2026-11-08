@@ -7,7 +7,7 @@ import {
   type OcorrenciaAmbiental,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { painel } from "@/lib/estilos";
@@ -38,7 +38,10 @@ export default async function Ocorrencias() {
         </p>
       )}
       {podeEditar && (
-        <Recolhido titulo="Registrar ocorrência">
+        <Recolhido
+          titulo="Registrar ocorrência"
+          aberto={r.ok && r.dados.length === 0}
+        >
           <NovaOcorrencia hoje={hojeEmBrasilia()} />
         </Recolhido>
       )}

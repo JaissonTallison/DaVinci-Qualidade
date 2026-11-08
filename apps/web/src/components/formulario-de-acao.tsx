@@ -92,21 +92,3 @@ export function Bloco({
     </section>
   );
 }
-
-/** Ação secundária (revisar, cancelar): recolhida para não competir com a principal. */
-export function Recolhido({
-  titulo,
-  children,
-}: {
-  titulo: string;
-  children: ReactNode;
-}) {
-  return (
-    <details className={`${painel} mt-4 px-5 py-3`}>
-      <summary className="cursor-pointer text-base font-semibold text-texto-2">
-        {titulo}
-      </summary>
-      <div className="mt-3">{children}</div>
-    </details>
-  );
-}

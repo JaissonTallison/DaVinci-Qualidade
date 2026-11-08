@@ -296,7 +296,9 @@ export default function Manual() {
           {FAQ.map(([p, r]) => (
             <li key={p} className="px-5 py-2.5">
               <details>
-                <summary className="cursor-pointer font-semibold">{p}</summary>
+                <summary className="dv-abrir cursor-pointer font-semibold">
+                  {p}
+                </summary>
                 <p className="mt-1 max-w-[80ch] text-sm">{r}</p>
               </details>
             </li>

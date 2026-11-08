@@ -2,7 +2,8 @@
 
 import type { RiscoOuOportunidade } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { encerrarRo } from "@/lib/acoes-sgi";
 import { areaDeTexto } from "@/lib/estilos";
 import type { ConfigRo } from "./config";

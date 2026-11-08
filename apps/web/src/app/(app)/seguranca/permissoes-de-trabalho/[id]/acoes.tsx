@@ -2,7 +2,8 @@
 
 import type { PermissaoDeTrabalho } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Bloco, Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { cancelarPt, encerrarPt, liberarPt } from "@/lib/acoes-pgr-pt";
 import { campo } from "@/lib/estilos";
 

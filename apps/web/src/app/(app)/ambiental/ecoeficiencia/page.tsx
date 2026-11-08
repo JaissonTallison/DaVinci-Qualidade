@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { DadosDoUsuario, Ecoeficiencia as Eco } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { painel } from "@/lib/estilos";

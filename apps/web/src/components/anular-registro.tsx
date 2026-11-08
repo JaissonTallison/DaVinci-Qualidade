@@ -25,7 +25,7 @@ export function AnularRegistro({
     (estado.erro.detalhes?.[0]?.mensagem ?? estado.erro.mensagem);
   return (
     <details className="relative inline-block text-left" open={Boolean(erro)}>
-      <summary className="cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
+      <summary className="dv-abrir cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
         Anular
       </summary>
       <form

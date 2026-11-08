@@ -6,7 +6,7 @@ import {
   type ProgramaAmbiental,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import { painel } from "@/lib/estilos";
@@ -32,7 +32,7 @@ export default async function Programas() {
         descricao="Cada programa parte de uma linha de base e persegue uma meta com prazo. Indicadores de água, energia, resíduos e emissões são calculados pelo sistema (ano corrente); o indicador próprio é medido mês a mês."
       />
       {podeEditar && (
-        <Recolhido titulo="Novo programa">
+        <Recolhido titulo="Novo programa" aberto={r.ok && r.dados.length === 0}>
           <NovoPrograma />
         </Recolhido>
       )}

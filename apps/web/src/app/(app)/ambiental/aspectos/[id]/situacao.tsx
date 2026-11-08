@@ -1,7 +1,8 @@
 "use client";
 
 import type { AspectoAmbiental } from "@davinci/types";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { situacaoDoAspecto } from "@/lib/acoes-ambiental";
 
 /** Inativar tira o aspecto do levantamento sem apagar o histórico. Gestor (ambiental.excluir). */
