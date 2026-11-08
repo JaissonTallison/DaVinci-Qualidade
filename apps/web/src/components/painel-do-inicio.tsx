@@ -48,7 +48,7 @@ export function PainelDoInicio({
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg text-texto">
+          <h2 className="text-md font-semibold text-texto">
             {mensalAtivo === "insp"
               ? "Inspeções por mês"
               : "Taxa de frequência de acidentes (TF)"}

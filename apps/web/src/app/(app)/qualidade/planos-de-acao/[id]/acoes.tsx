@@ -62,7 +62,7 @@ export function AcoesDaTarefa({
             <div className="absolute right-0 z-10 mt-1 flex w-72 flex-col gap-2 rounded-md bg-superficie p-3 text-left shadow-sm">
               <label
                 htmlFor={`motivo-${tarefa.id}`}
-                className="text-sm font-semibold text-texto-2"
+                className="text-base font-medium text-texto"
               >
                 Por que cancelar esta tarefa?
               </label>
@@ -126,7 +126,7 @@ export function AcoesDoPlano({
             {(erros, v) => (
               <>
                 <fieldset className="flex flex-col gap-1.5">
-                  <legend className="text-sm font-semibold text-texto-2">
+                  <legend className="text-base font-medium text-texto">
                     Resultado
                   </legend>
                   <div className="flex gap-6 text-base">

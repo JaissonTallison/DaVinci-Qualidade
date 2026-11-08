@@ -159,7 +159,7 @@ export function FormularioDeProduto({
               />
             </Campo>
             <fieldset className="sm:col-span-3">
-              <legend className="text-sm font-semibold text-texto-2">
+              <legend className="text-base font-medium text-texto">
                 Perigos (pictogramas da FDS)
               </legend>
               <div className="mt-2 grid gap-2 sm:grid-cols-3">

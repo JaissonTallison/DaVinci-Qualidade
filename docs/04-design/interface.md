@@ -254,19 +254,21 @@ O "ID do erro" é o `digest` do Next, o mesmo que fica no log do servidor.
 
 ## 8. Componentes do QSSMA
 
-| Componente                            | Regra                                                                                                                                                                      |
-| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Status** (`Selo`)                   | Retângulo de 22 px, canto de 4 px, só texto, sem ponto. Tons: perigo, atenção, sucesso, info, neutro. Os componentes de `marcadores*.tsx` já escolhem o tom de cada status |
-| **Vencido / atrasado** (`Alerta`)     | Selo de perigo com há quanto tempo ("Vencida há 3 dias") e, embaixo, o status e a data em cinza                                                                            |
-| **Alerta em caixa** (`CaixaDeAlerta`) | Fundo e borda suaves no tom, ícone padrão do Lucide (`circle-alert`, `triangle-alert`, `circle-check`, `info`), título opcional e as ações que resolvem. Sem faixa lateral |
-| **Número do registro**                | Mono, `texto`, copiável com um clique                                                                                                                                      |
-| **Prazo**                             | Data `dd/mm/aaaa`; vencendo, selo de atenção ao lado; vencido, `Alerta`                                                                                                    |
-| **Tabela**                            | Cabeçalho em `superficie-2`, 12 px em caixa alta; linhas de 44 px com divisória e hover em `superficie-2`; ordenação com seta; paginação com números                       |
-| **Matriz de risco 5×5**               | Quadrados com o marcador do nível (5.4) e a contagem de riscos. Eixos rotulados: Probabilidade (1–5) e Impacto (1–5)                                                       |
-| **Checklist de inspeção**             | Três botões por item: OK, NOK, N/A, com o fundo suave do tom quando marcado                                                                                                |
-| **Faixa de indicadores**              | Uma moldura, indicadores separados por divisória vertical. Sem ícone                                                                                                       |
-| **Estado vazio**                      | Ícone de 28 px em `texto-3`, título do que falta, uma frase e o botão que resolve                                                                                          |
-| **Botões**                            | Verbo + objeto: "Abrir NC", "Liberar permissão". Primário em azul da marca, um por tela                                                                                    |
+| Componente                            | Regra                                                                                                                                                                       |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Status** (`Selo`)                   | Retângulo de 22 px, canto de 4 px, só texto, sem ponto. Tons: perigo, atenção, sucesso, info, neutro. Os componentes de `marcadores*.tsx` já escolhem o tom de cada status  |
+| **Vencido / atrasado** (`Alerta`)     | Selo de perigo com há quanto tempo ("Vencida há 3 dias") e, embaixo, o status e a data em cinza                                                                             |
+| **Alerta em caixa** (`CaixaDeAlerta`) | Fundo e borda suaves no tom, ícone padrão do Lucide (`circle-alert`, `triangle-alert`, `circle-check`, `info`), título opcional e as ações que resolvem. Sem faixa lateral  |
+| **Número do registro**                | Mono, `texto`, copiável com um clique                                                                                                                                       |
+| **Prazo**                             | Data `dd/mm/aaaa`; vencendo, selo de atenção ao lado; vencido, `Alerta`                                                                                                     |
+| **Tabela**                            | Cabeçalho em `superficie-2`, 12 px em caixa alta; linhas de 44 px com divisória e hover em `superficie-2`; ordenação com seta; paginação com números                        |
+| **Matriz de risco 5×5**               | Quadrados com o marcador do nível (5.4) e a contagem de riscos. Eixos rotulados: Probabilidade (1–5) e Impacto (1–5)                                                        |
+| **Checklist de inspeção**             | Três botões por item: OK, NOK, N/A, com o fundo suave do tom quando marcado                                                                                                 |
+| **Faixa de indicadores**              | Uma moldura, indicadores separados por divisória vertical. Sem ícone                                                                                                        |
+| **Card** (`painel`)                   | Cabeçalho com `cabecalhoDoPainel` (título `tituloDoPainel` de 15 px, descrição de 13 px, ações à direita) sobre a linha; corpo com `p-5`. Tabela encosta nas bordas do card |
+| **Campos nativos**                    | Caixa de marcar e rádio de 16 px no azul da marca; seleção com a seta dupla do Lucide; rótulo de 14 px em `font-medium`, "(opcional)" em cinza                              |
+| **Estado vazio**                      | Ícone de 28 px em `texto-3`, título do que falta, uma frase e o botão que resolve                                                                                           |
+| **Botões**                            | Verbo + objeto: "Abrir NC", "Liberar permissão". Primário em azul da marca, um por tela                                                                                     |
 
 ---
 
@@ -358,4 +360,4 @@ SVG próprio em `components/graficos.tsx`: colunas empilhadas, colunas agrupadas
 
 As telas de acesso (`.dv-acesso`) são a única área com degradê do sistema. O resumo do início é um painel branco comum (16/10/2026): saudação, prazos vencidos, a prioridade com link e a saúde do sistema de gestão em lista compacta.
 
-As telas de acesso (entrar, esqueci a senha, código do 2FA) seguem o visual aprovado pelo dono do produto em 16/10/2026: foto de fundo com véu marinho em degradê, cartão branco de canto 24 px com sombra, ícones das áreas em quadrado colorido, botão azul e o título "Bem-vindo(a)". É uma vitrine de quem ainda não entrou; dentro do sistema continuam valendo todas as regras desta página. Tudo fica escopado em `.dv-acesso` e não pode ser reaproveitado em outras telas.
+As telas de acesso (entrar, esqueci a senha, código do 2FA) seguem o mesmo design system desde 08/11/2026: no computador, o painel da marca em azul sólido (`menu`) à esquerda, com a logo, uma frase do que o sistema faz, as cinco áreas com ícone em `ouro-claro` e as normas em selos de contorno; à direita, o cartão branco (`painel`) sobre o `fundo`, com campos de 40 px e botão primário. Sem foto, degradê, vidro, sombra grande nem "Bem-vindo(a)". As classes `.dv-acesso-*` só aplicam os tokens.

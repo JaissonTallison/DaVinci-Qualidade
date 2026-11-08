@@ -81,7 +81,7 @@ export default async function DetalheDaInspecao({
         voltar={{ href: "/qualidade/inspecoes", rotulo: "Inspeções" }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="font-mono text-lg text-texto-2">{i.numero}</span>
+          <span className="font-mono text-base text-texto-2">{i.numero}</span>
           <StatusDaInspecao status={i.status} />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{i.objeto}</h1>

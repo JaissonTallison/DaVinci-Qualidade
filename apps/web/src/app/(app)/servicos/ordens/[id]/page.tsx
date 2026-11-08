@@ -71,7 +71,7 @@ export default async function DetalheDaOs({
         voltar={{ href: "/servicos/ordens", rotulo: "Ordens de serviço" }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4">
-          <span className="font-mono text-lg text-texto-2">{o.numero}</span>
+          <span className="font-mono text-base text-texto-2">{o.numero}</span>
           <StatusDaOs status={o.status} atrasada={o.atrasada} prazo={o.prazo} />
         </header>
         <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">

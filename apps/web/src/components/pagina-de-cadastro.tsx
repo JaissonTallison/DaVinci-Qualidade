@@ -6,7 +6,13 @@ import {
   CircleAlert,
   CircleCheck,
 } from "@/components/icones";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { Selo } from "@/components/selo";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 
 /**
  * Peças da tela de cadastro (interface.md §7.2): cabeçalho com voltar, uma seção por bloco,
@@ -86,24 +92,15 @@ function textoDaSituacao(s: SituacaoDaSecao): string {
     : `${s.faltam} obrigatórios pendentes`;
 }
 
-/** Situação da seção em texto, com ícone só para completa e pendente (não depende de cor). */
+/** Situação da seção em selo: completa em sucesso, pendente em atenção, opcional neutro. */
 function SeloDaSecao({ situacao }: { situacao: SituacaoDaSecao }) {
-  const texto = textoDaSituacao(situacao);
-  if (situacao.tipo === "completa")
-    return (
-      <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-conforme">
-        <CircleCheck aria-hidden size={16} strokeWidth={1.75} />
-        {texto}
-      </span>
-    );
-  if (situacao.tipo === "pendente")
-    return (
-      <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-atencao">
-        <CircleAlert aria-hidden size={16} strokeWidth={1.75} />
-        {texto}
-      </span>
-    );
-  return <span className="shrink-0 text-sm text-texto-3">{texto}</span>;
+  const tom =
+    situacao.tipo === "completa"
+      ? "sucesso"
+      : situacao.tipo === "pendente"
+        ? "atencao"
+        : "neutro";
+  return <Selo tom={tom}>{textoDaSituacao(situacao)}</Selo>;
 }
 
 /** Um bloco do formulário: título, para que serve, situação do preenchimento e os campos. */
@@ -127,14 +124,12 @@ export function SecaoDoCadastro({
       aria-labelledby={`${id}-titulo`}
       className={`${painel} scroll-mt-20`}
     >
-      <header className="flex items-start justify-between gap-4 border-b border-borda px-5 py-3.5">
+      <header className={`${cabecalhoDoPainel} justify-between`}>
         <div className="min-w-0">
-          <h2 id={`${id}-titulo`} className="text-lg text-texto">
+          <h2 id={`${id}-titulo`} className={tituloDoPainel}>
             {titulo}
           </h2>
-          {descricao && (
-            <p className="mt-0.5 text-sm text-texto-2">{descricao}</p>
-          )}
+          {descricao && <p className="text-sm text-texto-2">{descricao}</p>}
         </div>
         {situacao && <SeloDaSecao situacao={situacao} />}
       </header>
@@ -161,7 +156,7 @@ export function ColunaDeResumo({
       <section className={painel} aria-labelledby="resumo-titulo">
         <h2
           id="resumo-titulo"
-          className="border-b border-borda px-4 py-3 text-lg text-texto"
+          className="border-b border-borda px-4 py-3 text-md font-semibold text-texto"
         >
           Resumo
         </h2>
@@ -182,7 +177,7 @@ export function ColunaDeResumo({
       <section className={painel} aria-labelledby="preenchimento-titulo">
         <h2
           id="preenchimento-titulo"
-          className="border-b border-borda px-4 py-3 text-lg text-texto"
+          className="border-b border-borda px-4 py-3 text-md font-semibold text-texto"
         >
           Preenchimento
         </h2>

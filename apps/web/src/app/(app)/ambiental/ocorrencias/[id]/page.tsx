@@ -56,7 +56,7 @@ export default async function DetalheDaOcorrencia({
         }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4">
-          <span className="font-mono text-lg text-texto-2">{o.numero}</span>
+          <span className="font-mono text-base text-texto-2">{o.numero}</span>
           <span>{aberta ? "Aberta" : "Encerrada"}</span>
           {o.comunicacaoAtrasada && (
             <span className="font-semibold text-nao-conforme">

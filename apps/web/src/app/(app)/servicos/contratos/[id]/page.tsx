@@ -77,7 +77,7 @@ export default async function DetalheDoContrato({
         voltar={{ href: "/servicos/contratos", rotulo: "Contratos e SLA" }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4">
-          <span className="font-mono text-lg text-texto-2">{c.numero}</span>
+          <span className="font-mono text-base text-texto-2">{c.numero}</span>
           <span className={COR_DA_SITUACAO[c.situacao]}>
             {SITUACOES_DO_CONTRATO[c.situacao]}
           </span>

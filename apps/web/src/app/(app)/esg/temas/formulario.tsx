@@ -270,7 +270,7 @@ export function FormularioDeTema({
               />
             </Campo>
             <fieldset className="sm:col-span-3">
-              <legend className="text-sm font-semibold text-texto-2">
+              <legend className="text-base font-medium text-texto">
                 ODS a que o tema contribui
               </legend>
               <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">

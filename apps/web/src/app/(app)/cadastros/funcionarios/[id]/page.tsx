@@ -106,7 +106,9 @@ export default async function DetalheDoFuncionario({
         voltar={{ href: "/cadastros/funcionarios", rotulo: "Profissionais" }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="font-mono text-lg text-texto-2">{f.matricula}</span>
+          <span className="font-mono text-base text-texto-2">
+            {f.matricula}
+          </span>
           <span className={f.ativo ? "text-texto" : "text-texto-2"}>
             {f.ativo
               ? "Ativo"

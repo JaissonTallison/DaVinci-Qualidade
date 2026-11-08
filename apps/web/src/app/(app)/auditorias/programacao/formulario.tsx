@@ -191,7 +191,7 @@ export function FormularioDaProgramacao({
                   return (
                     <label
                       key={mes}
-                      className="flex cursor-pointer items-center gap-1.5 rounded-sm border border-borda-campo px-2.5 py-1.5 text-sm select-none has-[:checked]:border-marinho has-[:checked]:bg-campo"
+                      className="flex cursor-pointer items-center gap-1.5 rounded-sm border border-borda-campo px-2.5 py-1.5 text-sm select-none has-[:checked]:border-acao has-[:checked]:bg-info-suave"
                     >
                       <input
                         type="checkbox"

@@ -52,7 +52,7 @@ export default async function DetalheDaInovacao({
         voltar={{ href: "/sgi/inovacao", rotulo: "Gestão de inovação" }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4">
-          <span className="font-mono text-lg text-texto-2">{m.numero}</span>
+          <span className="font-mono text-base text-texto-2">{m.numero}</span>
           <StatusDaMudanca status={m.status} />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{m.titulo}</h1>

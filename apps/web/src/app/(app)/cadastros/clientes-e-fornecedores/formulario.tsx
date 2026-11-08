@@ -115,7 +115,7 @@ export function FormularioDeParceiro({
   );
   const campoPapel = (
     <fieldset className="flex flex-col gap-1.5">
-      <legend className="text-sm font-semibold text-texto-2">Papel</legend>
+      <legend className="text-base font-medium text-texto">Papel</legend>
       <div className="flex h-9 items-center gap-5 text-base">
         {PAPEIS_DO_FORMULARIO.map(([k, n]) => (
           <label key={k} className="flex items-center gap-2">

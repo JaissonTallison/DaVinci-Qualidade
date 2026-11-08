@@ -199,7 +199,7 @@ export function FormalizarNc({
       <input type="hidden" name="versao" value={auditoria.versao} />
       <input type="hidden" name="constatacaoId" value={constatacaoId} />
       {voltar && <input type="hidden" name="voltar" value={voltar} />}
-      <label className="flex flex-col gap-1 text-sm font-semibold text-texto-2">
+      <label className="flex flex-col gap-2 text-base font-medium text-texto">
         Responsável pela NC
         <input
           name="responsavel"
@@ -211,7 +211,7 @@ export function FormalizarNc({
           className={`${campoCompacto} w-full font-normal`}
         />
       </label>
-      <label className="flex flex-col gap-1 text-sm font-semibold text-texto-2">
+      <label className="flex flex-col gap-2 text-base font-medium text-texto">
         Prazo
         <input
           name="prazo"

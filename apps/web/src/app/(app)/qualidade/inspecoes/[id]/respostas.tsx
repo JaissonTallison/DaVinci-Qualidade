@@ -171,7 +171,7 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
       <div className="border-t border-borda px-5 py-4">
         <label
           htmlFor="observacoes"
-          className="text-sm font-semibold text-texto-2"
+          className="text-base font-medium text-texto"
         >
           Observações gerais
         </label>

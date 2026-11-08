@@ -32,7 +32,7 @@ export function AnularRegistro({
       >
         <label
           htmlFor={`motivo-${id}`}
-          className="text-sm font-semibold text-texto-2"
+          className="text-base font-medium text-texto"
         >
           {pergunta}
         </label>

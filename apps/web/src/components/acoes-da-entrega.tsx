@@ -25,7 +25,7 @@ export function DevolverEntrega({
         <input type="hidden" name="voltar" value={voltar} />
         <label
           htmlFor={`devolucao-${entrega.id}`}
-          className="text-sm font-semibold text-texto-2"
+          className="text-base font-medium text-texto"
         >
           Data da devolução
         </label>
@@ -64,7 +64,7 @@ export function AnularEntrega({
         <input type="hidden" name="voltar" value={voltar} />
         <label
           htmlFor={`anulacao-${entrega.id}`}
-          className="text-sm font-semibold text-texto-2"
+          className="text-base font-medium text-texto"
         >
           Por que anular esta entrega?
         </label>

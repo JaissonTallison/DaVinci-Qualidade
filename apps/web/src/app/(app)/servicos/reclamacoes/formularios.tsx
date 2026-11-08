@@ -146,7 +146,7 @@ const simNao = (
   valor?: string,
 ) => (
   <fieldset>
-    <legend className="text-sm font-semibold text-texto-2">{rotulo}</legend>
+    <legend className="text-base font-medium text-texto">{rotulo}</legend>
     <div className="mt-1.5 flex gap-5 text-base">
       {[
         ["sim", "Sim"],

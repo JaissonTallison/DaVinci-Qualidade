@@ -253,7 +253,7 @@ export default async function DetalheDaNc({
         }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="font-mono text-lg text-texto-2">{nc.numero}</span>
+          <span className="font-mono text-base text-texto-2">{nc.numero}</span>
           <StatusDaNc
             status={nc.status}
             vencida={nc.vencida}

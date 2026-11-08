@@ -178,7 +178,7 @@ export function FormularioDeAuditoria({
             />
           </Campo>
           <fieldset className="flex flex-col gap-1.5">
-            <legend className="text-sm font-semibold text-texto-2">
+            <legend className="text-base font-medium text-texto">
               Normas auditadas *
             </legend>
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-base">

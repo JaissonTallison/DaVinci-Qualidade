@@ -56,7 +56,7 @@ export default async function DetalheDoTerceiro({
         voltar={{ href: "/seguranca/terceiros", rotulo: "Terceiros" }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="font-mono text-lg text-texto-2">
+          <span className="font-mono text-base text-texto-2">
             {formatarDocumento(t.cnpj)}
           </span>
           <SituacaoDoTerceiro situacao={t.situacao} />

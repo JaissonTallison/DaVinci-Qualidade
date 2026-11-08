@@ -52,7 +52,7 @@ export default async function DetalheDoEquipamento({
         }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4">
-          <span className="font-mono text-lg text-texto-2">
+          <span className="font-mono text-base text-texto-2">
             {e.identificacao}
           </span>
           <span

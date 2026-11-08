@@ -60,7 +60,7 @@ export default async function DetalheDaReclamacao({
         }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4">
-          <span className="font-mono text-lg text-texto-2">{x.numero}</span>
+          <span className="font-mono text-base text-texto-2">{x.numero}</span>
           <span className={x.atrasada ? "font-semibold text-nao-conforme" : ""}>
             {STATUS_DA_RECLAMACAO[x.status]}
             {x.atrasada && " · resposta atrasada"}

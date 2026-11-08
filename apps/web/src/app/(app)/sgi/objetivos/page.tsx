@@ -65,7 +65,7 @@ export default async function Objetivos({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-lg text-texto">{o.nome}</h2>
+                  <h2 className="text-md font-semibold text-texto">{o.nome}</h2>
                   <p className="text-sm text-texto-2">
                     {o.indicador} · meta {num(o.meta)} {o.unidade} (
                     {SENTIDOS_META[o.sentido].toLowerCase()}) · {o.responsavel}

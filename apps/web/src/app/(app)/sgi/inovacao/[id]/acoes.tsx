@@ -20,7 +20,7 @@ export function DecidirInovacao({ mudanca }: { mudanca: Mudanca }) {
         {(erros, v) => (
           <>
             <fieldset className="flex flex-col gap-1.5">
-              <legend className="text-sm font-semibold text-texto-2">
+              <legend className="text-base font-medium text-texto">
                 Decisão
               </legend>
               <div className="flex gap-6 text-base">

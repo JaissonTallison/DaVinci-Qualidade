@@ -99,7 +99,9 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg text-texto">Auditorias — panorama</h2>
+          <h2 className="text-md font-semibold text-texto">
+            Auditorias — panorama
+          </h2>
           <p className="text-sm text-texto-2">
             Conformidade, carga por auditor, situação e andamento.
           </p>

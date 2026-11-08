@@ -43,7 +43,7 @@ export default async function DetalheDoEpi({
         voltar={{ href: "/seguranca/epis", rotulo: "Catálogo de EPIs" }}
       >
         <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="font-mono text-lg text-texto-2">CA {e.ca}</span>
+          <span className="font-mono text-base text-texto-2">CA {e.ca}</span>
           <span className="text-texto-2">{e.ativo ? "Ativo" : "Inativo"}</span>
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{e.nome}</h1>
