@@ -25,6 +25,7 @@ import {
   NovoRequisitoDoContrato,
 } from "../requisitos";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Contrato" };
 const AVISOS = {
   criado: "Contrato cadastrado.",
@@ -67,20 +68,18 @@ export default async function DetalheDoContrato({
   const podeAnotar = podeEditar && c.situacao !== "encerrado";
   return (
     <article>
-      <Link
-        href="/servicos/contratos"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/servicos/contratos", rotulo: "Contratos e SLA" }}
       >
-        Contratos e SLA
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-mono text-lg text-texto-2">{c.numero}</span>
-        <span className={COR_DA_SITUACAO[c.situacao]}>
-          {SITUACOES_DO_CONTRATO[c.situacao]}
-        </span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{c.clienteNome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="font-mono text-lg text-texto-2">{c.numero}</span>
+          <span className={COR_DA_SITUACAO[c.situacao]}>
+            {SITUACOES_DO_CONTRATO[c.situacao]}
+          </span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{c.clienteNome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section
         className={`${painel} mt-6 grid gap-x-8 gap-y-4 p-5 sm:grid-cols-4`}
       >

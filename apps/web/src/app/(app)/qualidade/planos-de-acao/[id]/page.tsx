@@ -21,6 +21,7 @@ import { Anexos } from "@/components/anexos";
 import { linkDaOrigemDoPlano } from "@/lib/origem-plano";
 import { LinhaDoTempoDoPlano } from "./linha-do-tempo";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Plano de ação" };
 
 const AVISOS: Record<string, string> = {
@@ -57,39 +58,38 @@ export default async function DetalheDoPlano({
 
   return (
     <article>
-      <Link
-        href="/qualidade/planos-de-acao"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/qualidade/planos-de-acao", rotulo: "Planos de ação" }}
       >
-        Planos de ação
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{p.numero}</span>
-        <StatusDoPlano
-          status={p.status}
-          atrasado={p.atrasado}
-          prazo={p.prazo}
-        />
-        <Progresso
-          valor={p.progresso}
-          feitos={p.tarefas.filter((t) => t.situacao === "concluida").length}
-          total={p.tarefas.filter((t) => t.situacao !== "cancelada").length}
-        />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
-
-      {/* Resumo rápido: responsável e prazo do plano logo abaixo do título. */}
-      <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
-        <span>
-          Responsável:{" "}
-          <span className="font-medium text-texto">{p.responsavel}</span>
-        </span>
-        <span>
-          Prazo:{" "}
-          <span className="font-medium text-texto">{formatarData(p.prazo)}</span>
-          {!terminado && ` · ${prazoRelativo(p.prazo)}`}
-        </span>
-      </div>
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">{p.numero}</span>
+          <StatusDoPlano
+            status={p.status}
+            atrasado={p.atrasado}
+            prazo={p.prazo}
+          />
+          <Progresso
+            valor={p.progresso}
+            feitos={p.tarefas.filter((t) => t.situacao === "concluida").length}
+            total={p.tarefas.filter((t) => t.situacao !== "cancelada").length}
+          />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
+        {/* Resumo rápido: responsável e prazo do plano logo abaixo do título. */}
+        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
+          <span>
+            Responsável:{" "}
+            <span className="font-medium text-texto">{p.responsavel}</span>
+          </span>
+          <span>
+            Prazo:{" "}
+            <span className="font-medium text-texto">
+              {formatarData(p.prazo)}
+            </span>
+            {!terminado && ` · ${prazoRelativo(p.prazo)}`}
+          </span>
+        </div>
+      </CabecalhoComVoltar>
 
       <section className={`${painel} mt-6 p-5`}>
         <h2 className={tituloDaSecao}>Linha do tempo</h2>

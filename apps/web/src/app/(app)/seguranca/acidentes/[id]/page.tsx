@@ -37,6 +37,7 @@ import { ArvoreDeCausas } from "./arvore";
 import { InvestigacaoEstruturada } from "./investigacao";
 import { LinhaDoTempoDoAcidente } from "./linha-do-tempo";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Acidente" };
 
 const AVISOS: Record<string, string> = {
@@ -82,20 +83,18 @@ export default async function DetalheDoAcidente({
 
   return (
     <article>
-      <Link
-        href="/seguranca/acidentes"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/seguranca/acidentes", rotulo: "Acidentes" }}
       >
-        Acidentes
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{a.numero}</span>
-        <StatusDoAcidente status={a.status} />
-        <TipoDoAcidente tipo={a.tipo} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {a.acidentado ? `${a.acidentado} · ${a.local}` : a.local}
-      </h1>
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">{a.numero}</span>
+          <StatusDoAcidente status={a.status} />
+          <TipoDoAcidente tipo={a.tipo} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {a.acidentado ? `${a.acidentado} · ${a.local}` : a.local}
+        </h1>
+      </CabecalhoComVoltar>
 
       <section className={`${painel} mt-6 p-5`}>
         <h2 className={tituloDaSecao}>Linha do tempo</h2>

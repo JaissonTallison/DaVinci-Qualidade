@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { AnaliseCritica, DadosDoUsuario } from "@davinci/types";
 import { Anexos } from "@/components/anexos";
@@ -10,6 +9,7 @@ import { formatarData } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
 import { Dado } from "../../dado";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Análise crítica" };
 const AVISOS: Record<string, string> = {
   criada: "Análise crítica registrada. Anexe a ata assinada, se houver.",
@@ -32,16 +32,14 @@ export default async function DetalheDaAnalise({
   const a = r.dados;
   return (
     <article>
-      <Link
-        href="/sgi/analises-criticas"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/sgi/analises-criticas", rotulo: "Análises críticas" }}
       >
-        Análises críticas
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        Análise crítica de {formatarData(a.data)}
-      </h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <h1 className={tituloDaPagina}>
+          Análise crítica de {formatarData(a.data)}
+        </h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Participantes" largo>

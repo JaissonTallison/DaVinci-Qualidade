@@ -24,15 +24,12 @@ import {
 } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
-import {
-  botaoSecundario,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { botaoSecundario, painel, tituloDaPagina } from "@/lib/estilos";
 import { AcaoDaEtapa, CancelarNc } from "./acoes";
 import { Anexos } from "@/components/anexos";
 import { linkDaOrigem } from "@/lib/origem-nc";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Não conformidade" };
 
 const AVISOS: Record<string, string> = {
@@ -138,7 +135,9 @@ export default async function DetalheDaNc({
           ],
         ]}
       />
-      {nc.contencao && <Texto rotulo="Contenção imediata" texto={nc.contencao} />}
+      {nc.contencao && (
+        <Texto rotulo="Contenção imediata" texto={nc.contencao} />
+      )}
     </>
   );
 
@@ -146,8 +145,14 @@ export default async function DetalheDaNc({
     <>
       <Dados
         itens={[
-          ["Método", nc.metodoAnalise ? METODOS_ANALISE[nc.metodoAnalise] : null],
-          ["Categoria 6M", nc.categoria6m ? CATEGORIAS_6M[nc.categoria6m] : null],
+          [
+            "Método",
+            nc.metodoAnalise ? METODOS_ANALISE[nc.metodoAnalise] : null,
+          ],
+          [
+            "Categoria 6M",
+            nc.categoria6m ? CATEGORIAS_6M[nc.categoria6m] : null,
+          ],
           ["Tipo de causa", nc.causaTipo],
           [
             "Implantada em",
@@ -222,7 +227,10 @@ export default async function DetalheDaNc({
       <>
         <Dados
           itens={[
-            ["Resultado da última verificação", nc.eficaz ? "Eficaz" : "Ineficaz"],
+            [
+              "Resultado da última verificação",
+              nc.eficaz ? "Eficaz" : "Ineficaz",
+            ],
             [
               "Verificada em",
               nc.verificadoEm ? formatarMomento(nc.verificadoEm) : null,
@@ -237,33 +245,42 @@ export default async function DetalheDaNc({
 
   return (
     <article>
-      <Link href="/qualidade/nao-conformidades" className="dv-voltar">
-        Não conformidades
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{nc.numero}</span>
-        <StatusDaNc status={nc.status} vencida={nc.vencida} prazo={nc.prazo} />
-        {nc.ciclos >= 2 && (
-          <span className="text-sm text-atencao">
-            Reincidente: {nc.ciclos}º ciclo de tratamento
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/qualidade/nao-conformidades",
+          rotulo: "Não conformidades",
+        }}
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">{nc.numero}</span>
+          <StatusDaNc
+            status={nc.status}
+            vencida={nc.vencida}
+            prazo={nc.prazo}
+          />
+          {nc.ciclos >= 2 && (
+            <span className="text-sm text-atencao">
+              Reincidente: {nc.ciclos}º ciclo de tratamento
+            </span>
+          )}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{nc.titulo}</h1>
+        {/* Resumo rápido da situação */}
+        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
+          <GravidadeDaNc gravidade={nc.gravidade} />
+          <span>
+            Responsável:{" "}
+            <span className="font-medium text-texto">{nc.responsavel}</span>
           </span>
-        )}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{nc.titulo}</h1>
-
-      {/* Resumo rápido da situação */}
-      <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
-        <GravidadeDaNc gravidade={nc.gravidade} />
-        <span>
-          Responsável:{" "}
-          <span className="font-medium text-texto">{nc.responsavel}</span>
-        </span>
-        <span>
-          Prazo:{" "}
-          <span className="font-medium text-texto">{formatarData(nc.prazo)}</span>
-          {!terminada && !nc.vencida && ` · ${prazoRelativo(nc.prazo)}`}
-        </span>
-      </div>
+          <span>
+            Prazo:{" "}
+            <span className="font-medium text-texto">
+              {formatarData(nc.prazo)}
+            </span>
+            {!terminada && !nc.vencida && ` · ${prazoRelativo(nc.prazo)}`}
+          </span>
+        </div>
+      </CabecalhoComVoltar>
 
       {aviso && AVISOS[aviso] && (
         <p
@@ -302,7 +319,9 @@ export default async function DetalheDaNc({
         <Etapa
           n={2}
           titulo="Analisar e tratar"
-          estado={cancelada ? (analise ? "concluida" : "a_seguir") : estadoDa(1)}
+          estado={
+            cancelada ? (analise ? "concluida" : "a_seguir") : estadoDa(1)
+          }
           resumo={
             nc.dataImplantacao
               ? `Ação implantada em ${formatarData(nc.dataImplantacao)}`
@@ -319,7 +338,10 @@ export default async function DetalheDaNc({
           }
         >
           {!terminada && podeEditar && estadoDa(1) === "atual" && (
-            <AcaoDaEtapa nc={nc} causas={causas.ok ? causas.dados.map((c) => c.nome) : []} />
+            <AcaoDaEtapa
+              nc={nc}
+              causas={causas.ok ? causas.dados.map((c) => c.nome) : []}
+            />
           )}
           {analise}
           {planosDaNc}
@@ -337,7 +359,10 @@ export default async function DetalheDaNc({
           orientacao="Confirme, com base em evidência objetiva, se a ação corretiva eliminou a causa."
         >
           {!terminada && podeEditar && estadoDa(2) === "atual" && (
-            <AcaoDaEtapa nc={nc} causas={causas.ok ? causas.dados.map((c) => c.nome) : []} />
+            <AcaoDaEtapa
+              nc={nc}
+              causas={causas.ok ? causas.dados.map((c) => c.nome) : []}
+            />
           )}
           {verificacao}
         </Etapa>
@@ -374,8 +399,8 @@ export default async function DetalheDaNc({
             Outras NCs do mesmo registro de origem
           </h2>
           <p className="mt-1 text-sm text-texto-2">
-            Abertas a partir de {nc.origemRef}. Pode indicar recorrência do mesmo
-            problema.
+            Abertas a partir de {nc.origemRef}. Pode indicar recorrência do
+            mesmo problema.
           </p>
           <ul className="mt-3 divide-y divide-borda">
             {outras.map((n) => (
@@ -433,7 +458,11 @@ function Etapa({
             : "border border-borda-campo text-texto-3"
       }`}
     >
-      {estado === "concluida" ? <Check aria-hidden size={14} strokeWidth={2.5} /> : n}
+      {estado === "concluida" ? (
+        <Check aria-hidden size={14} strokeWidth={2.5} />
+      ) : (
+        n
+      )}
     </span>
   );
   const cabecalho = (
@@ -498,7 +527,9 @@ function Etapa({
       {estado === "a_seguir" && orientacao && (
         <p className="mt-2 text-sm text-texto-3">{orientacao}</p>
       )}
-      {estado === "concluida" && children && <div className="mt-3">{children}</div>}
+      {estado === "concluida" && children && (
+        <div className="mt-3">{children}</div>
+      )}
     </section>
   );
 }

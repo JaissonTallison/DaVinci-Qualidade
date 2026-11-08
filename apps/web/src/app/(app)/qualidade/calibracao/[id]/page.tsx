@@ -27,6 +27,7 @@ import {
 } from "./acoes";
 import { Anexos } from "@/components/anexos";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Instrumento" };
 
 const AVISOS: Record<string, string> = {
@@ -62,28 +63,26 @@ export default async function DetalheDoInstrumento({
 
   return (
     <article>
-      <Link
-        href="/qualidade/calibracao"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/qualidade/calibracao", rotulo: "Calibração" }}
       >
-        Calibração
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{i.tag}</span>
-        <SituacaoDoInstrumento
-          situacao={i.situacao}
-          desde={i.proximaCalibracao}
-        />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{i.descricao}</h1>
-      {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
-          {AVISOS[aviso]}
-        </p>
-      )}
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">{i.tag}</span>
+          <SituacaoDoInstrumento
+            situacao={i.situacao}
+            desde={i.proximaCalibracao}
+          />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{i.descricao}</h1>
+        {aviso && AVISOS[aviso] && (
+          <p
+            role="status"
+            className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
+          >
+            {AVISOS[aviso]}
+          </p>
+        )}
+      </CabecalhoComVoltar>
 
       <section className={`${painel} mt-6 p-5`}>
         <h2 className={tituloDaSecao}>Situação da calibração</h2>
@@ -246,9 +245,9 @@ export default async function DetalheDoInstrumento({
       {podeEditar && (
         <Recolhido titulo="Editar dados do instrumento">
           <p className="mb-4 max-w-2xl text-base text-texto-2">
-            Altere a identificação, as características de medição, a localização e
-            a frequência. As calibrações não se editam aqui — são registradas no
-            histórico. Ao salvar, a situação é recalculada e aparece em
+            Altere a identificação, as características de medição, a localização
+            e a frequência. As calibrações não se editam aqui — são registradas
+            no histórico. Ao salvar, a situação é recalculada e aparece em
             “Situação da calibração”, no topo.
           </p>
           <FormularioDeInstrumento instrumento={i} embutido />

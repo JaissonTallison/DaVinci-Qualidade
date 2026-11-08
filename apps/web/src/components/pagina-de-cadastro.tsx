@@ -13,7 +13,47 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
  * coluna de resumo fixa ao rolar e barra de ações no rodapé.
  */
 
-/** Título da página com o botão de voltar à listagem de origem, à esquerda do título. */
+/** Botão de voltar quadrado, só com a seta (interface.md §7): leva à tela de origem. */
+export function BotaoVoltar({
+  href,
+  rotulo,
+}: {
+  href: string;
+  rotulo: string;
+}) {
+  const texto = `Voltar para ${rotulo}`;
+  return (
+    <Link
+      href={href}
+      aria-label={texto}
+      title={texto}
+      className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-campo border border-borda-campo bg-superficie text-texto-2 shadow-cartao transition-colors hover:bg-campo hover:text-texto"
+    >
+      <ArrowLeft aria-hidden size={18} strokeWidth={1.75} />
+    </Link>
+  );
+}
+
+/**
+ * Cabeçalho de tela interna (detalhe, ficha, subtelas): o botão de voltar à esquerda e, ao lado, o que a
+ * tela já mostra no topo (número, situação, título, linha de dados), alinhado ao título.
+ */
+export function CabecalhoComVoltar({
+  voltar,
+  children,
+}: {
+  voltar: { href: string; rotulo: string };
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <BotaoVoltar href={voltar.href} rotulo={voltar.rotulo} />
+      <div className="min-w-0 flex-1">{children}</div>
+    </div>
+  );
+}
+
+/** Título da página de cadastro com o botão de voltar à listagem de origem, à esquerda do título. */
 export function CabecalhoDeCadastro({
   voltar,
   titulo,
@@ -23,24 +63,13 @@ export function CabecalhoDeCadastro({
   titulo: string;
   descricao?: string;
 }) {
-  const texto = `Voltar para ${voltar.rotulo}`;
   return (
-    <div className="flex items-start gap-3">
-      <Link
-        href={voltar.href}
-        aria-label={texto}
-        title={texto}
-        className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-campo border border-borda-campo bg-superficie text-texto-2 shadow-cartao transition-colors hover:bg-campo hover:text-texto"
-      >
-        <ArrowLeft aria-hidden size={18} strokeWidth={1.75} />
-      </Link>
-      <div className="min-w-0">
-        <h1 className={tituloDaPagina}>{titulo}</h1>
-        {descricao && (
-          <p className="mt-1 max-w-3xl text-base text-texto-2">{descricao}</p>
-        )}
-      </div>
-    </div>
+    <CabecalhoComVoltar voltar={voltar}>
+      <h1 className={tituloDaPagina}>{titulo}</h1>
+      {descricao && (
+        <p className="mt-1 max-w-3xl text-base text-texto-2">{descricao}</p>
+      )}
+    </CabecalhoComVoltar>
   );
 }
 

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   formatarDocumento,
@@ -19,6 +18,7 @@ import { FormularioDeTerceiro } from "../formulario";
 import { SituacaoDoTerceiro } from "../situacao";
 import { RegistrarDocumento } from "./documento";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Terceiro" };
 
 const AVISOS: Record<string, string> = {
@@ -46,35 +46,33 @@ export default async function DetalheDoTerceiro({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("seguranca.editar");
   return (
     <article>
-      <Link
-        href="/seguranca/terceiros"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/seguranca/terceiros", rotulo: "Terceiros" }}
       >
-        Terceiros
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">
-          {formatarDocumento(t.cnpj)}
-        </span>
-        <SituacaoDoTerceiro situacao={t.situacao} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{t.razaoSocial}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
-      {t.pendencias.length > 0 && (
-        <div
-          role="alert"
-          className="mt-4 rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-        >
-          <p className="font-semibold">
-            Não liberar a entrada enquanto houver pendência:
-          </p>
-          <ul className="mt-1 list-disc pl-5">
-            {t.pendencias.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">
+            {formatarDocumento(t.cnpj)}
+          </span>
+          <SituacaoDoTerceiro situacao={t.situacao} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{t.razaoSocial}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+        {t.pendencias.length > 0 && (
+          <div
+            role="alert"
+            className="mt-4 rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
+          >
+            <p className="font-semibold">
+              Não liberar a entrada enquanto houver pendência:
+            </p>
+            <ul className="mt-1 list-disc pl-5">
+              {t.pendencias.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
           <div className="sm:col-span-3">

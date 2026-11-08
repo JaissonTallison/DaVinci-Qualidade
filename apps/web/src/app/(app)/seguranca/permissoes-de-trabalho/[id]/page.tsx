@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -18,6 +17,7 @@ import { periodoDaPt } from "../periodo";
 import { CancelarPt, EncerrarPt, LiberarPt } from "./acoes";
 import { LinhaDoTempoDaPt } from "./linha-do-tempo";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Permissão de trabalho" };
 
 const AVISOS: Record<string, string> = {
@@ -47,20 +47,21 @@ export default async function DetalheDaPt({
   const aberta = pt.status === "solicitada" || pt.status === "liberada";
   return (
     <article>
-      <Link
-        href="/seguranca/permissoes-de-trabalho"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/seguranca/permissoes-de-trabalho",
+          rotulo: "Permissões de trabalho",
+        }}
       >
-        Permissões de trabalho
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{pt.numero}</span>
-        <StatusDaPt status={pt.status} vencida={pt.vencida} fim={pt.fim} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {TIPOS_PT[pt.tipo]} · {pt.local}
-      </h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">{pt.numero}</span>
+          <StatusDaPt status={pt.status} vencida={pt.vencida} fim={pt.fim} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {TIPOS_PT[pt.tipo]} · {pt.local}
+        </h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <h2 className={tituloDaSecao}>Linha do tempo</h2>
         <LinhaDoTempoDaPt pt={pt} />

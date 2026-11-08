@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -19,6 +18,7 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeProduto } from "../formulario";
 import { SituacaoDoProduto } from "./situacao";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Produto químico" };
 const AVISOS: Record<string, string> = {
   criado: "Produto cadastrado. Anexe a FDS abaixo.",
@@ -46,21 +46,22 @@ export default async function DetalheDoProduto({
   const podeEditar = permissoes.includes("ambiental.editar");
   return (
     <article>
-      <Link
-        href="/ambiental/produtos-quimicos"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/ambiental/produtos-quimicos",
+          rotulo: "Produtos químicos",
+        }}
       >
-        Produtos químicos
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="text-texto-2">{p.fabricante}</span>
-        {p.cas && (
-          <span className="font-mono text-sm text-texto-2">CAS {p.cas}</span>
-        )}
-        {!p.ativo && <span className="text-texto-2">Inativo</span>}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{p.nome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="text-texto-2">{p.fabricante}</span>
+          {p.cas && (
+            <span className="font-mono text-sm text-texto-2">CAS {p.cas}</span>
+          )}
+          {!p.ativo && <span className="text-texto-2">Inativo</span>}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{p.nome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Perigos" largo>

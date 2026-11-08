@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -20,6 +19,7 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeRisco } from "../formulario";
 import { SituacaoDoRisco } from "./situacao";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Risco" };
 
 const AVISOS: Record<string, string> = {
@@ -45,21 +45,17 @@ export default async function DetalheDoRisco({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   return (
     <article>
-      <Link
-        href="/seguranca/pgr"
-        className="dv-voltar"
-      >
-        PGR
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <NivelDoRisco nivel={x.nivel} />
-        <span className="text-texto-2">
-          {GRUPOS_DE_RISCO[x.grupo]} · {x.local}
-          {x.ativo ? "" : " · Eliminado"}
-        </span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{x.perigo}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+      <CabecalhoComVoltar voltar={{ href: "/seguranca/pgr", rotulo: "PGR" }}>
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <NivelDoRisco nivel={x.nivel} />
+          <span className="text-texto-2">
+            {GRUPOS_DE_RISCO[x.grupo]} · {x.local}
+            {x.ativo ? "" : " · Eliminado"}
+          </span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{x.perigo}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Possíveis danos" largo>

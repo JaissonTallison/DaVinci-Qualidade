@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CircleAlert, CircleCheck, Circle, CircleDashed } from "@/components/icones";
+import {
+  CircleAlert,
+  CircleCheck,
+  Circle,
+  CircleDashed,
+} from "@/components/icones";
 import {
   MOMENTOS_DO_KIT,
   NORMAS,
@@ -20,6 +25,7 @@ import { EtapasDaAuditoria } from "../etapas";
 import { AbasDoPlanejar } from "../planejar-abas";
 import { StatusDoItem } from "./status";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Kit pré-auditoria" };
 
 /** Etapa Planejar: o que precisa estar pronto a 90, 30, 15 e 7 dias da auditoria e no dia dela. */
@@ -43,18 +49,21 @@ export default async function KitDaAuditoria({
   const atrasados = k.itens.filter((i) => i.atrasado).length;
   return (
     <article>
-      <Link href="/auditorias" className="dv-voltar">
-        Auditorias
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{a.dados.numero}</span>
-        <StatusDaAuditoria status={a.dados.status} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        Auditoria {TIPOS_AUDITORIA[a.dados.tipo].toLowerCase()} ·{" "}
-        {a.dados.normas.map((n) => NORMAS[n]).join(", ")}
-      </h1>
-      <EtapasDaAuditoria id={id} atual="planejar" />
+      <CabecalhoComVoltar
+        voltar={{ href: "/auditorias", rotulo: "Auditorias" }}
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">
+            {a.dados.numero}
+          </span>
+          <StatusDaAuditoria status={a.dados.status} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          Auditoria {TIPOS_AUDITORIA[a.dados.tipo].toLowerCase()} ·{" "}
+          {a.dados.normas.map((n) => NORMAS[n]).join(", ")}
+        </h1>
+        <EtapasDaAuditoria id={id} atual="planejar" />
+      </CabecalhoComVoltar>
       <AbasDoPlanejar id={id} atual="kit" />
 
       <section className={`${painel} mt-6 p-5`} aria-label="Prontidão">

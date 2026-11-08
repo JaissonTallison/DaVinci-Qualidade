@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   NORMAS,
   TIPOS_AUDITORIA,
@@ -9,6 +8,7 @@ import { StatusDaAuditoria } from "@/components/marcadores";
 import { tituloDaPagina } from "@/lib/estilos";
 import { EtapasDaAuditoria } from "./etapas";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 /** Cabeçalho comum das telas da jornada: número, status, título e a barra das etapas. */
 export function CabecalhoDaAuditoria({
   auditoria: a,
@@ -19,21 +19,22 @@ export function CabecalhoDaAuditoria({
 }) {
   return (
     <>
-      <Link href="/auditorias" className="dv-voltar">
-        Auditorias
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{a.numero}</span>
-        <StatusDaAuditoria status={a.status} />
-        {a.plano.empresaAuditada && (
-          <span className="text-texto-2">{a.plano.empresaAuditada}</span>
-        )}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        Auditoria {TIPOS_AUDITORIA[a.tipo].toLowerCase()} ·{" "}
-        {a.normas.map((n) => NORMAS[n]).join(", ")}
-      </h1>
-      <EtapasDaAuditoria id={a.id} atual={etapa} />
+      <CabecalhoComVoltar
+        voltar={{ href: "/auditorias", rotulo: "Auditorias" }}
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">{a.numero}</span>
+          <StatusDaAuditoria status={a.status} />
+          {a.plano.empresaAuditada && (
+            <span className="text-texto-2">{a.plano.empresaAuditada}</span>
+          )}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          Auditoria {TIPOS_AUDITORIA[a.tipo].toLowerCase()} ·{" "}
+          {a.normas.map((n) => NORMAS[n]).join(", ")}
+        </h1>
+        <EtapasDaAuditoria id={a.id} atual={etapa} />
+      </CabecalhoComVoltar>
     </>
   );
 }

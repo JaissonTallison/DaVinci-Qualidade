@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -20,6 +19,7 @@ import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { FormularioDeTema } from "../formulario";
 import { RegistrarAndamento, SituacaoDoTema } from "./acoes";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Tema ESG" };
 const AVISOS: Record<string, string> = {
   criado: "Tema cadastrado.",
@@ -48,16 +48,15 @@ export default async function DetalheDoTema({
   const podeEditar = permissoes.includes("esg.editar");
   return (
     <article>
-      <Link href="/esg/temas" className="dv-voltar">
-        Temas ESG
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="text-texto-2">{PILARES[t.pilar]}</span>
-        <Materialidade nivel={t.nivel} nota={t.nota} />
-        {!t.ativo && <span className="text-texto-2">Inativo</span>}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{t.nome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+      <CabecalhoComVoltar voltar={{ href: "/esg/temas", rotulo: "Temas ESG" }}>
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="text-texto-2">{PILARES[t.pilar]}</span>
+          <Materialidade nivel={t.nivel} nota={t.nota} />
+          {!t.ativo && <span className="text-texto-2">Inativo</span>}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{t.nome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           {t.descricao && (

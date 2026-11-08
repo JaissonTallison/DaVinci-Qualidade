@@ -27,6 +27,7 @@ import { AnexosDoItem } from "@/components/anexos-do-item";
 import { RespostasDaInspecao } from "./respostas";
 import { Anexos } from "@/components/anexos";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Inspeção" };
 
 const AVISOS: Record<string, string> = {
@@ -73,25 +74,23 @@ export default async function DetalheDaInspecao({
 
   return (
     <article>
-      <Link
-        href="/qualidade/inspecoes"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/qualidade/inspecoes", rotulo: "Inspeções" }}
       >
-        Inspeções
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{i.numero}</span>
-        <StatusDaInspecao status={i.status} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{i.objeto}</h1>
-      {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
-          {AVISOS[aviso]}
-        </p>
-      )}
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">{i.numero}</span>
+          <StatusDaInspecao status={i.status} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{i.objeto}</h1>
+        {aviso && AVISOS[aviso] && (
+          <p
+            role="status"
+            className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
+          >
+            {AVISOS[aviso]}
+          </p>
+        )}
+      </CabecalhoComVoltar>
 
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -164,8 +163,7 @@ export default async function DetalheDaInspecao({
               </>
             ) : (
               <>
-                Resultado{" "}
-                <span className="font-semibold">pelo checklist</span>:{" "}
+                Resultado <span className="font-semibold">pelo checklist</span>:{" "}
                 {naoConformes}{" "}
                 {naoConformes === 1
                   ? "item não conforme"

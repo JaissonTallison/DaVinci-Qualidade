@@ -1,6 +1,5 @@
 import { Alerta } from "@/components/alerta";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -21,6 +20,7 @@ import { FormularioDeMonitoramento } from "../formulario";
 import { textoDoLimite } from "../limites";
 import { RegistrarResultado, SituacaoDoMonitoramento } from "./acoes";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Monitoramento" };
 const AVISOS: Record<string, string> = {
   criado: "Monitoramento cadastrado. Registre a primeira coleta.",
@@ -51,20 +51,18 @@ export default async function DetalheDoMonitoramento({
   const serie = [...resultados].reverse().slice(-12);
   return (
     <article>
-      <Link
-        href="/ambiental/monitoramentos"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/ambiental/monitoramentos", rotulo: "Monitoramentos" }}
       >
-        Monitoramentos
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="text-texto-2">{TIPOS_MONITORAMENTO[m.tipo]}</span>
-        {!m.ativo && <span className="text-texto-2">Inativo</span>}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {m.parametro} · {m.ponto}
-      </h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="text-texto-2">{TIPOS_MONITORAMENTO[m.tipo]}</span>
+          {!m.ativo && <span className="text-texto-2">Inativo</span>}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {m.parametro} · {m.ponto}
+        </h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Limite">{textoDoLimite(m)}</Dado>

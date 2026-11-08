@@ -11,6 +11,7 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeEpi } from "../formulario";
 import { SituacaoDoEpi } from "./situacao";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "EPI" };
 
 const AVISOS: Record<string, string> = {
@@ -37,18 +38,16 @@ export default async function DetalheDoEpi({
 
   return (
     <article>
-      <Link
-        href="/seguranca/epis"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/seguranca/epis", rotulo: "Catálogo de EPIs" }}
       >
-        Catálogo de EPIs
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">CA {e.ca}</span>
-        <span className="text-texto-2">{e.ativo ? "Ativo" : "Inativo"}</span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{e.nome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">CA {e.ca}</span>
+          <span className="text-texto-2">{e.ativo ? "Ativo" : "Inativo"}</span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{e.nome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
 
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">

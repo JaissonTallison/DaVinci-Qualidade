@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   TIPOS_REGISTRO_SST,
@@ -15,6 +14,7 @@ import { anularRegistroSst } from "@/lib/acoes-pgr-pt";
 import { formatarData } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Registro de segurança" };
 
 const AVISOS: Record<string, string> = {
@@ -41,23 +41,27 @@ export default async function DetalheDoRegistro({
   const t = TIPOS_REGISTRO_SST[x.tipo];
   return (
     <article>
-      <Link
-        href="/seguranca/registros"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/seguranca/registros",
+          rotulo: "Registros de segurança",
+        }}
       >
-        Registros de segurança
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <span className="text-texto-2">
-          {t.rotulo} · {formatarData(x.data)}
-          {x.motivoAnulacao ? " · Anulado" : ""}
-        </span>
-        {!x.motivoAnulacao && permissoes.includes("seguranca.excluir") && (
-          <AnularRegistro id={x.id} acao={anularRegistroSst.bind(null, x.id)} />
-        )}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{x.tema}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <span className="text-texto-2">
+            {t.rotulo} · {formatarData(x.data)}
+            {x.motivoAnulacao ? " · Anulado" : ""}
+          </span>
+          {!x.motivoAnulacao && permissoes.includes("seguranca.excluir") && (
+            <AnularRegistro
+              id={x.id}
+              acao={anularRegistroSst.bind(null, x.id)}
+            />
+          )}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{x.tema}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <div>

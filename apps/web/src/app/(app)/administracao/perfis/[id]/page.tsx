@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PERMISSOES, type Perfil } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
@@ -9,6 +8,7 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDePerfil } from "../formulario";
 import { DuasEtapas, SituacaoDoPerfil } from "./acoes";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Perfil de acesso" };
 
 const AVISOS: Record<string, string> = {
@@ -34,19 +34,17 @@ export default async function DetalheDoPerfil({
   const p = r.dados;
   return (
     <article>
-      <Link
-        href="/administracao/perfis"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/administracao/perfis", rotulo: "Perfis de acesso" }}
       >
-        Perfis de acesso
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>{p.nome}</h1>
-      <p className="mt-1 text-base text-texto-2">
-        {p.usuarios} {p.usuarios === 1 ? "usuário usa" : "usuários usam"} este
-        perfil
-        {p.ativo ? "" : " · Inativo"}
-      </p>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <h1 className={tituloDaPagina}>{p.nome}</h1>
+        <p className="mt-1 text-base text-texto-2">
+          {p.usuarios} {p.usuarios === 1 ? "usuário usa" : "usuários usam"} este
+          perfil
+          {p.ativo ? "" : " · Inativo"}
+        </p>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       {p.protegido ? (
         <section className={`${painel} mt-6 p-5`}>
           <p className="text-base text-texto-2">

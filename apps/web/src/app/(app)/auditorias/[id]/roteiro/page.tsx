@@ -35,6 +35,7 @@ import {
   RetirarPergunta,
 } from "./formularios";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Roteiro de entrevista" };
 
 /** Etapa Planejar: escolher as perguntas que serão feitas em campo (8 a 15 por processo é um roteiro realista). */
@@ -80,18 +81,21 @@ export default async function RoteiroDaAuditoriaPage({
     .filter((g) => g.perguntas.length);
   return (
     <article>
-      <Link href="/auditorias" className="dv-voltar">
-        Auditorias
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{a.dados.numero}</span>
-        <StatusDaAuditoria status={a.dados.status} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        Auditoria {TIPOS_AUDITORIA[a.dados.tipo].toLowerCase()} ·{" "}
-        {a.dados.normas.map((n) => NORMAS[n]).join(", ")}
-      </h1>
-      <EtapasDaAuditoria id={id} atual="planejar" />
+      <CabecalhoComVoltar
+        voltar={{ href: "/auditorias", rotulo: "Auditorias" }}
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-lg text-texto-2">
+            {a.dados.numero}
+          </span>
+          <StatusDaAuditoria status={a.dados.status} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          Auditoria {TIPOS_AUDITORIA[a.dados.tipo].toLowerCase()} ·{" "}
+          {a.dados.normas.map((n) => NORMAS[n]).join(", ")}
+        </h1>
+        <EtapasDaAuditoria id={id} atual="planejar" />
+      </CabecalhoComVoltar>
       <AbasDoPlanejar id={id} atual="roteiro" />
       <Aviso
         avisos={{

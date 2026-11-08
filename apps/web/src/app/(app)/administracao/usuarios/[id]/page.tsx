@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Perfil, UsuarioDaEmpresa } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
@@ -15,6 +14,7 @@ import {
   TrocarPerfil,
 } from "./acoes";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Usuário" };
 
 const AVISOS: Record<string, string> = {
@@ -39,14 +39,12 @@ export default async function DetalheDoUsuario({
   const u = r.dados;
   return (
     <article>
-      <Link
-        href="/administracao/usuarios"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/administracao/usuarios", rotulo: "Usuários" }}
       >
-        Usuários
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>{u.nome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <h1 className={tituloDaPagina}>{u.nome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
           <Dado rotulo="E-mail">{u.email}</Dado>

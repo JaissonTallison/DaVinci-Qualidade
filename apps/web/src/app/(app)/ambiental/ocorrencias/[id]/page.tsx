@@ -21,6 +21,7 @@ import {
   NcDaOcorrencia,
 } from "../formularios";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Ocorrência ambiental" };
 const AVISOS = {
   registrada: "Ocorrência registrada.",
@@ -48,25 +49,26 @@ export default async function DetalheDaOcorrencia({
   const aberta = o.status === "aberta";
   return (
     <article>
-      <Link
-        href="/ambiental/ocorrencias"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/ambiental/ocorrencias",
+          rotulo: "Ocorrências ambientais",
+        }}
       >
-        Ocorrências ambientais
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-mono text-lg text-texto-2">{o.numero}</span>
-        <span>{aberta ? "Aberta" : "Encerrada"}</span>
-        {o.comunicacaoAtrasada && (
-          <span className="font-semibold text-nao-conforme">
-            Comunicação fora do prazo
-          </span>
-        )}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {TIPOS_DE_OCORRENCIA[o.tipo]}: {o.substancia}
-      </h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="font-mono text-lg text-texto-2">{o.numero}</span>
+          <span>{aberta ? "Aberta" : "Encerrada"}</span>
+          {o.comunicacaoAtrasada && (
+            <span className="font-semibold text-nao-conforme">
+              Comunicação fora do prazo
+            </span>
+          )}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {TIPOS_DE_OCORRENCIA[o.tipo]}: {o.substancia}
+        </h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section
         className={`${painel} mt-6 grid gap-x-8 gap-y-4 p-5 sm:grid-cols-4`}
       >

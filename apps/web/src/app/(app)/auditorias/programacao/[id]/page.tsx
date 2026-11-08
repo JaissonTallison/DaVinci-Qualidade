@@ -19,6 +19,7 @@ import {
 } from "@/lib/estilos";
 import { FormularioDaProgramacao } from "../formulario";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Item da programação" };
 
 export default async function EditarItemDaProgramacao({
@@ -39,20 +40,24 @@ export default async function EditarItemDaProgramacao({
 
   return (
     <>
-      <Link href="/auditorias/programacao" className="dv-voltar">
-        Programação de auditorias
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {item.setor} · {item.ano}
-      </h1>
-      {erro && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-nao-conforme/40 bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-        >
-          {erro}
-        </p>
-      )}
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/auditorias/programacao",
+          rotulo: "Programação de auditorias",
+        }}
+      >
+        <h1 className={tituloDaPagina}>
+          {item.setor} · {item.ano}
+        </h1>
+        {erro && (
+          <p
+            role="status"
+            className="mt-4 rounded-sm border border-nao-conforme/40 bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
+          >
+            {erro}
+          </p>
+        )}
+      </CabecalhoComVoltar>
 
       <FormularioDaProgramacao item={item} ano={item.ano} />
 
@@ -95,7 +100,11 @@ export default async function EditarItemDaProgramacao({
             auditorias vinculadas; o histórico das auditorias não muda.
           </p>
           <form
-            action={excluirItemProgramacao.bind(null, item.id, String(item.ano))}
+            action={excluirItemProgramacao.bind(
+              null,
+              item.id,
+              String(item.ano),
+            )}
             className="mt-3"
           >
             <button type="submit" className={botaoPerigo}>

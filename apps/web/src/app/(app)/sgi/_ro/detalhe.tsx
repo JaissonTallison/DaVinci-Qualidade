@@ -1,9 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  type DadosDoUsuario,
-  type RiscoOuOportunidade,
-} from "@davinci/types";
+import { type DadosDoUsuario, type RiscoOuOportunidade } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
@@ -16,6 +12,7 @@ import { EncerrarRo } from "./acoes";
 import type { ConfigRo } from "./config";
 import { FormularioDeRo } from "./formulario";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 const AVISOS = {
   criado: "Registrado.",
   salvo: "Salvo.",
@@ -43,21 +40,18 @@ export async function DetalheDoRo({
     eu.ok && eu.dados.permissoes.includes("sgi.editar") && !x.encerradoEm;
   return (
     <article>
-      <Link href={cfg.base} className="dv-voltar">
-        {cfg.titulo}
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="text-texto-2">
-          {cfg.classe}:
-        </span>
-        <ClasseDoRo classe={x.classe} />
-        <span className="text-texto-2">
-          {x.processo}
-          {x.encerradoEm ? " · Encerrado" : ""}
-        </span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{x.descricao}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+      <CabecalhoComVoltar voltar={{ href: cfg.base, rotulo: cfg.titulo }}>
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="text-texto-2">{cfg.classe}:</span>
+          <ClasseDoRo classe={x.classe} />
+          <span className="text-texto-2">
+            {x.processo}
+            {x.encerradoEm ? " · Encerrado" : ""}
+          </span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{x.descricao}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           {x.contexto && (
