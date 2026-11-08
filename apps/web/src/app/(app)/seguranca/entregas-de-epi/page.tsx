@@ -165,7 +165,7 @@ export default async function EntregasDeEpi({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<ShieldCheck aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<ShieldCheck aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma entrega com esses filtros."

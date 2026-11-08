@@ -137,7 +137,7 @@ export default async function PermissoesDeTrabalho({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<HardHat aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<HardHat aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma permissão com esses filtros."

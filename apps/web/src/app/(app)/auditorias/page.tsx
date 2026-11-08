@@ -201,7 +201,7 @@ export default async function ListaDeAuditorias({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<FileSearch aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<FileSearch aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma auditoria com esses filtros."

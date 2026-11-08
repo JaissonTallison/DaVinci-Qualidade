@@ -25,6 +25,7 @@ import {
   botaoSecundario,
   campo,
   erroDoCampo,
+  opcaoSegmentada,
   rotulo,
   trilho,
 } from "@/lib/estilos";
@@ -210,9 +211,7 @@ export function FormularioNovaNc({
                         onChange={() => setGravidade(chave)}
                         className="peer sr-only"
                       />
-                      <span className="flex cursor-pointer items-center justify-center rounded-sm px-3.5 py-1.5 text-base text-texto-2 transition-colors hover:bg-superficie/70 hover:text-texto peer-checked:bg-superficie peer-checked:font-semibold peer-checked:text-marinho peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-marinho/40">
-                        {nome}
-                      </span>
+                      <span className={opcaoSegmentada}>{nome}</span>
                     </label>
                   ))}
                 </div>

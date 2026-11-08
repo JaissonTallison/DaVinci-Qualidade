@@ -135,7 +135,7 @@ export default async function Vencimentos({
           </div>
         ) : itens.length === 0 ? (
           <EstadoVazio
-            icone={<CalendarClock aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<CalendarClock aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nada com esses filtros."

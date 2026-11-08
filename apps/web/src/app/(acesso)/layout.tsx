@@ -120,7 +120,7 @@ export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
           </ul>
           <div className="dv-acesso-vidro mt-auto flex max-w-[45rem] flex-wrap items-center gap-x-6 gap-y-3 px-6 py-5 tela-baixa:gap-x-4 tela-baixa:px-5 tela-baixa:py-4">
             <div className="flex items-center gap-4">
-              <Globe aria-hidden size={40} strokeWidth={1.5} />
+              <Globe aria-hidden size={28} strokeWidth={1.5} />
               <p className="text-md text-white/90">
                 <span className="font-semibold text-white">
                   {REFERENCIAIS.length} normas

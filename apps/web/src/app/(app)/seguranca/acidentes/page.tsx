@@ -161,7 +161,7 @@ export default async function ListaDeAcidentes({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<Siren aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<Siren aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhum registro com esses filtros."

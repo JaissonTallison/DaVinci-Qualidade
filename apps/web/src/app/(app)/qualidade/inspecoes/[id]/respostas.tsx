@@ -23,7 +23,7 @@ import { errosPorCampo } from "@/lib/formularios";
 const MARCADA: Record<RespostaItem, string> = {
   ok: "has-checked:border-conforme-borda has-checked:bg-conforme-suave has-checked:text-conforme-texto",
   nok: "has-checked:border-nao-conforme-borda has-checked:bg-nao-conforme-suave has-checked:text-nao-conforme-texto",
-  na: "has-checked:border-neutro has-checked:bg-neutro/10 has-checked:text-texto",
+  na: "has-checked:border-borda-forte has-checked:bg-superficie-2 has-checked:text-texto",
 };
 
 /**

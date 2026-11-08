@@ -121,7 +121,7 @@ export default async function Ordens({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<Wrench aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<Wrench aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma ordem de serviço com este status."

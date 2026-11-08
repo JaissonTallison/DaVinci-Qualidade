@@ -66,7 +66,7 @@ export function LinhaDoTempoDaReclamacao({ r }: { r: Reclamacao }) {
                       : "border border-borda-forte text-texto-3"
                 }`}
               >
-                {concluido ? <Check size={15} strokeWidth={1.75} /> : i + 1}
+                {concluido ? <Check size={14} strokeWidth={1.75} /> : i + 1}
               </span>
               {!ultimo && (
                 <span

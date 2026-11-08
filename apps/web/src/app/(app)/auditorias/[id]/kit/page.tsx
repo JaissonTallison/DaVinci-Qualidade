@@ -124,25 +124,25 @@ export default async function KitDaAuditoria({
                     <span className="shrink-0" aria-hidden>
                       {i.status === "concluido" ? (
                         <CircleCheck
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-conforme"
                         />
                       ) : i.atrasado ? (
                         <CircleAlert
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-nao-conforme"
                         />
                       ) : i.status === "em_andamento" ? (
                         <CircleDashed
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-info"
                         />
                       ) : (
                         <Circle
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-texto-3"
                         />

@@ -191,7 +191,7 @@ export default async function ListaDeInspecoes({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<ClipboardCheck aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<ClipboardCheck aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma inspeção com esses filtros."

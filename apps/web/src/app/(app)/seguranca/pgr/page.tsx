@@ -207,7 +207,7 @@ export default async function Pgr({
           </div>
         ) : itens.length === 0 ? (
           <EstadoVazio
-            icone={<ShieldAlert aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<ShieldAlert aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhum risco com esses filtros."

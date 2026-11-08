@@ -204,7 +204,7 @@ export default async function ListaDePlanos({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<ListChecks aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<ListChecks aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhum plano com esses filtros."

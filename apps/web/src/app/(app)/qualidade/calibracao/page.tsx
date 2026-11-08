@@ -204,7 +204,7 @@ export default async function ListaDeInstrumentos({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<Ruler aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<Ruler aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhum instrumento com esses filtros."

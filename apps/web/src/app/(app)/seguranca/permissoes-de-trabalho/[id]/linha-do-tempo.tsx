@@ -59,7 +59,7 @@ export function LinhaDoTempoDaPt({ pt }: { pt: PermissaoDeTrabalho }) {
                       : "border border-borda-forte text-texto-3"
                 }`}
               >
-                {concluido ? <Check size={15} strokeWidth={1.75} /> : i + 1}
+                {concluido ? <Check size={14} strokeWidth={1.75} /> : i + 1}
               </span>
               {!ultimo && (
                 <span
@@ -100,7 +100,7 @@ export function LinhaDoTempoDaPt({ pt }: { pt: PermissaoDeTrabalho }) {
             aria-hidden
             className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme-suave text-nao-conforme-texto"
           >
-            <X size={15} strokeWidth={1.75} />
+            <X size={14} strokeWidth={1.75} />
           </span>
           <p className="text-base font-semibold text-nao-conforme">Cancelada</p>
         </li>

@@ -58,6 +58,10 @@ export const trilho =
 export const aba = (ativa: boolean, pequena = false) =>
   `inline-flex items-center gap-1.5 rounded-xs whitespace-nowrap font-medium transition-colors ${pequena ? "h-7 px-3 text-sm" : "h-8 px-3.5 text-base"} ${ativa ? "bg-superficie text-texto shadow-xs ring-1 ring-borda-campo" : "text-texto-2 hover:text-texto"}`;
 
+/** Opção do seletor segmentado feito com rádio (`<input className="peer sr-only">` + este `<span>`), dentro do `trilho`. */
+export const opcaoSegmentada =
+  "flex h-8 cursor-pointer items-center justify-center rounded-xs px-3.5 text-base font-medium text-texto-2 transition-colors hover:text-texto peer-checked:bg-superficie peer-checked:text-texto peer-checked:shadow-xs peer-checked:ring-1 peer-checked:ring-borda-campo peer-focus-visible:outline-2 peer-focus-visible:outline-foco";
+
 /** Abas de página (seções de um registro, situação de uma lista): sublinhado na cor da marca. */
 export const linhaDeAbas = "flex gap-1 overflow-x-auto border-b border-borda";
 export const abaDePagina = (ativa: boolean) =>

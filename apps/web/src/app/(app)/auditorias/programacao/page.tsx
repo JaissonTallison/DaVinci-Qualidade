@@ -94,7 +94,7 @@ export default async function ProgramacaoDeAuditorias({
           </div>
         ) : lista.dados.length === 0 ? (
           <EstadoVazio
-            icone={<CalendarClock aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<CalendarClock aria-hidden size={28} strokeWidth={1.5} />}
             titulo={`Nenhum item planejado para ${ano}.`}
             descricao="Adicione os setores a auditar no ano, com as normas, a frequência e os meses."
             acao={

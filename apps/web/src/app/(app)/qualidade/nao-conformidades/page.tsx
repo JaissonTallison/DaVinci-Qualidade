@@ -227,7 +227,7 @@ export default async function ListaDeNcs({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<ClipboardList aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<ClipboardList aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma NC com esses filtros."

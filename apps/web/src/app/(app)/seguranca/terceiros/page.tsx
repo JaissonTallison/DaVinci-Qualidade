@@ -160,7 +160,7 @@ export default async function Terceiros({
           </div>
         ) : itens.length === 0 ? (
           <EstadoVazio
-            icone={<Building2 aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<Building2 aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma empresa terceirizada com esses filtros."
