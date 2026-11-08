@@ -38,7 +38,9 @@ export default async function RequisitosSst({
     <>
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className={tituloDaPagina}>Requisitos legais de SST</h1>
+          <h1 className={tituloDaPagina}>
+            Requisitos legais de SST (segurança e saúde no trabalho)
+          </h1>
           <p className="mt-1 max-w-2xl text-base text-texto-2">
             Normas aplicáveis (NR e demais) e a avaliação de atendimento, refeita
             ao menos uma vez por ano.

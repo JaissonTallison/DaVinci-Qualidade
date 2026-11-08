@@ -42,7 +42,9 @@ export default async function Gee({
     <>
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className={tituloDaPagina}>Inventário de GEE</h1>
+          <h1 className={tituloDaPagina}>
+            Inventário de GEE (gases de efeito estufa)
+          </h1>
           <p className="mt-1 max-w-2xl text-base text-texto-2">
             Emissões de gases de efeito estufa calculadas a partir do consumo:
             escopo 1 (combustíveis queimados na empresa) e escopo 2 (energia
