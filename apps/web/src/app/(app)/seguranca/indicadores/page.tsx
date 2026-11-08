@@ -5,7 +5,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { FaixaDeIndicadores } from "@/components/faixa-de-indicadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { LancarHoras } from "./lancar-horas";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
@@ -113,7 +118,9 @@ export default async function Indicadores({
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Mês a mês</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Mês a mês</h2>
+        </header>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">

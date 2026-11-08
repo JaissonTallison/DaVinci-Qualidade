@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 
 export const metadata: Metadata = { title: "Manual de auditorias" };
 
@@ -215,50 +220,60 @@ export default function Manual() {
         tudo entra no relatório.
       </p>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>O fluxo</h2>
-        <ol className="mt-3 grid gap-3 md:grid-cols-5">
-          {ETAPAS.map((e) => (
-            <li key={e.n} className="border-l-2 border-menu pl-3">
-              <p className="text-sm text-texto-2 tabular-nums">Etapa {e.n}</p>
-              <p className="font-semibold">{e.nome}</p>
-              <p className="mt-1 text-sm">{e.o}</p>
-              <p className="mt-1 text-xs text-texto-3">
-                Na auditoria: {e.telas.map(([t]) => t).join(", ")}
-              </p>
-            </li>
-          ))}
-        </ol>
-        <p className="mt-4 text-sm text-texto-2">
-          Comece em{" "}
-          <Link href="/auditorias/nova" className="text-info hover:underline">
-            Nova auditoria
-          </Link>
-          ; o resumo de cada auditoria mostra a trilha e o próximo passo.
-        </p>
-      </section>
-
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Apoio a qualquer momento</h2>
-        <dl className="mt-3 grid gap-4 sm:grid-cols-2">
-          {APOIO.map(([t, href, d]) => (
-            <div key={t}>
-              <dt>
-                <Link
-                  href={href}
-                  className="font-semibold text-info hover:underline"
-                >
-                  {t}
-                </Link>
-              </dt>
-              <dd className="mt-0.5 text-sm">{d}</dd>
-            </div>
-          ))}
-        </dl>
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>O fluxo</h2>
+        </header>
+        <div className="p-5">
+          <ol className="grid gap-3 md:grid-cols-5">
+            {ETAPAS.map((e) => (
+              <li key={e.n} className="border-l-2 border-menu pl-3">
+                <p className="text-sm text-texto-2 tabular-nums">Etapa {e.n}</p>
+                <p className="font-semibold">{e.nome}</p>
+                <p className="mt-1 text-sm">{e.o}</p>
+                <p className="mt-1 text-xs text-texto-3">
+                  Na auditoria: {e.telas.map(([t]) => t).join(", ")}
+                </p>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-4 text-sm text-texto-2">
+            Comece em{" "}
+            <Link href="/auditorias/nova" className="text-info hover:underline">
+              Nova auditoria
+            </Link>
+            ; o resumo de cada auditoria mostra a trilha e o próximo passo.
+          </p>
+        </div>
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Glossário</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Apoio a qualquer momento</h2>
+        </header>
+        <div className="p-5">
+          <dl className="grid gap-4 sm:grid-cols-2">
+            {APOIO.map(([t, href, d]) => (
+              <div key={t}>
+                <dt>
+                  <Link
+                    href={href}
+                    className="font-semibold text-info hover:underline"
+                  >
+                    {t}
+                  </Link>
+                </dt>
+                <dd className="mt-0.5 text-sm">{d}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Glossário</h2>
+        </header>
         <dl className="mt-3 divide-y divide-borda border-t border-borda">
           {GLOSSARIO.map(([t, d, ex]) => (
             <div
@@ -280,7 +295,9 @@ export default function Manual() {
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Perguntas frequentes</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Perguntas frequentes</h2>
+        </header>
         <ul className="mt-3 divide-y divide-borda border-t border-borda">
           {FAQ.map(([p, r]) => (
             <li key={p} className="px-5 py-2.5">

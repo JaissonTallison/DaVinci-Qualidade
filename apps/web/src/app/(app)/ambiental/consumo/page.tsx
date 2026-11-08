@@ -15,9 +15,10 @@ import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import {
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { FormularioDeConsumo } from "./formulario";
 import { GraficoDeConsumo } from "./grafico";
@@ -121,14 +122,20 @@ export default async function Consumo({
         </p>
       ) : (
         <>
-          <section className={`${painel} mt-6 p-5`}>
-            <h2 className={tituloDaSecao}>Evolução no ano</h2>
-            <div className="mt-3">
-              <GraficoDeConsumo ano={ano} consumos={dados} fontes={fontes} />
+          <section className={`${painel} mt-6`}>
+            <header className={cabecalhoDoPainel}>
+              <h2 className={tituloDoPainel}>Evolução no ano</h2>
+            </header>
+            <div className="p-5">
+              <div>
+                <GraficoDeConsumo ano={ano} consumos={dados} fontes={fontes} />
+              </div>
             </div>
           </section>
           <section className={`${painel} mt-6`}>
-            <h2 className={`${tituloDaSecao} px-5 pt-5`}>Leituras de {ano}</h2>
+            <header className={cabecalhoDoPainel}>
+              <h2 className={tituloDoPainel}>Leituras de {ano}</h2>
+            </header>
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
                 <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">

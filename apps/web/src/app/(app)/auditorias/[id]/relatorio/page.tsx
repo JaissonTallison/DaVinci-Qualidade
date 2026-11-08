@@ -22,8 +22,10 @@ import { formatarMomento } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { ConcluirAuditoria } from "../acoes";
 import { CabecalhoDaAuditoria } from "../cabecalho";
@@ -254,30 +256,34 @@ export default async function Relatorio({
         )}
       </section>
 
-      <section id="encerramento" className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Encerramento</h2>
-        {podeEditar &&
-        aud.status !== "concluida" &&
-        aud.status !== "cancelada" ? (
-          <PontosFortes auditoria={aud} />
-        ) : (
-          aud.plano.pontosFortes && (
-            <p className="mt-3 text-base whitespace-pre-line">
-              {aud.plano.pontosFortes}
-            </p>
-          )
-        )}
-        {aud.status === "concluida" && aud.conclusao && (
-          <div className="mt-5">
-            <h3 className="text-sm font-semibold text-texto-2">
-              Conclusão{" "}
-              {aud.concluidaEm && `· ${formatarMomento(aud.concluidaEm)}`}
-            </h3>
-            <p className="mt-1 max-w-[72ch] text-base whitespace-pre-line">
-              {aud.conclusao}
-            </p>
-          </div>
-        )}
+      <section id="encerramento" className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Encerramento</h2>
+        </header>
+        <div className="p-5">
+          {podeEditar &&
+          aud.status !== "concluida" &&
+          aud.status !== "cancelada" ? (
+            <PontosFortes auditoria={aud} />
+          ) : (
+            aud.plano.pontosFortes && (
+              <p className="mt-3 text-base whitespace-pre-line">
+                {aud.plano.pontosFortes}
+              </p>
+            )
+          )}
+          {aud.status === "concluida" && aud.conclusao && (
+            <div className="mt-5">
+              <h3 className="text-sm font-semibold text-texto-2">
+                Conclusão{" "}
+                {aud.concluidaEm && `· ${formatarMomento(aud.concluidaEm)}`}
+              </h3>
+              <p className="mt-1 max-w-[72ch] text-base whitespace-pre-line">
+                {aud.conclusao}
+              </p>
+            </div>
+          )}
+        </div>
       </section>
       {podeEditar && aud.status === "em_andamento" && (
         <ConcluirAuditoria auditoria={aud} />

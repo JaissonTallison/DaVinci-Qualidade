@@ -12,7 +12,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SituacaoDaLicenca } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   CumprirCondicionante,
   NovaCondicionante,
@@ -94,7 +99,9 @@ export default async function DetalheDaLicenca({
           <SolicitarRenovacao licenca={l} />
         )}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Condicionantes</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Condicionantes</h2>
+        </header>
         {pendentes.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             {l.condicionantes.length

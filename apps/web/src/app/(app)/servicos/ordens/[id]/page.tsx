@@ -18,9 +18,10 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
 import {
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { LinkDaPesquisa } from "@/components/link-da-pesquisa";
 import { AvaliarOs, CancelarOs, ConcluirOs, IniciarOs } from "./acoes";
@@ -95,9 +96,13 @@ export default async function DetalheDaOs({
       </CabecalhoComVoltar>
       <Aviso avisos={AVISOS} chave={aviso} />
       {conviteNovo && <LinkDaPesquisa convite={conviteNovo} />}
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDaOs o={o} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDaOs o={o} />
+        </div>
       </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">

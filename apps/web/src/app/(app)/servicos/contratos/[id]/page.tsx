@@ -16,7 +16,12 @@ import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { COR_DA_SITUACAO } from "../situacao";
 import { EditarContrato } from "../formularios";
 import {
@@ -127,10 +132,14 @@ export default async function DetalheDoContrato({
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Requisitos do cliente</h2>
-        <p className="px-5 pt-1 text-sm text-texto-2">
-          O que o cliente exige neste contrato (ISO 9001 8.2.2).
-        </p>
+        <header className={cabecalhoDoPainel}>
+          <div className="min-w-0">
+            <h2 className={tituloDoPainel}>Requisitos do cliente</h2>
+            <p className="text-sm text-texto-2">
+              O que o cliente exige neste contrato (ISO 9001 8.2.2).
+            </p>
+          </div>
+        </header>
         {c.requisitos.length === 0 ? (
           <p className="px-5 py-4 text-base text-texto-2">
             Nenhum requisito cadastrado.
@@ -153,47 +162,53 @@ export default async function DetalheDoContrato({
         )}
       </section>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Análise crítica dos requisitos</h2>
-        <p className="mt-1 text-sm text-texto-2">
-          Antes de assumir, registra-se que a empresa consegue cumprir os
-          requisitos do cliente (ISO 9001 8.2.3).
-        </p>
-        {c.analiseData && c.analiseConclusao ? (
-          <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-3">
-            <Dado rotulo="Conclusão">
-              <span
-                className={`font-semibold ${COR_DA_CONCLUSAO[c.analiseConclusao]}`}
-              >
-                {CONCLUSOES_DA_ANALISE[c.analiseConclusao]}
-              </span>
-            </Dado>
-            {c.analiseResponsavel && (
-              <Dado rotulo="Responsável">{c.analiseResponsavel}</Dado>
-            )}
-            <Dado rotulo="Data">{formatarData(c.analiseData)}</Dado>
-            {c.analiseParecer && (
-              <Dado rotulo="Parecer" largo>
-                {c.analiseParecer}
-              </Dado>
-            )}
-          </dl>
-        ) : (
-          <p className="mt-3 text-base text-texto-2">
-            Análise crítica ainda não registrada.
-          </p>
-        )}
-        {podeAnotar && (
-          <div className="mt-4">
-            <AnaliseCritica c={c} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <div className="min-w-0">
+            <h2 className={tituloDoPainel}>Análise crítica dos requisitos</h2>
+            <p className="text-sm text-texto-2">
+              Antes de assumir, registra-se que a empresa consegue cumprir os
+              requisitos do cliente (ISO 9001 8.2.3).
+            </p>
           </div>
-        )}
+        </header>
+        <div className="p-5">
+          {c.analiseData && c.analiseConclusao ? (
+            <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-3">
+              <Dado rotulo="Conclusão">
+                <span
+                  className={`font-semibold ${COR_DA_CONCLUSAO[c.analiseConclusao]}`}
+                >
+                  {CONCLUSOES_DA_ANALISE[c.analiseConclusao]}
+                </span>
+              </Dado>
+              {c.analiseResponsavel && (
+                <Dado rotulo="Responsável">{c.analiseResponsavel}</Dado>
+              )}
+              <Dado rotulo="Data">{formatarData(c.analiseData)}</Dado>
+              {c.analiseParecer && (
+                <Dado rotulo="Parecer" largo>
+                  {c.analiseParecer}
+                </Dado>
+              )}
+            </dl>
+          ) : (
+            <p className="mt-3 text-base text-texto-2">
+              Análise crítica ainda não registrada.
+            </p>
+          )}
+          {podeAnotar && (
+            <div className="mt-4">
+              <AnaliseCritica c={c} />
+            </div>
+          )}
+        </div>
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>
-          Ordens de serviço do contrato
-        </h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Ordens de serviço do contrato</h2>
+        </header>
         {doContrato.length === 0 ? (
           <p className="px-5 py-4 text-base text-texto-2">
             Nenhuma OS aberta neste contrato.

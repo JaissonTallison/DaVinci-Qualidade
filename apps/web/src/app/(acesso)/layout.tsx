@@ -1,7 +1,5 @@
-import type { CSSProperties } from "react";
 import Image from "next/image";
 import {
-  Globe,
   HardHat,
   Leaf,
   ShieldCheck,
@@ -10,40 +8,35 @@ import {
   type LucideIcon,
 } from "@/components/icones";
 import { NORMAS } from "@davinci/types";
+import { sobretitulo } from "@/lib/estilos";
 
-const AREAS: { icone: LucideIcon; cor: string; nome: string; texto: string }[] =
-  [
-    {
-      icone: ShieldCheck,
-      cor: "#3b82f6",
-      nome: "Qualidade",
-      texto: "Processos padronizados e melhores resultados.",
-    },
-    {
-      icone: Users,
-      cor: "#8b6cf6",
-      nome: "Serviços",
-      texto: "Atendimento e operação integrada e eficiente.",
-    },
-    {
-      icone: HardHat,
-      cor: "#f59331",
-      nome: "Segurança do Trabalho",
-      texto: "Ambientes mais seguros e pessoas protegidas.",
-    },
-    {
-      icone: Leaf,
-      cor: "#2fbf71",
-      nome: "Meio Ambiente",
-      texto: "Operações responsáveis com o planeta.",
-    },
-    {
-      icone: Sprout,
-      cor: "#22c3b0",
-      nome: "Agenda ESG",
-      texto: "Sustentabilidade que gera valor para o negócio.",
-    },
-  ];
+const AREAS: { icone: LucideIcon; nome: string; texto: string }[] = [
+  {
+    icone: ShieldCheck,
+    nome: "Qualidade",
+    texto: "Processos padronizados e melhores resultados.",
+  },
+  {
+    icone: Users,
+    nome: "Serviços",
+    texto: "Atendimento e operação integrada e eficiente.",
+  },
+  {
+    icone: HardHat,
+    nome: "Segurança do Trabalho",
+    texto: "Ambientes mais seguros e pessoas protegidas.",
+  },
+  {
+    icone: Leaf,
+    nome: "Meio Ambiente",
+    texto: "Operações responsáveis com o planeta.",
+  },
+  {
+    icone: Sprout,
+    nome: "Agenda ESG",
+    texto: "Sustentabilidade que gera valor para o negócio.",
+  },
+];
 
 /** Referenciais que o sistema audita, uma vez cada (as edições da mesma norma contam como uma). */
 const REFERENCIAIS = [
@@ -61,109 +54,78 @@ const partes = (n: string) => {
 };
 
 /**
- * Telas de acesso (entrar, código do 2FA, senha). Foto de fundo com véu marinho e o cartão branco por cima;
- * no computador, o painel da marca à esquerda. Visual próprio, escopado em .dv-acesso (globals.css).
+ * Telas de acesso (entrar, código do 2FA, senha): no computador, o painel da marca em azul sólido à esquerda
+ * (a mesma cor do menu lateral); à direita, o cartão branco do design system sobre o fundo da página.
  */
 export default function LayoutDeAcesso({ children }: LayoutProps<"/">) {
   return (
-    <main
-      id="conteudo"
-      className="dv-acesso relative isolate flex flex-1 overflow-hidden bg-marinho"
-    >
-      <Image
-        src="/acesso/fundo.webp"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="-z-10 object-cover object-[35%_center]"
-      />
-      <div aria-hidden className="dv-acesso-veu absolute inset-0 -z-10" />
-
+    <main id="conteudo" className="dv-acesso flex flex-1 bg-fundo">
       <div className="grid w-full lg:grid-cols-[minmax(0,1fr)_minmax(0,31rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
-        <aside className="dv-acesso-escala hidden flex-col px-12 py-8 text-white lg:flex xl:px-20 *:shrink-0">
+        <aside className="dv-acesso-escala hidden flex-col bg-menu px-12 py-10 text-primaria-texto lg:flex xl:px-20 *:shrink-0">
           <Image
-            className="h-auto w-[200px]"
+            className="h-auto w-[180px]"
             src="/brand/logo-fundo-escuro.svg"
             alt="DaVinci Qualidade e Certificações"
             width={573}
             height={215}
             priority
           />
-          <p className="dv-acesso-titulo mt-10 max-w-xl text-white tela-baixa:mt-6">
-            Conformidade hoje.
-            <br />
-            Um futuro mais
-            <br />
-            <em>seguro e sustentável.</em>
+          <h2 className="mt-12 max-w-xl text-2xl font-semibold tela-baixa:mt-8">
+            Gestão integrada da qualidade, segurança, meio ambiente e ESG
+          </h2>
+          <p className="mt-3 max-w-md text-base text-primaria-texto/75">
+            Um único sistema para registrar, tratar e provar a conformidade, com{" "}
+            {REFERENCIAIS.length} normas auditáveis.
           </p>
-          <p className="mt-4 max-w-md text-lg text-white/85">
-            Qualidade, Serviços, Segurança do Trabalho, Meio Ambiente e Agenda
-            ESG em um único sistema, com {REFERENCIAIS.length} normas auditáveis
-            para a sua empresa.
-          </p>
-          <ul className="my-7 flex flex-col gap-3.5 tela-baixa:my-5 tela-baixa:grid tela-baixa:max-w-3xl tela-baixa:grid-cols-2 tela-baixa:gap-x-8 tela-baixa:gap-y-4">
-            {AREAS.map(({ icone: Icone, cor, nome, texto }) => (
-              <li key={nome} className="flex items-center gap-5">
-                <span
-                  className="dv-acesso-icone"
-                  style={{ "--cor": cor } as CSSProperties}
-                >
-                  <Icone aria-hidden size={26} strokeWidth={1.75} />
-                </span>
+          <ul className="mt-10 flex max-w-xl flex-col divide-y divide-primaria-texto/10 border-y border-primaria-texto/10 tela-baixa:mt-6">
+            {AREAS.map(({ icone: Icone, nome, texto }) => (
+              <li key={nome} className="flex items-start gap-3 py-3.5">
+                <Icone
+                  aria-hidden
+                  size={18}
+                  strokeWidth={1.75}
+                  className="mt-0.5 shrink-0 text-ouro-claro"
+                />
                 <div>
-                  <p className="text-lg font-semibold text-white">{nome}</p>
-                  <p className="max-w-80 text-base text-white/80">{texto}</p>
+                  <p className="text-base font-medium">{nome}</p>
+                  <p className="text-sm text-primaria-texto/70">{texto}</p>
                 </div>
               </li>
             ))}
           </ul>
-          <div className="dv-acesso-vidro mt-auto flex max-w-[45rem] flex-wrap items-center gap-x-6 gap-y-3 px-6 py-5 tela-baixa:gap-x-4 tela-baixa:px-5 tela-baixa:py-4">
-            <div className="flex items-center gap-4">
-              <Globe aria-hidden size={28} strokeWidth={1.5} />
-              <p className="text-md text-white/90">
-                <span className="font-semibold text-white">
-                  {REFERENCIAIS.length} normas
-                </span>{" "}
-                ISO e IATF
-                <br />
-                em uma única plataforma.
-              </p>
-            </div>
-            <ul className="flex flex-wrap gap-2.5" aria-label="Normas">
+          <div className="mt-auto pt-8">
+            <p className={`${sobretitulo} text-primaria-texto/60`}>
+              Normas auditáveis
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-2" aria-label="Normas">
               {REFERENCIAIS.slice(0, NA_FAIXA).map((n) => {
                 const [sigla, numero] = partes(n);
                 return (
                   <li
                     key={n}
                     title={n}
-                    className="dv-acesso-norma flex w-16 flex-col tela-baixa:w-14 items-center py-1.5 text-base leading-tight text-white"
+                    className="inline-flex h-6 items-center rounded-xs border border-primaria-texto/25 px-2 text-xs font-medium"
                   >
-                    <span>{sigla}</span>
-                    <span>{numero}</span>
+                    {sigla} {numero}
                   </li>
                 );
               })}
               {REFERENCIAIS.length > NA_FAIXA && (
                 <li
                   title={REFERENCIAIS.slice(NA_FAIXA).join(", ")}
-                  className="dv-acesso-norma flex w-16 flex-col tela-baixa:w-14 items-center py-1.5 text-base leading-tight text-white"
+                  className="inline-flex h-6 items-center rounded-xs border border-primaria-texto/25 px-2 text-xs font-medium"
                 >
-                  <span>+{REFERENCIAIS.length - NA_FAIXA}</span>
-                  <span className="text-sm">normas</span>
+                  +{REFERENCIAIS.length - NA_FAIXA} normas
                 </li>
               )}
             </ul>
           </div>
-          <p className="mt-5 text-sm tracking-[0.3em] text-white/55 uppercase">
-            Pessoas · Processos · Conformidade · Sustentabilidade
-          </p>
         </aside>
 
-        <div className="flex items-center justify-center px-4 py-6 sm:px-8 lg:pr-12 lg:pl-0 xl:pr-20">
-          <div className="dv-acesso-cartao dv-acesso-escala w-full max-w-[26rem] px-6 py-7 sm:px-9 sm:py-8">
+        <div className="flex items-center justify-center px-4 py-8 sm:px-8">
+          <div className="dv-acesso-cartao dv-acesso-escala w-full max-w-[26rem] px-6 py-7 sm:px-8 sm:py-8">
             <Image
-              className="mx-auto h-auto w-[160px]"
+              className="mx-auto h-auto w-[150px]"
               src="/brand/logo.svg"
               alt="DaVinci Qualidade e Certificações"
               width={573}

@@ -12,7 +12,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   EditarEquipamento,
   InspecionarEquipamento,
@@ -105,7 +110,9 @@ export default async function DetalheDoEquipamento({
         />
       )}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Inspeções</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Inspeções</h2>
+        </header>
         {e.inspecoes.length === 0 ? (
           <p className="px-5 py-5 text-base text-texto-2">
             Nenhuma inspeção registrada.

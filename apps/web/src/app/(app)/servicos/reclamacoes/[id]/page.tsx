@@ -13,7 +13,12 @@ import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   AnalisarReclamacao,
   EncerrarReclamacao,
@@ -64,9 +69,13 @@ export default async function DetalheDaReclamacao({
         <h1 className={`${tituloDaPagina} mt-1`}>{x.clienteNome}</h1>
         <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDaReclamacao r={x} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDaReclamacao r={x} />
+        </div>
       </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-4">

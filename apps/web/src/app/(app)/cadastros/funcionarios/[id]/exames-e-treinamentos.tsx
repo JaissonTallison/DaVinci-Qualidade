@@ -15,7 +15,13 @@ import {
   anularTreinamentoRealizado,
 } from "@/lib/acoes-exames-e-treinamentos";
 import { formatarData } from "@/lib/datas";
-import { botaoSecundario, painel, tituloDaSecao } from "@/lib/estilos";
+import {
+  botaoSecundario,
+  cabecalhoDoPainel,
+  painel,
+  tituloDaSecao,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { RegistrarAso } from "./registrar-aso";
 
 /** Exames ocupacionais e treinamentos da pessoa. O vigente é o mais recente; os antigos ficam como histórico. */
@@ -38,9 +44,9 @@ export async function ExamesETreinamentos({
   return (
     <>
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>
-          Exames ocupacionais (ASO)
-        </h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Exames ocupacionais (ASO)</h2>
+        </header>
         {!asos.ok ? (
           <div className="p-5">
             <AvisoDeErro erro={asos.erro} />

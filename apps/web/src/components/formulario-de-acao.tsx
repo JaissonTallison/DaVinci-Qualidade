@@ -6,8 +6,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import {
   botaoPerigo,
   botaoPrimario,
+  cabecalhoDoPainel,
   painel,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
@@ -84,10 +85,14 @@ export function Bloco({
   children: ReactNode;
 }) {
   return (
-    <section className={`${painel} mt-6 p-5`}>
-      <h2 className={tituloDaSecao}>{titulo}</h2>
-      <p className="mt-1 text-base text-texto-2">{descricao}</p>
-      {children}
+    <section className={`${painel} mt-6`}>
+      <header className={cabecalhoDoPainel}>
+        <div className="min-w-0">
+          <h2 className={tituloDoPainel}>{titulo}</h2>
+          <p className="text-sm text-texto-2">{descricao}</p>
+        </div>
+      </header>
+      <div className="p-5">{children}</div>
     </section>
   );
 }

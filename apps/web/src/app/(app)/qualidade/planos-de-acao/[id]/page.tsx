@@ -13,7 +13,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Progresso, StatusDoPlano } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { formatarReais } from "@/lib/valores";
 import { AnexosDoItem } from "@/components/anexos-do-item";
 import { AcoesDaTarefa, AcoesDoPlano } from "./acoes";
@@ -92,9 +97,13 @@ export default async function DetalheDoPlano({
         </div>
       </CabecalhoComVoltar>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDoPlano p={p} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDoPlano p={p} />
+        </div>
       </section>
 
       {aviso && AVISOS[aviso] && (
@@ -103,51 +112,65 @@ export default async function DetalheDoPlano({
         </CaixaDeAlerta>
       )}
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Objetivo</h2>
-        <p className="mt-3 max-w-[72ch] text-md whitespace-pre-line">
-          {p.objetivo}
-        </p>
-        <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Dado rotulo="Tipo">{TIPOS_PLANO[p.tipo]}</Dado>
-          <Dado rotulo="Origem">
-            {ORIGENS_PLANO[p.origem]}
-            {p.origemRef &&
-              (() => {
-                const href = linkDaOrigemDoPlano(p.origem, p.origemRef, p.ncId);
-                return href ? (
-                  <Link
-                    href={href}
-                    className="ml-1 font-mono text-sm font-medium text-acao hover:underline"
-                  >
-                    {p.origemRef}
-                  </Link>
-                ) : (
-                  <span className="ml-1 font-mono text-sm">{p.origemRef}</span>
-                );
-              })()}
-          </Dado>
-          {p.custoPrevisto && (
-            <Dado rotulo="Custo previsto">
-              {formatarReais(p.custoPrevisto)}
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Objetivo</h2>
+        </header>
+        <div className="p-5">
+          <p className="max-w-[72ch] text-md whitespace-pre-line">
+            {p.objetivo}
+          </p>
+          <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+            <Dado rotulo="Tipo">{TIPOS_PLANO[p.tipo]}</Dado>
+            <Dado rotulo="Origem">
+              {ORIGENS_PLANO[p.origem]}
+              {p.origemRef &&
+                (() => {
+                  const href = linkDaOrigemDoPlano(
+                    p.origem,
+                    p.origemRef,
+                    p.ncId,
+                  );
+                  return href ? (
+                    <Link
+                      href={href}
+                      className="ml-1 font-mono text-sm font-medium text-acao hover:underline"
+                    >
+                      {p.origemRef}
+                    </Link>
+                  ) : (
+                    <span className="ml-1 font-mono text-sm">
+                      {p.origemRef}
+                    </span>
+                  );
+                })()}
             </Dado>
-          )}
-        </dl>
+            {p.custoPrevisto && (
+              <Dado rotulo="Custo previsto">
+                {formatarReais(p.custoPrevisto)}
+              </Dado>
+            )}
+          </dl>
+        </div>
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Tarefas</h2>
-        <p className="px-5 pt-1 text-base text-texto-2">
-          {pendentes === 0
-            ? "Todas as tarefas concluídas."
-            : `${pendentes} ${pendentes === 1 ? "tarefa pendente" : "tarefas pendentes"}`}
-          {atrasadas > 0 && (
-            <span className="font-medium text-nao-conforme">
-              {" · "}
-              {atrasadas} {atrasadas === 1 ? "atrasada" : "atrasadas"}
-            </span>
-          )}
-        </p>
+        <header className={cabecalhoDoPainel}>
+          <div className="min-w-0">
+            <h2 className={tituloDoPainel}>Tarefas</h2>
+            <p className="text-sm text-texto-2">
+              {pendentes === 0
+                ? "Todas as tarefas concluídas."
+                : `${pendentes} ${pendentes === 1 ? "tarefa pendente" : "tarefas pendentes"}`}
+              {atrasadas > 0 && (
+                <span className="font-medium text-nao-conforme">
+                  {" · "}
+                  {atrasadas} {atrasadas === 1 ? "atrasada" : "atrasadas"}
+                </span>
+              )}
+            </p>
+          </div>
+        </header>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
@@ -243,7 +266,9 @@ export default async function DetalheDoPlano({
       )}
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Evidências das tarefas</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Evidências das tarefas</h2>
+        </header>
         <p className="px-5 text-base text-texto-2">
           O registro que comprova cada tarefa feita: documento revisado, lista
           de presença, foto, tela do sistema.
@@ -277,36 +302,44 @@ export default async function DetalheDoPlano({
       </section>
 
       {p.eficaz !== null && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Verificação de eficácia</h2>
-          <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-3">
-            <Dado rotulo="Resultado da última verificação">
-              {p.eficaz ? "Objetivo alcançado" : "Objetivo não alcançado"}
-            </Dado>
-            {p.verificadoEm && (
-              <Dado rotulo="Verificada em">
-                {formatarMomento(p.verificadoEm)}
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Verificação de eficácia</h2>
+          </header>
+          <div className="p-5">
+            <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
+              <Dado rotulo="Resultado da última verificação">
+                {p.eficaz ? "Objetivo alcançado" : "Objetivo não alcançado"}
               </Dado>
+              {p.verificadoEm && (
+                <Dado rotulo="Verificada em">
+                  {formatarMomento(p.verificadoEm)}
+                </Dado>
+              )}
+            </dl>
+            {p.parecerEficacia && (
+              <p className="mt-4 max-w-[72ch] text-base whitespace-pre-line">
+                {p.parecerEficacia}
+              </p>
             )}
-          </dl>
-          {p.parecerEficacia && (
-            <p className="mt-4 max-w-[72ch] text-base whitespace-pre-line">
-              {p.parecerEficacia}
-            </p>
-          )}
+          </div>
         </section>
       )}
 
       {p.status === "cancelado" && p.motivoCancelamento && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Cancelamento</h2>
-          {p.canceladoEm && (
-            <p className="mt-2 text-sm text-texto-2">
-              {formatarMomento(p.canceladoEm)}
-              {p.canceladoPorNome ? ` · por ${p.canceladoPorNome}` : ""}
-            </p>
-          )}
-          <p className="mt-2 text-base">{p.motivoCancelamento}</p>
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Cancelamento</h2>
+          </header>
+          <div className="p-5">
+            {p.canceladoEm && (
+              <p className="mt-2 text-sm text-texto-2">
+                {formatarMomento(p.canceladoEm)}
+                {p.canceladoPorNome ? ` · por ${p.canceladoPorNome}` : ""}
+              </p>
+            )}
+            <p className="mt-2 text-base">{p.motivoCancelamento}</p>
+          </div>
         </section>
       )}
 

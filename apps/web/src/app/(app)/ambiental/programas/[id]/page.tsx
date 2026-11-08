@@ -11,7 +11,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { EditarPrograma, MedirPrograma } from "../formularios";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
@@ -79,7 +84,9 @@ export default async function DetalheDoPrograma({
       </section>
       {p.acoes.length > 0 && (
         <section className={`${painel} mt-6`}>
-          <h2 className={`${tituloDaSecao} px-5 pt-5`}>Ações</h2>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Ações</h2>
+          </header>
           <ul className="mt-3 divide-y divide-borda border-t border-borda text-sm">
             {p.acoes.map((a, i) => (
               <li
@@ -102,13 +109,17 @@ export default async function DetalheDoPrograma({
         </section>
       )}
       {p.indicador === "manual" && p.medicoes.length > 0 && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Medições</h2>
-          <p className="mt-2 text-sm">
-            {p.medicoes
-              .map((m) => `${m.competencia}: ${n(m.valor)}`)
-              .join(" · ")}
-          </p>
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Medições</h2>
+          </header>
+          <div className="p-5">
+            <p className="text-sm">
+              {p.medicoes
+                .map((m) => `${m.competencia}: ${n(m.valor)}`)
+                .join(" · ")}
+            </p>
+          </div>
         </section>
       )}
       {podeEditar && p.indicador === "manual" && !p.encerrado && (

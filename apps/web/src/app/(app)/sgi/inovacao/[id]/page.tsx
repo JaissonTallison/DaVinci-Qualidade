@@ -11,7 +11,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { StatusDaMudanca } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { Dado } from "../../dado";
 import { DecidirInovacao, ImplementarInovacao } from "./acoes";
 import { LinhaDoTempoDaInovacao } from "./linha-do-tempo";
@@ -53,9 +58,13 @@ export default async function DetalheDaInovacao({
         <h1 className={`${tituloDaPagina} mt-1`}>{m.titulo}</h1>
         <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDaInovacao m={m} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDaInovacao m={m} />
+        </div>
       </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">

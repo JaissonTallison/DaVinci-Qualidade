@@ -13,9 +13,10 @@ import { chamarApi } from "@/lib/api";
 import { excluirItemProgramacao } from "@/lib/acoes-programacao";
 import {
   botaoPerigo,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { FormularioDaProgramacao } from "../formulario";
 
@@ -59,36 +60,40 @@ export default async function EditarItemDaProgramacao({
 
       <FormularioDaProgramacao item={item} ano={item.ano} />
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Auditorias vinculadas</h2>
-        {item.realizadas.length === 0 ? (
-          <p className="mt-2 text-base text-texto-2">
-            Nenhuma auditoria vinculada a este item ainda. Ao planejar uma
-            auditoria, escolha este item da programação para vinculá-la.
-          </p>
-        ) : (
-          <ul className="mt-3 divide-y divide-borda">
-            {item.realizadas.map((a) => (
-              <li
-                key={a.id}
-                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
-              >
-                <Link
-                  href={`/auditorias/${a.id}`}
-                  className="font-mono text-sm font-medium text-info hover:underline"
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Auditorias vinculadas</h2>
+        </header>
+        <div className="p-5">
+          {item.realizadas.length === 0 ? (
+            <p className="mt-2 text-base text-texto-2">
+              Nenhuma auditoria vinculada a este item ainda. Ao planejar uma
+              auditoria, escolha este item da programação para vinculá-la.
+            </p>
+          ) : (
+            <ul className="mt-3 divide-y divide-borda">
+              {item.realizadas.map((a) => (
+                <li
+                  key={a.id}
+                  className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
                 >
-                  {a.numero}
-                </Link>
-                {a.mes && (
-                  <span className="text-sm text-texto-2">
-                    {MESES_ABREVIADOS[a.mes - 1]}
-                  </span>
-                )}
-                <StatusDaAuditoria status={a.status} />
-              </li>
-            ))}
-          </ul>
-        )}
+                  <Link
+                    href={`/auditorias/${a.id}`}
+                    className="font-mono text-sm font-medium text-info hover:underline"
+                  >
+                    {a.numero}
+                  </Link>
+                  {a.mes && (
+                    <span className="text-sm text-texto-2">
+                      {MESES_ABREVIADOS[a.mes - 1]}
+                    </span>
+                  )}
+                  <StatusDaAuditoria status={a.status} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </section>
 
       {podeExcluir && (

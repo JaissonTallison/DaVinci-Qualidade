@@ -12,7 +12,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { StatusDaPt } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarMomento } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { periodoDaPt } from "../periodo";
 import { CancelarPt, EncerrarPt, LiberarPt } from "./acoes";
 import { LinhaDoTempoDaPt } from "./linha-do-tempo";
@@ -62,9 +67,13 @@ export default async function DetalheDaPt({
         </h1>
         <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDaPt pt={pt} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDaPt pt={pt} />
+        </div>
       </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">

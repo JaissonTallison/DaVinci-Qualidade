@@ -7,7 +7,7 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { EnviarAnexo, RemoverAnexo } from "@/components/enviar-anexo";
 import { chamarApi } from "@/lib/api";
 import { formatarMomento } from "@/lib/datas";
-import { painel, tituloDaSecao } from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 
 function tamanho(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
@@ -31,7 +31,9 @@ export async function Anexos({
   );
   return (
     <section className={`${painel} mt-6`}>
-      <h2 className={`${tituloDaSecao} px-5 pt-5`}>Anexos e evidências</h2>
+      <header className={cabecalhoDoPainel}>
+        <h2 className={tituloDoPainel}>Anexos e evidências</h2>
+      </header>
       {!r.ok ? (
         <div className="p-5">
           <AvisoDeErro erro={r.erro} />

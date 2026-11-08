@@ -15,12 +15,13 @@ import { formatarData } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
+  cabecalhoDoPainel,
   campo,
   campoCompacto,
   painel,
   rotulo,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 
 export const metadata: Metadata = { title: "Log do Auditor" };
@@ -99,43 +100,47 @@ export default async function LogDoAuditorPage({
             )}
           </section>
 
-          <section className={`${painel} mt-6 p-5`}>
-            <h2 className={tituloDaSecao}>Declaração de experiência</h2>
-            <form
-              action="/auditorias/log/declaracao"
-              className="mt-3 flex flex-wrap items-end gap-4"
-            >
-              <input type="hidden" name="auditor" value={nome} />
-              <label className="flex flex-col gap-1">
-                <span className={rotulo}>Nome que deve constar</span>
-                <input
-                  name="nome"
-                  defaultValue={nome}
-                  maxLength={120}
-                  className={`${campo} w-72`}
-                />
-              </label>
-              <label className="inline-flex items-center gap-2 text-base">
-                <input
-                  type="checkbox"
-                  name="anonimizar"
-                  value="1"
-                  defaultChecked
-                  className="size-4 accent-primaria"
-                />
-                Anonimizar as organizações (Organização A, B, C…)
-              </label>
-              <button type="submit" className={botaoPrimario}>
-                <FileText aria-hidden size={16} strokeWidth={1.75} />
-                Gerar declaração
-              </button>
-            </form>
+          <section className={`${painel} mt-6`}>
+            <header className={cabecalhoDoPainel}>
+              <h2 className={tituloDoPainel}>Declaração de experiência</h2>
+            </header>
+            <div className="p-5">
+              <form
+                action="/auditorias/log/declaracao"
+                className="mt-3 flex flex-wrap items-end gap-4"
+              >
+                <input type="hidden" name="auditor" value={nome} />
+                <label className="flex flex-col gap-1">
+                  <span className={rotulo}>Nome que deve constar</span>
+                  <input
+                    name="nome"
+                    defaultValue={nome}
+                    maxLength={120}
+                    className={`${campo} w-72`}
+                  />
+                </label>
+                <label className="inline-flex items-center gap-2 text-base">
+                  <input
+                    type="checkbox"
+                    name="anonimizar"
+                    value="1"
+                    defaultChecked
+                    className="size-4 accent-primaria"
+                  />
+                  Anonimizar as organizações (Organização A, B, C…)
+                </label>
+                <button type="submit" className={botaoPrimario}>
+                  <FileText aria-hidden size={16} strokeWidth={1.75} />
+                  Gerar declaração
+                </button>
+              </form>
+            </div>
           </section>
 
           <section className={`${painel} mt-6`}>
-            <h2 className={`${tituloDaSecao} px-5 pt-5`}>
-              Auditorias registradas
-            </h2>
+            <header className={cabecalhoDoPainel}>
+              <h2 className={tituloDoPainel}>Auditorias registradas</h2>
+            </header>
             {r.dados.auditorias.length === 0 ? (
               <p className="px-5 py-5 text-base text-texto-2">
                 Nenhuma auditoria com este nome como líder ou na equipe.

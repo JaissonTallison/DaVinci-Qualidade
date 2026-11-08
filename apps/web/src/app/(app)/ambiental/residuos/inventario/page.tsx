@@ -17,9 +17,10 @@ import { linkCsv } from "@/lib/csv";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 
 export const metadata: Metadata = { title: "Inventário de resíduos" };
@@ -219,7 +220,9 @@ export default async function Inventario({
       </section>
       {saidas.ok && saidas.dados.length > 0 && (
         <section className={`${painel} mt-6`}>
-          <h2 className={`${tituloDaSecao} px-5 pt-5`}>Saídas do ano</h2>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Saídas do ano</h2>
+          </header>
           <ul className="mt-3 divide-y divide-borda border-t border-borda text-sm">
             {saidas.dados.map((s) => (
               <li

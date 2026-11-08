@@ -14,7 +14,12 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { FormularioDeAvaliacao } from "./formulario";
 
 export const metadata: Metadata = { title: "Avaliação de fornecedores" };
@@ -96,7 +101,9 @@ export default async function Fornecedores({
         </div>
       ) : (
         <section className={`${painel} mt-6`}>
-          <h2 className={`${tituloDaSecao} px-5 pt-5`}>Situação atual</h2>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Situação atual</h2>
+          </header>
           {vigentes.length === 0 ? (
             <p className="px-5 pt-2 pb-5 text-base text-texto-2">
               Nenhum fornecedor avaliado.

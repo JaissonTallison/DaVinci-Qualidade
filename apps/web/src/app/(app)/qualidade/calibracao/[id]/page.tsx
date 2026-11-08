@@ -14,9 +14,10 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
 import {
   botaoPrimario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { formatarReais } from "@/lib/valores";
 import { FormularioDeInstrumento } from "../formulario";
@@ -82,71 +83,81 @@ export default async function DetalheDoInstrumento({
         )}
       </CabecalhoComVoltar>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Situação da calibração</h2>
-        <dl className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-3">
-          <Dado rotulo="Última calibração">
-            {i.ultimaCalibracao ? formatarData(i.ultimaCalibracao) : "Nenhuma"}
-          </Dado>
-          <Dado rotulo="Próxima calibração">
-            {i.proximaCalibracao ? formatarData(i.proximaCalibracao) : "—"}
-            {i.proximaCalibracao && i.emUso && i.situacao !== "reprovado" && (
-              <span
-                className={`ml-1 text-sm ${
-                  i.situacao === "vencido"
-                    ? "text-nao-conforme"
-                    : i.situacao === "vence_em_breve"
-                      ? "text-atencao"
-                      : "text-texto-2"
-                }`}
-              >
-                · {prazoRelativo(i.proximaCalibracao)}
-              </span>
-            )}
-          </Dado>
-          <Dado rotulo="Frequência">
-            a cada {i.frequenciaMeses}{" "}
-            {i.frequenciaMeses === 1 ? "mês" : "meses"}
-          </Dado>
-        </dl>
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Situação da calibração</h2>
+        </header>
+        <div className="p-5">
+          <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
+            <Dado rotulo="Última calibração">
+              {i.ultimaCalibracao
+                ? formatarData(i.ultimaCalibracao)
+                : "Nenhuma"}
+            </Dado>
+            <Dado rotulo="Próxima calibração">
+              {i.proximaCalibracao ? formatarData(i.proximaCalibracao) : "—"}
+              {i.proximaCalibracao && i.emUso && i.situacao !== "reprovado" && (
+                <span
+                  className={`ml-1 text-sm ${
+                    i.situacao === "vencido"
+                      ? "text-nao-conforme"
+                      : i.situacao === "vence_em_breve"
+                        ? "text-atencao"
+                        : "text-texto-2"
+                  }`}
+                >
+                  · {prazoRelativo(i.proximaCalibracao)}
+                </span>
+              )}
+            </Dado>
+            <Dado rotulo="Frequência">
+              a cada {i.frequenciaMeses}{" "}
+              {i.frequenciaMeses === 1 ? "mês" : "meses"}
+            </Dado>
+          </dl>
+        </div>
       </section>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Dados do instrumento</h2>
-        <dl className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
-          {i.grandeza && (
-            <Dado rotulo="Grandeza">{GRANDEZAS_DE_MEDICAO[i.grandeza]}</Dado>
-          )}
-          {i.unidade && <Dado rotulo="Unidade">{i.unidade}</Dado>}
-          {i.faixa && <Dado rotulo="Faixa">{i.faixa}</Dado>}
-          {i.criterioAceitacao && (
-            <Dado rotulo="Critério de aceitação">{i.criterioAceitacao}</Dado>
-          )}
-          {i.erroMaximoAdmissivel && (
-            <Dado rotulo="Erro máximo admissível (EMA)">
-              {i.erroMaximoAdmissivel}
-            </Dado>
-          )}
-          {i.incerteza && <Dado rotulo="Incerteza">{i.incerteza}</Dado>}
-          {i.classeExatidao && (
-            <Dado rotulo="Classe de exatidão">{i.classeExatidao}</Dado>
-          )}
-          {i.normaReferencia && (
-            <Dado rotulo="Norma de referência">{i.normaReferencia}</Dado>
-          )}
-          {(i.fabricante || i.modelo) && (
-            <Dado rotulo="Fabricante e modelo">
-              {[i.fabricante, i.modelo].filter(Boolean).join(" · ")}
-            </Dado>
-          )}
-          {i.numeroSerie && (
-            <Dado rotulo="Número de série">
-              <span className="font-mono">{i.numeroSerie}</span>
-            </Dado>
-          )}
-          {i.local && <Dado rotulo="Local">{i.local}</Dado>}
-          {i.responsavel && <Dado rotulo="Responsável">{i.responsavel}</Dado>}
-        </dl>
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Dados do instrumento</h2>
+        </header>
+        <div className="p-5">
+          <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
+            {i.grandeza && (
+              <Dado rotulo="Grandeza">{GRANDEZAS_DE_MEDICAO[i.grandeza]}</Dado>
+            )}
+            {i.unidade && <Dado rotulo="Unidade">{i.unidade}</Dado>}
+            {i.faixa && <Dado rotulo="Faixa">{i.faixa}</Dado>}
+            {i.criterioAceitacao && (
+              <Dado rotulo="Critério de aceitação">{i.criterioAceitacao}</Dado>
+            )}
+            {i.erroMaximoAdmissivel && (
+              <Dado rotulo="Erro máximo admissível (EMA)">
+                {i.erroMaximoAdmissivel}
+              </Dado>
+            )}
+            {i.incerteza && <Dado rotulo="Incerteza">{i.incerteza}</Dado>}
+            {i.classeExatidao && (
+              <Dado rotulo="Classe de exatidão">{i.classeExatidao}</Dado>
+            )}
+            {i.normaReferencia && (
+              <Dado rotulo="Norma de referência">{i.normaReferencia}</Dado>
+            )}
+            {(i.fabricante || i.modelo) && (
+              <Dado rotulo="Fabricante e modelo">
+                {[i.fabricante, i.modelo].filter(Boolean).join(" · ")}
+              </Dado>
+            )}
+            {i.numeroSerie && (
+              <Dado rotulo="Número de série">
+                <span className="font-mono">{i.numeroSerie}</span>
+              </Dado>
+            )}
+            {i.local && <Dado rotulo="Local">{i.local}</Dado>}
+            {i.responsavel && <Dado rotulo="Responsável">{i.responsavel}</Dado>}
+          </dl>
+        </div>
       </section>
 
       {i.situacao === "reprovado" && podeEditar && (
@@ -169,9 +180,9 @@ export default async function DetalheDoInstrumento({
       {i.emUso && podeEditar && <RegistrarCalibracao instrumento={i} />}
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>
-          Histórico de calibrações
-        </h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Histórico de calibrações</h2>
+        </header>
         {i.calibracoes.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             Nenhuma calibração registrada.

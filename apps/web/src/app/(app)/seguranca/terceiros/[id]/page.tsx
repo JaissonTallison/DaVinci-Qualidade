@@ -13,7 +13,12 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { FormularioDeTerceiro } from "../formulario";
 import { SituacaoDoTerceiro } from "../situacao";
 import { RegistrarDocumento } from "./documento";
@@ -93,7 +98,9 @@ export default async function DetalheDoTerceiro({
         </dl>
       </section>
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Documentos de SST</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Documentos de SST</h2>
+        </header>
         {t.documentos.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             Nenhum documento registrado.

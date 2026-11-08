@@ -18,9 +18,11 @@ import { formatarData, formatarMomento } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
   tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { CancelarInspecao } from "./cancelar";
 import { AnexosDoItem } from "@/components/anexos-do-item";
@@ -213,7 +215,9 @@ export default async function DetalheDaInspecao({
         <RespostasDaInspecao inspecao={i} />
       ) : (
         <section className={`${painel} mt-6`}>
-          <h2 className={`${tituloDaSecao} px-5 pt-5`}>Itens</h2>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Itens</h2>
+          </header>
           <table className="mt-3 w-full text-left">
             <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
@@ -255,9 +259,9 @@ export default async function DetalheDaInspecao({
       )}
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>
-          Fotos e evidências por item
-        </h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Fotos e evidências por item</h2>
+        </header>
         <p className="px-5 text-base text-texto-2">
           Priorize os itens{" "}
           <span className="font-medium text-nao-conforme">
@@ -300,76 +304,85 @@ export default async function DetalheDaInspecao({
       </section>
 
       {i.status === "reprovada" && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Não conformidades</h2>
-          {ncs?.ok && ncs.dados.itens.length > 0 ? (
-            <>
-              <p className="mt-1 text-base text-texto-2">
-                Esta inspeção já gerou{" "}
-                {ncs.dados.itens.length === 1
-                  ? "uma NC"
-                  : `${ncs.dados.itens.length} NCs`}
-                . Consulte o andamento do tratamento:
-              </p>
-              <ul className="mt-3 divide-y divide-borda">
-                {ncs.dados.itens.map((nc) => (
-                  <li
-                    key={nc.id}
-                    className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
-                  >
-                    <Link
-                      href={`/qualidade/nao-conformidades/${nc.id}`}
-                      className="font-mono text-sm font-medium text-info hover:underline"
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Não conformidades</h2>
+          </header>
+          <div className="p-5">
+            {ncs?.ok && ncs.dados.itens.length > 0 ? (
+              <>
+                <p className="mt-1 text-base text-texto-2">
+                  Esta inspeção já gerou{" "}
+                  {ncs.dados.itens.length === 1
+                    ? "uma NC"
+                    : `${ncs.dados.itens.length} NCs`}
+                  . Consulte o andamento do tratamento:
+                </p>
+                <ul className="mt-3 divide-y divide-borda">
+                  {ncs.dados.itens.map((nc) => (
+                    <li
+                      key={nc.id}
+                      className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
                     >
-                      {nc.numero}
+                      <Link
+                        href={`/qualidade/nao-conformidades/${nc.id}`}
+                        className="font-mono text-sm font-medium text-info hover:underline"
+                      >
+                        {nc.numero}
+                      </Link>
+                      <span className="min-w-48 flex-1">{nc.titulo}</span>
+                      <StatusDaNc
+                        status={nc.status}
+                        vencida={nc.vencida}
+                        prazo={nc.prazo}
+                      />
+                    </li>
+                  ))}
+                </ul>
+                {permissoes.includes("qualidade.editar") && (
+                  <div className="mt-4">
+                    <Link
+                      href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
+                      className={botaoSecundario}
+                    >
+                      Abrir outra NC
                     </Link>
-                    <span className="min-w-48 flex-1">{nc.titulo}</span>
-                    <StatusDaNc
-                      status={nc.status}
-                      vencida={nc.vencida}
-                      prazo={nc.prazo}
-                    />
-                  </li>
-                ))}
-              </ul>
-              {permissoes.includes("qualidade.editar") && (
-                <div className="mt-4">
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="mt-1 flex flex-wrap items-start justify-between gap-3">
+                <p className="max-w-[60ch] text-base text-texto-2">
+                  Nenhuma NC foi aberta a partir desta inspeção. Abra uma para
+                  tratar o que foi encontrado — ela já vem ligada a esta
+                  inspeção
+                  {naoConformes > 0
+                    ? ", com os itens não conformes e as observações"
+                    : ""}
+                  .
+                </p>
+                {permissoes.includes("qualidade.editar") && (
                   <Link
                     href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
-                    className={botaoSecundario}
+                    className={botaoPrimario}
                   >
-                    Abrir outra NC
+                    Abrir NC
                   </Link>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="mt-1 flex flex-wrap items-start justify-between gap-3">
-              <p className="max-w-[60ch] text-base text-texto-2">
-                Nenhuma NC foi aberta a partir desta inspeção. Abra uma para
-                tratar o que foi encontrado — ela já vem ligada a esta inspeção
-                {naoConformes > 0
-                  ? ", com os itens não conformes e as observações"
-                  : ""}
-                .
-              </p>
-              {permissoes.includes("qualidade.editar") && (
-                <Link
-                  href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
-                  className={botaoPrimario}
-                >
-                  Abrir NC
-                </Link>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
+          </div>
         </section>
       )}
 
       {i.status === "cancelada" && i.motivoCancelamento && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Cancelamento</h2>
-          <p className="mt-2 text-base">{i.motivoCancelamento}</p>
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Cancelamento</h2>
+          </header>
+          <div className="p-5">
+            <p className="text-base">{i.motivoCancelamento}</p>
+          </div>
         </section>
       )}
 

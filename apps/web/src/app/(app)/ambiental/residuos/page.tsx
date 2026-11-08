@@ -14,7 +14,13 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDaSecao,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   FormularioDeResiduo,
   FormularioDeSaida,
@@ -84,7 +90,9 @@ export default async function Residuos({
         </>
       )}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Inventário</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Inventário</h2>
+        </header>
         {!rs.ok ? (
           <div className="p-5">
             <AvisoDeErro erro={rs.erro} />

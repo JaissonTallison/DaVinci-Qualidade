@@ -15,7 +15,12 @@ import { Linha } from "@/components/graficos";
 import { atualizarMonitoramento } from "@/lib/acoes-ambiental";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { FormularioDeMonitoramento } from "../formulario";
 import { textoDoLimite } from "../limites";
 import { RegistrarResultado, SituacaoDoMonitoramento } from "./acoes";
@@ -83,7 +88,9 @@ export default async function DetalheDoMonitoramento({
       </section>
       {podeEditar && m.ativo && <RegistrarResultado monitoramento={m} />}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Resultados</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Resultados</h2>
+        </header>
         {resultados.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             Nenhuma coleta registrada.

@@ -18,7 +18,13 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { TipoDaConstatacao } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
-import { botaoPrimario, painel, tituloDaSecao } from "@/lib/estilos";
+import {
+  botaoPrimario,
+  cabecalhoDoPainel,
+  painel,
+  tituloDaSecao,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { FormularioDeAuditoria } from "../formulario";
 import {
   CancelarAuditoria,
@@ -264,27 +270,35 @@ export default async function DetalheDaAuditoria({
       )}
 
       {a.status === "concluida" && a.conclusao && (
-        <section id="conclusao" className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Conclusão</h2>
-          {a.concluidaEm && (
-            <p className="mt-1 text-sm text-texto-2">
-              {formatarMomento(a.concluidaEm)}
+        <section id="conclusao" className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Conclusão</h2>
+          </header>
+          <div className="p-5">
+            {a.concluidaEm && (
+              <p className="mt-1 text-sm text-texto-2">
+                {formatarMomento(a.concluidaEm)}
+              </p>
+            )}
+            <p className="mt-3 max-w-[72ch] text-base whitespace-pre-line">
+              {a.conclusao}
             </p>
-          )}
-          <p className="mt-3 max-w-[72ch] text-base whitespace-pre-line">
-            {a.conclusao}
-          </p>
+          </div>
         </section>
       )}
       {a.status === "cancelada" && a.motivoCancelamento && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Cancelamento</h2>
-          {a.canceladaPorNome && (
-            <p className="mt-2 text-sm text-texto-2">
-              por {a.canceladaPorNome}
-            </p>
-          )}
-          <p className="mt-2 text-base">{a.motivoCancelamento}</p>
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Cancelamento</h2>
+          </header>
+          <div className="p-5">
+            {a.canceladaPorNome && (
+              <p className="mt-2 text-sm text-texto-2">
+                por {a.canceladaPorNome}
+              </p>
+            )}
+            <p className="mt-2 text-base">{a.motivoCancelamento}</p>
+          </div>
         </section>
       )}
 
@@ -301,45 +315,49 @@ export default async function DetalheDaAuditoria({
         <CancelarAuditoria auditoria={a} />
       )}
       {a.registroPorSetor.length > 0 && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Registro por setor</h2>
-          <ul className="mt-3 divide-y divide-borda">
-            {a.registroPorSetor.map((l, i) => (
-              <li key={i} className="py-3">
-                <p className="font-semibold text-texto">{l.setor}</p>
-                <dl className="mt-1 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-                  {l.comentarios && (
-                    <div>
-                      <dt className="text-texto-3">Comentários</dt>
-                      <dd className="whitespace-pre-line">{l.comentarios}</dd>
-                    </div>
-                  )}
-                  {l.pontosPositivos && (
-                    <div>
-                      <dt className="text-texto-3">Pontos positivos</dt>
-                      <dd className="whitespace-pre-line">
-                        {l.pontosPositivos}
-                      </dd>
-                    </div>
-                  )}
-                  {l.observacoes && (
-                    <div>
-                      <dt className="text-texto-3">Observações</dt>
-                      <dd className="whitespace-pre-line">{l.observacoes}</dd>
-                    </div>
-                  )}
-                  {l.naoConformidade && (
-                    <div>
-                      <dt className="text-texto-3">Não conformidade</dt>
-                      <dd className="whitespace-pre-line text-nao-conforme">
-                        {l.naoConformidade}
-                      </dd>
-                    </div>
-                  )}
-                </dl>
-              </li>
-            ))}
-          </ul>
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Registro por setor</h2>
+          </header>
+          <div className="p-5">
+            <ul className="divide-y divide-borda">
+              {a.registroPorSetor.map((l, i) => (
+                <li key={i} className="py-3">
+                  <p className="font-semibold text-texto">{l.setor}</p>
+                  <dl className="mt-1 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                    {l.comentarios && (
+                      <div>
+                        <dt className="text-texto-3">Comentários</dt>
+                        <dd className="whitespace-pre-line">{l.comentarios}</dd>
+                      </div>
+                    )}
+                    {l.pontosPositivos && (
+                      <div>
+                        <dt className="text-texto-3">Pontos positivos</dt>
+                        <dd className="whitespace-pre-line">
+                          {l.pontosPositivos}
+                        </dd>
+                      </div>
+                    )}
+                    {l.observacoes && (
+                      <div>
+                        <dt className="text-texto-3">Observações</dt>
+                        <dd className="whitespace-pre-line">{l.observacoes}</dd>
+                      </div>
+                    )}
+                    {l.naoConformidade && (
+                      <div>
+                        <dt className="text-texto-3">Não conformidade</dt>
+                        <dd className="whitespace-pre-line text-nao-conforme">
+                          {l.naoConformidade}
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
       )}
       <Anexos
