@@ -7,8 +7,9 @@ import { Campo } from "@/components/campo";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { definirFator } from "@/lib/acoes-ambiental";
-import { botaoPrimario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Fator de emissão do ano: a empresa informa o valor e de onde ele veio. */
 export function FormularioDeFator({ ano }: { ano: number }) {
@@ -72,9 +73,9 @@ export function FormularioDeFator({ ano }: { ano: number }) {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
+        <Botao type="submit" disabled={salvando} variante="primario">
           {salvando ? "Salvando…" : `Salvar fator de ${ano}`}
-        </button>
+        </Botao>
       </div>
     </form>
   );

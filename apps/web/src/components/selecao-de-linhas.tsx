@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "@/components/icones";
+import { Download, X } from "@/components/icones";
 import {
   createContext,
   useContext,
@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { botaoSecundario } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 interface Selecao {
   selecionados: Set<string>;
@@ -117,23 +117,25 @@ export function BarraDeSelecao({
         {n} {n === 1 ? rotulo[0] : rotulo[1]}
       </span>
       <div className="flex flex-wrap items-center gap-2">
-        <a
+        <Botao
           href={`/exportar?recurso=${recurso}&ids=${ids.join(",")}`}
           download
-          className={botaoSecundario}
+          tamanho="pequeno"
+          icone={Download}
         >
           Exportar selecionadas
-        </a>
+        </Botao>
         {children}
       </div>
-      <button
-        type="button"
+      <Botao
         onClick={limpar}
-        className="ml-auto inline-flex items-center gap-1 text-sm text-texto-2 hover:text-texto"
+        variante="fantasma"
+        tamanho="pequeno"
+        icone={X}
+        className="ml-auto"
       >
-        <X aria-hidden size={14} strokeWidth={1.75} />
         Limpar seleção
-      </button>
+      </Botao>
     </div>
   );
 }

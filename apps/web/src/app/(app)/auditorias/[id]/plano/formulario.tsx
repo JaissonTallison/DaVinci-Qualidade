@@ -12,12 +12,12 @@ import { ListaDeProcessosAuditados } from "@/components/lista-de-processos-audit
 import { salvarPlanoDaAuditoria } from "@/lib/acoes-auditorias";
 import {
   areaDeTexto,
-  botaoLink,
   campo,
   campoCompacto,
   rotulo,
   tituloDaSecao,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 type Props = {
   auditoria: Auditoria;
@@ -249,13 +249,9 @@ export function FormularioDoPlano({
           </div>
           <p className="text-sm text-texto-3">
             Linha em branco é descartada.{" "}
-            <button
-              type="button"
-              className={botaoLink}
-              onClick={() => setNCrono((n) => n + 1)}
-            >
+            <Botao onClick={() => setNCrono((n) => n + 1)} variante="link">
               Adicionar linha
-            </button>
+            </Botao>
           </p>
           {erros.cronograma && (
             <p className="text-sm text-nao-conforme">{erros.cronograma}</p>
@@ -301,13 +297,9 @@ export function FormularioDoPlano({
             })}
           </div>
           <p className="text-sm text-texto-3">
-            <button
-              type="button"
-              className={botaoLink}
-              onClick={() => setNAud((n) => n + 1)}
-            >
+            <Botao onClick={() => setNAud((n) => n + 1)} variante="link">
               Adicionar auditado
-            </button>
+            </Botao>
           </p>
           {Object.entries(erros)
             .filter(([k]) => k.startsWith("auditados."))

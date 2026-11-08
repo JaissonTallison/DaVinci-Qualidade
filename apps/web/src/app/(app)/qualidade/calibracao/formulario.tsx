@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState, type ReactNode } from "react";
 import {
   GRANDEZAS_DE_MEDICAO,
@@ -13,9 +12,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { salvarInstrumento, type EstadoDaAcao } from "@/lib/acoes-calibracao";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { CATALOGO_DE_CALIBRACAO } from "./catalogo";
+import { Botao } from "@/components/botao";
 
 /**
  * Campos de texto, na ordem em que aparecem, agrupados por etapa (`grupo`).
@@ -223,13 +223,13 @@ export function FormularioDeInstrumento({
         key={montagem}
         embutido={embutido}
         acoesEmbutido={
-          <button type="submit" className={botaoPrimario} disabled={salvando}>
+          <Botao type="submit" disabled={salvando} variante="primario">
             {salvando
               ? "Salvando…"
               : instrumento
                 ? "Salvar instrumento"
                 : "Cadastrar instrumento"}
-          </button>
+          </Botao>
         }
         resumo={[
           { rotulo: "TAG", campo: "tag" },
@@ -239,16 +239,21 @@ export function FormularioDeInstrumento({
         ]}
         acoes={
           <>
-            <Link href="/qualidade/calibracao" className={botaoSecundario}>
+            <Botao href="/qualidade/calibracao" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : instrumento
                   ? "Salvar instrumento"
                   : "Cadastrar instrumento"}
-            </button>
+            </Botao>
           </>
         }
       >

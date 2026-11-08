@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import type { FuncionarioResumo, Treinamento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -10,8 +9,9 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { registrarTurma } from "@/lib/acoes-exames-e-treinamentos";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeTurma({
   treinamentos,
@@ -44,12 +44,18 @@ export function FormularioDeTurma({
         ]}
         acoes={
           <>
-            <Link href="/cadastros/treinamentos" className={botaoSecundario}>
+            <Botao href="/cadastros/treinamentos" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Salvando…" : "Registrar turma"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Salvando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Registrar turma
+            </Botao>
           </>
         }
       >

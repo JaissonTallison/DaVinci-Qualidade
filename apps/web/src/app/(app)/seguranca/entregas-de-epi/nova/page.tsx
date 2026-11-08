@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
-import Link from "next/link";
 import type {
   EntregaEpi,
   Epi,
@@ -10,8 +9,10 @@ import type {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoLink, botaoSecundario, campoCompacto } from "@/lib/estilos";
+import { campoCompacto } from "@/lib/estilos";
 import { FormularioDeEntrega } from "./formulario";
+import { Search } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Registrar entrega de EPI" };
 
@@ -78,9 +79,9 @@ export default async function NovaEntrega({
       ) : epis.ok && epis.dados.length === 0 ? (
         <p className="mt-6 text-base text-texto-2">
           Nenhum EPI ativo no catálogo.{" "}
-          <Link href="/seguranca/epis" className={botaoLink}>
+          <Botao href="/seguranca/epis" variante="link">
             Cadastre os EPIs
-          </Link>{" "}
+          </Botao>{" "}
           antes de registrar entregas.
         </p>
       ) : (
@@ -100,9 +101,9 @@ export default async function NovaEntrega({
                 aria-label="Buscar profissional"
                 className={`${campoCompacto} w-64`}
               />
-              <button type="submit" className={botaoSecundario}>
+              <Botao type="submit" icone={Search}>
                 Buscar profissional
-              </button>
+              </Botao>
               <span className="text-sm text-texto-2">
                 {lista.dados.total > LIMITE
                   ? `Mostrando ${LIMITE} de ${lista.dados.total} profissionais ativos.`

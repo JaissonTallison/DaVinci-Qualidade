@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   aspectoSignificativo,
@@ -15,13 +14,9 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { SignificanciaDoAspecto } from "@/components/marcadores-ambientais";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 const SEVERIDADES = {
   1: "1 · Desprezível",
@@ -104,13 +99,13 @@ export function FormularioDeAspecto({
         embutido={Boolean(aspecto)}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : aspecto
                   ? "Salvar alterações"
                   : "Cadastrar aspecto"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -121,16 +116,21 @@ export function FormularioDeAspecto({
         ]}
         acoes={
           <>
-            <Link href="/ambiental/aspectos" className={botaoSecundario}>
+            <Botao href="/ambiental/aspectos" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : aspecto
                   ? "Salvar alterações"
                   : "Cadastrar aspecto"}
-            </button>
+            </Botao>
           </>
         }
       >

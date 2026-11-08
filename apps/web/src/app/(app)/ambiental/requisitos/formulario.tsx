@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { ESFERAS, type RequisitoLegal } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -8,13 +7,9 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Cadastro e edição do requisito legal. Na edição vai dentro do bloco recolhido, sem moldura própria. */
 export function FormularioDeRequisito({
@@ -44,13 +39,13 @@ export function FormularioDeRequisito({
         embutido={Boolean(requisito)}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : requisito
                   ? "Salvar alterações"
                   : "Cadastrar requisito"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -60,16 +55,21 @@ export function FormularioDeRequisito({
         ]}
         acoes={
           <>
-            <Link href="/ambiental/requisitos" className={botaoSecundario}>
+            <Botao href="/ambiental/requisitos" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : requisito
                   ? "Salvar alterações"
                   : "Cadastrar requisito"}
-            </button>
+            </Botao>
           </>
         }
       >

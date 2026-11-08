@@ -1,4 +1,4 @@
-import { ListFilter, ShieldAlert } from "@/components/icones";
+import { ListFilter, Plus, Printer, ShieldAlert } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
@@ -7,7 +7,6 @@ import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
 import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   BarraDeSelecao,
   CaixaDeSelecao,
@@ -27,8 +26,6 @@ import { NivelDoRisco } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   campoCompacto,
   linkDiscreto,
   painel,
@@ -36,6 +33,7 @@ import {
   tituloDaPagina,
 } from "@/lib/estilos";
 import { BASE_LEGAL_PGR } from "./base-legal";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "PGR" };
 
@@ -137,14 +135,18 @@ export default async function Pgr({
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Link href={`${BASE}/documento`} className={botaoSecundario}>
+          <Botao href={`${BASE}/documento`} tamanho="grande" icone={Printer}>
             Documento do PGR
-          </Link>
+          </Botao>
           {podeCriar && (
-            <Link href={`${BASE}/novo`} className={botaoPrimario}>
-              <IconeDaTela href={`${BASE}/novo`} />
+            <Botao
+              href={`${BASE}/novo`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
               Cadastrar risco
-            </Link>
+            </Botao>
           )}
         </div>
       </header>
@@ -186,10 +188,9 @@ export default async function Pgr({
             opcoes={NIVEIS_DE_RISCO}
             valor={params.nivel}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="pgr" consulta={consulta} />
           {filtrando && (
             <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
@@ -220,14 +221,11 @@ export default async function Pgr({
             }
             acao={
               filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
+                <Botao href={BASE}>Limpar filtros</Botao>
               ) : podeCriar ? (
-                <Link href={`${BASE}/novo`} className={botaoPrimario}>
-                  <IconeDaTela href={`${BASE}/novo`} />
+                <Botao href={`${BASE}/novo`} variante="primario" icone={Plus}>
                   Cadastrar o primeiro risco
-                </Link>
+                </Botao>
               ) : undefined
             }
           />

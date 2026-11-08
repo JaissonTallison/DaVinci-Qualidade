@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "@/components/icones";
 import {
   FONTES_DE_CONSUMO,
@@ -14,7 +13,6 @@ import { Bloco } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import {
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -22,6 +20,7 @@ import {
 } from "@/lib/estilos";
 import { FormularioDeConsumo } from "./formulario";
 import { GraficoDeConsumo } from "./grafico";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Consumo de água e energia" };
 const MESES = [
@@ -82,24 +81,22 @@ export default async function Consumo({
           </p>
         </div>
         <nav aria-label="Ano" className="flex items-center gap-2">
-          <Link
+          <Botao
             href={`/ambiental/consumo?ano=${ano - 1}`}
-            className={botaoSecundario}
             aria-label={`Ano ${ano - 1}`}
-          >
-            <ChevronLeft aria-hidden size={16} strokeWidth={1.75} />
-          </Link>
+            tamanho="grande"
+            icone={ChevronLeft}
+          ></Botao>
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
           </span>
           {ano < anoAtual && (
-            <Link
+            <Botao
               href={`/ambiental/consumo?ano=${ano + 1}`}
-              className={botaoSecundario}
               aria-label={`Ano ${ano + 1}`}
-            >
-              <ChevronRight aria-hidden size={16} strokeWidth={1.75} />
-            </Link>
+              tamanho="grande"
+              iconeDireita={ChevronRight}
+            ></Botao>
           )}
         </nav>
       </header>

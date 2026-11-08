@@ -3,7 +3,8 @@
 import { useActionState, useState } from "react";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { responderPesquisa } from "@/lib/acoes-servicos";
-import { areaDeTexto, botaoPrimario } from "@/lib/estilos";
+import { areaDeTexto } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /** Nota de 0 a 10 (recomendação) e, quando há OS, a nota do serviço de 1 a 5. */
 export function FormularioDaPesquisa({
@@ -85,13 +86,14 @@ export function FormularioDaPesquisa({
       {estado.erro && (
         <p className="mt-3 text-sm text-nao-conforme">{estado.erro.mensagem}</p>
       )}
-      <button
+      <Botao
         type="submit"
-        className={`${botaoPrimario} mt-5`}
         disabled={enviando || nota === ""}
+        variante="primario"
+        className="mt-5"
       >
         {enviando ? "Enviando…" : "Enviar resposta"}
-      </button>
+      </Botao>
     </form>
   );
 }

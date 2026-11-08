@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import {
   formatarDocumento,
   type DadosDoUsuario,
@@ -11,13 +10,8 @@ import {
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  campoCompacto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Clientes e fornecedores" };
 
@@ -54,13 +48,14 @@ export default async function Parceiros({
           </p>
         </div>
         {podeCriar && (
-          <Link
+          <Botao
             href="/cadastros/clientes-e-fornecedores/novo"
-            className={botaoPrimario}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
           >
-            <IconeDaTela href={"/cadastros/clientes-e-fornecedores/novo"} />
-            Cadastrar
-          </Link>
+            Cadastrar cliente ou fornecedor
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -87,10 +82,9 @@ export default async function Parceiros({
             opcoes={{ inativos: "Inativos", todos: "Todos" }}
             valor={params.situacao}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!lista.ok ? (
           <div className="p-4">

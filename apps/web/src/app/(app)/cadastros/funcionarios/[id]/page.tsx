@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -23,15 +22,12 @@ import { SituacaoDoRequisitoMarcador } from "@/components/situacao-do-requisito"
 import { TabelaDeEntregas } from "@/components/tabela-de-entregas";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  painel,
-  tituloDaPagina,
-  tituloDaSecao,
-} from "@/lib/estilos";
+import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { FormularioDeFuncionario } from "../formulario";
 import { DesligarFuncionario, ReadmitirFuncionario } from "./acoes";
 import { ExamesETreinamentos } from "./exames-e-treinamentos";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Profissional" };
 
@@ -221,15 +217,13 @@ export default async function DetalheDoFuncionario({
           <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-5">
             <h2 className={tituloDaSecao}>Ficha de EPI</h2>
             {f.ativo && permissoes.includes("seguranca.editar") && (
-              <Link
+              <Botao
                 href={`/seguranca/entregas-de-epi/nova?funcionario=${f.id}`}
-                className={botaoPrimario}
+                variante="primario"
+                icone={Plus}
               >
-                <IconeDaTela
-                  href={`/seguranca/entregas-de-epi/nova?funcionario=${f.id}`}
-                />
                 Registrar entrega
-              </Link>
+              </Botao>
             )}
           </div>
           {!ficha.ok ? (

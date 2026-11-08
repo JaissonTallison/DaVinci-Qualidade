@@ -17,13 +17,10 @@ import {
   registrarSaida,
 } from "@/lib/acoes-ambiental";
 import { hojeEmBrasilia } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-  campoCompacto,
-} from "@/lib/estilos";
+import { campo, campoCompacto } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 function useFormulario(
   acao: (e: EstadoDaAcao, f: FormData) => Promise<EstadoDaAcao>,
@@ -97,9 +94,14 @@ export function FormularioDeResiduo() {
         {texto("destinacao", "Destinação")}
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Cadastrar resíduo"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Cadastrar resíduo
+        </Botao>
       </div>
     </form>
   );
@@ -215,9 +217,14 @@ export function FormularioDeSaida({
         {texto("custo", "Custo da destinação (R$)", 15)}
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Registrar saída"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Registrar saída
+        </Botao>
       </div>
     </form>
   );
@@ -255,9 +262,14 @@ export function RegistrarCdf({ saidaId }: { saidaId: string }) {
         defaultValue={v.data ?? hojeEmBrasilia()}
         className={campoCompacto}
       />
-      <button type="submit" className={botaoSecundario} disabled={salvando}>
-        {salvando ? "…" : "Registrar CDF"}
-      </button>
+      <Botao
+        type="submit"
+        carregando={salvando}
+        textoCarregando="…"
+        icone={Plus}
+      >
+        Registrar CDF
+      </Botao>
       {erro && <p className="w-full text-sm text-nao-conforme">{erro}</p>}
     </form>
   );

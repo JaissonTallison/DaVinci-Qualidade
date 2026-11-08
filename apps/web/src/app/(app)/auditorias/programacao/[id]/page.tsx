@@ -12,7 +12,6 @@ import { StatusDaAuditoria } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { excluirItemProgramacao } from "@/lib/acoes-programacao";
 import {
-  botaoPerigo,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -22,6 +21,8 @@ import { FormularioDaProgramacao } from "../formulario";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Trash2 } from "@/components/icones";
+import { Botao } from "@/components/botao";
 export const metadata: Metadata = { title: "Item da programação" };
 
 export default async function EditarItemDaProgramacao({
@@ -110,9 +111,9 @@ export default async function EditarItemDaProgramacao({
             )}
             className="mt-3"
           >
-            <button type="submit" className={botaoPerigo}>
+            <Botao type="submit" variante="perigo" icone={Trash2}>
               Remover item
-            </button>
+            </Botao>
           </form>
         </Recolhido>
       )}

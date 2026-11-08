@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ArrowLeft, House, RotateCw } from "@/components/icones";
 import { PaginaDeErro } from "@/components/pagina-de-erro";
-import { botaoPrimario, botaoSecundario } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /** Data e hora do erro no formato do sistema, para o suporte cruzar com o log. */
 function agora(): string {
@@ -40,18 +39,16 @@ export function ErroNaoEncontrado() {
       texto="O endereço acessado não existe ou o registro foi removido. Se você chegou aqui por um link salvo, ele pode estar desatualizado."
       acoes={
         <>
-          <Link href="/" className={botaoPrimario}>
-            <House aria-hidden size={16} strokeWidth={1.75} />
+          <Botao href="/" variante="primario" tamanho="grande" icone={House}>
             Ir para o início
-          </Link>
-          <button
-            type="button"
-            className={botaoSecundario}
+          </Botao>
+          <Botao
             onClick={() => router.back()}
+            tamanho="grande"
+            icone={ArrowLeft}
           >
-            <ArrowLeft aria-hidden size={16} strokeWidth={1.75} />
             Voltar à página anterior
-          </button>
+          </Botao>
         </>
       }
       atalhos={ATALHOS}
@@ -82,18 +79,17 @@ export function ErroInesperado({
       texto="Não foi possível carregar esta tela por uma falha no servidor. Nenhum dado foi alterado. Tente de novo; se o erro continuar, envie os detalhes abaixo ao suporte."
       acoes={
         <>
-          <button
-            type="button"
-            className={botaoPrimario}
+          <Botao
             onClick={tentarDeNovo}
+            variante="primario"
+            tamanho="grande"
+            icone={RotateCw}
           >
-            <RotateCw aria-hidden size={16} strokeWidth={1.75} />
             Tentar novamente
-          </button>
-          <Link href="/" className={botaoSecundario}>
-            <House aria-hidden size={16} strokeWidth={1.75} />
+          </Botao>
+          <Botao href="/" tamanho="grande" icone={House}>
             Ir para o início
-          </Link>
+          </Botao>
         </>
       }
       detalhes={[

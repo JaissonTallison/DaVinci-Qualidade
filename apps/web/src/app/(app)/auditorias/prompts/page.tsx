@@ -12,12 +12,8 @@ import { BotaoCopiar } from "@/components/botao-copiar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
-import {
-  botaoSecundario,
-  campoCompacto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Prompts de IA" };
 
@@ -87,10 +83,9 @@ export default async function Prompts({
             aria-label="Palavra-chave"
             className={`${campoCompacto} w-44`}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         <Suspense>
           <BuscasSalvas />

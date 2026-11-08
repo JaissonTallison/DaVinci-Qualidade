@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import {
   PERIGOS_GHS,
   UNIDADES_PRODUTO,
@@ -8,16 +8,10 @@ import {
   type ProdutoQuimico,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  campoCompacto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Produtos químicos" };
 
@@ -56,13 +50,14 @@ export default async function Produtos({
           </p>
         </div>
         {podeCriar && (
-          <Link
+          <Botao
             href="/ambiental/produtos-quimicos/novo"
-            className={botaoPrimario}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
           >
-            <IconeDaTela href="/ambiental/produtos-quimicos" />
-            Novo produto
-          </Link>
+            Cadastrar produto
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -87,10 +82,9 @@ export default async function Produtos({
             />
             Só FDS para revisar
           </label>
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!r.ok ? (
           <div className="p-4">

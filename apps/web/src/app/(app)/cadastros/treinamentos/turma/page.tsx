@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
-import Link from "next/link";
 import type { FuncionarioResumo, Pagina, Treinamento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoLink } from "@/lib/estilos";
 import { FormularioDeTurma } from "./formulario";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Registrar turma" };
 
@@ -44,9 +43,9 @@ export default async function Turma({
       ) : treinamentos.ok && treinamentos.dados.length === 0 ? (
         <p className="mt-6 text-base text-texto-2">
           Nenhum treinamento ativo.{" "}
-          <Link href="/cadastros/treinamentos" className={botaoLink}>
+          <Botao href="/cadastros/treinamentos" variante="link">
             Cadastre no catálogo
-          </Link>{" "}
+          </Botao>{" "}
           antes.
         </p>
       ) : (

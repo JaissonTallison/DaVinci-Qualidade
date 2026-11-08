@@ -1,6 +1,5 @@
 import { Download } from "@/components/icones";
-import Link from "next/link";
-import { botaoSecundario } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /**
  * Baixa a lista atual em CSV, com os filtros aplicados (não só a página na tela). Aponta para /exportar,
@@ -17,14 +16,8 @@ export function BotaoExportar({
   q.delete("pagina");
   q.set("recurso", recurso);
   return (
-    <Link
-      href={`/exportar?${q}`}
-      prefetch={false}
-      download
-      className={botaoSecundario}
-    >
-      <Download aria-hidden size={16} strokeWidth={1.75} />
+    <Botao href={`/exportar?${q}`} prefetch={false} download icone={Download}>
       Exportar
-    </Link>
+    </Botao>
   );
 }

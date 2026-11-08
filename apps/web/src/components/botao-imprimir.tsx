@@ -1,7 +1,7 @@
 "use client";
 
 import { Printer } from "@/components/icones";
-import { botaoPrimario } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /** Abre a impressão do navegador, onde dá para salvar em PDF. */
 export function BotaoImprimir({
@@ -10,13 +10,13 @@ export function BotaoImprimir({
   rotulo?: string;
 }) {
   return (
-    <button
-      type="button"
+    <Botao
       onClick={() => window.print()}
-      className={`${botaoPrimario} print:hidden`}
+      variante="primario"
+      icone={Printer}
+      className="print:hidden"
     >
-      <Printer aria-hidden size={16} strokeWidth={1.75} />
       {rotulo}
-    </button>
+    </Botao>
   );
 }

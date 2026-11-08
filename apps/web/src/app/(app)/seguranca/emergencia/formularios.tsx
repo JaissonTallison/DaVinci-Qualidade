@@ -17,6 +17,7 @@ import {
   salvarPlanoDeEmergencia,
 } from "@/lib/acoes-sst";
 import { areaDeTexto, campo } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export function NovoBrigadista({
   funcionarios,
@@ -106,33 +107,33 @@ export function RetirarBrigadista({ b }: { b: Brigadista }) {
       {erro && <span className="text-nao-conforme">{erro}</span>}
       {confirmar ? (
         <>
-          <button
-            type="button"
+          <Botao
             disabled={pendente}
-            className="font-semibold text-nao-conforme hover:underline"
             onClick={() =>
               iniciar(async () => setErro(await retirarBrigadista(b.id)))
             }
+            variante="perigo"
+            tamanho="pequeno"
           >
             Confirmar
-          </button>
-          <button
-            type="button"
-            className="text-texto-2 hover:underline"
+          </Botao>
+          <Botao
             onClick={() => setConfirmar(false)}
+            variante="fantasma"
+            tamanho="pequeno"
           >
             Manter
-          </button>
+          </Botao>
         </>
       ) : (
-        <button
-          type="button"
+        <Botao
           aria-label={`Retirar ${b.nome} da brigada`}
-          className="text-texto-2 hover:text-nao-conforme hover:underline"
           onClick={() => setConfirmar(true)}
+          variante="fantasma"
+          tamanho="pequeno"
         >
           Retirar
-        </button>
+        </Botao>
       )}
     </span>
   );

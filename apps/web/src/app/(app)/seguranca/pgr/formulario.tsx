@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   GRUPOS_DE_RISCO,
@@ -17,13 +16,9 @@ import { NivelDoRisco } from "@/components/marcadores";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarRisco } from "@/lib/acoes-pgr-pt";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Identificar e avaliar o risco. O nível aparece enquanto se escolhe severidade e probabilidade. */
 export function FormularioDeRisco({
@@ -61,13 +56,13 @@ export function FormularioDeRisco({
         embutido={embutido}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : risco
                   ? "Salvar avaliação"
                   : "Cadastrar risco"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -78,16 +73,21 @@ export function FormularioDeRisco({
         ]}
         acoes={
           <>
-            <Link href="/seguranca/pgr" className={botaoSecundario}>
+            <Botao href="/seguranca/pgr" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : risco
                   ? "Salvar avaliação"
                   : "Cadastrar risco"}
-            </button>
+            </Botao>
           </>
         }
       >

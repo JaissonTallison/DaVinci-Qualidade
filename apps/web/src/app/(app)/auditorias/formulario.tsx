@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, type ReactNode } from "react";
 import {
   NORMAS,
@@ -14,15 +13,10 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import { salvarAuditoria, type EstadoDaAcao } from "@/lib/acoes-auditorias";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-  painel,
-} from "@/lib/estilos";
+import { areaDeTexto, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { TabelaPorSetor } from "./tabela-por-setor";
+import { Botao } from "@/components/botao";
 
 /** Agrupa campos relacionados sob um subtítulo sóbrio, para o planejamento ler como etapas. */
 /** id do bloco a partir do título, para o atalho da coluna de resumo. */
@@ -83,13 +77,13 @@ export function FormularioDeAuditoria({
       <CadastroEmBlocos
         embutido={embutido}
         acoesEmbutido={
-          <button type="submit" className={botaoPrimario} disabled={salvando}>
+          <Botao type="submit" disabled={salvando} variante="primario">
             {salvando
               ? "Salvando…"
               : auditoria
                 ? "Salvar planejamento"
                 : "Planejar auditoria"}
-          </button>
+          </Botao>
         }
         resumo={[
           { rotulo: "Tipo", campo: "tipo" },
@@ -99,16 +93,21 @@ export function FormularioDeAuditoria({
         ]}
         acoes={
           <>
-            <Link href="/auditorias" className={botaoSecundario}>
+            <Botao href="/auditorias" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : auditoria
                   ? "Salvar planejamento"
                   : "Planejar auditoria"}
-            </button>
+            </Botao>
           </>
         }
       >

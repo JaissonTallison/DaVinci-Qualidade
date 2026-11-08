@@ -4,7 +4,8 @@ import { useActionState } from "react";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { enviarAvisosAgora } from "@/lib/acoes-sgi";
-import { botaoSecundario } from "@/lib/estilos";
+import { Send } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export function EnviarAvisos() {
   const [estado, enviar, enviando] = useActionState<
@@ -12,9 +13,14 @@ export function EnviarAvisos() {
   >(enviarAvisosAgora, {});
   return (
     <form action={enviar} className="flex flex-col items-end gap-1">
-      <button type="submit" className={botaoSecundario} disabled={enviando}>
-        {enviando ? "Enviando…" : "Enviar avisos agora"}
-      </button>
+      <Botao
+        type="submit"
+        carregando={enviando}
+        textoCarregando="Enviando…"
+        icone={Send}
+      >
+        Enviar avisos agora
+      </Botao>
       {estado.enviados !== undefined && (
         <p role="status" className="text-sm text-texto-2">
           {estado.enviados === 0

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   RESULTADOS_ASO,
   TIPOS_ASO,
@@ -16,13 +15,14 @@ import {
 } from "@/lib/acoes-exames-e-treinamentos";
 import { formatarData } from "@/lib/datas";
 import {
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaSecao,
   tituloDoPainel,
 } from "@/lib/estilos";
 import { RegistrarAso } from "./registrar-aso";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 /** Exames ocupacionais e treinamentos da pessoa. O vigente é o mais recente; os antigos ficam como histórico. */
 export async function ExamesETreinamentos({
@@ -140,12 +140,12 @@ export async function ExamesETreinamentos({
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-5">
           <h2 className={tituloDaSecao}>Treinamentos</h2>
           {podeEditar && f.ativo && (
-            <Link
+            <Botao
               href={`/cadastros/treinamentos/turma?funcionario=${f.id}`}
-              className={botaoSecundario}
+              icone={Plus}
             >
               Registrar treinamento
-            </Link>
+            </Botao>
           )}
         </div>
         {!realizados.ok ? (

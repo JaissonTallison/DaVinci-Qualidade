@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import type { Contrato, ParceiroResumo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -8,15 +7,11 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarOs } from "@/lib/acoes-servicos";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { Selecao } from "@/components/selecao";
 import { EscolhaDeParceiro } from "../../escolha-de-parceiro";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeOs({
   clientes,
@@ -41,12 +36,18 @@ export function FormularioDeOs({
         ]}
         acoes={
           <>
-            <Link href="/servicos/ordens" className={botaoSecundario}>
+            <Botao href="/servicos/ordens" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Salvando…" : "Abrir ordem de serviço"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Salvando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Abrir ordem de serviço
+            </Botao>
           </>
         }
       >

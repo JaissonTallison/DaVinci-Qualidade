@@ -2,7 +2,9 @@
 
 import { useActionState } from "react";
 import type { EstadoDaAcao } from "@/lib/acao";
-import { botaoPerigo, campoCompacto } from "@/lib/estilos";
+import { campoCompacto } from "@/lib/estilos";
+import { Trash2 } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 /** "Anular" na linha do histórico: o registro fica visível, riscado, com o motivo. */
 export function AnularRegistro({
@@ -44,9 +46,14 @@ export function AnularRegistro({
           className={`${campoCompacto} w-full`}
         />
         {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
-        <button type="submit" className={botaoPerigo} disabled={enviando}>
+        <Botao
+          type="submit"
+          disabled={enviando}
+          variante="perigo"
+          icone={Trash2}
+        >
           Anular registro
-        </button>
+        </Botao>
       </form>
     </details>
   );

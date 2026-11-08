@@ -1,4 +1,4 @@
-import { ClipboardList, ListFilter } from "@/components/icones";
+import { ClipboardList, ListFilter, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
@@ -8,7 +8,6 @@ import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
 import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { Paginacao } from "@/components/paginacao";
 import {
   BarraDeSelecao,
@@ -37,14 +36,13 @@ import {
   prazoRelativo,
 } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   campoCompacto,
   linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Não conformidades" };
 
@@ -159,10 +157,14 @@ export default async function ListaDeNcs({
           )}
         </div>
         {podeAbrir && (
-          <Link href={`${BASE}/nova`} className={botaoPrimario}>
-            <IconeDaTela href={`${BASE}/nova`} />
+          <Botao
+            href={`${BASE}/nova`}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Abrir NC
-          </Link>
+          </Botao>
         )}
       </header>
 
@@ -206,10 +208,9 @@ export default async function ListaDeNcs({
             />
             Só vencidas
           </label>
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="nao-conformidades" consulta={consulta} />
           {filtrando && (
             <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
@@ -240,14 +241,11 @@ export default async function ListaDeNcs({
             }
             acao={
               filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
+                <Botao href={BASE}>Limpar filtros</Botao>
               ) : podeAbrir ? (
-                <Link href={`${BASE}/nova`} className={botaoPrimario}>
-                  <IconeDaTela href={`${BASE}/nova`} />
+                <Botao href={`${BASE}/nova`} variante="primario" icone={Plus}>
                   Abrir a primeira NC
-                </Link>
+                </Botao>
               ) : undefined
             }
           />

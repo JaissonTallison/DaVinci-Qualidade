@@ -20,8 +20,6 @@ import { RespostaMarcador } from "@/components/marcadores-auditoria";
 import { chamarApi } from "@/lib/api";
 import { formatarMomento } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaSecao,
@@ -31,6 +29,7 @@ import { ConcluirAuditoria } from "../acoes";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { PontosFortes } from "./encerramento";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Relatório de auditoria" };
 
@@ -96,19 +95,19 @@ export default async function Relatorio({
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link
+          <Botao
             href={`/auditorias/${id}/relatorio/imprimir?modelo=classico`}
-            className={botaoPrimario}
+            variante="primario"
+            icone={Printer}
           >
-            <Printer aria-hidden size={16} strokeWidth={1.75} />
             PDF clássico
-          </Link>
-          <Link
+          </Botao>
+          <Botao
             href={`/auditorias/${id}/relatorio/imprimir?modelo=executivo`}
-            className={botaoSecundario}
+            icone={Printer}
           >
             PDF executivo
-          </Link>
+          </Botao>
         </div>
       </section>
 

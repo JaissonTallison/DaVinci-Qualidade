@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ListFilter, Printer } from "@/components/icones";
 import {
   NORMAS,
@@ -12,17 +11,13 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
-import {
-  botaoSecundario,
-  campoCompacto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
 import { Suspense } from "react";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { CAPITULOS, PACKS, filtrosDaBiblioteca } from "./filtros";
 import { ListaDeEvidencias } from "./lista";
 import { NovaEvidenciaPropria } from "./nova";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Biblioteca de evidências" };
 
@@ -98,18 +93,17 @@ export default async function Biblioteca({
             aria-label="Palavra-chave"
             className={`${campoCompacto} w-44`}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           {r.ok && r.dados.length > 0 && (
-            <Link
+            <Botao
               href={`/auditorias/biblioteca/imprimir?${filtro}`}
-              className={`${botaoSecundario} ml-auto`}
+              icone={Printer}
+              className="ml-auto"
             >
-              <Printer aria-hidden size={16} strokeWidth={1.75} />
               Imprimir ({r.dados.length})
-            </Link>
+            </Botao>
           )}
         </form>
         <Suspense>

@@ -1,4 +1,4 @@
-import { Check, ChevronDown } from "@/components/icones";
+import { Check, ChevronDown, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -24,13 +24,14 @@ import {
 } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
-import { botaoSecundario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
 import { AcaoDaEtapa, CancelarNc } from "./acoes";
 import { Anexos } from "@/components/anexos";
 import { linkDaOrigem } from "@/lib/origem-nc";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";
 export const metadata: Metadata = { title: "Não conformidade" };
 
 const AVISOS: Record<string, string> = {
@@ -183,12 +184,12 @@ export default async function DetalheDaNc({
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <p className="text-sm font-semibold text-texto-2">Planos de ação</p>
         {!terminada && podeEditar && (
-          <Link
+          <Botao
             href={`/qualidade/planos-de-acao/novo?nc=${nc.id}`}
-            className={botaoSecundario}
+            icone={Plus}
           >
             Criar plano de ação
-          </Link>
+          </Botao>
         )}
       </div>
       {listaDePlanos.length > 0 ? (

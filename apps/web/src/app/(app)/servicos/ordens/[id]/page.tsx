@@ -17,7 +17,6 @@ import { StatusDaOs } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
 import {
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -28,6 +27,7 @@ import { AvaliarOs, CancelarOs, ConcluirOs, IniciarOs } from "./acoes";
 import { ExecucaoDaOs } from "./execucao";
 import { LinhaDoTempoDaOs } from "./linha-do-tempo";
 import { EnviarPesquisa } from "./pesquisa";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Ordem de serviço" };
 const AVISOS: Record<string, string> = {
@@ -84,13 +84,9 @@ export default async function DetalheDaOs({
                 voltar={`/servicos/ordens/${o.id}`}
               />
             )}
-            <Link
-              href={`/servicos/ordens/${o.id}/imprimir`}
-              className={botaoSecundario}
-            >
-              <Printer aria-hidden size={16} strokeWidth={1.75} />
+            <Botao href={`/servicos/ordens/${o.id}/imprimir`} icone={Printer}>
               Relatório da OS
-            </Link>
+            </Botao>
           </div>
         </div>
       </CabecalhoComVoltar>

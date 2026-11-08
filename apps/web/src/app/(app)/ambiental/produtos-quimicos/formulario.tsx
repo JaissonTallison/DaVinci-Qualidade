@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import {
   PERIGOS_GHS,
@@ -12,8 +11,9 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Cadastro e edição do produto. Na edição vai dentro do bloco recolhido, sem moldura própria. */
 export function FormularioDeProduto({
@@ -59,13 +59,13 @@ export function FormularioDeProduto({
         embutido={Boolean(produto)}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : produto
                   ? "Salvar alterações"
                   : "Cadastrar produto"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -75,19 +75,21 @@ export function FormularioDeProduto({
         ]}
         acoes={
           <>
-            <Link
-              href="/ambiental/produtos-quimicos"
-              className={botaoSecundario}
-            >
+            <Botao href="/ambiental/produtos-quimicos" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : produto
                   ? "Salvar alterações"
                   : "Cadastrar produto"}
-            </button>
+            </Botao>
           </>
         }
       >

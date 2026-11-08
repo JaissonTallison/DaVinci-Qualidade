@@ -279,7 +279,45 @@ O "ID do erro" é o `digest` do Next, o mesmo que fica no log do servidor.
 | **Card** (`painel`)                   | Cabeçalho com `cabecalhoDoPainel` (título `tituloDoPainel` de 15 px, descrição de 13 px, ações à direita) sobre a linha; corpo com `p-5`. Tabela encosta nas bordas do card |
 | **Campos nativos**                    | Caixa de marcar e rádio de 16 px no azul da marca; seleção com a seta dupla do Lucide; rótulo de 14 px em `font-medium`, "(opcional)" em cinza                              |
 | **Estado vazio**                      | Ícone de 28 px em `texto-3`, título do que falta, uma frase e o botão que resolve                                                                                           |
-| **Botões**                            | Verbo + objeto: "Abrir NC", "Liberar permissão". Primário em azul da marca, um por tela                                                                                     |
+| **Botões** (`Botao`)                  | Ver §8.1. Verbo + objeto: "Abrir NC", "Liberar permissão". Um primário por área, em azul da marca                                                                           |
+
+### 8.1 Botões
+
+Todo botão é o componente `Botao` (`components/botao.tsx`); só com ícone, `BotaoIcone`. O ESLint recusa classe de botão solta em `className`.
+
+| Variante     | Quando                                                             |
+| ------------ | ------------------------------------------------------------------ |
+| `primario`   | A ação que conclui a tarefa. Um por área (cabeçalho, card, modal)  |
+| `secundario` | Apoio: Exportar, Imprimir, Filtrar, Cancelar no cadastro (padrão)  |
+| `fantasma`   | Ações de linha (Retirar, Manter), descartar, botão só com ícone    |
+| `perigo`     | Excluir, anular, inativar: vermelho cheio e sempre com confirmação |
+| `link`       | Navegação no meio do texto ("Cadastre o cliente")                  |
+
+| Tamanho   | Altura | Onde                                                  |
+| --------- | ------ | ----------------------------------------------------- |
+| `grande`  | 40 px  | Cabeçalho da página e barra de ações do cadastro      |
+| `medio`   | 36 px  | Corpo da tela, filtros, modais, estado vazio (padrão) |
+| `pequeno` | 30 px  | Linha de tabela, cabeçalho de card, ações em lote     |
+
+**Ícone pela ação, nunca o da tela do menu** (16 px; 14 no pequeno; traço 1,75; cor do texto). À esquerda, exceto seta de avançar e abrir menu, à direita:
+
+| Ação                                           | Ícone                                  |
+| ---------------------------------------------- | -------------------------------------- |
+| Criar registro (Abrir NC, Registrar acidente…) | `Plus`                                 |
+| Salvar, concluir, aprovar                      | Nenhum                                 |
+| Editar                                         | `Pencil`                               |
+| Excluir, anular, remover                       | `Trash2`                               |
+| Filtrar                                        | `ListFilter`                           |
+| Exportar, baixar planilha                      | `Download`                             |
+| Imprimir, PDF                                  | `Printer`                              |
+| Enviar, e-mail, WhatsApp                       | `Send`, `Mail`, `MessageCircle`        |
+| Anexar · Copiar · Consultar                    | `Paperclip` · `Copy` · `Search`        |
+| Tentar de novo · Voltar                        | `RotateCw` · `ArrowLeft`               |
+| Avançar, resolver · Abrir menu                 | `ArrowRight` · `ChevronDown` (direita) |
+
+**Verbos de criar:** Abrir (NC, OS), Registrar (eventos: acidente, inspeção, entrega, análise, turma), Cadastrar (cadastros: instrumento, terceiro, licença, produto, requisito, aspecto, tema, profissional, risco) e os do domínio (Solicitar PT, Planejar auditoria, Propor inovação, Criar plano). Nada de "Novo X".
+
+**Estados:** `carregando` mostra o giro, troca o texto ("Salvando…") e trava o botão; desabilitado leva `motivo`, que aparece ao passar o mouse. Com `href` o botão é link; com `download` ou endereço de fora (e-mail, WhatsApp), âncora comum.
 
 ---
 

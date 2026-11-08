@@ -3,8 +3,8 @@ import type { ConviteDePesquisa } from "@davinci/types";
 import { BotaoCopiar } from "@/components/botao-copiar";
 import { formatarData } from "@/lib/datas";
 import { enderecoDoSistema } from "@/lib/endereco-do-sistema";
-import { botaoSecundario } from "@/lib/estilos";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";
 
 /** O link do convite, com copiar, e-mail e WhatsApp prontos. */
 export async function LinkDaPesquisa({
@@ -25,22 +25,22 @@ export async function LinkDaPesquisa({
       </p>
       <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
         <BotaoCopiar texto={url} rotulo="Copiar link" />
-        <a
+        <Botao
           href={`mailto:?subject=${encodeURIComponent("Pesquisa de satisfação")}&body=${encodeURIComponent(texto)}`}
-          className={`${botaoSecundario} h-8 text-sm`}
+          tamanho="pequeno"
+          icone={Mail}
         >
-          <Mail aria-hidden size={14} strokeWidth={1.75} />
-          <span>Enviar por e-mail</span>
-        </a>
-        <a
+          Enviar por e-mail
+        </Botao>
+        <Botao
           href={`https://wa.me/?text=${encodeURIComponent(texto)}`}
           target="_blank"
           rel="noreferrer"
-          className={`${botaoSecundario} h-8 text-sm`}
+          tamanho="pequeno"
+          icone={MessageCircle}
         >
-          <MessageCircle aria-hidden size={14} strokeWidth={1.75} />
-          <span>Enviar por WhatsApp</span>
-        </a>
+          Enviar por WhatsApp
+        </Botao>
       </div>
     </CaixaDeAlerta>
   );

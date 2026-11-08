@@ -1,15 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import type { Perfil } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { Selecao } from "@/components/selecao";
 import { criarUsuario, type EstadoComSenha } from "@/lib/acoes-administracao";
-import { botaoLink, botaoPrimario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { SenhaProvisoria } from "../senha-provisoria";
+import { Botao } from "@/components/botao";
 
 export function NovoUsuario({ perfis }: { perfis: Perfil[] }) {
   const [estado, acao, salvando] = useActionState<EstadoComSenha, FormData>(
@@ -31,12 +31,12 @@ export function NovoUsuario({ perfis }: { perfis: Perfil[] }) {
           </p>
         )}
         <p className="mt-3 text-base">
-          <Link
+          <Botao
             href={`/administracao/usuarios/${estado.usuarioId}`}
-            className={botaoLink}
+            variante="link"
           >
             Ver o usuário
-          </Link>
+          </Botao>
         </p>
       </div>
     );
@@ -87,9 +87,14 @@ export function NovoUsuario({ perfis }: { perfis: Perfil[] }) {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Cadastrar usuário"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Cadastrar usuário
+        </Botao>
       </div>
     </form>
   );

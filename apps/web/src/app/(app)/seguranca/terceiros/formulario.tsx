@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { formatarDocumento, type Terceiro } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -8,8 +7,9 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarTerceiro } from "@/lib/acoes-terceiros";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeTerceiro({
   terceiro,
@@ -40,13 +40,13 @@ export function FormularioDeTerceiro({
         embutido={embutido}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : terceiro
                   ? "Salvar"
                   : "Cadastrar terceiro"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -56,16 +56,21 @@ export function FormularioDeTerceiro({
         ]}
         acoes={
           <>
-            <Link href="/seguranca/terceiros" className={botaoSecundario}>
+            <Botao href="/seguranca/terceiros" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : terceiro
                   ? "Salvar"
                   : "Cadastrar terceiro"}
-            </button>
+            </Botao>
           </>
         }
       >

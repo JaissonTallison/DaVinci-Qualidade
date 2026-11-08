@@ -13,8 +13,9 @@ import {
   criarEvidenciaPropria,
   type EstadoDaAcao,
 } from "@/lib/acoes-auditorias";
-import { botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function NovaEvidenciaPropria() {
   const [estado, enviar, enviando] = useActionState<EstadoDaAcao, FormData>(
@@ -106,9 +107,9 @@ export function NovaEvidenciaPropria() {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoSecundario} disabled={enviando}>
-          {enviando ? "Salvando…" : "Salvar na biblioteca"}
-        </button>
+        <Botao type="submit" carregando={enviando} textoCarregando="Salvando…">
+          Salvar na biblioteca
+        </Botao>
       </div>
     </form>
   );

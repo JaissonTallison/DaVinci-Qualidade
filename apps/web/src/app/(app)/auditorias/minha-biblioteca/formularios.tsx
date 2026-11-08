@@ -13,12 +13,14 @@ import {
   type EstadoDaAcao,
   type ItemProprio,
 } from "@/lib/acoes-auditorias";
-import { areaDeTexto, botaoLink, botaoPrimario, campo } from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import {
   COLUNAS_DA_PLANILHA,
   NOMES_DA_PLANILHA,
 } from "@/lib/planilha-da-biblioteca";
+import { Botao } from "@/components/botao";
+import { Download, Trash2 } from "@/components/icones";
 
 function useCadastro(
   acao: (e: EstadoDaAcao, f: FormData) => Promise<EstadoDaAcao>,
@@ -104,9 +106,14 @@ export function NovoCriterio() {
         />
       </Campo>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={enviando}>
-          {enviando ? "Salvando…" : "Salvar critério"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Salvar critério
+        </Botao>
       </div>
     </form>
   );
@@ -179,9 +186,14 @@ export function NovoModeloNc() {
         {texto("evidenciaFechamento", "Evidência de fechamento", 3, 500)}
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={enviando}>
-          {enviando ? "Salvando…" : "Salvar modelo de NC"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Salvar modelo de NC
+        </Botao>
       </div>
     </form>
   );
@@ -214,13 +226,16 @@ export function ImportarPlanilha() {
             ))}
           </select>
         </Campo>
-        <a
+        <Botao
           href={modelo}
           download={`modelo-${tipo}.csv`}
-          className={`${botaoLink} pb-2 text-sm`}
+          variante="link"
+          tamanho="pequeno"
+          icone={Download}
+          className="pb-2"
         >
           Baixar planilha modelo
-        </a>
+        </Botao>
       </div>
       <p className="text-sm text-texto-2">
         Colunas:{" "}
@@ -250,9 +265,14 @@ export function ImportarPlanilha() {
         />
       </Campo>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={enviando}>
-          {enviando ? "Importando…" : "Importar"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Importando…"
+          variante="primario"
+        >
+          Importar
+        </Botao>
       </div>
     </form>
   );
@@ -276,33 +296,35 @@ export function ExcluirProprio({
       {erro && <span className="text-nao-conforme">{erro}</span>}
       {confirmar ? (
         <>
-          <button
-            type="button"
-            disabled={pendente}
-            className="font-semibold text-nao-conforme hover:underline"
+          <Botao
+            carregando={pendente}
+            textoCarregando="Excluindo…"
             onClick={() =>
               iniciar(async () => setErro(await excluirItemProprio(tipo, id)))
             }
+            variante="perigo"
+            tamanho="pequeno"
           >
-            {pendente ? "Excluindo…" : "Confirmar exclusão"}
-          </button>
-          <button
-            type="button"
-            className="text-texto-2 hover:underline"
+            Confirmar exclusão
+          </Botao>
+          <Botao
             onClick={() => setConfirmar(false)}
+            variante="fantasma"
+            tamanho="pequeno"
           >
             Manter
-          </button>
+          </Botao>
         </>
       ) : (
-        <button
-          type="button"
+        <Botao
           aria-label={`Excluir ${nome}`}
-          className="text-texto-2 hover:text-nao-conforme hover:underline"
           onClick={() => setConfirmar(true)}
+          variante="fantasma"
+          tamanho="pequeno"
+          icone={Trash2}
         >
           Excluir
-        </button>
+        </Botao>
       )}
     </span>
   );

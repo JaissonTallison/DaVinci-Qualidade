@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
-import Link from "next/link";
 import type { Contrato, Pagina, ParceiroResumo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoLink } from "@/lib/estilos";
 import { FormularioDeOs } from "./formulario";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Abrir ordem de serviço" };
 
@@ -27,12 +26,9 @@ export default async function NovaOs() {
       ) : clientes.dados.itens.length === 0 ? (
         <p className="mt-6 text-base text-texto-2">
           Nenhum cliente cadastrado.{" "}
-          <Link
-            href="/cadastros/clientes-e-fornecedores/novo"
-            className={botaoLink}
-          >
+          <Botao href="/cadastros/clientes-e-fornecedores/novo" variante="link">
             Cadastre o cliente
-          </Link>{" "}
+          </Botao>{" "}
           antes.
         </p>
       ) : (

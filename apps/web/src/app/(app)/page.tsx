@@ -26,12 +26,12 @@ import { chamarApi, type Resultado } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { Selo } from "@/components/selo";
 import {
-  botaoPrimario,
   painel,
   sobretitulo,
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Início" };
 
@@ -277,13 +277,14 @@ export default async function Inicio() {
             )}
 
             {pior && pior.pct < 100 && (
-              <Link
+              <Botao
                 href={pior.href}
-                className={`${botaoPrimario} shrink-0 max-sm:w-full`}
+                variante="primario"
+                iconeDireita={ArrowRight}
+                className="shrink-0 max-sm:w-full"
               >
                 Resolver
-                <ArrowRight aria-hidden size={16} strokeWidth={1.75} />
-              </Link>
+              </Botao>
             )}
           </div>
 

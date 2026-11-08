@@ -8,9 +8,10 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { avaliarFornecedor } from "@/lib/acoes-servicos";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoPrimario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { EscolhaDeParceiro } from "../escolha-de-parceiro";
+import { Botao } from "@/components/botao";
 
 const NOTAS = {
   5: "5 · Excelente",
@@ -96,9 +97,14 @@ export function FormularioDeAvaliacao({
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Registrar avaliação"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Registrar avaliação
+        </Botao>
       </div>
     </form>
   );

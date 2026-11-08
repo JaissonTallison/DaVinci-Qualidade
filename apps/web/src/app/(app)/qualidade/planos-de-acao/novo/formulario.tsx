@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState, type ReactNode } from "react";
 import {
   MAXIMO_DE_TAREFAS,
@@ -14,15 +13,11 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { LinhasDeTarefa } from "@/components/linhas-de-tarefa";
 import { Selecao } from "@/components/selecao";
 import { criarPlano, type EstadoDaAcao } from "@/lib/acoes-planos";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-  painel,
-} from "@/lib/estilos";
+import { areaDeTexto, campo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { ORIGEM_PLANO_VINCULAVEL } from "@/lib/origem-plano";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export interface Inicial {
   valores: Record<string, string>;
@@ -93,12 +88,18 @@ export function FormularioNovoPlano({
         ]}
         acoes={
           <>
-            <Link href="/qualidade/planos-de-acao" className={botaoSecundario}>
+            <Botao href="/qualidade/planos-de-acao" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Criando…" : "Criar plano"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Criando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Criar plano
+            </Botao>
           </>
         }
       >
@@ -246,13 +247,13 @@ export function FormularioNovoPlano({
               erros={erros}
             />
             {linhas < MAXIMO_DE_TAREFAS && (
-              <button
-                type="button"
+              <Botao
                 onClick={() => setLinhas((n) => n + 1)}
-                className={`${botaoSecundario} mt-3`}
+                className="mt-3"
+                icone={Plus}
               >
                 Incluir tarefa
-              </button>
+              </Botao>
             )}
           </div>
           <p className="text-sm text-texto-2">

@@ -17,6 +17,7 @@ import {
   mudarSituacaoDoEquipamento,
 } from "@/lib/acoes-sst";
 import { campo } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 function Campos({
   erros,
@@ -305,18 +306,18 @@ export function SituacaoDoEquipamento({ e }: { e: Equipamento }) {
   return (
     <span className="inline-flex items-center gap-2 text-sm">
       {erro && <span className="text-nao-conforme">{erro}</span>}
-      <button
-        type="button"
+      <Botao
         disabled={pendente}
-        className="text-texto-2 hover:text-texto hover:underline"
         onClick={() =>
           iniciar(async () =>
             setErro(await mudarSituacaoDoEquipamento(e.id, e.versao, !e.ativo)),
           )
         }
+        variante="fantasma"
+        tamanho="pequeno"
       >
         {e.ativo ? "Retirar de uso" : "Voltar ao uso"}
-      </button>
+      </Botao>
     </span>
   );
 }

@@ -15,8 +15,10 @@ import {
   type EstadoComSenha,
 } from "@/lib/acoes-administracao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import { botaoPerigo, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { SenhaProvisoria } from "../../senha-provisoria";
+import { KeyRound } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export function TrocarPerfil({
   usuario,
@@ -123,9 +125,9 @@ export function RedefinirSenha({ usuario }: { usuario: UsuarioDaEmpresa }) {
         <SenhaProvisoria senha={estado.senha} />
       ) : (
         <form action={enviar} className="mt-4">
-          <button type="submit" className={botaoSecundario} disabled={enviando}>
+          <Botao type="submit" disabled={enviando} icone={KeyRound}>
             Gerar senha provisória
-          </button>
+          </Botao>
         </form>
       )}
     </Recolhido>
@@ -149,9 +151,9 @@ export function Desativar2fa({ usuario }: { usuario: UsuarioDaEmpresa }) {
         </div>
       )}
       <form action={enviar} className="mt-4">
-        <button type="submit" className={botaoPerigo} disabled={enviando}>
+        <Botao type="submit" disabled={enviando} variante="perigo">
           Desativar duas etapas
-        </button>
+        </Botao>
       </form>
     </Recolhido>
   );

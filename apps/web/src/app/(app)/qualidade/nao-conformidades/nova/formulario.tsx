@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   GRAVIDADES_NC,
@@ -21,8 +20,6 @@ import { abrirNc, type EstadoDaAcao } from "@/lib/acoes-nc";
 import { formatarData } from "@/lib/datas";
 import {
   areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
   campo,
   erroDoCampo,
   opcaoSegmentada,
@@ -31,6 +28,8 @@ import {
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { ORIGEM_VINCULAVEL } from "@/lib/origem-nc";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 /** Mínimos do esquema (packages/types/src/nao-conformidades.ts): título 5, descrição 10, responsável 3. */
 const preenchido = (valor: string, minimo = 1) => valor.trim().length >= minimo;
@@ -466,12 +465,19 @@ export function FormularioNovaNc({
             : "Campos obrigatórios preenchidos"
         }
       >
-        <Link href="/qualidade/nao-conformidades" className={botaoSecundario}>
+        <Botao href="/qualidade/nao-conformidades" tamanho="grande">
           Cancelar
-        </Link>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Abrindo…" : "Abrir NC"}
-        </button>
+        </Botao>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Abrindo…"
+          variante="primario"
+          tamanho="grande"
+          icone={Plus}
+        >
+          Abrir NC
+        </Botao>
       </BarraDeAcoes>
     </form>
   );

@@ -6,8 +6,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarEpi } from "@/lib/acoes-epis";
-import { botaoPrimario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Cadastrar (sem `epi`) ou editar. Trocar o CA (lote novo) vale para as entregas daqui em diante. */
 export function FormularioDeEpi({ epi }: { epi?: Epi }) {
@@ -85,9 +86,9 @@ export function FormularioDeEpi({ epi }: { epi?: Epi }) {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
+        <Botao type="submit" disabled={salvando} variante="primario">
           {salvando ? "Salvando…" : epi ? "Salvar EPI" : "Cadastrar EPI"}
-        </button>
+        </Botao>
       </div>
     </form>
   );

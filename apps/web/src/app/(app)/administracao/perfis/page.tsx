@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import type { Perfil } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoPrimario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Perfis de acesso" };
 
@@ -20,10 +21,14 @@ export default async function Perfis() {
             fazer.
           </p>
         </div>
-        <Link href="/administracao/perfis/novo" className={botaoPrimario}>
-          <IconeDaTela href={"/administracao/perfis/novo"} />
+        <Botao
+          href="/administracao/perfis/novo"
+          variante="primario"
+          tamanho="grande"
+          icone={Plus}
+        >
           Criar perfil
-        </Link>
+        </Botao>
       </header>
       <section className={`${painel} mt-6`}>
         {!lista.ok ? (

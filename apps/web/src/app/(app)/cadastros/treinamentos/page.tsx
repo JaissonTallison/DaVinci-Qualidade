@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import type { DadosDoUsuario, Treinamento } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
-import { botaoPrimario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeTreinamento, SituacaoDoTreinamento } from "./formulario";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Treinamentos" };
 
@@ -49,10 +50,14 @@ export default async function Treinamentos({
           </p>
         </div>
         {podeEditar && (
-          <Link href="/cadastros/treinamentos/turma" className={botaoPrimario}>
-            <IconeDaTela href={"/cadastros/treinamentos/turma"} />
+          <Botao
+            href="/cadastros/treinamentos/turma"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Registrar turma
-          </Link>
+          </Botao>
         )}
       </header>
       <Aviso avisos={AVISOS} chave={aviso} />

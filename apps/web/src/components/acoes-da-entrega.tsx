@@ -5,7 +5,9 @@ import type { EntregaEpi } from "@davinci/types";
 import { anularEntrega, devolverEntrega } from "@/lib/acoes-epis";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoPerigo, botaoSecundario, campoCompacto } from "@/lib/estilos";
+import { campoCompacto } from "@/lib/estilos";
+import { Trash2 } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 /** Devolver: o EPI saiu do uso e não vence mais. `voltar` é a tela para onde a ação retorna. */
 export function DevolverEntrega({
@@ -38,9 +40,9 @@ export function DevolverEntrega({
           defaultValue={estado.valores?.data ?? hojeEmBrasilia()}
           className={`${campoCompacto} w-full`}
         />
-        <button type="submit" className={botaoSecundario} disabled={enviando}>
+        <Botao type="submit" disabled={enviando}>
           Registrar devolução
-        </button>
+        </Botao>
       </form>
     </Janela>
   );
@@ -75,9 +77,14 @@ export function AnularEntrega({
           defaultValue={estado.valores?.motivo}
           className={`${campoCompacto} w-full`}
         />
-        <button type="submit" className={botaoPerigo} disabled={enviando}>
+        <Botao
+          type="submit"
+          disabled={enviando}
+          variante="perigo"
+          icone={Trash2}
+        >
           Anular entrega
-        </button>
+        </Botao>
       </form>
     </Janela>
   );

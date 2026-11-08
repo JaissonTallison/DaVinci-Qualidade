@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { DIAS_PARA_RENOVAR, TIPOS_LICENCA } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -9,8 +8,9 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarLicenca } from "@/lib/acoes-ambiental";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeLicenca() {
   const [estado, enviar, salvando] = useActionState<EstadoDaAcao, FormData>(
@@ -29,12 +29,18 @@ export function FormularioDeLicenca() {
         ]}
         acoes={
           <>
-            <Link href="/ambiental/licencas" className={botaoSecundario}>
+            <Botao href="/ambiental/licencas" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Salvando…" : "Cadastrar licença"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Salvando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Cadastrar licença
+            </Botao>
           </>
         }
       >

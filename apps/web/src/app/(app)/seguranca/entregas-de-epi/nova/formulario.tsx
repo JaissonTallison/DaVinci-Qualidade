@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   MOTIVOS_ENTREGA,
@@ -14,13 +13,9 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { registrarEntrega } from "@/lib/acoes-epis";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** EPI com CA vencido aparece desabilitado: a pessoa vê que ele existe e por que não pode escolher. */
 export function FormularioDeEntrega({
@@ -67,12 +62,18 @@ export function FormularioDeEntrega({
         ]}
         acoes={
           <>
-            <Link href="/seguranca/entregas-de-epi" className={botaoSecundario}>
+            <Botao href="/seguranca/entregas-de-epi" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Salvando…" : "Registrar entrega"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Salvando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Registrar entrega
+            </Botao>
           </>
         }
       >

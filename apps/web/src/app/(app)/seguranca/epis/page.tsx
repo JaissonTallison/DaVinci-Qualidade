@@ -7,13 +7,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { ValidadeDoCa } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
-import {
-  botaoSecundario,
-  campoCompacto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeEpi } from "./formulario";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Catálogo de EPIs" };
 
@@ -62,10 +58,9 @@ export default async function CatalogoDeEpis({
               </option>
             ))}
           </select>
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!lista.ok ? (
           <div className="p-4">

@@ -16,7 +16,6 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
 import {
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -24,6 +23,7 @@ import {
 } from "@/lib/estilos";
 import { EnviarAvisos } from "./enviar-avisos";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Painel de vencimentos" };
 
@@ -67,10 +67,9 @@ export default async function Vencimentos({
           opcoes={MODULOS_DO_PAINEL}
           valor={modulo}
         />
-        <button type="submit" className={botaoSecundario}>
-          <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+        <Botao type="submit" icone={ListFilter}>
           Filtrar
-        </button>
+        </Botao>
       </form>
       <Grupo
         titulo={`Vencidos (${vencidos.length})`}

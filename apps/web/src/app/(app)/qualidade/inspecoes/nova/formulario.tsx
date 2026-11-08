@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   NIVEIS_DE_INSPECAO,
@@ -18,8 +17,9 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { LinhasDeItem } from "@/components/linhas-de-item";
 import { Selecao } from "@/components/selecao";
 import { criarInspecao, type EstadoDaAcao } from "@/lib/acoes-inspecoes";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function FormularioNovaInspecao({
   modelos,
@@ -69,12 +69,18 @@ export function FormularioNovaInspecao({
         ]}
         acoes={
           <>
-            <Link href="/qualidade/inspecoes" className={botaoSecundario}>
+            <Botao href="/qualidade/inspecoes" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Criando…" : "Criar e responder"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Criando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Criar e responder
+            </Botao>
           </>
         }
       >

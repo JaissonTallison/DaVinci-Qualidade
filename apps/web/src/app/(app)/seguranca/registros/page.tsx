@@ -1,7 +1,6 @@
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   ROTULOS_REGISTRO_SST,
   type DadosDoUsuario,
@@ -13,12 +12,8 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Registros de segurança" };
 
@@ -54,10 +49,14 @@ export default async function Registros({
           </p>
         </div>
         {podeCriar && (
-          <Link href="/seguranca/registros/novo" className={botaoPrimario}>
-            <IconeDaTela href={"/seguranca/registros/novo"} />
-            Novo registro
-          </Link>
+          <Botao
+            href="/seguranca/registros/novo"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
+            Criar registro
+          </Botao>
         )}
       </header>
       {r && (
@@ -98,10 +97,9 @@ export default async function Registros({
             opcoes={ROTULOS_REGISTRO_SST}
             valor={tipo}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!lista.ok ? (
           <div className="p-4">

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { TIPOS_INOVACAO } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -9,13 +8,9 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { proporMudanca } from "@/lib/acoes-sgi";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeInovacao() {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
@@ -34,12 +29,18 @@ export function FormularioDeInovacao() {
         ]}
         acoes={
           <>
-            <Link href="/sgi/inovacao" className={botaoSecundario}>
+            <Botao href="/sgi/inovacao" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Salvando…" : "Propor inovação"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Salvando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Propor inovação
+            </Botao>
           </>
         }
       >

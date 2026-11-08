@@ -1,4 +1,4 @@
-import { CalendarClock } from "@/components/icones";
+import { CalendarClock, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -10,14 +10,13 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { chamarApi } from "@/lib/api";
 import {
-  botaoPrimario,
-  botaoSecundario,
+  aba,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
+  trilho,
 } from "@/lib/estilos";
 
 export const metadata: Metadata = { title: "Programação de auditorias" };
@@ -60,21 +59,25 @@ export default async function ProgramacaoDeAuditorias({
             </p>
           </div>
           {podeEditar && (
-            <Link href={`${BASE}/nova?ano=${ano}`} className={botaoPrimario}>
-              <IconeDaTela href={BASE} />
+            <Botao
+              href={`${BASE}/nova?ano=${ano}`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
               Adicionar item
-            </Link>
+            </Botao>
           )}
         </header>
       </CabecalhoComVoltar>
 
-      <nav aria-label="Ano" className="mt-6 flex flex-wrap gap-2">
+      <nav aria-label="Ano" className={`${trilho} mt-6`}>
         {anos.map((a) => (
           <Link
             key={a}
             href={`${BASE}?ano=${a}`}
             aria-current={a === ano ? "page" : undefined}
-            className={a === ano ? botaoPrimario : botaoSecundario}
+            className={`${aba(a === ano)} tabular-nums`}
           >
             {a}
           </Link>
@@ -99,13 +102,13 @@ export default async function ProgramacaoDeAuditorias({
             descricao="Adicione os setores a auditar no ano, com as normas, a frequência e os meses."
             acao={
               podeEditar ? (
-                <Link
+                <Botao
                   href={`${BASE}/nova?ano=${ano}`}
-                  className={botaoPrimario}
+                  variante="primario"
+                  icone={Plus}
                 >
-                  <IconeDaTela href={BASE} />
                   Adicionar o primeiro item
-                </Link>
+                </Botao>
               ) : undefined
             }
           />
@@ -205,3 +208,4 @@ export default async function ProgramacaoDeAuditorias({
 }
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";

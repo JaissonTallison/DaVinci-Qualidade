@@ -1,4 +1,4 @@
-import { ListFilter, Siren } from "@/components/icones";
+import { ListFilter, Plus, Siren } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
@@ -7,7 +7,6 @@ import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
 import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { Paginacao } from "@/components/paginacao";
 import {
   BarraDeSelecao,
@@ -28,14 +27,13 @@ import { StatusDoAcidente, TipoDoAcidente } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   campoCompacto,
   linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Acidentes" };
 
@@ -110,10 +108,14 @@ export default async function ListaDeAcidentes({
           </p>
         </div>
         {podeRegistrar && (
-          <Link href={`${BASE}/novo`} className={botaoPrimario}>
-            <IconeDaTela href={`${BASE}/novo`} />
+          <Botao
+            href={`${BASE}/novo`}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Registrar acidente
-          </Link>
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -140,10 +142,9 @@ export default async function ListaDeAcidentes({
             opcoes={STATUS_ACIDENTE}
             valor={params.status}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="acidentes" consulta={consulta} />
           {filtrando && (
             <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
@@ -174,14 +175,11 @@ export default async function ListaDeAcidentes({
             }
             acao={
               filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
+                <Botao href={BASE}>Limpar filtros</Botao>
               ) : podeRegistrar ? (
-                <Link href={`${BASE}/novo`} className={botaoPrimario}>
-                  <IconeDaTela href={`${BASE}/novo`} />
+                <Botao href={`${BASE}/novo`} variante="primario" icone={Plus}>
                   Registrar o primeiro acidente
-                </Link>
+                </Botao>
               ) : undefined
             }
           />
