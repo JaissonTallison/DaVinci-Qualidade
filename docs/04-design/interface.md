@@ -238,6 +238,14 @@ Vale para registrar e editar em página (mais de 6 campos; até 6, modal). Peça
 5. **Barra de ações** (`BarraDeAcoes`): fixa no rodapé no computador e no tablet; à esquerda quantos obrigatórios faltam; à direita Cancelar e a ação primária por último.
 6. **Voltar nas outras telas:** o link `.dv-voltar` ("← Riscos") fica acima do título, discreto, sem borda nem fundo.
 
+**Como montar um cadastro novo.** Use `CadastroEmBlocos` e `Bloco` (`components/cadastro-em-blocos.tsx`) dentro do `<form noValidate>`: cada `Bloco` é uma seção; o componente lê os campos e monta a situação de cada bloco, o "x de y obrigatórios", o resumo e a barra de ações. Regras:
+
+- **Obrigatório é o campo com `required`.** O formulário continua com `noValidate`: quem valida é o servidor; o `required` só informa a tela (e o leitor de tela). Obrigatório condicional vira `required={condição}` com o rótulo trocando para "(opcional)" quando não vale (ex.: plano do PGR em risco alto ou crítico).
+- `minLength` conta como mínimo para considerar o campo preenchido. Grupo de rádio ou de caixas conta uma vez, pelo `name`.
+- `resumo` lista os campos que aparecem na coluna (rótulo + `name`); o valor sai como a pessoa vê (texto da opção, data em dd/mm/aaaa).
+- Formulário usado também na edição dentro do detalhe: `embutido` mostra só os campos e o botão de salvar, sem blocos nem resumo.
+- Telas montadas assim: abrir NC, plano de ação, inspeção, modelo de inspeção, instrumento de calibração; cliente ou fornecedor, funcionário, turma de treinamento; risco do PGR, acidente, entrega de EPI, permissão de trabalho, registro de SST, requisito legal, terceiro; aspecto ambiental, licença, monitoramento, produto químico, requisito legal ambiental; risco e oportunidade, análise crítica, inovação; auditoria e programação de auditoria; ordem de serviço; tema ESG; perfil de acesso.
+
 ### 7.3 Telas de erro (08/11/2026)
 
 Peças em `components/pagina-de-erro.tsx` e `components/erros-do-sistema.tsx`. Mesma estrutura em todas: código em mono ("Erro 404"), título em linguagem comum, causa provável, ações e **detalhes técnicos copiáveis** (endereço, data e hora, ID do erro) para o suporte. Sem ilustração, sem número gigante, sem "Ops!".
