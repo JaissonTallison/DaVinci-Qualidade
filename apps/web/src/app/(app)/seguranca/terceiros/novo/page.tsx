@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { tituloDaPagina } from "@/lib/estilos";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import { FormularioDeTerceiro } from "../formulario";
 
 export const metadata: Metadata = { title: "Cadastrar terceiro" };
@@ -8,17 +7,11 @@ export const metadata: Metadata = { title: "Cadastrar terceiro" };
 export default function NovoTerceiro() {
   return (
     <>
-      <Link
-        href="/seguranca/terceiros"
-        className="dv-voltar"
-      >
-        Terceiros
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Cadastrar terceiro</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Depois do cadastro, registre os documentos de SST. Sem PGR, PCMSO e ASO
-        válidos, a terceira fica com pendência.
-      </p>
+      <CabecalhoDeCadastro
+        voltar={{ href: "/seguranca/terceiros", rotulo: "Terceiros" }}
+        titulo="Cadastrar terceiro"
+        descricao="Depois do cadastro, registre os documentos de SST. Sem PGR, PCMSO e ASO válidos, a terceira fica com pendência."
+      />
       <FormularioDeTerceiro />
     </>
   );

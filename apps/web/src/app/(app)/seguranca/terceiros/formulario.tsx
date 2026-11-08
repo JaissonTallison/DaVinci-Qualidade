@@ -1,12 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { formatarDocumento, type Terceiro } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarTerceiro } from "@/lib/acoes-terceiros";
-import { botaoPrimario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 export function FormularioDeTerceiro({
@@ -30,103 +32,152 @@ export function FormularioDeTerceiro({
     fimContrato: terceiro?.fimContrato ?? "",
   };
   return (
-    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
+    <form action={acao} noValidate className={embutido ? "" : "mt-6"}>
       {terceiro && (
         <input type="hidden" name="versao" value={terceiro.versao} />
       )}
-      <div className={`grid gap-5 sm:grid-cols-3 ${embutido ? "" : "p-5"}`}>
-        {estado.erro && !estado.erro.detalhes?.length && (
-          <div className="sm:col-span-3">
-            <AvisoDeErro erro={estado.erro} />
-          </div>
-        )}
-        <Campo
-          id="razaoSocial"
-          rotulo="Razão social"
-          erro={erros.razaoSocial}
-          className="sm:col-span-2"
-        >
-          <input
-            id="razaoSocial"
-            name="razaoSocial"
-            maxLength={150}
-            defaultValue={v.razaoSocial}
-            className={campo}
-            aria-invalid={Boolean(erros.razaoSocial)}
-          />
-        </Campo>
-        <Campo id="cnpj" rotulo="CNPJ" erro={erros.cnpj}>
-          <input
-            id="cnpj"
-            name="cnpj"
-            inputMode="numeric"
-            placeholder="00.000.000/0000-00"
-            maxLength={18}
-            defaultValue={v.cnpj}
-            className={`${campo} font-mono`}
-            aria-invalid={Boolean(erros.cnpj)}
-          />
-        </Campo>
-        <Campo
-          id="servico"
-          rotulo="Serviço prestado"
-          erro={erros.servico}
-          className="sm:col-span-2"
-        >
-          <input
-            id="servico"
-            name="servico"
-            maxLength={200}
-            defaultValue={v.servico}
-            className={campo}
-            aria-invalid={Boolean(erros.servico)}
-          />
-        </Campo>
-        <Campo id="contato" rotulo="Contato (opcional)" erro={erros.contato}>
-          <input
-            id="contato"
-            name="contato"
-            maxLength={120}
-            defaultValue={v.contato}
-            className={campo}
-          />
-        </Campo>
-        <Campo
-          id="inicioContrato"
-          rotulo="Início do contrato"
-          erro={erros.inicioContrato}
-        >
-          <input
-            id="inicioContrato"
-            name="inicioContrato"
-            type="date"
-            defaultValue={v.inicioContrato}
-            className={campo}
-            aria-invalid={Boolean(erros.inicioContrato)}
-          />
-        </Campo>
-        <Campo
-          id="fimContrato"
-          rotulo="Fim do contrato (opcional)"
-          erro={erros.fimContrato}
-        >
-          <input
-            id="fimContrato"
-            name="fimContrato"
-            type="date"
-            defaultValue={v.fimContrato}
-            className={campo}
-            aria-invalid={Boolean(erros.fimContrato)}
-          />
-        </Campo>
-      </div>
-      <div
-        className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
+      <CadastroEmBlocos
+        embutido={embutido}
+        acoesEmbutido={
+          <>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : terceiro
+                  ? "Salvar"
+                  : "Cadastrar terceiro"}
+            </button>
+          </>
+        }
+        resumo={[
+          { rotulo: "CNPJ", campo: "cnpj" },
+          { rotulo: "Serviço", campo: "servico" },
+          { rotulo: "Início", campo: "inicioContrato" },
+        ]}
+        acoes={
+          <>
+            <Link href="/seguranca/terceiros" className={botaoSecundario}>
+              Cancelar
+            </Link>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : terceiro
+                  ? "Salvar"
+                  : "Cadastrar terceiro"}
+            </button>
+          </>
+        }
       >
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : terceiro ? "Salvar" : "Cadastrar terceiro"}
-        </button>
-      </div>
+        <Bloco
+          id="empresa"
+          titulo="Empresa"
+          descricao="Razão social, CNPJ e serviço prestado."
+        >
+          <div className="grid gap-5 sm:grid-cols-3">
+            {estado.erro && !estado.erro.detalhes?.length && (
+              <div className="sm:col-span-3">
+                <AvisoDeErro erro={estado.erro} />
+              </div>
+            )}
+            <Campo
+              id="razaoSocial"
+              rotulo="Razão social"
+              erro={erros.razaoSocial}
+              className="sm:col-span-2"
+            >
+              <input
+                id="razaoSocial"
+                required
+                name="razaoSocial"
+                maxLength={150}
+                defaultValue={v.razaoSocial}
+                className={campo}
+                aria-invalid={Boolean(erros.razaoSocial)}
+              />
+            </Campo>
+            <Campo id="cnpj" rotulo="CNPJ" erro={erros.cnpj}>
+              <input
+                id="cnpj"
+                required
+                name="cnpj"
+                inputMode="numeric"
+                placeholder="00.000.000/0000-00"
+                maxLength={18}
+                defaultValue={v.cnpj}
+                className={`${campo} font-mono`}
+                aria-invalid={Boolean(erros.cnpj)}
+              />
+            </Campo>
+            <Campo
+              id="servico"
+              rotulo="Serviço prestado"
+              erro={erros.servico}
+              className="sm:col-span-2"
+            >
+              <input
+                id="servico"
+                required
+                name="servico"
+                maxLength={200}
+                defaultValue={v.servico}
+                className={campo}
+                aria-invalid={Boolean(erros.servico)}
+              />
+            </Campo>
+          </div>
+        </Bloco>
+        <Bloco
+          id="contrato"
+          titulo="Contrato"
+          descricao="Contato e vigência do contrato."
+        >
+          <div className="grid gap-5 sm:grid-cols-3">
+            <Campo
+              id="contato"
+              rotulo="Contato (opcional)"
+              erro={erros.contato}
+            >
+              <input
+                id="contato"
+                name="contato"
+                maxLength={120}
+                defaultValue={v.contato}
+                className={campo}
+              />
+            </Campo>
+            <Campo
+              id="inicioContrato"
+              rotulo="Início do contrato"
+              erro={erros.inicioContrato}
+            >
+              <input
+                id="inicioContrato"
+                required
+                name="inicioContrato"
+                type="date"
+                defaultValue={v.inicioContrato}
+                className={campo}
+                aria-invalid={Boolean(erros.inicioContrato)}
+              />
+            </Campo>
+            <Campo
+              id="fimContrato"
+              rotulo="Fim do contrato (opcional)"
+              erro={erros.fimContrato}
+            >
+              <input
+                id="fimContrato"
+                name="fimContrato"
+                type="date"
+                defaultValue={v.fimContrato}
+                className={campo}
+                aria-invalid={Boolean(erros.fimContrato)}
+              />
+            </Campo>
+          </div>
+        </Bloco>
+      </CadastroEmBlocos>
     </form>
   );
 }

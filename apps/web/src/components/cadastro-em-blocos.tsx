@@ -34,7 +34,10 @@ type LeituraDoBloco = {
   total: number;
 };
 
-const SituacoesDosBlocos = createContext<Record<string, SituacaoDaSecao>>({});
+const SituacoesDosBlocos = createContext<{
+  situacoes: Record<string, SituacaoDaSecao>;
+  embutido: boolean;
+}>({ situacoes: {}, embutido: false });
 
 function situacaoDoBloco(b: LeituraDoBloco): SituacaoDaSecao {
   if (b.total === 0) return { tipo: "opcional" };
@@ -94,9 +97,14 @@ function valorVisivel(form: HTMLFormElement, nome: string): string {
       .join(", ");
   if (primeiro instanceof HTMLInputElement && primeiro.type === "date")
     return primeiro.value ? formatarData(primeiro.value) : "";
-  if (primeiro instanceof HTMLInputElement && primeiro.type === "datetime-local") {
+  if (
+    primeiro instanceof HTMLInputElement &&
+    primeiro.type === "datetime-local"
+  ) {
     const [dia, hora] = primeiro.value.split("T");
-    return dia ? `${formatarData(dia)}${hora ? ` ${hora.slice(0, 5)}` : ""}` : "";
+    return dia
+      ? `${formatarData(dia)}${hora ? ` ${hora.slice(0, 5)}` : ""}`
+      : "";
   }
   return primeiro.value.trim();
 }
@@ -155,7 +163,9 @@ export function Bloco({
   descricao?: string;
   children: ReactNode;
 }) {
-  const situacoes = useContext(SituacoesDosBlocos);
+  const { situacoes, embutido } = useContext(SituacoesDosBlocos);
+  // Edição dentro do detalhe: só os campos, sem o painel do bloco.
+  if (embutido) return <>{children}</>;
   return (
     <SecaoDoCadastro
       id={id}
@@ -175,10 +185,16 @@ export function Bloco({
 export function CadastroEmBlocos({
   resumo,
   acoes,
+  acoesEmbutido,
+  embutido = false,
   children,
 }: {
   resumo: ItemDoResumo[];
   acoes: ReactNode;
+  /** Botões da edição embutida no detalhe (sem Cancelar); padrão: os mesmos de `acoes`. */
+  acoesEmbutido?: ReactNode;
+  /** Edição dentro do detalhe: campos empilhados e o botão embaixo, sem blocos nem resumo. */
+  embutido?: boolean;
   children: ReactNode;
 }) {
   const raiz = useRef<HTMLDivElement>(null);
@@ -204,8 +220,18 @@ export function CadastroEmBlocos({
     <span className="font-normal text-texto-3">{texto}</span>
   );
 
+  if (embutido)
+    return (
+      <SituacoesDosBlocos.Provider value={{ situacoes: {}, embutido: true }}>
+        <div className="flex flex-col gap-5">{children}</div>
+        <div className="mt-5 flex justify-end gap-3">
+          {acoesEmbutido ?? acoes}
+        </div>
+      </SituacoesDosBlocos.Provider>
+    );
+
   return (
-    <SituacoesDosBlocos.Provider value={situacoes}>
+    <SituacoesDosBlocos.Provider value={{ situacoes, embutido: false }}>
       <div
         ref={raiz}
         onInput={atualizar}
