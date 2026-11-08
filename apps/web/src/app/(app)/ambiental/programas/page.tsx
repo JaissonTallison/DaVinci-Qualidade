@@ -9,8 +9,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { NovoPrograma } from "./formularios";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Programas e metas ambientais" };
 
@@ -26,12 +27,10 @@ export default async function Programas() {
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   return (
     <>
-      <h1 className={tituloDaPagina}>Programas e metas ambientais</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Cada programa parte de uma linha de base e persegue uma meta com prazo.
-        Indicadores de água, energia, resíduos e emissões são calculados pelo
-        sistema (ano corrente); o indicador próprio é medido mês a mês.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Programas e metas ambientais"
+        descricao="Cada programa parte de uma linha de base e persegue uma meta com prazo. Indicadores de água, energia, resíduos e emissões são calculados pelo sistema (ano corrente); o indicador próprio é medido mês a mês."
+      />
       {podeEditar && (
         <Recolhido titulo="Novo programa">
           <NovoPrograma />

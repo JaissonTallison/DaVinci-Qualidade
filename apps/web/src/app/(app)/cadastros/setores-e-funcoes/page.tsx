@@ -10,8 +10,9 @@ import Link from "next/link";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi, type Resultado } from "@/lib/api";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import { painel, tituloDaSecao } from "@/lib/estilos";
 import { FormularioDeEstrutura, SituacaoDaEstrutura } from "./acoes";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Setores e funções" };
 
@@ -81,13 +82,10 @@ export default async function SetoresEFuncoes({
 
   return (
     <>
-      <h1 className={tituloDaPagina}>Setores e funções</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Todo profissional tem um setor e uma função. Abra a função para a
-        descrição de cargo e as competências exigidas (treinamentos, EPIs,
-        riscos). Com profissional ativo, o setor ou a função não se inativa:
-        mude as pessoas antes.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Setores e funções"
+        descricao="Todo profissional tem um setor e uma função. Abra a função para a descrição de cargo e as competências exigidas (treinamentos, EPIs, riscos). Com profissional ativo, o setor ou a função não se inativa: mude as pessoas antes."
+      />
       <Aviso avisos={AVISOS} chave={aviso} />
       {totalPendentes > 0 && (
         <p className="mt-3 text-sm text-nao-conforme">

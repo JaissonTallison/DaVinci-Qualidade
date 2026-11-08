@@ -18,7 +18,8 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { PilaresDaSustentabilidade } from "./pilares";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import { painel, tituloDaSecao } from "@/lib/estilos";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Painel ESG" };
 
@@ -207,11 +208,16 @@ export default async function PainelEsg() {
   };
   return (
     <>
-      <h1 className={tituloDaPagina}>Painel ESG</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Indicadores de {ano} vindos de cada módulo do sistema, organizados pelos
-        três pilares. Clique em um número para ver os registros por trás dele.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Painel ESG"
+        descricao={
+          <>
+            Indicadores de {ano} vindos de cada módulo do sistema, organizados
+            pelos três pilares. Clique em um número para ver os registros por
+            trás dele.
+          </>
+        }
+      />
       <PilaresDaSustentabilidade />
       {(Object.keys(pilares) as Pilar[]).map((p) =>
         pilares[p].length === 0 ? null : (

@@ -5,12 +5,8 @@ import type { DadosDoUsuario, Permissao } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { IconeDaTela } from "@/components/icones-do-menu";
 import { chamarApi } from "@/lib/api";
-import {
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-  tituloDaSecao,
-} from "@/lib/estilos";
+import { painel, tituloDaSecao } from "@/lib/estilos";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Biblioteca do Auditor" };
 
@@ -101,11 +97,10 @@ export default async function BibliotecaDoAuditor() {
   );
   return (
     <>
-      <h1 className={tituloDaPagina}>Biblioteca do Auditor</h1>
-      <p className={subtituloDaPagina}>
-        Critérios, perguntas, evidências e modelos de NC usados no planejamento
-        e na execução das auditorias.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Biblioteca do Auditor"
+        descricao="Critérios, perguntas, evidências e modelos de NC usados no planejamento e na execução das auditorias."
+      />
       {!eu.ok ? (
         <div className="mt-6">
           <AvisoDeErro erro={eu.erro} />

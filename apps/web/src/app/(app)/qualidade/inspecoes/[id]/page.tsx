@@ -80,17 +80,17 @@ export default async function DetalheDaInspecao({
       <CabecalhoComVoltar
         voltar={{ href: "/qualidade/inspecoes", rotulo: "Inspeções" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">{i.numero}</span>
           <StatusDaInspecao status={i.status} />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{i.objeto}</h1>
-        {aviso && AVISOS[aviso] && (
-          <CaixaDeAlerta tom="sucesso" className="mt-4">
-            {AVISOS[aviso]}
-          </CaixaDeAlerta>
-        )}
       </CabecalhoComVoltar>
+      {aviso && AVISOS[aviso] && (
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
+          {AVISOS[aviso]}
+        </CaixaDeAlerta>
+      )}
 
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-6">

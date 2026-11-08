@@ -76,15 +76,15 @@ export default async function DetalheDoContrato({
       <CabecalhoComVoltar
         voltar={{ href: "/servicos/contratos", rotulo: "Contratos e SLA" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="font-mono text-base text-texto-2">{c.numero}</span>
           <span className={COR_DA_SITUACAO[c.situacao]}>
             {SITUACOES_DO_CONTRATO[c.situacao]}
           </span>
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{c.clienteNome}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section
         className={`${painel} mt-6 grid gap-x-8 gap-y-4 p-5 sm:grid-cols-4`}
       >

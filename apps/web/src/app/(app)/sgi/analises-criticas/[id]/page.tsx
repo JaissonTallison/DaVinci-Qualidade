@@ -38,8 +38,8 @@ export default async function DetalheDaAnalise({
         <h1 className={tituloDaPagina}>
           Análise crítica de {formatarData(a.data)}
         </h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Participantes" largo>

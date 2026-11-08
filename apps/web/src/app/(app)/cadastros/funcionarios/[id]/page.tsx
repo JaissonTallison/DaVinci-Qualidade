@@ -101,7 +101,7 @@ export default async function DetalheDoFuncionario({
       <CabecalhoComVoltar
         voltar={{ href: "/cadastros/funcionarios", rotulo: "Profissionais" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">
             {f.matricula}
           </span>

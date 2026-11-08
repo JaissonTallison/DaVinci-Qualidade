@@ -55,27 +55,27 @@ export default async function DetalheDoTerceiro({
       <CabecalhoComVoltar
         voltar={{ href: "/seguranca/terceiros", rotulo: "Terceiros" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">
             {formatarDocumento(t.cnpj)}
           </span>
           <SituacaoDoTerceiro situacao={t.situacao} />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{t.razaoSocial}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
-        {t.pendencias.length > 0 && (
-          <CaixaDeAlerta tom="perigo" className="mt-4">
-            <p className="font-semibold">
-              Não liberar a entrada enquanto houver pendência:
-            </p>
-            <ul className="mt-1 list-disc pl-5">
-              {t.pendencias.map((p) => (
-                <li key={p}>{p}</li>
-              ))}
-            </ul>
-          </CaixaDeAlerta>
-        )}
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
+      {t.pendencias.length > 0 && (
+        <CaixaDeAlerta tom="perigo" className="mt-4">
+          <p className="font-semibold">
+            Não liberar a entrada enquanto houver pendência:
+          </p>
+          <ul className="mt-1 list-disc pl-5">
+            {t.pendencias.map((p) => (
+              <li key={p}>{p}</li>
+            ))}
+          </ul>
+        </CaixaDeAlerta>
+      )}
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
           <div className="sm:col-span-3">

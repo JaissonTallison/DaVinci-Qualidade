@@ -25,14 +25,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaPt } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
-import {
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { linkDiscreto, painel } from "@/lib/estilos";
 import { periodoDaPt } from "./periodo";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Permissões de trabalho" };
 
@@ -83,24 +79,22 @@ export default async function PermissoesDeTrabalho({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Permissões de trabalho</h1>
-          <p className={subtituloDaPagina}>
-            Permissões de trabalho e a situação de cada liberação.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href={`${BASE}/nova`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Solicitar PT
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Permissões de trabalho"
+        descricao="Permissões de trabalho e a situação de cada liberação."
+        acoes={
+          podeCriar && (
+            <Botao
+              href={`${BASE}/nova`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Solicitar PT
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form
           className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3"

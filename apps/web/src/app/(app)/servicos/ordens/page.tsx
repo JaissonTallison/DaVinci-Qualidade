@@ -27,13 +27,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaOs } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Ordens de serviço" };
 
@@ -76,24 +72,22 @@ export default async function Ordens({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Ordens de serviço</h1>
-          <p className={subtituloDaPagina}>
-            Ordens de serviço e o andamento de cada atendimento.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href={`${BASE}/nova`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Abrir OS
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Ordens de serviço"
+        descricao="Ordens de serviço e o andamento de cada atendimento."
+        acoes={
+          podeCriar && (
+            <Botao
+              href={`${BASE}/nova`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Abrir OS
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3">
           <SelecaoDeFiltro

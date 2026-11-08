@@ -15,10 +15,11 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { NovaReclamacao } from "./formularios";
 import { ListFilter } from "@/components/icones";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Reclamações de clientes" };
 
@@ -38,12 +39,10 @@ export default async function Reclamacoes({
   const pct = (v: number | null) => (v === null ? "—" : `${v}%`);
   return (
     <>
-      <h1 className={tituloDaPagina}>Reclamações de clientes</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Toda reclamação tem prazo de resposta. A análise diz se procede;
-        procedente pode abrir a não conformidade na Qualidade. A resposta ao
-        cliente e a satisfação com a solução fecham o ciclo.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Reclamações de clientes"
+        descricao="Toda reclamação tem prazo de resposta. A análise diz se procede; procedente pode abrir a não conformidade na Qualidade. A resposta ao cliente e a satisfação com a solução fecham o ciclo."
+      />
       {resumo.ok && (
         <section
           className={`${painel} mt-6 grid grid-cols-2 gap-5 p-5 sm:grid-cols-5`}

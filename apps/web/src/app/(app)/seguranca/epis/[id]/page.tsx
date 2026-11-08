@@ -42,13 +42,13 @@ export default async function DetalheDoEpi({
       <CabecalhoComVoltar
         voltar={{ href: "/seguranca/epis", rotulo: "Catálogo de EPIs" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">CA {e.ca}</span>
           <span className="text-texto-2">{e.ativo ? "Ativo" : "Inativo"}</span>
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{e.nome}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
 
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">

@@ -13,13 +13,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = {
   title: "Vencimentos de ASO e treinamentos",
@@ -93,13 +89,10 @@ export default async function Vencimentos({
 
   return (
     <>
-      <h1 className={tituloDaPagina}>
-        Vencimentos de ASO (atestado de saúde ocupacional) e treinamentos
-      </h1>
-      <p className={subtituloDaPagina}>
-        ASOs e treinamentos com validade, do mais próximo de vencer ao mais
-        distante.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Vencimentos de ASO (atestado de saúde ocupacional) e treinamentos"
+        descricao="ASOs e treinamentos com validade, do mais próximo de vencer ao mais distante."
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3">
           <SelecaoDeFiltro

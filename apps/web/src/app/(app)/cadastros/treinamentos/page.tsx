@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { DadosDoUsuario, Treinamento } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { FormularioDeTreinamento, SituacaoDoTreinamento } from "./formulario";
 import { Plus } from "@/components/icones";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Treinamentos" };
 
@@ -33,33 +33,27 @@ export default async function Treinamentos({
     eu.ok && eu.dados.permissoes.includes("funcionarios.editar");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h1 className={tituloDaPagina}>Treinamentos</h1>
-            <Link
-              href="/cadastros/treinamentos/turmas"
-              className="text-sm text-info hover:underline"
-            >
-              Turmas: lista de presença e certificados
-            </Link>
-          </div>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Catálogo com carga horária e validade. A turma registra o
-            treinamento na ficha de cada participante e calcula quando vence.
-          </p>
-        </div>
-        {podeEditar && (
-          <Botao
-            href="/cadastros/treinamentos/turma"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Registrar turma
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Treinamentos"
+        descricao="Catálogo com carga horária e validade. A turma registra o treinamento na ficha de cada participante e calcula quando vence."
+        acoes={
+          <>
+            <Botao href="/cadastros/treinamentos/turmas" tamanho="grande">
+              Turmas e certificados
+            </Botao>
+            {podeEditar && (
+              <Botao
+                href="/cadastros/treinamentos/turma"
+                variante="primario"
+                tamanho="grande"
+                icone={Plus}
+              >
+                Registrar turma
+              </Botao>
+            )}
+          </>
+        }
+      />
       <Aviso avisos={AVISOS} chave={aviso} />
       {podeEditar && (
         <Recolhido titulo="Cadastrar treinamento">

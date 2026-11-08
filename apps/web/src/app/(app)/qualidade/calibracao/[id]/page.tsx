@@ -68,7 +68,7 @@ export default async function DetalheDoInstrumento({
       <CabecalhoComVoltar
         voltar={{ href: "/qualidade/calibracao", rotulo: "Calibração" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">{i.tag}</span>
           <SituacaoDoInstrumento
             situacao={i.situacao}
@@ -76,12 +76,12 @@ export default async function DetalheDoInstrumento({
           />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{i.descricao}</h1>
-        {aviso && AVISOS[aviso] && (
-          <CaixaDeAlerta tom="sucesso" className="mt-4">
-            {AVISOS[aviso]}
-          </CaixaDeAlerta>
-        )}
       </CabecalhoComVoltar>
+      {aviso && AVISOS[aviso] && (
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
+          {AVISOS[aviso]}
+        </CaixaDeAlerta>
+      )}
 
       <section className={`${painel} mt-6`}>
         <header className={cabecalhoDoPainel}>

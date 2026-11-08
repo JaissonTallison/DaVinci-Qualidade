@@ -12,8 +12,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaMudanca } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Gestão de inovação" };
 
@@ -30,25 +31,22 @@ export default async function Inovacoes({
   const podeCriar = eu.ok && eu.dados.permissoes.includes("sgi.editar");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Gestão de inovação</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Ideias de melhoria dos processos, produtos e tecnologias: avaliadas
-            antes, com resultados verificados depois.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/sgi/inovacao/nova"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Propor inovação
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Gestão de inovação"
+        descricao="Ideias de melhoria dos processos, produtos e tecnologias: avaliadas antes, com resultados verificados depois."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/sgi/inovacao/nova"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Propor inovação
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3">
           <SelecaoDeFiltro

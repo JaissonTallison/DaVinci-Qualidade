@@ -9,9 +9,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SituacaoDaLicenca } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { Plus } from "@/components/icones";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Licenças" };
 
@@ -23,26 +24,22 @@ export default async function Licencas() {
   const podeCriar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Licenças</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Licenças ambientais, outorgas e autorizações. O alerta de renovação
-            abre na data limite para protocolar; depois do protocolo, acompanha
-            só a validade.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/ambiental/licencas/nova"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar licença
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Licenças"
+        descricao="Licenças ambientais, outorgas e autorizações. O alerta de renovação abre na data limite para protocolar; depois do protocolo, acompanha só a validade."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/ambiental/licencas/nova"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar licença
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         {!r.ok ? (
           <div className="p-4">

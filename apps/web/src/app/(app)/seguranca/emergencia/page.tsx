@@ -13,18 +13,14 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
-import {
-  cabecalhoDoPainel,
-  painel,
-  tituloDaPagina,
-  tituloDoPainel,
-} from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import {
   NovoBrigadista,
   PlanoDeEmergenciaForm,
   RetirarBrigadista,
 } from "./formularios";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Brigada e plano de emergência" };
 
@@ -47,19 +43,21 @@ export default async function Emergencia({
   const p = plano.ok ? plano.dados : null;
   return (
     <>
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className={tituloDaPagina}>Brigada e plano de emergência</h1>
-        {p && (
-          <Botao href="/seguranca/emergencia/imprimir" icone={Printer}>
-            Plano para imprimir
-          </Botao>
-        )}
-      </div>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Quem atua numa emergência, com o treinamento em dia (reciclagem anual),
-        e o que fazer em cada cenário. Os simulados ficam em DDS, APR, CIPA e
-        simulados.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Brigada e plano de emergência"
+        descricao="Quem atua numa emergência, com o treinamento em dia (reciclagem anual), e o que fazer em cada cenário. Os simulados ficam em DDS, APR, CIPA e simulados."
+        acoes={
+          p && (
+            <Botao
+              href="/seguranca/emergencia/imprimir"
+              tamanho="grande"
+              icone={Printer}
+            >
+              Plano para imprimir
+            </Botao>
+          )
+        }
+      />
       <Aviso
         avisos={{
           brigadista: "Brigadista incluído.",

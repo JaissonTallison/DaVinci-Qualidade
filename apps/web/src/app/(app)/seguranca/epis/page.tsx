@@ -7,9 +7,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { ValidadeDoCa } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
-import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { campoCompacto, painel } from "@/lib/estilos";
 import { FormularioDeEpi } from "./formulario";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Catálogo de EPIs" };
 
@@ -32,11 +33,10 @@ export default async function CatalogoDeEpis({
 
   return (
     <>
-      <h1 className={tituloDaPagina}>Catálogo de EPIs</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Cada EPI com o seu Certificado de Aprovação. Com o CA vencido, o EPI não
-        pode ser entregue (NR-6).
-      </p>
+      <CabecalhoDaPagina
+        titulo="Catálogo de EPIs"
+        descricao="Cada EPI com o seu Certificado de Aprovação. Com o CA vencido, o EPI não pode ser entregue (NR-6)."
+      />
       <Aviso avisos={{ criado: "EPI cadastrado no catálogo." }} chave={aviso} />
       {podeEditar && (
         <Recolhido titulo="Cadastrar EPI">

@@ -10,8 +10,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { NovaOcorrencia } from "./formularios";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Ocorrências ambientais" };
 
@@ -27,13 +28,10 @@ export default async function Ocorrencias() {
     : 0;
   return (
     <>
-      <h1 className={tituloDaPagina}>Ocorrências ambientais</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Registre logo depois da contenção. Severidade alta ou crítica, ou água
-        atingida, exige comunicar o órgão ambiental até o dia seguinte; a
-        ocorrência só encerra com a comunicação registrada, as causas e as
-        ações.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Ocorrências ambientais"
+        descricao="Registre logo depois da contenção. Severidade alta ou crítica, ou água atingida, exige comunicar o órgão ambiental até o dia seguinte; a ocorrência só encerra com a comunicação registrada, as causas e as ações."
+      />
       {semComunicar > 0 && (
         <p className="mt-3 text-base font-semibold text-nao-conforme">
           {semComunicar} ocorrência(s) sem a comunicação obrigatória.

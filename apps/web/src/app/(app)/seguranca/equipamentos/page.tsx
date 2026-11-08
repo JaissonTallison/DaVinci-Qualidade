@@ -10,10 +10,11 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { NovoEquipamento } from "./formularios";
 import { ListFilter } from "@/components/icones";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Equipamentos de emergência" };
 
@@ -34,13 +35,10 @@ export default async function Equipamentos({
   const pendentes = lista.filter((e) => e.ativo && e.pendencia).length;
   return (
     <>
-      <h1 className={tituloDaPagina}>Equipamentos de emergência</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Cada equipamento com a periodicidade da categoria: extintor com inspeção
-        mensal, recarga anual e teste hidrostático a cada 5 anos (NBR 12962);
-        mangueira com inspeção semestral e teste anual (NBR 12779). Os
-        vencimentos entram no painel.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Equipamentos de emergência"
+        descricao="Cada equipamento com a periodicidade da categoria: extintor com inspeção mensal, recarga anual e teste hidrostático a cada 5 anos (NBR 12962); mangueira com inspeção semestral e teste anual (NBR 12779). Os vencimentos entram no painel."
+      />
       <p className="mt-3 text-base">
         <span className={vencidos ? "font-semibold text-nao-conforme" : ""}>
           {vencidos} vencido(s)

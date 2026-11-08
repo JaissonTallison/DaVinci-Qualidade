@@ -59,15 +59,15 @@ export default async function DetalheDoMonitoramento({
       <CabecalhoComVoltar
         voltar={{ href: "/ambiental/monitoramentos", rotulo: "Monitoramentos" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="text-texto-2">{TIPOS_MONITORAMENTO[m.tipo]}</span>
           {!m.ativo && <span className="text-texto-2">Inativo</span>}
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>
           {m.parametro} · {m.ponto}
         </h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Limite">{textoDoLimite(m)}</Dado>

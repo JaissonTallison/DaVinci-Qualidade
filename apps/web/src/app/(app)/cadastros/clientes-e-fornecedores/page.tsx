@@ -10,8 +10,9 @@ import {
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
-import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { campoCompacto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Clientes e fornecedores" };
 
@@ -39,25 +40,22 @@ export default async function Parceiros({
   const podeCriar = eu.ok && eu.dados.permissoes.includes("parceiros.editar");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Clientes e fornecedores</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Um cadastro só para o sistema todo: ordens de serviço, pesquisas de
-            satisfação e avaliação de fornecedores usam esta lista.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/cadastros/clientes-e-fornecedores/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar cliente ou fornecedor
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Clientes e fornecedores"
+        descricao="Um cadastro só para o sistema todo: ordens de serviço, pesquisas de satisfação e avaliação de fornecedores usam esta lista."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/cadastros/clientes-e-fornecedores/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar cliente ou fornecedor
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form
           className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3"

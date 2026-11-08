@@ -13,11 +13,12 @@ import { FaixaDeIndicadores } from "@/components/faixa-de-indicadores";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { LinkDaPesquisa } from "@/components/link-da-pesquisa";
 import { formatarMomento } from "@/lib/datas";
 import { NovoConvite } from "./convites";
 import { FormularioDeNps } from "./formulario";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = {
   title: "Satisfação do cliente (ISC)",
@@ -42,10 +43,10 @@ export default async function Satisfacao({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
     <>
-      <h1 className={tituloDaPagina}>Índice de Satisfação do Cliente (ISC)</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Satisfação do cliente medida nos últimos 12 meses (ISO 9001, 9.1.2).
-      </p>
+      <CabecalhoDaPagina
+        titulo="Índice de Satisfação do Cliente (ISC)"
+        descricao="Satisfação do cliente medida nos últimos 12 meses (ISO 9001, 9.1.2)."
+      />
       <Recolhido titulo="Como funciona o ISC">
         <p className="max-w-2xl text-base text-texto-2">
           O cliente dá uma nota de 0 a 10 ao serviço. O Índice de Satisfação do

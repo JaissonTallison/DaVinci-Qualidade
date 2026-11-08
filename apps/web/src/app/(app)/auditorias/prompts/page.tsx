@@ -12,8 +12,9 @@ import { BotaoCopiar } from "@/components/botao-copiar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
-import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { campoCompacto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Prompts de IA" };
 
@@ -43,13 +44,10 @@ export default async function Prompts({
     : [];
   return (
     <>
-      <h1 className={tituloDaPagina}>Prompts de IA</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Comandos prontos para colar no ChatGPT, Gemini ou Claude: redação de NC,
-        causa raiz, plano de ação, comunicação com a liderança e outros. Revise
-        a resposta com os dados reais; o prompt acelera a redação, não substitui
-        a evidência.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Prompts de IA"
+        descricao="Comandos prontos para colar no ChatGPT, Gemini ou Claude: redação de NC, causa raiz, plano de ação, comunicação com a liderança e outros. Revise a resposta com os dados reais; o prompt acelera a redação, não substitui a evidência."
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-2 border-b border-borda px-4 py-3">
           <SelecaoDeFiltro

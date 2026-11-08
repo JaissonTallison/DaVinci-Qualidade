@@ -3,8 +3,8 @@ import type { RecursosDaEmpresa } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeModulos } from "./formulario";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Módulos contratados" };
 
@@ -15,11 +15,10 @@ export default async function Modulos({
   const r = await chamarApi<RecursosDaEmpresa>("/empresa/recursos");
   return (
     <div className="w-full">
-      <h1 className={tituloDaPagina}>Módulos contratados</h1>
-      <p className="mt-1 text-base text-texto-2">
-        Módulo desligado some do menu e das permissões. Os dados ficam guardados
-        e voltam ao religar.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Módulos contratados"
+        descricao="Módulo desligado some do menu e das permissões. Os dados ficam guardados e voltam ao religar."
+      />
       <Aviso
         avisos={{
           salvo:

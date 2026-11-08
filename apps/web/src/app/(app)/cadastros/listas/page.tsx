@@ -8,8 +8,9 @@ import {
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi, type Resultado } from "@/lib/api";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import { painel, tituloDaSecao } from "@/lib/estilos";
 import { FormularioDoItem, SituacaoDoItem } from "./acoes";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Listas de apoio" };
 
@@ -42,11 +43,10 @@ export default async function ListasDeCadastro({
 
   return (
     <>
-      <h1 className={tituloDaPagina}>Listas de apoio</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Listas que a empresa mantém e seleciona nos registros (em vez de
-        digitar). Em uso, o item não se apaga: inative-o.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Listas de apoio"
+        descricao="Listas que a empresa mantém e seleciona nos registros (em vez de digitar). Em uso, o item não se apaga: inative-o."
+      />
       <Aviso avisos={AVISOS} chave={aviso} />
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-2">
         {LISTAS.map((lista, i) => (

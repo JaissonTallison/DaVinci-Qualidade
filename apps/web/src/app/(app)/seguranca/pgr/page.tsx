@@ -25,15 +25,10 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { NivelDoRisco } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { BASE_LEGAL_PGR } from "./base-legal";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "PGR" };
 
@@ -125,31 +120,33 @@ export default async function Pgr({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>
-            PGR (programa de gerenciamento de riscos) · Inventário de riscos
-          </h1>
-          <p className={subtituloDaPagina}>
-            Inventário de riscos do PGR e as ações de controle de cada um.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <Botao href={`${BASE}/documento`} tamanho="grande" icone={Printer}>
-            Documento do PGR
-          </Botao>
-          {podeCriar && (
-            <Botao
-              href={`${BASE}/novo`}
-              variante="primario"
-              tamanho="grande"
-              icone={Plus}
-            >
-              Cadastrar risco
-            </Botao>
-          )}
-        </div>
-      </header>
+      <CabecalhoDaPagina
+        titulo="PGR (programa de gerenciamento de riscos) · Inventário de riscos"
+        descricao="Inventário de riscos do PGR e as ações de controle de cada um."
+        acoes={
+          <>
+            <div className="flex flex-wrap gap-3">
+              <Botao
+                href={`${BASE}/documento`}
+                tamanho="grande"
+                icone={Printer}
+              >
+                Documento do PGR
+              </Botao>
+              {podeCriar && (
+                <Botao
+                  href={`${BASE}/novo`}
+                  variante="primario"
+                  tamanho="grande"
+                  icone={Plus}
+                >
+                  Cadastrar risco
+                </Botao>
+              )}
+            </div>
+          </>
+        }
+      />
       <Recolhido titulo="Base legal · NR-1">
         <p className="text-base text-texto-2">
           {BASE_LEGAL_PGR.norma}. {BASE_LEGAL_PGR.ementa}

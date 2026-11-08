@@ -58,15 +58,15 @@ export default async function DetalheDaPt({
           rotulo: "Permissões de trabalho",
         }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">{pt.numero}</span>
           <StatusDaPt status={pt.status} vencida={pt.vencida} fim={pt.fim} />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>
           {TIPOS_PT[pt.tipo]} · {pt.local}
         </h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6`}>
         <header className={cabecalhoDoPainel}>
           <h2 className={tituloDoPainel}>Linha do tempo</h2>

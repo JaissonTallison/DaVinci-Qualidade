@@ -43,8 +43,8 @@ export default async function DetalheDoUsuario({
         voltar={{ href: "/administracao/usuarios", rotulo: "Usuários" }}
       >
         <h1 className={tituloDaPagina}>{u.nome}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
           <Dado rotulo="E-mail">{u.email}</Dado>

@@ -10,8 +10,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SignificanciaDoAspecto } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { campoCompacto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Aspectos e impactos" };
 
@@ -35,26 +36,22 @@ export default async function Aspectos({
     : 0;
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Aspectos e impactos</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Levantamento (LAIA) das atividades, do que geram ou consomem e do
-            impacto. Significância = severidade × frequência; alta (15 ou mais)
-            ou ligada a requisito legal é significativa e pede controle.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/ambiental/aspectos/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar aspecto
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Aspectos e impactos"
+        descricao="Levantamento (LAIA) das atividades, do que geram ou consomem e do impacto. Significância = severidade × frequência; alta (15 ou mais) ou ligada a requisito legal é significativa e pede controle."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/ambiental/aspectos/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar aspecto
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3">
           <select

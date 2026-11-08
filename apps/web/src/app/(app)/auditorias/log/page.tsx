@@ -18,10 +18,10 @@ import {
   campoCompacto,
   painel,
   rotulo,
-  tituloDaPagina,
   tituloDoPainel,
 } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Log do Auditor" };
 
@@ -40,13 +40,10 @@ export default async function LogDoAuditorPage({
       : null;
   return (
     <>
-      <h1 className={tituloDaPagina}>Log do Auditor</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        As auditorias em que a pessoa atuou como líder ou na equipe, com horas,
-        referenciais e processos. Papel e horas vêm do plano de cada auditoria.
-        Serve de base para a declaração de experiência na qualificação de
-        auditor.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Log do Auditor"
+        descricao="As auditorias em que a pessoa atuou como líder ou na equipe, com horas, referenciais e processos. Papel e horas vêm do plano de cada auditoria. Serve de base para a declaração de experiência na qualificação de auditor."
+      />
       <form className="mt-4 flex flex-wrap items-end gap-2">
         <label className="flex flex-col gap-1">
           <span className={rotulo}>Auditor</span>

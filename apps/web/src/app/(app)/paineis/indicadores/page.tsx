@@ -18,7 +18,8 @@ import {
 } from "@davinci/types";
 import { chamarApi, type Resultado } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { painel, subtituloDaPagina, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Indicadores gerais" };
 
@@ -320,11 +321,10 @@ export default async function IndicadoresGerais() {
 
   return (
     <>
-      <h1 className={tituloDaPagina}>Indicadores gerais</h1>
-      <p className={subtituloDaPagina}>
-        Visão consolidada dos indicadores de cada módulo que você acompanha.
-        Clique em um número para abrir a tela de origem.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Indicadores gerais"
+        descricao="Visão consolidada dos indicadores de cada módulo que você acompanha. Clique em um número para abrir a tela de origem."
+      />
       {visiveis.map((area) => (
         <section key={area.titulo} className={`${painel} mt-6 overflow-hidden`}>
           <div className="flex items-center justify-between px-5 pt-4 pb-2">

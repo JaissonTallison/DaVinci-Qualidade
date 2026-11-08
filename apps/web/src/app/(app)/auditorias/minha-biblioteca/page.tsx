@@ -19,12 +19,7 @@ import {
   TipoDaEvidencia,
 } from "@/components/marcadores-auditoria";
 import { chamarApi } from "@/lib/api";
-import {
-  aba as estiloDaAba,
-  painel,
-  tituloDaPagina,
-  trilho,
-} from "@/lib/estilos";
+import { aba as estiloDaAba, painel, trilho } from "@/lib/estilos";
 import { NovaEvidenciaPropria } from "../biblioteca/nova";
 import {
   ExcluirProprio,
@@ -33,6 +28,7 @@ import {
   NovoModeloNc,
 } from "./formularios";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Minha biblioteca" };
 
@@ -88,13 +84,10 @@ export default async function MinhaBiblioteca({
 
   return (
     <>
-      <h1 className={tituloDaPagina}>Minha biblioteca</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        O que a empresa acrescenta aos bancos do sistema: critérios além das
-        normas (legislação, norma interna, contrato), perguntas, evidências e
-        modelos de NC próprios. Eles aparecem junto com os do sistema nos
-        roteiros, na biblioteca e no banco de NCs.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Minha biblioteca"
+        descricao="O que a empresa acrescenta aos bancos do sistema: critérios além das normas (legislação, norma interna, contrato), perguntas, evidências e modelos de NC próprios. Eles aparecem junto com os do sistema nos roteiros, na biblioteca e no banco de NCs."
+      />
       {f.aviso && avisos[f.aviso] && (
         <CaixaDeAlerta tom="sucesso" className="mt-4">
           {avisos[f.aviso]}

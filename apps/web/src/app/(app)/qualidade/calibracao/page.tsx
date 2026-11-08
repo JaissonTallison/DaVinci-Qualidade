@@ -26,14 +26,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { SituacaoDoInstrumento } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Calibração" };
 
@@ -98,74 +93,61 @@ export default async function ListaDeInstrumentos({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Calibração</h1>
-          {resumo.ok ? (
-            <>
-              <p className={subtituloDaPagina}>
-                {plural(resumo.dados.emUso, "em uso", "em uso")}
-                {emDia > 0 && ` · ${emDia} em dia`}
-              </p>
-              {resumo.dados.vencemEmBreve > 0 && (
-                <p className="mt-0.5 text-sm text-atencao">
-                  <Link
-                    href={`${BASE}?situacao=vence_em_breve`}
-                    className="hover:underline"
-                  >
-                    {plural(
-                      resumo.dados.vencemEmBreve,
-                      "vence em até 30 dias",
-                      "vencem em até 30 dias",
-                    )}
-                  </Link>
-                </p>
-              )}
-              {(resumo.dados.vencidos > 0 || resumo.dados.reprovados > 0) && (
-                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
-                  {resumo.dados.vencidos > 0 && (
-                    <Link
-                      href={`${BASE}?situacao=vencido`}
-                      className="hover:underline"
-                    >
-                      {plural(resumo.dados.vencidos, "vencido", "vencidos")}
-                    </Link>
-                  )}
-                  {resumo.dados.vencidos > 0 &&
-                    resumo.dados.reprovados > 0 &&
-                    " · "}
-                  {resumo.dados.reprovados > 0 && (
-                    <Link
-                      href={`${BASE}?situacao=reprovado`}
-                      className="hover:underline"
-                    >
-                      {plural(
-                        resumo.dados.reprovados,
-                        "reprovado",
-                        "reprovados",
-                      )}
-                    </Link>
-                  )}
-                </p>
-              )}
-            </>
-          ) : (
-            <p className={subtituloDaPagina}>
-              Instrumentos de medição e a situação de calibração de cada um.
-            </p>
-          )}
-        </div>
-        {podeCriar && (
-          <Botao
-            href={`${BASE}/novo`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar instrumento
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Calibração"
+        descricao="Instrumentos de medição e a situação de calibração de cada um."
+        acoes={
+          podeCriar && (
+            <Botao
+              href={`${BASE}/novo`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar instrumento
+            </Botao>
+          )
+        }
+        regua={
+          resumo.ok
+            ? [
+                { rotulo: "Em uso", valor: resumo.dados.emUso },
+                {
+                  rotulo: "Em dia",
+                  valor: emDia,
+                  tom: emDia > 0 ? "sucesso" : undefined,
+                },
+                {
+                  rotulo: "Vencem em 30 dias",
+                  valor: resumo.dados.vencemEmBreve,
+                  tom: resumo.dados.vencemEmBreve > 0 ? "atencao" : undefined,
+                  href:
+                    resumo.dados.vencemEmBreve > 0
+                      ? `${BASE}?situacao=vence_em_breve`
+                      : undefined,
+                },
+                {
+                  rotulo: "Vencidos",
+                  valor: resumo.dados.vencidos,
+                  tom: resumo.dados.vencidos > 0 ? "perigo" : undefined,
+                  href:
+                    resumo.dados.vencidos > 0
+                      ? `${BASE}?situacao=vencido`
+                      : undefined,
+                },
+                {
+                  rotulo: "Reprovados",
+                  valor: resumo.dados.reprovados,
+                  tom: resumo.dados.reprovados > 0 ? "perigo" : undefined,
+                  href:
+                    resumo.dados.reprovados > 0
+                      ? `${BASE}?situacao=reprovado`
+                      : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
 
       <section className={`${painel} mt-6`}>
         <form

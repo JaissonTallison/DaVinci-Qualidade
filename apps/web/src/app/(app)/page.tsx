@@ -25,13 +25,9 @@ import { PendenciasCriticas } from "@/components/pendencias-criticas";
 import { chamarApi, type Resultado } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { Selo } from "@/components/selo";
-import {
-  painel,
-  sobretitulo,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { painel, sobretitulo } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Início" };
 
@@ -208,17 +204,11 @@ export default async function Inicio() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-        <div className="min-w-0 max-w-xl">
-          <h1 className={tituloDaPagina}>
-            {saudacao}, {eu.usuario.nome.split(" ")[0]}
-          </h1>
-          <p className={subtituloDaPagina}>
-            {eu.empresa.nome} · resumo do que pede ação hoje
-          </p>
-        </div>
-        <RelogioDoDia inicialISO={agora.toISOString()} />
-      </header>
+      <CabecalhoDaPagina
+        titulo={`${saudacao}, ${eu.usuario.nome.split(" ")[0]}`}
+        descricao={`${eu.empresa.nome} · resumo do que pede ação hoje`}
+        acoes={<RelogioDoDia inicialISO={agora.toISOString()} />}
+      />
 
       <div
         className="dv-entrar"

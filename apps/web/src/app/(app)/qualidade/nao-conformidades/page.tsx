@@ -35,14 +35,9 @@ import {
   hojeEmBrasilia,
   prazoRelativo,
 } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Não conformidades" };
 
@@ -126,47 +121,44 @@ export default async function ListaDeNcs({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Não conformidades</h1>
-          {resumo.ok ? (
-            <>
-              <p className={subtituloDaPagina}>
-                {resumo.dados.abertas === 1
-                  ? "1 em aberto"
-                  : `${resumo.dados.abertas} em aberto`}
-                {resumo.dados.graves > 0 &&
-                  ` · ${plural(resumo.dados.graves, "grave", "graves")} (alta ou crítica)`}
-              </p>
-              {resumo.dados.vencidas > 0 && (
-                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
-                  <Link
-                    href={`${BASE}?vencidas=true`}
-                    className="hover:underline"
-                  >
-                    {plural(resumo.dados.vencidas, "vencida", "vencidas")}
-                  </Link>
-                </p>
-              )}
-            </>
-          ) : (
-            <p className={subtituloDaPagina}>
-              Não conformidades registradas e o andamento do tratamento de cada
-              uma.
-            </p>
-          )}
-        </div>
-        {podeAbrir && (
-          <Botao
-            href={`${BASE}/nova`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Abrir NC
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Não conformidades"
+        descricao="Não conformidades registradas e o andamento do tratamento de cada uma."
+        acoes={
+          podeAbrir && (
+            <Botao
+              href={`${BASE}/nova`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Abrir NC
+            </Botao>
+          )
+        }
+        regua={
+          resumo.ok
+            ? [
+                { rotulo: "Em aberto", valor: resumo.dados.abertas },
+                {
+                  rotulo: "Graves",
+                  valor: resumo.dados.graves,
+                  detalhe: "alta ou crítica",
+                  tom: resumo.dados.graves > 0 ? "atencao" : undefined,
+                },
+                {
+                  rotulo: "Vencidas",
+                  valor: resumo.dados.vencidas,
+                  tom: resumo.dados.vencidas > 0 ? "perigo" : undefined,
+                  href:
+                    resumo.dados.vencidas > 0
+                      ? `${BASE}?vencidas=true`
+                      : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
 
       <section className={`${painel} mt-6`}>
         <form

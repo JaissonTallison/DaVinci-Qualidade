@@ -30,14 +30,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { Progresso, StatusDoPlano } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Planos de ação" };
 
@@ -112,44 +107,44 @@ export default async function ListaDePlanos({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Planos de ação</h1>
-          {resumo.ok ? (
-            <>
-              <p className={subtituloDaPagina}>
-                {plural(resumo.dados.emExecucao, "em execução", "em execução")}
-                {resumo.dados.aguardandoEficacia > 0 &&
-                  ` · ${resumo.dados.aguardandoEficacia} aguardando eficácia`}
-              </p>
-              {resumo.dados.atrasados > 0 && (
-                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
-                  <Link
-                    href={`${BASE}?atrasados=true`}
-                    className="hover:underline"
-                  >
-                    {plural(resumo.dados.atrasados, "atrasado", "atrasados")}
-                  </Link>
-                </p>
-              )}
-            </>
-          ) : (
-            <p className={subtituloDaPagina}>
-              Planos de ação e o acompanhamento de cada prazo e da eficácia.
-            </p>
-          )}
-        </div>
-        {podeCriar && (
-          <Botao
-            href={`${BASE}/novo`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Criar plano
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Planos de ação"
+        descricao="Planos de ação e o acompanhamento de cada prazo e da eficácia."
+        acoes={
+          podeCriar && (
+            <Botao
+              href={`${BASE}/novo`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Criar plano
+            </Botao>
+          )
+        }
+        regua={
+          resumo.ok
+            ? [
+                { rotulo: "Em execução", valor: resumo.dados.emExecucao },
+                {
+                  rotulo: "Aguardando eficácia",
+                  valor: resumo.dados.aguardandoEficacia,
+                  tom:
+                    resumo.dados.aguardandoEficacia > 0 ? "atencao" : undefined,
+                },
+                {
+                  rotulo: "Atrasados",
+                  valor: resumo.dados.atrasados,
+                  tom: resumo.dados.atrasados > 0 ? "perigo" : undefined,
+                  href:
+                    resumo.dados.atrasados > 0
+                      ? `${BASE}?atrasados=true`
+                      : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
 
       <section className={`${painel} mt-6`}>
         <form

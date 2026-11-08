@@ -15,15 +15,10 @@ import {
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { SituacaoDoTerceiro } from "./situacao";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Terceiros" };
 
@@ -99,24 +94,22 @@ export default async function Terceiros({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Terceiros</h1>
-          <p className={subtituloDaPagina}>
-            Empresas terceiras e a situação dos documentos de cada uma.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href={`${BASE}/novo`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar terceiro
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Terceiros"
+        descricao="Empresas terceiras e a situação dos documentos de cada uma."
+        acoes={
+          podeCriar && (
+            <Botao
+              href={`${BASE}/novo`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar terceiro
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form
           className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3"

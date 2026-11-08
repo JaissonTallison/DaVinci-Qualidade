@@ -59,7 +59,7 @@ export default async function DetalheDaReclamacao({
           rotulo: "Reclamações de clientes",
         }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="font-mono text-base text-texto-2">{x.numero}</span>
           <span className={x.atrasada ? "font-semibold text-nao-conforme" : ""}>
             {STATUS_DA_RECLAMACAO[x.status]}
@@ -67,8 +67,8 @@ export default async function DetalheDaReclamacao({
           </span>
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{x.clienteNome}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6`}>
         <header className={cabecalhoDoPainel}>
           <h2 className={tituloDoPainel}>Linha do tempo</h2>

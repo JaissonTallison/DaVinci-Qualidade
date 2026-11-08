@@ -4,8 +4,9 @@ import { NUMEROS_ODS, ODS, type TemaEsg } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { IconeOds } from "@/components/marcadores-esg";
 import { chamarApi } from "@/lib/api";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import { painel, tituloDaSecao } from "@/lib/estilos";
 import { MapaDosOds } from "./mapa";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "ODS" };
 
@@ -21,13 +22,16 @@ export default async function Ods() {
   ).length;
   return (
     <>
-      <h1 className={tituloDaPagina}>
-        Objetivos de Desenvolvimento Sustentável
-      </h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Os 17 ODS da ONU e os temas da empresa que contribuem para cada um.{" "}
-        {comMaterial} ODS têm ao menos um tema material, onde estão as metas.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Objetivos de Desenvolvimento Sustentável"
+        descricao={
+          <>
+            Os 17 ODS da ONU e os temas da empresa que contribuem para cada um.{" "}
+            {comMaterial} ODS têm ao menos um tema material, onde estão as
+            metas.
+          </>
+        }
+      />
       <MapaDosOds temas={r.dados} />
       <h2 className={`${tituloDaSecao} mt-8`}>
         Os 17 ODS e os temas da empresa

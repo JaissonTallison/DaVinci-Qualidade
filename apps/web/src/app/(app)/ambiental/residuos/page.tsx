@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { CircleAlert } from "@/components/icones";
+import { CircleAlert, FileText } from "@/components/icones";
 import {
   CLASSES_RESIDUO,
   UNIDADES_RESIDUO,
@@ -17,7 +16,6 @@ import { formatarData } from "@/lib/datas";
 import {
   cabecalhoDoPainel,
   painel,
-  tituloDaPagina,
   tituloDaSecao,
   tituloDoPainel,
 } from "@/lib/estilos";
@@ -26,6 +24,8 @@ import {
   FormularioDeSaida,
   RegistrarCdf,
 } from "./formularios";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Resíduos" };
 const AVISOS: Record<string, string> = {
@@ -51,28 +51,24 @@ export default async function Residuos({
   const atrasados = semCdf.filter((s) => s.cdfAtrasado).length;
   return (
     <>
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className={tituloDaPagina}>Resíduos</h1>
-        <nav aria-label="Resíduos" className="flex flex-wrap gap-4 text-sm">
-          <Link
-            href="/ambiental/destinadores"
-            className="text-info hover:underline"
-          >
-            Transportadores e destinadores
-          </Link>
-          <Link
-            href="/ambiental/residuos/inventario"
-            className="text-info hover:underline"
-          >
-            Inventário anual e planilha do MTR
-          </Link>
-        </nav>
-      </div>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Inventário por classe (NBR 10004) e cada saída com o MTR. O destinador
-        devolve o CDF; passados 30 dias sem ele, a saída fica atrasada e aparece
-        nos vencimentos.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Resíduos"
+        descricao="Inventário por classe (NBR 10004) e cada saída com o MTR. O destinador devolve o CDF; passados 30 dias sem ele, a saída fica atrasada e aparece nos vencimentos."
+        acoes={
+          <>
+            <Botao href="/ambiental/destinadores" tamanho="grande">
+              Transportadores e destinadores
+            </Botao>
+            <Botao
+              href="/ambiental/residuos/inventario"
+              tamanho="grande"
+              icone={FileText}
+            >
+              Inventário anual e MTR
+            </Botao>
+          </>
+        }
+      />
       <Aviso avisos={AVISOS} chave={aviso} />
       {podeEditar && (
         <>

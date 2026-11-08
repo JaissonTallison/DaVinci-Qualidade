@@ -5,7 +5,8 @@ import type { DadosDoUsuario, Permissao } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { IconeDaTela } from "@/components/icones-do-menu";
 import { chamarApi } from "@/lib/api";
-import { painel, subtituloDaPagina, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Configurações da qualidade" };
 
@@ -32,10 +33,10 @@ export default async function ConfiguracoesDaQualidade() {
   const itens = ITENS.filter((i) => permissoes.includes(i.permissao));
   return (
     <>
-      <h1 className={tituloDaPagina}>Configurações da qualidade</h1>
-      <p className={subtituloDaPagina}>
-        Telas de apoio do módulo Qualidade, fora do fluxo do dia a dia.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Configurações da qualidade"
+        descricao="Telas de apoio do módulo Qualidade, fora do fluxo do dia a dia."
+      />
       {!eu.ok ? (
         <div className="mt-6">
           <AvisoDeErro erro={eu.erro} />

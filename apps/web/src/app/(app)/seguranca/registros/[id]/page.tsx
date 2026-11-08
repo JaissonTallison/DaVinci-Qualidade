@@ -60,8 +60,8 @@ export default async function DetalheDoRegistro({
           )}
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{x.tema}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <div>

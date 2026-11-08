@@ -15,15 +15,11 @@ import {
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
-import {
-  cabecalhoDoPainel,
-  painel,
-  tituloDaPagina,
-  tituloDoPainel,
-} from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import { EnviarAvisos } from "./enviar-avisos";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Painel de vencimentos" };
 
@@ -42,17 +38,11 @@ export default async function Vencimentos({
   const proximos = prazos.filter((p) => p.situacao === "vence_em_breve");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Painel de vencimentos</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Tudo o que venceu ou vence nos próximos 30 dias, de todos os módulos
-            que você acompanha. Todo dia às 7h, quem tem prazo vencido ou para
-            os próximos 7 dias recebe um resumo por e-mail.
-          </p>
-        </div>
-        {podeAvisar && <EnviarAvisos />}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Painel de vencimentos"
+        descricao="Tudo o que venceu ou vence nos próximos 30 dias, de todos os módulos que você acompanha. Todo dia às 7h, quem tem prazo vencido ou para os próximos 7 dias recebe um resumo por e-mail."
+        acoes={podeAvisar && <EnviarAvisos />}
+      />
       {r.dados.indisponiveis.length > 0 && (
         <CaixaDeAlerta tom="atencao" className="mt-4">
           Sem resposta de:{" "}

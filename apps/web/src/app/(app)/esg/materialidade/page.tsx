@@ -10,7 +10,8 @@ import {
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Materialidade } from "@/components/marcadores-esg";
 import { chamarApi } from "@/lib/api";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import { painel, tituloDaSecao } from "@/lib/estilos";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Matriz de materialidade" };
 
@@ -35,25 +36,29 @@ export default async function MatrizDeMaterialidade() {
   const semAvaliacao = r.dados.length - avaliados.length;
   return (
     <>
-      <h1 className={tituloDaPagina}>Matriz de materialidade</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        {avaliados.length === 0
-          ? "Nenhum tema avaliado ainda."
-          : `${materiais} de ${avaliados.length} temas avaliados são materiais (nota ${NOTA_MATERIAL} ou mais).`}{" "}
-        Impacto: quanto a empresa afeta pessoas e ambiente. Relevância: quanto o
-        tema pesa no negócio e para as partes interessadas.
-        {semAvaliacao > 0 && (
+      <CabecalhoDaPagina
+        titulo="Matriz de materialidade"
+        descricao={
           <>
-            {" "}
-            <Link href="/esg/temas" className="text-info hover:underline">
-              {semAvaliacao === 1
-                ? "1 tema sem avaliação"
-                : `${semAvaliacao} temas sem avaliação`}
-            </Link>
-            .
+            {avaliados.length === 0
+              ? "Nenhum tema avaliado ainda."
+              : `${materiais} de ${avaliados.length} temas avaliados são materiais (nota ${NOTA_MATERIAL} ou mais).`}{" "}
+            Impacto: quanto a empresa afeta pessoas e ambiente. Relevância:
+            quanto o tema pesa no negócio e para as partes interessadas.
+            {semAvaliacao > 0 && (
+              <>
+                {" "}
+                <Link href="/esg/temas" className="text-info hover:underline">
+                  {semAvaliacao === 1
+                    ? "1 tema sem avaliação"
+                    : `${semAvaliacao} temas sem avaliação`}
+                </Link>
+                .
+              </>
+            )}
           </>
-        )}
-      </p>
+        }
+      />
       <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <section
           className={`${painel} p-5`}

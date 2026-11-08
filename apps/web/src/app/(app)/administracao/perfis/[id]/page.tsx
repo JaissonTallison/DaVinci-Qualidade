@@ -43,8 +43,8 @@ export default async function DetalheDoPerfil({
           perfil
           {p.ativo ? "" : " · Inativo"}
         </p>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       {p.protegido ? (
         <section className={`${painel} mt-6 p-5`}>
           <p className="text-base text-texto-2">

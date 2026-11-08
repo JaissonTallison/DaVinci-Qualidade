@@ -8,10 +8,11 @@ import { BuscasSalvas } from "@/components/buscas-salvas";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
-import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { campoCompacto, painel } from "@/lib/estilos";
 import { CAPITULOS, PACKS } from "../biblioteca/filtros";
 import { AssistenteDeNc } from "./assistente";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Banco de NCs" };
 
@@ -26,12 +27,10 @@ export default async function BancoDeNcs({
   const r = await chamarApi<ModeloDeNc[]>(`/modelos-de-nc?${filtro}`);
   return (
     <>
-      <h1 className={tituloDaPagina}>Banco de NCs</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Modelos de redação de não conformidade por norma e cláusula, com a causa
-        raiz comum, a ação corretiva e a evidência de fechamento. Na auditoria,
-        escolha o modelo na etapa Registrar e ajuste ao que foi visto.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Banco de NCs"
+        descricao="Modelos de redação de não conformidade por norma e cláusula, com a causa raiz comum, a ação corretiva e a evidência de fechamento. Na auditoria, escolha o modelo na etapa Registrar e ajuste ao que foi visto."
+      />
       <Recolhido titulo="Assistente de NC: prompts para reescrever, achar a causa e montar o plano">
         <AssistenteDeNc />
       </Recolhido>

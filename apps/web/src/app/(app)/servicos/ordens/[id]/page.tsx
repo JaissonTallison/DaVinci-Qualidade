@@ -70,7 +70,7 @@ export default async function DetalheDaOs({
       <CabecalhoComVoltar
         voltar={{ href: "/servicos/ordens", rotulo: "Ordens de serviço" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="font-mono text-base text-texto-2">{o.numero}</span>
           <StatusDaOs status={o.status} atrasada={o.atrasada} prazo={o.prazo} />
         </header>
