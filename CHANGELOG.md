@@ -71,6 +71,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
+- **Design system aplicado em todas as telas** (08/11/2026): tokens do design system aprovado (fundo, neutros, status com fundo e borda suaves, foco), azul da marca #172477 no botão primário, IBM Plex Sans e Plex Mono no lugar da família Source, cantos 4/6/8 px, elevação em camadas, campos de 40 px, botões primário/secundário/fantasma/perigo/pequeno/ícone.
+- Todo status vira selo (`Selo`, sem ponto); avisos e bloqueios viram `CaixaDeAlerta` com o ícone padrão do Lucide; tabelas com cabeçalho em caixa alta e linhas de 44 px; paginação com números; estado vazio, chips de filtro e seletor segmentado no padrão.
+- Início sem foto com degradê, fitas e cards de cor cheia: cabeçalho simples, resumo em card, atalhos em card branco.
+
 - Voltar das telas internas (detalhes, configurações, documentos para imprimir) passa a ser o botão quadrado ao lado do título, como no cadastro (`CabecalhoComVoltar`, `BotaoVoltar`); a classe `.dv-voltar` saiu. "Limpar filtros" e "Inativar" viram link de texto (`linkDiscreto`), sem a seta de voltar.
 - O sistema é sempre claro, mesmo com o computador no modo escuro (decisão Q12).
 

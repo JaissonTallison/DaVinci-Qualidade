@@ -1,6 +1,6 @@
 # Interface: o padrão visual da DaVinci Qualidade
 
-> **Status:** vigente (v1) · **Atualizado em:** 08/11/2026
+> **Status:** vigente (v2, design system de 08/11/2026) · **Atualizado em:** 08/11/2026
 > Vale para toda tela do `apps/web`. A estrutura do projeto segue a DaVinci Finance; **o visual não**. Layout, cores e tipografia são da Qualidade e estão definidos aqui.
 
 ---
@@ -32,73 +32,65 @@ Toda tela nova passa pelo [checklist da seção 10](#10-checklist-de-tela) antes
 ## 2. Princípios
 
 1. **O registro é o centro.** O QSSMA é um sistema de registros auditáveis: NC, inspeção, acidente, licença. A tela mostra o registro, o número dele, o status e quem mexeu, sem decoração competindo.
-2. **Sobriedade de documento oficial.** A referência visual é um relatório de auditoria ou uma norma ISO impressa, não um app de consumo. Serifa nos títulos, hierarquia clara, margens regulares.
+2. **Sobriedade de documento oficial.** A referência visual é um relatório de auditoria ou uma norma ISO impressa, não um app de consumo. Hierarquia clara, margens regulares, nenhum ornamento.
 3. **Status sempre legível sem cor.** Toda cor de status vem com texto ("Não conforme", "Vencida"). Quem é daltônico ou imprime em preto e branco precisa entender igual.
-4. **A marca aparece pouco e no lugar certo.** O marinho é a cor de trabalho. O ouro é a assinatura: entra só na logo, no item ativo do menu, nos ícones dos grupos do menu e em selos de certificação. A barra superior é branco gelo (`barra`) e o menu lateral é verde-petróleo (`menu`, #1C5560); no menu o ouro usado é o `ouro-claro` (#D9A441), que mantém contraste no fundo escuro.
+4. **A marca aparece pouco e no lugar certo.** O azul da marca (`#172477`) aparece em três lugares: menu lateral, botão primário e indicador ativo (aba, barra de progresso). O ouro (`ouro-claro`, #D9A441) só marca o item ativo do menu. O resto da tela é neutro, para que os status se destaquem.
 5. **Densidade de ferramenta.** Quem usa passa o dia no sistema. Mais linhas visíveis, menos rolagem, menos cliques.
 
 ---
 
 ## 3. Cara de IA: o que é proibido
 
-| Proibido                                                                          | Como fazemos                                                                                           |
-| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Inter, Geist ou fonte padrão do sistema em tudo                                   | Família **Source** (seção 4), sem serifa; títulos em negrito (padrão da tela de entrar, 16/10/2026)    |
-| Degradês em fundo, botão ou texto (roxo → azul, "aurora")                         | Cores sólidas dos tokens. O único gradiente é o metálico da logo                                       |
-| Cantos muito arredondados (`rounded-xl` para cima)                                | Cantos de 8 px em campos, botões, painéis e cartões (2 px só em caixa de seleção). Maiores não existem |
-| Sombra grande e difusa, "brilho" em volta de card, vidro fosco (_glassmorphism_)  | Borda fina separa camadas. Sombra só em menu suspenso e modal                                          |
-| Ícone dentro de círculo colorido em cada card                                     | Ícone pequeno, alinhado ao rótulo, na cor do texto                                                     |
-| Barrinha de progresso fina em lista ou cartão                                     | Texto: "3 de 5 tarefas · 60%" (componente `Progresso`); concluído em verde                             |
-| Grade de cards de indicador soltos, cada um de uma cor                            | Indicadores numa faixa única com divisórias, cor só no número que pede atenção                         |
-| Emoji em título, botão, mensagem ou estado vazio                                  | Nenhum emoji na interface                                                                              |
-| "Bem-vindo de volta!", "Ops! Algo deu errado", "Tudo pronto! 🎉"                  | Texto direto e específico (seção 9)                                                                    |
-| Ilustração "fofa" ou genérica em estado vazio                                     | Uma frase do que falta e o botão que resolve                                                           |
-| Hero com título gigante dentro do sistema                                         | Título da página em 26 px serifado, ações à direita                                                    |
-| Badge colorido e cheio para todo status                                           | Só o texto, sem ponto colorido (16/10/2026); fundo e `CircleAlert` só em status que exige ação         |
-| Cor hexadecimal solta no código (`text-[#7C3AED]`)                                | Só tokens semânticos (`text-nao-conforme`)                                                             |
-| Animação de entrada em lista, _hover_ que "pula"                                  | Transição só de cor e opacidade, até 150 ms                                                            |
-| Texto de exemplo (_lorem ipsum_, "Usuário Teste", "Empresa XYZ") em tela entregue | Dados reais ou de demonstração plausíveis (NC-2026-014, "Calibração do paquímetro TAG-0042")           |
-| Ícones de várias bibliotecas misturadas                                           | Só **Lucide** (`lucide-react`), traço 1,75 a 2, 16 px em botão e item de menu, 18 px em grupo e aviso  |
+| Proibido                                                                          | Como fazemos                                                                                                  |
+| --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Inter, Geist, Manrope, Sora, Poppins                                              | **IBM Plex Sans** e **IBM Plex Mono** (seção 4)                                                               |
+| Degradês em fundo, botão, card ou texto                                           | Cores sólidas dos tokens. Nenhum degradê no sistema (o Início também não tem)                                 |
+| Cantos muito arredondados (`rounded-lg` para cima)                                | 4 px em selo e caixa de marcar, 6 px em botão, campo e alerta, 8 px em card e modal. Maiores não existem      |
+| Sombra grande e difusa, "brilho" em volta de card, vidro fosco                    | Elevação em camadas dos tokens (seção 6). Card sem borda visível: a sombra já traz o contorno de 1 px         |
+| Ícone dentro de círculo colorido em cada card, ilustração de fundo                | Ícone só com função (navegação, ação, campo, estado), na cor do texto                                         |
+| Faixa lateral colorida em alerta ou card, fita com dobra                          | Alerta com fundo e borda suaves e o ícone padrão do Lucide no tom (`CaixaDeAlerta`)                           |
+| Ponto colorido em selo de status                                                  | Selo retangular só com texto (`Selo`), sem ponto                                                              |
+| Card de cor cheia por módulo                                                      | Card branco; a cor fica para o status                                                                         |
+| Emoji em título, botão, mensagem ou estado vazio                                  | Nenhum emoji na interface                                                                                     |
+| "Bem-vindo de volta!", "Ops! Algo deu errado", "Tudo pronto! 🎉"                  | Texto direto e específico (seção 9)                                                                           |
+| Hero com foto e título gigante dentro do sistema                                  | Título da página em 24 px, ações à direita                                                                    |
+| Cor hexadecimal solta no código (`text-[#7C3AED]`)                                | Só tokens semânticos (`text-nao-conforme`, `bg-atencao-suave`)                                                |
+| Animação de entrada em lista, _hover_ que "pula"                                  | Transição só de cor e opacidade, até 150 ms                                                                   |
+| Texto de exemplo (_lorem ipsum_, "Usuário Teste", "Empresa XYZ") em tela entregue | Dados reais ou de demonstração plausíveis (NC-2026-014, "Calibração do paquímetro TAG-0042")                  |
+| Ícones de várias bibliotecas misturadas                                           | Só **Lucide** (`lucide-react`), traço 1,75; 14 px em metadado, 16 px em botão e campo, 18 px no menu e alerta |
 
 ---
 
 ## 4. Tipografia
 
-**Escala de trabalho (16/10/2026):** `xs` 12,5 px · `sm` 14 px · `base` 15 px (texto principal) · `md` 17 px · `lg` 19 px · `xl` 23 px · `2xl` 28 px (título da página). A tabela abaixo é a escala anterior, mantida como histórico.
+### 4.1 Decisão (08/11/2026)
 
-### 4.1 Decisão
+| Uso                                                   | Família           | Pesos           |
+| ----------------------------------------------------- | ----------------- | --------------- |
+| Interface e títulos: textos, tabelas, botões, campos  | **IBM Plex Sans** | 400 · 500 · 600 |
+| Números de registro, CNPJ/CPF, TAG, CAS, ONU, códigos | **IBM Plex Mono** | 400 · 500       |
 
-| Uso                                              | Família             | Pesos     |
-| ------------------------------------------------ | ------------------- | --------- |
-| Títulos de página e de seção (`h1`, `h2`)        | **Source Serif 4**  | 600       |
-| Interface: textos, tabelas, botões, campos       | **Source Sans 3**   | 400 · 600 |
-| Números de registro, TAG, CAS, ONU, CID, códigos | **Source Code Pro** | 400 · 500 |
-
-**Por quê.** A Source é uma família da Adobe pensada para leitura longa e dados, com acentuação completa e números bem desenhados. A serifa dos títulos conversa com o "daVINCI" da logo e com a aparência de norma técnica. As três variantes foram desenhadas juntas, então combinam sem ajuste. As três têm licença livre (SIL OFL) e estão no `next/font/google`.
-
-A Finance usa IBM Plex. A Qualidade usa Source para que os dois produtos não pareçam o mesmo sistema com outra cor.
+A família Source foi trocada pela IBM Plex junto com o design system aprovado para a feira (decisão de 08/11/2026). Não há serifa: `font-serif` aponta para o Plex Sans. As duas fontes têm licença livre (SIL OFL) e vêm do `next/font/google`.
 
 ### 4.2 Escala
 
-Corpo de **14 px**, como em sistemas de gestão densos.
-
-| Token       | Tamanho / linha | Uso                                                |
-| ----------- | --------------- | -------------------------------------------------- |
-| `text-xs`   | 12 / 16 px      | Rótulo de coluna, legenda, metadado                |
-| `text-sm`   | 13 / 18 px      | Tabela densa, histórico de alterações              |
-| `text-base` | 14 / 20 px      | **Corpo**, célula de tabela, botão, campo          |
-| `text-md`   | 16 / 24 px      | Texto de leitura: descrição da NC, causa raiz, ata |
-| `text-lg`   | 18 / 26 px      | Subtítulo, título de modal                         |
-| `text-xl`   | 22 / 28 px      | Título de seção (serifado), valor de indicador     |
-| `text-2xl`  | 26 / 32 px      | **Título da página** (serifado)                    |
-| `text-3xl`  | 32 / 36 px      | Número em destaque dos cards do início             |
+| Token       | Tamanho / linha | Uso                                                       |
+| ----------- | --------------- | --------------------------------------------------------- |
+| `text-xs`   | 12 / 16 px      | Selo, cabeçalho de tabela (caixa alta), legenda, metadado |
+| `text-sm`   | 13 / 20 px      | Descrição de card, ajuda do campo, paginação              |
+| `text-base` | 14 / 20 px      | **Corpo**, célula de tabela, botão, campo, rótulo         |
+| `text-md`   | 15 / 22 px      | Título de card, texto de leitura (descrição da NC)        |
+| `text-lg`   | 16 / 24 px      | Título de modal                                           |
+| `text-xl`   | 18 / 26 px      | Título de seção                                           |
+| `text-2xl`  | 24 / 32 px      | **Título da página** (`tituloDaPagina`)                   |
+| `text-3xl`  | 28 / 36 px      | Número em destaque de indicador                           |
 
 ### 4.3 Regras
 
 - **Números tabulares** em toda tabela e indicador, para alinhar dígito com dígito.
 - **Número de registro em mono:** `NC-2026-014`, `TAG-0042`, `MTR 123456`. Facilita ler e copiar.
-- **Pesos:** 400 no texto e 600 em título, rótulo de destaque e valor. Nada de 300 nem de 700+.
-- **Caixa alta só em siglas** (NC, PGR, ASO, FISPQ, MTR). Título em caixa alta é proibido.
+- **Pesos:** 400 no texto, 500 em rótulo e botão, 600 em título e valor. Nada de 300 nem de 700.
+- **Caixa alta** só em siglas (NC, PGR, ASO) e no sobretítulo (`sobretitulo`: cabeçalho de tabela, título de grupo de campos), em 12 px com espaçamento de 0,04em.
 - **Linha de leitura** com até ~72 caracteres em textos corridos (causa raiz, ata, roteiro).
 
 ---
@@ -109,54 +101,44 @@ As cores saem da logo (ver [logos.md](logos.md)). O contraste de cada par texto/
 
 ### 5.1 Marca
 
-| Token        | HEX       | Papel                                                                                   |
-| ------------ | --------- | --------------------------------------------------------------------------------------- |
-| `marinho`    | `#102A43` | **Azul petróleo, cor principal:** botão primário, menu, cabeçalhos (14,64:1 com branco) |
-| `ouro`       | `#A06D10` | Só gráfico: moldura da logo, selo. **Nunca como texto** (4,48:1 sobre branco, reprova)  |
-| `ouro-texto` | `#986600` | Ouro quando precisa ser texto (4,96:1). Uso raro: selo "Certificado", destaque de marca |
+| Token         | HEX       | Papel                                                              |
+| ------------- | --------- | ------------------------------------------------------------------ |
+| `acao`        | `#172477` | **Azul da marca:** botão primário, aba ativa, barra de progresso   |
+| `acao-escuro` | `#101A5C` | Botão primário no hover                                            |
+| `menu`        | `#172477` | Fundo do menu lateral                                              |
+| `ouro-claro`  | `#D9A441` | Só a barra do item ativo do menu e os ícones dos grupos            |
+| `foco`        | `#3B4FD1` | Anel de foco de 2 px com folga de 2 px em todo elemento interativo |
 
 ### 5.2 Neutros (tema claro)
 
-Cinzas levemente puxados para o azul do marinho, para não brigar com ele.
-
-| Token          | HEX       | Uso                                                     | Contraste sobre branco |
-| -------------- | --------- | ------------------------------------------------------- | ---------------------- |
-| `fundo`        | `#F4F7FA` | Fundo da página (cinza gelo)                            | —                      |
-| `superficie`   | `#FFFFFF` | Painéis, tabelas, formulários                           | —                      |
-| `superficie-2` | `#EEF0F3` | Cabeçalho de tabela, linha selecionada                  | —                      |
-| `borda`        | `#D5DAE1` | Divisórias e contornos                                  | —                      |
-| `borda-forte`  | `#9AA3B0` | Contorno forte (quando precisa)                         | 2,55:1                 |
-| `campo`        | `#F5F7FB` | Fundo do campo de formulário                            | —                      |
-| `borda-campo`  | `#DFE5EE` | Contorno do campo (o fundo cinza ajuda a achar o campo) | 1,27:1                 |
-| `acao`         | `#0F766E` | Botão primário, verde esmeralda (texto branco 5,47:1)   | —                      |
-| `texto`        | `#0E1A2B` | Texto principal                                         | 17,48:1                |
-| `texto-2`      | `#334155` | Rótulos, texto secundário, ícones                       | 10,35:1                |
-| `texto-3`      | `#5F6B7C` | Metadados, legenda                                      | 5,41:1                 |
+| Token          | HEX       | Uso                                                                |
+| -------------- | --------- | ------------------------------------------------------------------ |
+| `fundo`        | `#EEF1F6` | Fundo da página, um tom abaixo do card para a elevação aparecer    |
+| `superficie`   | `#FFFFFF` | Card, tabela, campo, modal, barra superior                         |
+| `superficie-2` | `#F8F9FC` | Cabeçalho de tabela, hover de linha, rodapé de card                |
+| `afundado`     | `#E7EBF1` | Campo desabilitado ou só leitura, trilho do seletor e do progresso |
+| `borda`        | `#DFE3EA` | Divisórias de tabela e de card                                     |
+| `borda-campo`  | `#D3D8E2` | Contorno do campo e do botão secundário em repouso                 |
+| `borda-forte`  | `#8C94A8` | Contorno no hover; caixa de marcar e rádio (3:1)                   |
+| `texto`        | `#131A33` | Texto principal                                                    |
+| `texto-2`      | `#4F5870` | Texto secundário, cabeçalho de tabela, descrição (≥ 4,5:1)         |
+| `texto-3`      | `#677087` | Placeholder, ícone auxiliar, "(opcional)" (≥ 4,5:1)                |
 
 ### 5.3 Status do registro
 
-O QSSMA vive de status: conforme, não conforme, vencido, a vencer. São tokens próprios, separados da marca.
+Cada status tem a cor cheia (ícone, número), o fundo suave, a borda suave e o texto escuro para usar sobre o fundo suave. O selo e o alerta usam o trio suave + borda + texto.
 
-| Token          | Claro            | Escuro    | Significa                                                |
-| -------------- | ---------------- | --------- | -------------------------------------------------------- |
-| `conforme`     | `#0F766E` (5,47) | `#5CC48A` | Aprovado, Conforme, Vigente, Eficaz, Habilitada, Regular |
-| `nao-conforme` | `#B3261E` (6,54) | `#F2877E` | Reprovado, Não conforme, Vencida, Ineficaz, Irregular    |
-| `atencao`      | `#B45309` (5,02) | `#F0A35C` | A vencer, Condicional, Pendente, Atrasada, Atenção       |
-| `info`         | `#2B5597` (7,37) | `#8AB0EE` | Em andamento, Planejado                                  |
-| `neutro`       | `#586273` (6,16) | `#9AA4B2` | Rascunho, Não iniciado, Não se aplica                    |
-
-O `atencao` é o âmbar escuro: o âmbar da paleta (`ambar`, `#F59E0B`) tem só 2,15:1 sobre branco e fica para marcador (ponto, faixa, ícone), nunca texto. Paleta adotada em 16/10/2026: azul petróleo `#102A43`, verde esmeralda `#0F766E`, âmbar `#F59E0B`, cinza gelo `#F4F7FA`, branco e cinza ardósia `#334155`.
+| Status         | Cheia     | Suave          | Borda     | Texto     | Significa                                                   |
+| -------------- | --------- | -------------- | --------- | --------- | ----------------------------------------------------------- |
+| `conforme`     | `#157A52` | `#E7F5EE`      | `#B3DCC8` | `#0F6342` | Aprovado, Conforme, Vigente, Encerrado, Liberado            |
+| `nao-conforme` | `#B42318` | `#FDEEEC`      | `#F2C4BE` | `#A01D13` | Reprovado, Vencido, Atrasado, NC maior, pendência que trava |
+| `atencao`      | `#B45309` | `#FFF5E5`      | `#F3D29B` | `#8A4500` | Vence em breve, Aguardando eficácia, NC menor, Solicitada   |
+| `info`         | `#24339A` | `#E9ECF8`      | `#C3CBEE` | —         | Em andamento, Em tratamento, Em análise                     |
+| `neutro`       | `#4F5870` | `superficie-2` | `borda`   | `texto-2` | Rascunho, Planejada, Cancelado, Não se aplica               |
 
 ### 5.4 Escalas de nível (risco, significância, materialidade)
 
-Riscos (probabilidade × impacto), aspectos ambientais e materialidade ESG usam a mesma escala. **A cor fica só no marcador** (quadrado da matriz, ponto na lista). O texto do nível fica em `texto` e vem sempre com a nota: "Alto · 16".
-
-| Nível   | Marcador (claro) | Regra no QSSMA                                    |
-| ------- | ---------------- | ------------------------------------------------- |
-| Baixo   | `#1D7044`        | Risco < 6 · Significância < 6 · Materialidade < 6 |
-| Médio   | `#C99A06`        | Risco 6–11 · Significância e materialidade 6–14   |
-| Alto    | `#B4470B`        | Risco 12–19 · Significância e materialidade ≥ 15  |
-| Crítico | `#8E1B1B`        | Risco ≥ 20                                        |
+Risco, gravidade da NC, significância do aspecto, materialidade ESG e risco da evidência usam o selo no tom do nível (`tomDoNivel`): baixo em `conforme`, médio/moderado em `atencao`, alto e crítico em `nao-conforme`. A matriz 5×5 continua com os marcadores de nível (`nivel-baixo` a `nivel-critico`) nos quadrados. O texto do nível vem sempre escrito ("Alta · 20").
 
 ### 5.5 Tema: sempre claro
 
@@ -170,21 +152,30 @@ A tela de ODS usa as **17 cores oficiais da ONU** (tokens `--dv-ods-1` a `--dv-o
 
 ## 6. Escala, cantos e sombras
 
-| Elemento                 | Medida                   |
-| ------------------------ | ------------------------ |
-| Unidade de espaço        | 4 px                     |
-| Linha de tabela          | 36 px (densa: 32 px)     |
-| Botão e campo            | 36 px de altura          |
-| Espaço entre seções      | 24 px                    |
-| Margem lateral da página | 24 px (16 px no celular) |
+| Elemento                 | Medida                       |
+| ------------------------ | ---------------------------- |
+| Unidade de espaço        | 4 px                         |
+| Botão                    | 36 px (pequeno: 30 px)       |
+| Campo de formulário      | 40 px (filtro: 36 px)        |
+| Linha de tabela          | 44 px (12 px acima e abaixo) |
+| Espaço entre seções      | 24 px                        |
+| Margem lateral da página | 24 px (16 px no celular)     |
 
-| Token        | Valor | Uso                          |
-| ------------ | ----- | ---------------------------- |
-| `rounded-xs` | 2 px  | Checkbox, marcador de status |
-| `rounded-sm` | 8 px  | Botão, campo, etiqueta       |
-| `rounded-md` | 8 px  | Painel, tabela, menu, modal  |
+| Token                          | Valor | Uso                                                 |
+| ------------------------------ | ----- | --------------------------------------------------- |
+| `rounded-xs`                   | 4 px  | Selo, caixa de marcar, opção do seletor segmentado  |
+| `rounded-sm` / `rounded-campo` | 6 px  | Botão, campo, alerta, chip de filtro                |
+| `rounded-md`                   | 8 px  | Card, painel, tabela, menu suspenso, modal (máximo) |
+| `rounded-full`                 | —     | Só avatar e chave liga/desliga                      |
 
-Não existe `rounded-lg` para cima. Sombra só em menu suspenso (`shadow-sm`) e modal (`shadow-md`).
+| Elevação        | Uso                                                      |
+| --------------- | -------------------------------------------------------- |
+| `shadow-xs`     | Campo, botão, opção ativa do seletor                     |
+| `shadow-cartao` | Card e painel (já traz o contorno de 1 px: sem `border`) |
+| `shadow-sm`     | Menu suspenso, dica de gráfico, barra de ações em lote   |
+| `shadow-md`     | Modal, busca, painel lateral                             |
+
+As classes prontas ficam em `lib/estilos.ts`: `campo`, `campoCompacto`, `areaDeTexto`, `botaoPrimario`, `botaoSecundario`, `botaoFantasma`, `botaoPerigo`, `botaoPequeno`, `botaoIcone`, `botaoLink`, `linkDiscreto`, `painel`, `cabecalhoDoPainel`, `tituloDoPainel`, `tituloDaPagina`, `subtituloDaPagina`, `tituloDaSecao`, `sobretitulo`, `trilho` + `aba`, `opcaoSegmentada`, `linhaDeAbas` + `abaDePagina`, `selo`. Componente novo reaproveita daqui.
 
 ---
 
@@ -204,7 +195,7 @@ Não existe `rounded-lg` para cima. Sombra só em menu suspenso (`shadow-sm`) e 
 │ Gestão SGI │  │ Status ▾  Gravidade ▾  Origem ▾  Responsável ▾  Buscar  ││
 │ Serviços   │  ├──────────┬──────────────────────┬─────────┬──────┬──────┤│
 │ Segurança  │  │ Número   │ Descrição            │ Origem  │ Prazo│Status││
-│ Meio Amb.  │  │NC-2026-014│ Paquímetro fora de… │Inspeção │ 22/10│● Aberta│
+│ Meio Amb.  │  │NC-2026-014│ Paquímetro fora de… │Inspeção │ 22/10│[Aberta]│
 │ ESG        │  │ …        │                      │         │      │      ││
 │ ────────── │  └──────────────────────────────────────────────────────────┘│
 │ Cadastros  │                                                              │
@@ -212,10 +203,10 @@ Não existe `rounded-lg` para cima. Sombra só em menu suspenso (`shadow-sm`) e 
 └────────────┴──────────────────────────────────────────────────────────────┘
 ```
 
-- **Menu lateral** verde-petróleo (`menu`), com os grupos do QSSMA na ordem do documento de domínio. Grupo de módulo não contratado não aparece. O item ativo tem fundo um pouco mais claro e uma barra de 3 px em `ouro-claro` à esquerda.
-- **Cabeçalho da página:** título serifado, uma linha de resumo em `texto-2` com os números que importam, e as ações à direita (primária por último).
+- **Menu lateral** no azul da marca (`menu`, #172477), com os grupos do QSSMA na ordem do documento de domínio. Grupo de módulo não contratado não aparece. O item ativo tem fundo um pouco mais claro e uma barra de 3 px em `ouro-claro` à esquerda.
+- **Cabeçalho da página:** título de 24 px, uma linha de resumo em `texto-2` com os números que importam, e as ações à direita (primária por último).
 - **A lista é uma tabela,** com filtros no topo. Não usamos cards para listar registros (no celular a própria tabela é que vira cartões, §7.1).
-- **Registro aberto:** número em mono e status no topo. Conteúdo em seções com título serifado. O **histórico de alterações** fica sempre no rodapé do registro, porque é a trilha que o auditor pede.
+- **Registro aberto:** número em mono e status no topo. Conteúdo em cards com título de 15 px. O **histórico de alterações** fica sempre no rodapé do registro, porque é a trilha que o auditor pede.
 
 ### 7.1 Celular e tablet (decisão Q15)
 
@@ -263,16 +254,19 @@ O "ID do erro" é o `digest` do Next, o mesmo que fica no log do servidor.
 
 ## 8. Componentes do QSSMA
 
-| Componente                | Regra                                                                                                                          |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| **Status**                | Ponto de 8 px na cor do status + texto. Fundo colorido (10 % da cor) só quando exige ação: Vencida, Reprovado, Atrasada        |
-| **Número do registro**    | Mono, `texto`, copiável com um clique                                                                                          |
-| **Prazo**                 | Data `dd/mm/aaaa`. Vencido fica em `nao-conforme`; até 30 dias, em `atencao`. Ao lado, "vence em 5 dias" ou "venceu há 3 dias" |
-| **Matriz de risco 5×5**   | Quadrados com o marcador do nível (5.4) e a contagem de riscos. Eixos rotulados: Probabilidade (1–5) e Impacto (1–5)           |
-| **Checklist de inspeção** | Três botões por item: OK, NOK, N/A. O resultado aparece calculado no topo ("Reprovada: 1 item NOK")                            |
-| **Faixa de indicadores**  | Uma moldura, indicadores separados por divisória vertical. Número em 22 px, rótulo em 12 px. Sem ícone                         |
-| **Vencimentos**           | Lista agrupada por semana, com a origem (EPI, calibração, licença) em texto                                                    |
-| **Botões**                | Verbo + objeto: "Abrir NC", "Liberar permissão", "Gerar ata". Primário em `marinho`, um por tela                               |
+| Componente                            | Regra                                                                                                                                                                      |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Status** (`Selo`)                   | Retângulo de 22 px, canto de 4 px, só texto, sem ponto. Tons: perigo, atenção, sucesso, info, neutro. Os componentes de `marcadores*.tsx` já escolhem o tom de cada status |
+| **Vencido / atrasado** (`Alerta`)     | Selo de perigo com há quanto tempo ("Vencida há 3 dias") e, embaixo, o status e a data em cinza                                                                            |
+| **Alerta em caixa** (`CaixaDeAlerta`) | Fundo e borda suaves no tom, ícone padrão do Lucide (`circle-alert`, `triangle-alert`, `circle-check`, `info`), título opcional e as ações que resolvem. Sem faixa lateral |
+| **Número do registro**                | Mono, `texto`, copiável com um clique                                                                                                                                      |
+| **Prazo**                             | Data `dd/mm/aaaa`; vencendo, selo de atenção ao lado; vencido, `Alerta`                                                                                                    |
+| **Tabela**                            | Cabeçalho em `superficie-2`, 12 px em caixa alta; linhas de 44 px com divisória e hover em `superficie-2`; ordenação com seta; paginação com números                       |
+| **Matriz de risco 5×5**               | Quadrados com o marcador do nível (5.4) e a contagem de riscos. Eixos rotulados: Probabilidade (1–5) e Impacto (1–5)                                                       |
+| **Checklist de inspeção**             | Três botões por item: OK, NOK, N/A, com o fundo suave do tom quando marcado                                                                                                |
+| **Faixa de indicadores**              | Uma moldura, indicadores separados por divisória vertical. Sem ícone                                                                                                       |
+| **Estado vazio**                      | Ícone de 28 px em `texto-3`, título do que falta, uma frase e o botão que resolve                                                                                          |
+| **Botões**                            | Verbo + objeto: "Abrir NC", "Liberar permissão". Primário em azul da marca, um por tela                                                                                    |
 
 ---
 
@@ -301,7 +295,8 @@ Antes do merge, quem abriu o PR confere:
 - [ ] Só tokens de cor, nenhum HEX no componente
 - [ ] Todo status tem texto, não só cor
 - [ ] Ouro aparece só no menu (barra do ativo e ícones dos grupos, em `ouro-claro`) e na logo
-- [ ] Títulos em Source Serif 4, números de registro em Source Code Pro
+- [ ] Texto em IBM Plex Sans, números de registro em IBM Plex Mono
+- [ ] Status em `Selo`, avisos em `CaixaDeAlerta`, botões e campos das classes de `lib/estilos.ts`; nada de classe de cor, canto ou sombra montada à mão
 - [ ] Textos com verbo + objeto e mensagens de erro que dizem como corrigir
 - [ ] Cadastro em página segue a §7.2 (voltar, um bloco por seção, resumo, barra de ações)
 - [ ] Conferida em 1280 px e 390 px de largura
@@ -314,14 +309,14 @@ Antes do merge, quem abriu o PR confere:
 
 A estrutura (monorepo, microsserviços, gateway, pacotes) é a mesma da Finance. O visual é próprio:
 
-|                           | Finance           | Qualidade                                                  |
-| ------------------------- | ----------------- | ---------------------------------------------------------- |
-| Tipografia                | IBM Plex          | Source Serif 4 / Sans 3 / Code Pro                         |
-| Cor de destaque           | Laranja Finance   | Ouro da logo, só como assinatura; ação primária em marinho |
-| Centro da tela            | Números e valores | Registro, número e status                                  |
-| Cores semânticas próprias | Finanças          | Conformidade, prazos e níveis de risco                     |
+|                           | Finance           | Qualidade                                             |
+| ------------------------- | ----------------- | ----------------------------------------------------- |
+| Tipografia                | IBM Plex          | IBM Plex Sans / Mono (mesma família desde 08/11/2026) |
+| Cor de destaque           | Laranja Finance   | Azul da marca #172477; ouro só no item ativo do menu  |
+| Centro da tela            | Números e valores | Registro, número e status                             |
+| Cores semânticas próprias | Finanças          | Conformidade, prazos e níveis de risco                |
 
-Os tokens estão em `packages/tokens/css/tema.css`. O tema do Tailwind é zerado e só recebe estes tokens, e o ESLint do `apps/web` recusa degradê, cor solta, canto e sombra grandes, emoji e as fontes Inter, Geist, Manrope, Sora e Poppins. Qualquer mudança de cor passa por aqui primeiro, com o contraste medido.
+Os tokens estão em `packages/tokens/css/tema.css`. O tema do Tailwind é zerado e só recebe estes tokens, e o ESLint do `apps/web` recusa degradê, cor solta, canto e sombra grandes, emoji e as fontes Inter, Geist, Manrope, Sora e Poppins. A referência visual completa (componentes e telas de exemplo) é o design system aprovado em 08/11/2026. Qualquer mudança de cor passa por aqui primeiro, com o contraste medido.
 
 ## Ícones
 
