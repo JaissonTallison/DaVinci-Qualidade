@@ -132,73 +132,96 @@ main :is(input, select, textarea) {
   animation-delay: 200ms;
 }
 
-/* Destaque do início: o único degradê do sistema (decisão Q14). Cantos de 12 px só aqui. */
-
 /*
- * Tela de acesso (entrar, senha, 2FA): segunda exceção visual do sistema, decidida com o dono do produto
- * (docs/04-design/interface.md). Foto de fundo com véu marinho, cartão branco flutuante, ícones em quadrado colorido.
- * Tudo escopado em .dv-acesso: nada disso vale dentro do sistema.
+ * Telas de acesso (entrar, senha, 2FA) no design system: painel da marca em azul sólido à esquerda, cartão
+ * branco à direita sobre o fundo. Sem foto, degradê, vidro ou sombra grande (interface.md §7.4).
  */
-.dv-acesso {
-  --acesso-marinho: 2 14 33;
-  --acesso-azul: #0b62e3;
-  --acesso-azul-escuro: #0950bb;
-  --acesso-destaque: #2fd3b4;
-  --acesso-tinta: #0b1f44;
+.dv-acesso-cartao {
+  border-radius: var(--radius-md);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  box-shadow: var(--shadow-cartao);
 }
-.dv-acesso-veu {
-  background: rgb(var(--acesso-marinho) / 0.45);
-}
-@media (min-width: 1024px) {
-  .dv-acesso-veu {
-    background: linear-gradient(
-      90deg,
-      rgb(var(--acesso-marinho) / 0.94) 0%,
-      rgb(var(--acesso-marinho) / 0.82) 30%,
-      rgb(var(--acesso-marinho) / 0.35) 52%,
-      rgb(var(--acesso-marinho) / 0) 68%
-    );
-  }
-}
-.dv-acesso-titulo {
+.dv-acesso-cartao h1 {
   font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: clamp(2.25rem, 2.4vw, 2.75rem);
-  line-height: 1.12;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--color-texto);
 }
-.dv-acesso-titulo em {
-  font-style: normal;
-  color: var(--acesso-destaque);
+.dv-acesso-campo {
+  height: 2.5rem;
+  width: 100%;
+  border-radius: var(--radius-campo);
+  border: 1px solid var(--color-borda-campo);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: var(--text-base);
+  box-shadow: var(--shadow-xs);
+  transition: border-color 120ms;
 }
-.dv-acesso-icone {
+.dv-acesso-campo:hover {
+  border-color: var(--color-borda-forte);
+}
+.dv-acesso-campo::placeholder {
+  color: var(--color-texto-3);
+}
+.dv-acesso-campo:focus {
+  outline: 2px solid var(--color-foco);
+  outline-offset: 2px;
+  border-color: var(--color-foco);
+}
+.dv-acesso-campo[aria-invalid="true"] {
+  border-color: var(--color-nao-conforme);
+}
+.dv-acesso-botao {
   display: inline-flex;
-  flex-shrink: 0;
+  height: 2.5rem;
+  width: 100%;
   align-items: center;
   justify-content: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  border-radius: 12px;
-  color: var(--cor);
-  background: color-mix(in srgb, var(--cor) 20%, rgb(var(--acesso-marinho)));
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--cor) 30%, transparent),
-    0 6px 14px rgb(0 0 0 / 0.35);
+  gap: 0.5rem;
+  border-radius: var(--radius-campo);
+  background: var(--color-acao);
+  color: var(--color-primaria-texto);
+  font-size: var(--text-base);
+  font-weight: 500;
+  box-shadow: var(--shadow-xs);
+  transition: background-color 120ms;
 }
-.dv-acesso-vidro {
-  border-radius: 16px;
-  background: rgb(255 255 255 / 0.06);
-  border: 1px solid rgb(255 255 255 / 0.14);
-  backdrop-filter: blur(6px);
+.dv-acesso-botao:hover {
+  background: var(--color-acao-escuro);
 }
-.dv-acesso-norma {
-  border-radius: 10px;
-  background: rgb(255 255 255 / 0.08);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.14),
-    0 6px 14px rgb(0 0 0 / 0.35);
+.dv-acesso-botao:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
-/* Desktop com janela baixa (notebook): tudo diminui junto, nada some e não aparece rolagem */
+.dv-acesso-provedor {
+  display: inline-flex;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  border-radius: var(--radius-campo);
+  border: 1px solid var(--color-borda-campo);
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: var(--text-base);
+  font-weight: 500;
+  box-shadow: var(--shadow-xs);
+  transition:
+    background-color 120ms,
+    border-color 120ms;
+}
+.dv-acesso-provedor:hover {
+  border-color: var(--color-borda-forte);
+  background: var(--color-superficie-2);
+}
+.dv-acesso-link {
+  color: var(--color-info);
+  font-weight: 500;
+}
+.dv-acesso-link:hover {
+  text-decoration: underline;
+}
 @media (min-width: 1024px) and (max-height: 900px) {
   .dv-acesso-escala {
     zoom: 0.95;
@@ -219,105 +242,6 @@ main :is(input, select, textarea) {
     zoom: 0.8;
   }
 }
-.dv-acesso-cartao {
-  border-radius: 20px;
-  background: var(--color-white);
-  color: var(--acesso-tinta);
-  box-shadow: 0 30px 80px rgb(var(--acesso-marinho) / 0.35);
-}
-.dv-acesso-cartao h1 {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  color: var(--acesso-tinta);
-}
-.dv-acesso-campo {
-  height: 2.75rem;
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid #dfe5ee;
-  background: #f5f7fb;
-  color: var(--acesso-tinta);
-  font-size: 1rem;
-}
-.dv-acesso-campo::placeholder {
-  color: #6b7a90;
-}
-.dv-acesso-campo:focus {
-  outline: 2px solid var(--acesso-azul);
-  outline-offset: 1px;
-  background: var(--color-white);
-}
-.dv-acesso-campo[aria-invalid="true"] {
-  border-color: var(--color-nao-conforme);
-}
-.dv-acesso-botao {
-  display: inline-flex;
-  height: 2.75rem;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 8px;
-  background: var(--acesso-azul);
-  color: var(--color-white);
-  font-size: 1rem;
-  font-weight: 600;
-  transition: background-color 150ms;
-}
-.dv-acesso-botao:hover {
-  background: var(--acesso-azul-escuro);
-}
-.dv-acesso-botao:disabled {
-  opacity: 0.6;
-}
-.dv-acesso-provedor {
-  display: inline-flex;
-  height: 2.75rem;
-  align-items: center;
-  justify-content: center;
-  gap: 0.625rem;
-  border-radius: 8px;
-  border: 1px solid #dfe5ee;
-  background: var(--color-white);
-  color: var(--acesso-tinta);
-  font-size: 1rem;
-  font-weight: 500;
-  transition: background-color 150ms;
-}
-.dv-acesso-provedor:hover {
-  background: #f5f7fb;
-}
-.dv-acesso-link {
-  color: var(--acesso-azul);
-  font-weight: 600;
-}
-.dv-acesso-link:hover {
-  text-decoration: underline;
-}
-
-/* Botão de voltar no topo das telas (detalhe e cadastro): seta (Lucide arrow-left) + rótulo, estilo do botão secundário */
-.dv-voltar {
-  display: inline-flex;
-  align-items: center;
-  height: 2.25rem;
-  margin-bottom: 0.5rem;
-  padding-left: 2.2rem;
-  padding-right: 1rem;
-  border: 1px solid var(--color-borda-campo);
-  border-radius: var(--radius-campo);
-  background: var(--color-superficie)
-    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='15'%20height='15'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23475264'%20stroke-width='2.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%2019-7-7%207-7'/%3E%3Cpath%20d='M19%2012H5'/%3E%3C/svg%3E") 0.75rem center / 15px 15px no-repeat;
-  color: var(--color-texto);
-  font-size: var(--text-base);
-  font-weight: 600;
-  white-space: nowrap;
-  transition: background-color 150ms;
-}
-.dv-voltar:hover {
-  background-color: var(--color-campo);
-}
-
-
 
 @media (prefers-reduced-motion: reduce) {
   .dv-entrar,
@@ -510,36 +434,34 @@ main :is(input, select, textarea) {
 }
 
 /*
- * Tabelas zebradas (do tablet para cima; no celular viram cartões): linha par com um toque do azul petróleo e realce
- * ao passar o mouse. Fica na camada base: linha ou cabeçalho com classe de fundo própria (vencido, marcado) vence.
- * Tabela de formulário (com campos) não muda de cor ao passar o mouse.
+ * Controles e tabela na camada base: classe própria (linha vencida, campo com outra largura) sempre vence.
  */
 @layer base {
-  @media screen and (min-width: 640px) {
-    main table > tbody > tr:nth-child(even) {
-      background: color-mix(
-        in srgb,
-        var(--color-marinho) 5%,
-        var(--color-superficie)
-      );
-    }
-    main table:not(:has(input, select, textarea)) > tbody > tr:hover {
-      background: color-mix(
-        in srgb,
-        var(--color-acao) 8%,
-        var(--color-superficie)
-      );
-    }
+  /* Tabela do design system: sem listras; a linha ganha superficie-2 ao passar o mouse. */
+  main table:not(:has(input, select, textarea)) > tbody > tr:hover {
+    background: var(--color-superficie-2);
   }
-}
 
-/* Tablet e telas estreitas: tabela larga rola dentro do próprio quadro, sem empurrar a página (tabelas com campos
-   ficam de fora, para não cortar as listas de sugestões que abrem por cima). O `relative` segura dentro do quadro
-   os textos só para leitor de tela (`sr-only`, que são absolutos); sem ele, eles alargam a página inteira. */
-@media screen and (min-width: 640px) {
-  main :is(div, section):has(> table:not(:has(input, select, textarea))) {
-    position: relative;
-    overflow-x: auto;
+  /* Caixa de marcar e rádio nativos: 16 px, marcados no azul da marca. */
+  input:is([type="checkbox"], [type="radio"]) {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    accent-color: var(--color-acao);
+    cursor: pointer;
+  }
+  input:is([type="checkbox"], [type="radio"]):disabled {
+    cursor: not-allowed;
+  }
+
+  /* Seleção: seta dupla do Lucide (chevrons-up-down) à direita, no lugar da seta do navegador. */
+  select:not([multiple], [size]) {
+    appearance: none;
+    padding-right: 2.25rem;
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='16'%20height='16'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23677087'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m7%2015%205%205%205-5'/%3E%3Cpath%20d='m7%209%205-5%205%205'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.625rem center;
+    background-size: 16px 16px;
   }
 }
 

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { tituloDaPagina } from "@/lib/estilos";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import { FormularioDePerfil } from "../formulario";
 
 export const metadata: Metadata = { title: "Criar perfil" };
@@ -8,13 +7,11 @@ export const metadata: Metadata = { title: "Criar perfil" };
 export default function NovoPerfil() {
   return (
     <div className="w-full">
-      <Link
-        href="/administracao/perfis"
-        className="dv-voltar"
-      >
-        Perfis de acesso
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Criar perfil</h1>
+      <CabecalhoDeCadastro
+        voltar={{ href: "/administracao/perfis", rotulo: "Perfis de acesso" }}
+        titulo="Criar perfil"
+        descricao="Defina o que quem tiver este perfil pode ver e fazer no sistema."
+      />
       <FormularioDePerfil />
     </div>
   );

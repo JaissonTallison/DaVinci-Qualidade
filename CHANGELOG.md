@@ -6,6 +6,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Adicionado
 
+- Tela de cadastro em blocos ([interface.md §7.2](docs/04-design/interface.md#72-tela-de-cadastro-08112026)): voltar ao lado do título, uma seção por painel com a situação do preenchimento, coluna de resumo com os obrigatórios em texto e barra de ações fixa. Vale para todos os cadastros em página (29 telas, lista no interface.md), com a edição dentro do detalhe preservada; registrar risco e oportunidade ganhou a matriz 5×5 clicável.
+- Telas de erro ([interface.md §7.3](docs/04-design/interface.md#73-telas-de-erro-08112026)): 404 dentro do sistema e fora dele, falha ao montar a tela e falha geral, com detalhes técnicos copiáveis para o suporte.
 - Serviços ([módulo](docs/05-modulos/servicos.md)): reclamações de clientes com prazo de resposta, análise de procedência e NC na Qualidade; contratos com SLA medido nas OS; catálogo de serviços com checklist de execução, horas e materiais na OS e relatório para o aceite do cliente; pesquisa de satisfação por link, respondida sem login.
 - Segurança do Trabalho: eSocial SST ([módulo](docs/05-modulos/esocial.md)) com os eventos S-2210, S-2220 e S-2240 no leiaute S-1.3, pendências e registro do recibo; investigação de acidente com testemunhas, 5 porquês e árvore de causas, plano de ação a partir do acidente e CAT para imprimir; equipamentos de emergência com inspeção, recarga e teste hidrostático, brigada e plano de emergência ([módulo](docs/05-modulos/emergencia.md)); ordem de serviço de segurança por função (NR-1), ficha de EPI, lista de presença e certificados para assinar.
 - Meio Ambiente ([módulo](docs/05-modulos/ambiental.md)): ocorrências ambientais com comunicação obrigatória ao órgão e NC; obrigações legais em calendário; transportadores e destinadores com licença conferida na saída, custo e inventário anual de resíduos com planilhas; ecoeficiência por unidade produzida e programas com metas.
@@ -69,6 +71,11 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
+- **Design system aplicado em todas as telas** (08/11/2026): tokens do design system aprovado (fundo, neutros, status com fundo e borda suaves, foco), azul da marca #172477 no botão primário, IBM Plex Sans e Plex Mono no lugar da família Source, cantos 4/6/8 px, elevação em camadas, campos de 40 px, botões primário/secundário/fantasma/perigo/pequeno/ícone.
+- Todo status vira selo (`Selo`, sem ponto); avisos e bloqueios viram `CaixaDeAlerta` com o ícone padrão do Lucide; tabelas com cabeçalho em caixa alta e linhas de 44 px; paginação com números; estado vazio, chips de filtro e seletor segmentado no padrão.
+- Início sem foto com degradê, fitas e cards de cor cheia: cabeçalho simples, resumo em card, atalhos em card branco.
+
+- Voltar das telas internas (detalhes, configurações, documentos para imprimir) passa a ser o botão quadrado ao lado do título, como no cadastro (`CabecalhoComVoltar`, `BotaoVoltar`); a classe `.dv-voltar` saiu. "Limpar filtros" e "Inativar" viram link de texto (`linkDiscreto`), sem a seta de voltar.
 - O sistema é sempre claro, mesmo com o computador no modo escuro (decisão Q12).
 
 ### Corrigido

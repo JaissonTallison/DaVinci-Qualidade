@@ -31,6 +31,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -82,7 +83,11 @@ export default async function ListaDeInstrumentos({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.situacao)
     chips.push({
       rotulo: "Situação",
@@ -136,7 +141,11 @@ export default async function ListaDeInstrumentos({
                       href={`${BASE}?situacao=reprovado`}
                       className="hover:underline"
                     >
-                      {plural(resumo.dados.reprovados, "reprovado", "reprovados")}
+                      {plural(
+                        resumo.dados.reprovados,
+                        "reprovado",
+                        "reprovados",
+                      )}
                     </Link>
                   )}
                 </p>
@@ -175,12 +184,12 @@ export default async function ListaDeInstrumentos({
             valor={params.situacao}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="calibracao" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -195,7 +204,7 @@ export default async function ListaDeInstrumentos({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<Ruler aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<Ruler aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhum instrumento com esses filtros."
@@ -223,7 +232,7 @@ export default async function ListaDeInstrumentos({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -291,14 +300,14 @@ export default async function ListaDeInstrumentos({
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {lista.dados.itens.map((i) => (
-                    <tr key={i.id} className="relative hover:bg-campo">
-                      <td className="relative z-10 px-3 py-2">
+                    <tr key={i.id} className="relative hover:bg-superficie-2">
+                      <td className="relative z-10 px-3 py-3">
                         <CaixaDeSelecao
                           id={i.id}
                           rotulo={`Selecionar o instrumento ${i.tag}`}
                         />
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <Link
                           href={`${BASE}/${i.id}`}
                           aria-label={`Abrir o instrumento ${i.tag}`}
@@ -307,22 +316,22 @@ export default async function ListaDeInstrumentos({
                           {i.tag}
                         </Link>
                       </td>
-                      <td className="max-w-md px-4 py-2">
+                      <td className="max-w-md px-4 py-3">
                         {i.descricao}
                         <span className="block text-xs text-texto-3">
                           a cada {i.frequenciaMeses}{" "}
                           {i.frequenciaMeses === 1 ? "mês" : "meses"}
                         </span>
                       </td>
-                      <td className="px-4 py-2 text-texto-2 sm:hidden lg:table-cell">
+                      <td className="px-4 py-3 text-texto-2 sm:hidden lg:table-cell">
                         {i.local}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap sm:hidden lg:table-cell">
+                      <td className="px-4 py-3 whitespace-nowrap sm:hidden lg:table-cell">
                         {i.ultimaCalibracao
                           ? formatarData(i.ultimaCalibracao)
                           : "—"}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {i.proximaCalibracao
                           ? formatarData(i.proximaCalibracao)
                           : "—"}
@@ -336,13 +345,13 @@ export default async function ListaDeInstrumentos({
                             </span>
                           )}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <SituacaoDoInstrumento
                           situacao={i.situacao}
                           desde={i.proximaCalibracao}
                         />
                       </td>
-                      <td className="relative z-10 px-2 py-2 text-right">
+                      <td className="relative z-10 px-2 py-3 text-right">
                         <AcoesDaLinha rotulo={`Ações do instrumento ${i.tag}`}>
                           <Link href={`${BASE}/${i.id}`} className={itemDeAcao}>
                             Abrir

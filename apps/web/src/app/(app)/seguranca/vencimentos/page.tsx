@@ -15,6 +15,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import {
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -114,12 +115,12 @@ export default async function Vencimentos({
             valor={params.tipo}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="vencimentos" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -134,7 +135,7 @@ export default async function Vencimentos({
           </div>
         ) : itens.length === 0 ? (
           <EstadoVazio
-            icone={<CalendarClock aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<CalendarClock aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nada com esses filtros."
@@ -156,7 +157,7 @@ export default async function Vencimentos({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
                   <ThOrdenavel
                     campo="validade"
@@ -201,12 +202,12 @@ export default async function Vencimentos({
                 {itens.map((v) => (
                   <tr
                     key={`${v.tipo}-${v.funcionarioId}-${v.descricao}`}
-                    className="relative hover:bg-campo"
+                    className="relative hover:bg-superficie-2"
                   >
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Validade validade={v.validade} situacao={v.situacao} />
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`/cadastros/funcionarios/${v.funcionarioId}`}
                         aria-label={`Abrir o profissional ${v.funcionarioNome}`}
@@ -218,11 +219,11 @@ export default async function Vencimentos({
                         {v.matricula}
                       </span>
                     </td>
-                    <td className="px-4 py-2">{v.descricao}</td>
-                    <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3">{v.descricao}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {formatarData(v.data)}
                     </td>
-                    <td className="relative z-10 px-2 py-2 text-right">
+                    <td className="relative z-10 px-2 py-3 text-right">
                       <AcoesDaLinha rotulo={`Ações de ${v.funcionarioNome}`}>
                         <Link
                           href={`/cadastros/funcionarios/${v.funcionarioId}`}

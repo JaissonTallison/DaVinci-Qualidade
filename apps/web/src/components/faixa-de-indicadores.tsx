@@ -18,7 +18,7 @@ export function FaixaDeIndicadores({ itens }: { itens: Indicador[] }) {
       {itens.map((i) => {
         const numero = (
           <span
-            className={`text-xl font-semibold ${i.alerta ? "text-nao-conforme" : "text-texto"}`}
+            className={`text-2xl font-semibold tabular-nums ${i.alerta ? "text-nao-conforme-texto" : "text-texto"}`}
           >
             {i.valor === null
               ? "—"
@@ -29,7 +29,7 @@ export function FaixaDeIndicadores({ itens }: { itens: Indicador[] }) {
         );
         return (
           <div key={i.rotulo} className="flex flex-col gap-0.5 px-5 py-4">
-            <dt className="text-xs text-texto-2">{i.rotulo}</dt>
+            <dt className="text-sm text-texto-2">{i.rotulo}</dt>
             <dd>
               {i.href ? (
                 <Link href={i.href} className="hover:underline">

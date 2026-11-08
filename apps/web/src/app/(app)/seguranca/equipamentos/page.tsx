@@ -77,10 +77,12 @@ export default async function Equipamentos({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-borda text-left text-texto-2">
-                <th className="px-4 py-2 font-semibold">Equipamento</th>
-                <th className="px-4 py-2 font-semibold">Local</th>
-                <th className="px-4 py-2 font-semibold">Próximo vencimento</th>
-                <th className="px-4 py-2 font-semibold">Situação</th>
+                <th className="px-4 py-2.5 font-semibold">Equipamento</th>
+                <th className="px-4 py-2.5 font-semibold">Local</th>
+                <th className="px-4 py-2.5 font-semibold">
+                  Próximo vencimento
+                </th>
+                <th className="px-4 py-2.5 font-semibold">Situação</th>
               </tr>
             </thead>
             <tbody>
@@ -89,7 +91,7 @@ export default async function Equipamentos({
                   key={e.id}
                   className={`border-b border-borda last:border-0 ${e.ativo ? "" : "text-texto-3"}`}
                 >
-                  <td data-rotulo="Equipamento" className="px-4 py-2.5">
+                  <td data-rotulo="Equipamento" className="px-4 py-3">
                     <Link
                       href={`/seguranca/equipamentos/${e.id}`}
                       className="text-info hover:underline"
@@ -101,7 +103,7 @@ export default async function Equipamentos({
                       <span className="block text-texto-2">{e.detalhes}</span>
                     )}
                   </td>
-                  <td data-rotulo="Local" className="px-4 py-2.5">
+                  <td data-rotulo="Local" className="px-4 py-3">
                     {e.local}
                   </td>
                   <td
@@ -112,7 +114,7 @@ export default async function Equipamentos({
                       ? `${e.proximoVencimento.o} · ${formatarData(e.proximoVencimento.data)}`
                       : "—"}
                   </td>
-                  <td data-rotulo="Situação" className="px-4 py-2.5">
+                  <td data-rotulo="Situação" className="px-4 py-3">
                     {!e.ativo ? (
                       "Fora de uso"
                     ) : e.pendencia ? (

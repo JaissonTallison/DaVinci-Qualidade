@@ -3,8 +3,9 @@ import {
   ODS,
   type NivelDeMaterialidade,
 } from "@davinci/types";
+import { Selo, tomDoNivel } from "./selo";
 
-/** "Alta · 20": a cor fica só no marcador; o texto do nível vem sempre com a nota (interface.md §5.4). */
+/** "Alta · 20": selo no tom do nível, sempre com a nota. */
 export function Materialidade({
   nivel,
   nota,
@@ -12,12 +13,11 @@ export function Materialidade({
   nivel: NivelDeMaterialidade | null;
   nota: number | null;
 }) {
-  if (!nivel || nota === null)
-    return <span className="text-texto-3">Não avaliado</span>;
+  if (!nivel || nota === null) return <Selo>Não avaliado</Selo>;
   return (
-    <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-texto">
+    <Selo tom={tomDoNivel(nivel)}>
       {NIVEIS_DE_MATERIALIDADE[nivel]} · {nota}
-    </span>
+    </Selo>
   );
 }
 

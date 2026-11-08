@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   RESPOSTAS_ITEM,
   type Acidente,
@@ -18,7 +17,7 @@ import {
 } from "@davinci/types";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { tituloDaPagina } from "@/lib/estilos";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import { FormularioNovaNc } from "./formulario";
 
 export const metadata: Metadata = { title: "Abrir NC" };
@@ -150,7 +149,9 @@ export default async function NovaNc({
     chamarApi<ItemDeLista[]>("/listas/processo"),
   ]);
   const setoresAtivos = setores.ok ? setores.dados.map((s) => s.nome) : [];
-  const processosAtivos = processos.ok ? processos.dados.map((p) => p.nome) : [];
+  const processosAtivos = processos.ok
+    ? processos.dados.map((p) => p.nome)
+    : [];
   // Número → descrição curta, por origem, para o autocomplete do campo "Registro de origem"
   const opcao = (numero: string, desc: string) => ({ numero, desc });
   const registrosPorOrigem: Partial<
@@ -191,17 +192,14 @@ export default async function NovaNc({
           : null;
   return (
     <>
-      <Link
-        href={origem?.href ?? "/qualidade/nao-conformidades"}
-        className="dv-voltar"
-      >
-        {origem?.rotulo ?? "Não conformidades"}
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Abrir não conformidade</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Registre o que aconteceu, quem responde e até quando. A causa raiz e a
-        ação corretiva entram depois, no tratamento.
-      </p>
+      <CabecalhoDeCadastro
+        voltar={{
+          href: origem?.href ?? "/qualidade/nao-conformidades",
+          rotulo: origem?.rotulo ?? "Não conformidades",
+        }}
+        titulo="Abrir não conformidade"
+        descricao="Registre o que aconteceu, quem responde e até quando. A causa raiz e a ação corretiva entram depois, no tratamento."
+      />
       <FormularioNovaNc
         hoje={hojeEmBrasilia()}
         inicial={origem?.inicial}

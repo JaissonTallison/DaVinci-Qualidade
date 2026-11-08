@@ -31,6 +31,7 @@ import { formatarData } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -70,7 +71,8 @@ export default async function Ordens({
   if (params.status)
     chips.push({
       rotulo: "Status",
-      valor: STATUS_OS[params.status as keyof typeof STATUS_OS] ?? params.status,
+      valor:
+        STATUS_OS[params.status as keyof typeof STATUS_OS] ?? params.status,
       href: semFiltro("status"),
     });
 
@@ -99,12 +101,12 @@ export default async function Ordens({
             valor={params.status}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="ordens" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -119,7 +121,7 @@ export default async function Ordens({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<Wrench aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<Wrench aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma ordem de serviço com este status."
@@ -147,7 +149,7 @@ export default async function Ordens({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -199,20 +201,20 @@ export default async function Ordens({
                     >
                       Status
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Avaliação</th>
+                    <th className="px-4 py-2.5 font-semibold">Avaliação</th>
                     <th className="w-10 px-2 py-2" />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {lista.dados.itens.map((o) => (
-                    <tr key={o.id} className="relative hover:bg-campo">
-                      <td className="relative z-10 px-3 py-2">
+                    <tr key={o.id} className="relative hover:bg-superficie-2">
+                      <td className="relative z-10 px-3 py-3">
                         <CaixaDeSelecao
                           id={o.id}
                           rotulo={`Selecionar a OS ${o.numero}`}
                         />
                       </td>
-                      <td className="px-4 py-2 font-mono text-sm whitespace-nowrap">
+                      <td className="px-4 py-3 font-mono text-sm whitespace-nowrap">
                         <Link
                           href={`${BASE}/${o.id}`}
                           aria-label={`Abrir a OS ${o.numero}`}
@@ -221,22 +223,24 @@ export default async function Ordens({
                           {o.numero}
                         </Link>
                       </td>
-                      <td className="max-w-md px-4 py-2">{o.titulo}</td>
-                      <td className="px-4 py-2 text-texto-2">{o.clienteNome}</td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="max-w-md px-4 py-3">{o.titulo}</td>
+                      <td className="px-4 py-3 text-texto-2">
+                        {o.clienteNome}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {formatarData(o.prazo)}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <StatusDaOs
                           status={o.status}
                           atrasada={o.atrasada}
                           prazo={o.prazo}
                         />
                       </td>
-                      <td className="px-4 py-2 tabular-nums">
+                      <td className="px-4 py-3 tabular-nums">
                         {o.nota ? `${o.nota} de 5` : "—"}
                       </td>
-                      <td className="relative z-10 px-2 py-2 text-right">
+                      <td className="relative z-10 px-2 py-3 text-right">
                         <AcoesDaLinha rotulo={`Ações da OS ${o.numero}`}>
                           <Link href={`${BASE}/${o.id}`} className={itemDeAcao}>
                             Abrir

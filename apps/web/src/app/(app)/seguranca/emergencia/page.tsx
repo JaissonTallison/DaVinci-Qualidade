@@ -16,9 +16,10 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
 import {
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import {
   NovoBrigadista,
@@ -54,7 +55,7 @@ export default async function Emergencia({
             href="/seguranca/emergencia/imprimir"
             className={botaoSecundario}
           >
-            <Printer aria-hidden size={16} strokeWidth={2} />
+            <Printer aria-hidden size={16} strokeWidth={1.75} />
             Plano para imprimir
           </Link>
         )}
@@ -72,7 +73,9 @@ export default async function Emergencia({
         chave={aviso}
       />
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Brigada de emergência</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Brigada de emergência</h2>
+        </header>
         {!brigada.ok ? (
           <div className="p-5">
             <AvisoDeErro erro={brigada.erro} />
@@ -118,24 +121,28 @@ export default async function Emergencia({
           />
         </Recolhido>
       )}
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Plano de emergência</h2>
-        {p && (
-          <p className="text-sm text-texto-2">
-            Revisado em {formatarMomento(p.revisadoEm)}
-          </p>
-        )}
-        {podeEditar ? (
-          <PlanoDeEmergenciaForm plano={p} />
-        ) : p ? (
-          <p className="mt-2 text-base whitespace-pre-line">
-            {p.procedimentos}
-          </p>
-        ) : (
-          <p className="mt-2 text-base text-texto-2">
-            Plano ainda não preenchido.
-          </p>
-        )}
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Plano de emergência</h2>
+        </header>
+        <div className="p-5">
+          {p && (
+            <p className="text-sm text-texto-2">
+              Revisado em {formatarMomento(p.revisadoEm)}
+            </p>
+          )}
+          {podeEditar ? (
+            <PlanoDeEmergenciaForm plano={p} />
+          ) : p ? (
+            <p className="mt-2 text-base whitespace-pre-line">
+              {p.procedimentos}
+            </p>
+          ) : (
+            <p className="mt-2 text-base text-texto-2">
+              Plano ainda não preenchido.
+            </p>
+          )}
+        </div>
       </section>
     </>
   );

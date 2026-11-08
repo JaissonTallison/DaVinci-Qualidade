@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   formatarDocumento,
@@ -14,6 +13,7 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeParceiro } from "../formulario";
 import { SituacaoDoParceiro } from "./situacao";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Cliente ou fornecedor" };
 const AVISOS: Record<string, string> = {
   criado: "Cadastro criado.",
@@ -45,23 +45,24 @@ export default async function DetalheDoParceiro({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   return (
     <article>
-      <Link
-        href="/cadastros/clientes-e-fornecedores"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/cadastros/clientes-e-fornecedores",
+          rotulo: "Clientes e fornecedores",
+        }}
       >
-        Clientes e fornecedores
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-mono text-lg text-texto-2">
-          {formatarDocumento(p.documento)}
-        </span>
-        <span className="text-texto-2">
-          {p.papeis.map((x) => PAPEL[x] ?? x).join(" e ")}
-          {p.ativo ? "" : " · Inativo"}
-        </span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{p.nomeFantasia ?? p.nome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="font-mono text-base text-texto-2">
+            {formatarDocumento(p.documento)}
+          </span>
+          <span className="text-texto-2">
+            {p.papeis.map((x) => PAPEL[x] ?? x).join(" e ")}
+            {p.ativo ? "" : " · Inativo"}
+          </span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{p.nomeFantasia ?? p.nome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
           <div className="sm:col-span-2">

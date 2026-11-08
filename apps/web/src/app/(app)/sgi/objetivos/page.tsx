@@ -9,7 +9,7 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { linkDiscreto, painel, tituloDaPagina } from "@/lib/estilos";
 import { LancarMedicao, NovoObjetivo, SituacaoDoObjetivo } from "./acoes";
 
 export const metadata: Metadata = { title: "Objetivos da qualidade" };
@@ -65,7 +65,7 @@ export default async function Objetivos({
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-lg text-texto">{o.nome}</h2>
+                  <h2 className="text-md font-semibold text-texto">{o.nome}</h2>
                   <p className="text-sm text-texto-2">
                     {o.indicador} · meta {num(o.meta)} {o.unidade} (
                     {SENTIDOS_META[o.sentido].toLowerCase()}) · {o.responsavel}
@@ -124,7 +124,7 @@ export default async function Objetivos({
               )}
               {permissoes.includes("sgi.excluir") && (
                 <details className="mt-3">
-                  <summary className="cursor-pointer dv-voltar">
+                  <summary className={`cursor-pointer ${linkDiscreto}`}>
                     {o.ativo ? "Inativar" : "Reativar"}
                   </summary>
                   <SituacaoDoObjetivo objetivo={o} />

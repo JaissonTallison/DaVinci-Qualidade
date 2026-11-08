@@ -11,6 +11,8 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeEpi } from "../formulario";
 import { SituacaoDoEpi } from "./situacao";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "EPI" };
 
 const AVISOS: Record<string, string> = {
@@ -37,18 +39,16 @@ export default async function DetalheDoEpi({
 
   return (
     <article>
-      <Link
-        href="/seguranca/epis"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/seguranca/epis", rotulo: "Catálogo de EPIs" }}
       >
-        Catálogo de EPIs
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">CA {e.ca}</span>
-        <span className="text-texto-2">{e.ativo ? "Ativo" : "Inativo"}</span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{e.nome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-base text-texto-2">CA {e.ca}</span>
+          <span className="text-texto-2">{e.ativo ? "Ativo" : "Inativo"}</span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{e.nome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
 
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
@@ -85,10 +85,10 @@ export default async function DetalheDoEpi({
       </section>
 
       {podeEditar && e.caVencido && e.ativo && (
-        <p className="mt-6 max-w-3xl rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto">
+        <CaixaDeAlerta tom="perigo" className="mt-6">
           CA vencido: nenhuma entrega deste EPI é aceita. Se chegou lote com CA
           novo, atualize o número e a validade abaixo.
-        </p>
+        </CaixaDeAlerta>
       )}
       {podeEditar && (
         <Bloco

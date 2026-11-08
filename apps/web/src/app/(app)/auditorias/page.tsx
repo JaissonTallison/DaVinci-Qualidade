@@ -33,6 +33,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -41,7 +42,14 @@ import {
 export const metadata: Metadata = { title: "Auditorias" };
 
 const BASE = "/auditorias";
-const FILTROS = ["busca", "status", "tipo", "ordenar", "ordem", "pagina"] as const;
+const FILTROS = [
+  "busca",
+  "status",
+  "tipo",
+  "ordenar",
+  "ordem",
+  "pagina",
+] as const;
 const NAO_FILTRAM = new Set(["ordenar", "ordem", "pagina"]);
 
 export default async function ListaDeAuditorias({
@@ -82,7 +90,11 @@ export default async function ListaDeAuditorias({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.status)
     chips.push({
       rotulo: "Status",
@@ -169,12 +181,12 @@ export default async function ListaDeAuditorias({
             valor={params.tipo}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="auditorias" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -189,7 +201,7 @@ export default async function ListaDeAuditorias({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<FileSearch aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<FileSearch aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma auditoria com esses filtros."
@@ -217,7 +229,7 @@ export default async function ListaDeAuditorias({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -233,7 +245,7 @@ export default async function ListaDeAuditorias({
                     >
                       Número
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Escopo</th>
+                    <th className="px-4 py-2.5 font-semibold">Escopo</th>
                     <th className="hidden px-4 py-2 font-semibold lg:table-cell">
                       Normas
                     </th>
@@ -256,7 +268,7 @@ export default async function ListaDeAuditorias({
                     >
                       Período
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">NCs</th>
+                    <th className="px-4 py-2.5 font-semibold">NCs</th>
                     <ThOrdenavel
                       campo="status"
                       ordenar={ordenar}
@@ -271,14 +283,14 @@ export default async function ListaDeAuditorias({
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {lista.dados.itens.map((a) => (
-                    <tr key={a.id} className="relative hover:bg-campo">
-                      <td className="relative z-10 px-3 py-2">
+                    <tr key={a.id} className="relative hover:bg-superficie-2">
+                      <td className="relative z-10 px-3 py-3">
                         <CaixaDeSelecao
                           id={a.id}
                           rotulo={`Selecionar a auditoria ${a.numero}`}
                         />
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <Link
                           href={`${BASE}/${a.id}`}
                           aria-label={`Abrir a auditoria ${a.numero}`}
@@ -287,19 +299,19 @@ export default async function ListaDeAuditorias({
                           {a.numero}
                         </Link>
                       </td>
-                      <td className="max-w-md px-4 py-2">
+                      <td className="max-w-md px-4 py-3">
                         <span className="line-clamp-2">{a.escopo}</span>
                         <span className="text-xs text-texto-3">
                           {TIPOS_AUDITORIA[a.tipo]}
                         </span>
                       </td>
-                      <td className="hidden px-4 py-2 text-sm text-texto-2 lg:table-cell">
+                      <td className="hidden px-4 py-3 text-sm text-texto-2 lg:table-cell">
                         {a.normas.map((n) => NORMAS[n]).join(", ")}
                       </td>
-                      <td className="hidden px-4 py-2 whitespace-nowrap text-texto-2 lg:table-cell">
+                      <td className="hidden px-4 py-3 whitespace-nowrap text-texto-2 lg:table-cell">
                         {a.auditorLider}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {a.dataInicio === a.dataFim
                           ? formatarData(a.dataInicio)
                           : `${formatarData(a.dataInicio)} a ${formatarData(a.dataFim)}`}
@@ -309,7 +321,7 @@ export default async function ListaDeAuditorias({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-sm">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm">
                         {a.constatacoesDeNc}
                         {a.ncsPendentes > 0 && (
                           <span className="block text-xs text-atencao">
@@ -317,10 +329,10 @@ export default async function ListaDeAuditorias({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <StatusDaAuditoria status={a.status} />
                       </td>
-                      <td className="relative z-10 px-2 py-2 text-right">
+                      <td className="relative z-10 px-2 py-3 text-right">
                         <AcoesDaLinha rotulo={`Ações da auditoria ${a.numero}`}>
                           <Link href={`${BASE}/${a.id}`} className={itemDeAcao}>
                             Abrir

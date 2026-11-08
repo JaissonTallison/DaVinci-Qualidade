@@ -20,7 +20,8 @@ const AVISOS: Record<string, string> = {
   "processo-ativado": "Processo reativado.",
   "causa_nc-criado": "Tipo de causa cadastrado.",
   "causa_nc-salvo": "Tipo de causa salvo.",
-  "causa_nc-inativado": "Tipo de causa inativado: sai da escolha nos registros.",
+  "causa_nc-inativado":
+    "Tipo de causa inativado: sai da escolha nos registros.",
   "causa_nc-ativado": "Tipo de causa reativado.",
 };
 
@@ -106,7 +107,7 @@ function Lista({
                       <summary className="h-8 cursor-pointer list-none content-center text-sm text-texto-2 hover:text-texto hover:underline">
                         Renomear
                       </summary>
-                      <div className="absolute right-0 z-10 mt-1 w-80 rounded-md border border-borda bg-superficie p-3 shadow-sm">
+                      <div className="absolute right-0 z-10 mt-1 w-80 rounded-md bg-superficie p-3 shadow-sm">
                         <FormularioDoItem lista={lista} item={item} />
                       </div>
                     </details>

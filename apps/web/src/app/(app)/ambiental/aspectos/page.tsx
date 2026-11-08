@@ -80,7 +80,7 @@ export default async function Aspectos({
             <option value="todos">Todos</option>
           </select>
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           {r.ok && (
@@ -106,15 +106,15 @@ export default async function Aspectos({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Atividade</th>
-                  <th className="px-4 py-2 font-semibold">Aspecto</th>
-                  <th className="px-4 py-2 font-semibold">Impacto</th>
-                  <th className="px-4 py-2 font-semibold">Situação</th>
-                  <th className="px-4 py-2 font-semibold">S × F</th>
-                  <th className="px-4 py-2 font-semibold">Significância</th>
-                  <th className="px-4 py-2 font-semibold">Prazo da ação</th>
+                  <th className="px-4 py-2.5 font-semibold">Atividade</th>
+                  <th className="px-4 py-2.5 font-semibold">Aspecto</th>
+                  <th className="px-4 py-2.5 font-semibold">Impacto</th>
+                  <th className="px-4 py-2.5 font-semibold">Situação</th>
+                  <th className="px-4 py-2.5 font-semibold">S × F</th>
+                  <th className="px-4 py-2.5 font-semibold">Significância</th>
+                  <th className="px-4 py-2.5 font-semibold">Prazo da ação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
@@ -123,7 +123,7 @@ export default async function Aspectos({
                     key={a.id}
                     className={` ${a.ativo ? "" : "text-texto-3"}`}
                   >
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`/ambiental/aspectos/${a.id}`}
                         className="text-info hover:underline"
@@ -131,20 +131,20 @@ export default async function Aspectos({
                         {a.atividade}
                       </Link>
                     </td>
-                    <td className="max-w-xs px-4 py-2">{a.aspecto}</td>
-                    <td className="max-w-xs px-4 py-2 text-texto-2">
+                    <td className="max-w-xs px-4 py-3">{a.aspecto}</td>
+                    <td className="max-w-xs px-4 py-3 text-texto-2">
                       {a.impacto}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {SITUACOES_OPERACIONAIS[a.situacao]}
                     </td>
-                    <td className="px-4 py-2 tabular-nums whitespace-nowrap">
+                    <td className="px-4 py-3 tabular-nums whitespace-nowrap">
                       {a.severidade} × {a.frequencia}
                       {a.requisitoLegal && (
                         <span className="text-texto-2"> · legal</span>
                       )}
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <SignificanciaDoAspecto
                         significancia={a.significancia}
                         significativo={a.significativo}

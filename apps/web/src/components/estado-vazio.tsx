@@ -16,13 +16,13 @@ export function EstadoVazio({
   acao?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-3 px-4 py-14 text-center">
-      {icone && <div className="text-texto-3">{icone}</div>}
-      <p className="text-base font-medium text-texto">{titulo}</p>
+    <div className="flex flex-col items-center gap-1 px-6 py-10 text-center">
+      {icone && <div className="mb-2 text-texto-3">{icone}</div>}
+      <p className="text-base font-semibold text-texto">{titulo}</p>
       {descricao && (
-        <p className="max-w-md text-sm text-texto-2">{descricao}</p>
+        <p className="max-w-sm text-sm text-texto-2">{descricao}</p>
       )}
-      {acao && <div className="mt-1">{acao}</div>}
+      {acao && <div className="mt-3">{acao}</div>}
     </div>
   );
 }

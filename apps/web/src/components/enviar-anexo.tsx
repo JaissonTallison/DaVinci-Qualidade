@@ -46,7 +46,7 @@ export function EnviarAnexo({
           className={`${campoCompacto} min-w-0 flex-1`}
         />
         <button type="submit" className={botaoSecundario} disabled={enviando}>
-          <Paperclip aria-hidden size={16} strokeWidth={2} />
+          <Paperclip aria-hidden size={16} strokeWidth={1.75} />
           {enviando ? "Enviando…" : "Anexar"}
         </button>
       </div>

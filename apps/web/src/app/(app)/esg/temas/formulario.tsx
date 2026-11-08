@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   NOTA_MATERIAL,
@@ -11,14 +12,15 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { IconeOds, Materialidade } from "@/components/marcadores-esg";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import {
   areaDeTexto,
   botaoPrimario,
+  botaoSecundario,
   campo,
-  painel,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
@@ -84,163 +86,215 @@ export function FormularioDeTema({
     </Campo>
   );
   return (
-    <form action={enviar} noValidate className={tema ? "" : `${painel} mt-6`}>
+    <form action={enviar} noValidate className={tema ? "" : "mt-6"}>
       {tema && <input type="hidden" name="versao" value={tema.versao} />}
-      <div className={`grid gap-5 sm:grid-cols-3 ${tema ? "" : "p-5"}`}>
-        {estado.erro && !estado.erro.detalhes?.length && (
-          <div className="sm:col-span-3">
-            <AvisoDeErro erro={estado.erro} />
-          </div>
-        )}
-        <Campo
-          id="nome"
-          rotulo="Tema"
-          erro={erros.nome}
-          className="sm:col-span-2"
-        >
-          <input
-            id="nome"
-            name="nome"
-            maxLength={150}
-            defaultValue={v.nome}
-            className={campo}
-            aria-invalid={Boolean(erros.nome)}
-          />
-        </Campo>
-        <Campo id="pilar" rotulo="Pilar" erro={erros.pilar}>
-          <Selecao
-            id="pilar"
-            name="pilar"
-            defaultValue={v.pilar}
-            className={campo}
-            aria-invalid={Boolean(erros.pilar)}
-          >
-            <option value="">Escolha</option>
-            {Object.entries(PILARES).map(([k, n]) => (
-              <option key={k} value={k}>
-                {n}
-              </option>
-            ))}
-          </Selecao>
-        </Campo>
-        <Campo
-          id="descricao"
-          rotulo="Descrição (opcional)"
-          erro={erros.descricao}
-          className="sm:col-span-3"
-        >
-          <textarea
-            id="descricao"
-            name="descricao"
-            rows={2}
-            maxLength={500}
-            defaultValue={v.descricao}
-            className={areaDeTexto}
-          />
-        </Campo>
-        {nota15(
-          "impacto",
-          "Impacto",
-          "Quanto a empresa afeta pessoas e ambiente neste tema.",
-          setImpacto,
-        )}
-        {nota15(
-          "relevancia",
-          "Relevância",
-          "Quanto o tema pesa no negócio e para as partes interessadas.",
-          setRelevancia,
-        )}
-        <div
-          className="flex items-end pb-2.5 text-sm text-texto-2"
-          aria-live="polite"
-        >
-          {nota === null ? (
-            "Avalie os dois para ver a materialidade."
-          ) : (
-            <span className="inline-flex flex-wrap items-center gap-1.5">
-              Materialidade:{" "}
-              <Materialidade nivel={nivelDeMaterialidade(nota)} nota={nota} />
-              {material && <span>· material, pede meta</span>}
-            </span>
-          )}
-        </div>
-        <Campo
-          id="responsavel"
-          rotulo={material ? "Responsável" : "Responsável (opcional)"}
-          erro={erros.responsavel}
-        >
-          <input
-            id="responsavel"
-            name="responsavel"
-            list="pessoas"
-            maxLength={120}
-            defaultValue={v.responsavel}
-            className={campo}
-            aria-invalid={Boolean(erros.responsavel)}
-          />
-        </Campo>
-        <Campo
-          id="meta"
-          rotulo={material ? "Meta" : "Meta (opcional)"}
-          erro={erros.meta}
-          ajuda="O que, quanto e até quando. Ex.: reduzir 10% do consumo de energia por peça."
-          className="sm:col-span-2"
-        >
-          <input
-            id="meta"
-            name="meta"
-            maxLength={300}
-            defaultValue={v.meta}
-            className={campo}
-            aria-invalid={Boolean(erros.meta)}
-          />
-        </Campo>
-        <Campo
-          id="prazoMeta"
-          rotulo={material ? "Prazo da meta" : "Prazo da meta (opcional)"}
-          erro={erros.prazoMeta}
-        >
-          <input
-            id="prazoMeta"
-            name="prazoMeta"
-            type="date"
-            defaultValue={v.prazoMeta}
-            className={campo}
-            aria-invalid={Boolean(erros.prazoMeta)}
-          />
-        </Campo>
-        <fieldset className="sm:col-span-3">
-          <legend className="text-sm font-semibold text-texto-2">
-            ODS a que o tema contribui
-          </legend>
-          <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {NUMEROS_ODS.map((n) => (
-              <label key={n} className="inline-flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  name="ods"
-                  value={n}
-                  defaultChecked={marcados.has(String(n))}
-                  className="size-4 accent-primaria"
-                />
-                <IconeOds numero={n} />
-                {ODS[n]}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      </div>
-      <div
-        className={`flex gap-3 ${tema ? "mt-5" : "justify-end border-t border-borda px-5 py-3"}`}
+      <CadastroEmBlocos
+        embutido={Boolean(tema)}
+        acoesEmbutido={
+          <>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : tema
+                  ? "Salvar alterações"
+                  : "Cadastrar tema"}
+            </button>
+          </>
+        }
+        resumo={[
+          { rotulo: "Pilar", campo: "pilar" },
+          { rotulo: "Responsável", campo: "responsavel" },
+          { rotulo: "Prazo da meta", campo: "prazoMeta" },
+        ]}
+        acoes={
+          <>
+            <Link href="/esg/temas" className={botaoSecundario}>
+              Cancelar
+            </Link>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : tema
+                  ? "Salvar alterações"
+                  : "Cadastrar tema"}
+            </button>
+          </>
+        }
       >
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando
-            ? "Salvando…"
-            : tema
-              ? "Salvar alterações"
-              : "Cadastrar tema"}
-        </button>
-      </div>
+        <Bloco id="tema" titulo="Tema" descricao="Nome, pilar e descrição.">
+          <div className="grid gap-5 sm:grid-cols-3">
+            {estado.erro && !estado.erro.detalhes?.length && (
+              <div className="sm:col-span-3">
+                <AvisoDeErro erro={estado.erro} />
+              </div>
+            )}
+            <Campo
+              id="nome"
+              rotulo="Tema"
+              erro={erros.nome}
+              className="sm:col-span-2"
+            >
+              <input
+                id="nome"
+                required
+                name="nome"
+                maxLength={150}
+                defaultValue={v.nome}
+                className={campo}
+                aria-invalid={Boolean(erros.nome)}
+              />
+            </Campo>
+            <Campo id="pilar" rotulo="Pilar" erro={erros.pilar}>
+              <Selecao
+                id="pilar"
+                required
+                name="pilar"
+                defaultValue={v.pilar}
+                className={campo}
+                aria-invalid={Boolean(erros.pilar)}
+              >
+                <option value="">Escolha</option>
+                {Object.entries(PILARES).map(([k, n]) => (
+                  <option key={k} value={k}>
+                    {n}
+                  </option>
+                ))}
+              </Selecao>
+            </Campo>
+            <Campo
+              id="descricao"
+              rotulo="Descrição (opcional)"
+              erro={erros.descricao}
+              className="sm:col-span-3"
+            >
+              <textarea
+                id="descricao"
+                name="descricao"
+                rows={2}
+                maxLength={500}
+                defaultValue={v.descricao}
+                className={areaDeTexto}
+              />
+            </Campo>
+          </div>
+        </Bloco>
+        <Bloco
+          id="materialidade"
+          titulo="Materialidade"
+          descricao="Impacto e relevância definem se o tema é material."
+        >
+          <div className="grid gap-5 sm:grid-cols-3">
+            {nota15(
+              "impacto",
+              "Impacto",
+              "Quanto a empresa afeta pessoas e ambiente neste tema.",
+              setImpacto,
+            )}
+            {nota15(
+              "relevancia",
+              "Relevância",
+              "Quanto o tema pesa no negócio e para as partes interessadas.",
+              setRelevancia,
+            )}
+            <div
+              className="flex items-end pb-2.5 text-sm text-texto-2"
+              aria-live="polite"
+            >
+              {nota === null ? (
+                "Avalie os dois para ver a materialidade."
+              ) : (
+                <span className="inline-flex flex-wrap items-center gap-1.5">
+                  Materialidade:{" "}
+                  <Materialidade
+                    nivel={nivelDeMaterialidade(nota)}
+                    nota={nota}
+                  />
+                  {material && <span>· material, pede meta</span>}
+                </span>
+              )}
+            </div>
+          </div>
+        </Bloco>
+        <Bloco
+          id="meta"
+          titulo="Meta"
+          descricao="Responsável, meta e prazo; obrigatórios quando o tema é material."
+        >
+          <div className="grid gap-5 sm:grid-cols-3">
+            <Campo
+              id="responsavel"
+              rotulo={material ? "Responsável" : "Responsável (opcional)"}
+              erro={erros.responsavel}
+            >
+              <input
+                id="responsavel"
+                required={material}
+                name="responsavel"
+                list="pessoas"
+                maxLength={120}
+                defaultValue={v.responsavel}
+                className={campo}
+                aria-invalid={Boolean(erros.responsavel)}
+              />
+            </Campo>
+            <Campo
+              id="meta"
+              rotulo={material ? "Meta" : "Meta (opcional)"}
+              erro={erros.meta}
+              ajuda="O que, quanto e até quando. Ex.: reduzir 10% do consumo de energia por peça."
+              className="sm:col-span-2"
+            >
+              <input
+                id="meta"
+                required={material}
+                name="meta"
+                maxLength={300}
+                defaultValue={v.meta}
+                className={campo}
+                aria-invalid={Boolean(erros.meta)}
+              />
+            </Campo>
+            <Campo
+              id="prazoMeta"
+              rotulo={material ? "Prazo da meta" : "Prazo da meta (opcional)"}
+              erro={erros.prazoMeta}
+            >
+              <input
+                id="prazoMeta"
+                required={material}
+                name="prazoMeta"
+                type="date"
+                defaultValue={v.prazoMeta}
+                className={campo}
+                aria-invalid={Boolean(erros.prazoMeta)}
+              />
+            </Campo>
+            <fieldset className="sm:col-span-3">
+              <legend className="text-base font-medium text-texto">
+                ODS a que o tema contribui
+              </legend>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {NUMEROS_ODS.map((n) => (
+                  <label
+                    key={n}
+                    className="inline-flex items-center gap-2 text-sm"
+                  >
+                    <input
+                      type="checkbox"
+                      name="ods"
+                      value={n}
+                      defaultChecked={marcados.has(String(n))}
+                      className="size-4 accent-primaria"
+                    />
+                    <IconeOds numero={n} />
+                    {ODS[n]}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+        </Bloco>
+      </CadastroEmBlocos>
     </form>
   );
 }

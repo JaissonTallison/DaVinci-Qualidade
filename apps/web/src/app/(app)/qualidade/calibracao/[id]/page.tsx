@@ -14,9 +14,10 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
 import {
   botaoPrimario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { formatarReais } from "@/lib/valores";
 import { FormularioDeInstrumento } from "../formulario";
@@ -27,6 +28,8 @@ import {
 } from "./acoes";
 import { Anexos } from "@/components/anexos";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Instrumento" };
 
 const AVISOS: Record<string, string> = {
@@ -62,94 +65,99 @@ export default async function DetalheDoInstrumento({
 
   return (
     <article>
-      <Link
-        href="/qualidade/calibracao"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/qualidade/calibracao", rotulo: "Calibração" }}
       >
-        Calibração
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{i.tag}</span>
-        <SituacaoDoInstrumento
-          situacao={i.situacao}
-          desde={i.proximaCalibracao}
-        />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{i.descricao}</h1>
-      {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
-          {AVISOS[aviso]}
-        </p>
-      )}
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-base text-texto-2">{i.tag}</span>
+          <SituacaoDoInstrumento
+            situacao={i.situacao}
+            desde={i.proximaCalibracao}
+          />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{i.descricao}</h1>
+        {aviso && AVISOS[aviso] && (
+          <CaixaDeAlerta tom="sucesso" className="mt-4">
+            {AVISOS[aviso]}
+          </CaixaDeAlerta>
+        )}
+      </CabecalhoComVoltar>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Situação da calibração</h2>
-        <dl className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-3">
-          <Dado rotulo="Última calibração">
-            {i.ultimaCalibracao ? formatarData(i.ultimaCalibracao) : "Nenhuma"}
-          </Dado>
-          <Dado rotulo="Próxima calibração">
-            {i.proximaCalibracao ? formatarData(i.proximaCalibracao) : "—"}
-            {i.proximaCalibracao && i.emUso && i.situacao !== "reprovado" && (
-              <span
-                className={`ml-1 text-sm ${
-                  i.situacao === "vencido"
-                    ? "text-nao-conforme"
-                    : i.situacao === "vence_em_breve"
-                      ? "text-atencao"
-                      : "text-texto-2"
-                }`}
-              >
-                · {prazoRelativo(i.proximaCalibracao)}
-              </span>
-            )}
-          </Dado>
-          <Dado rotulo="Frequência">
-            a cada {i.frequenciaMeses}{" "}
-            {i.frequenciaMeses === 1 ? "mês" : "meses"}
-          </Dado>
-        </dl>
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Situação da calibração</h2>
+        </header>
+        <div className="p-5">
+          <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
+            <Dado rotulo="Última calibração">
+              {i.ultimaCalibracao
+                ? formatarData(i.ultimaCalibracao)
+                : "Nenhuma"}
+            </Dado>
+            <Dado rotulo="Próxima calibração">
+              {i.proximaCalibracao ? formatarData(i.proximaCalibracao) : "—"}
+              {i.proximaCalibracao && i.emUso && i.situacao !== "reprovado" && (
+                <span
+                  className={`ml-1 text-sm ${
+                    i.situacao === "vencido"
+                      ? "text-nao-conforme"
+                      : i.situacao === "vence_em_breve"
+                        ? "text-atencao"
+                        : "text-texto-2"
+                  }`}
+                >
+                  · {prazoRelativo(i.proximaCalibracao)}
+                </span>
+              )}
+            </Dado>
+            <Dado rotulo="Frequência">
+              a cada {i.frequenciaMeses}{" "}
+              {i.frequenciaMeses === 1 ? "mês" : "meses"}
+            </Dado>
+          </dl>
+        </div>
       </section>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Dados do instrumento</h2>
-        <dl className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
-          {i.grandeza && (
-            <Dado rotulo="Grandeza">{GRANDEZAS_DE_MEDICAO[i.grandeza]}</Dado>
-          )}
-          {i.unidade && <Dado rotulo="Unidade">{i.unidade}</Dado>}
-          {i.faixa && <Dado rotulo="Faixa">{i.faixa}</Dado>}
-          {i.criterioAceitacao && (
-            <Dado rotulo="Critério de aceitação">{i.criterioAceitacao}</Dado>
-          )}
-          {i.erroMaximoAdmissivel && (
-            <Dado rotulo="Erro máximo admissível (EMA)">
-              {i.erroMaximoAdmissivel}
-            </Dado>
-          )}
-          {i.incerteza && <Dado rotulo="Incerteza">{i.incerteza}</Dado>}
-          {i.classeExatidao && (
-            <Dado rotulo="Classe de exatidão">{i.classeExatidao}</Dado>
-          )}
-          {i.normaReferencia && (
-            <Dado rotulo="Norma de referência">{i.normaReferencia}</Dado>
-          )}
-          {(i.fabricante || i.modelo) && (
-            <Dado rotulo="Fabricante e modelo">
-              {[i.fabricante, i.modelo].filter(Boolean).join(" · ")}
-            </Dado>
-          )}
-          {i.numeroSerie && (
-            <Dado rotulo="Número de série">
-              <span className="font-mono">{i.numeroSerie}</span>
-            </Dado>
-          )}
-          {i.local && <Dado rotulo="Local">{i.local}</Dado>}
-          {i.responsavel && <Dado rotulo="Responsável">{i.responsavel}</Dado>}
-        </dl>
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Dados do instrumento</h2>
+        </header>
+        <div className="p-5">
+          <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
+            {i.grandeza && (
+              <Dado rotulo="Grandeza">{GRANDEZAS_DE_MEDICAO[i.grandeza]}</Dado>
+            )}
+            {i.unidade && <Dado rotulo="Unidade">{i.unidade}</Dado>}
+            {i.faixa && <Dado rotulo="Faixa">{i.faixa}</Dado>}
+            {i.criterioAceitacao && (
+              <Dado rotulo="Critério de aceitação">{i.criterioAceitacao}</Dado>
+            )}
+            {i.erroMaximoAdmissivel && (
+              <Dado rotulo="Erro máximo admissível (EMA)">
+                {i.erroMaximoAdmissivel}
+              </Dado>
+            )}
+            {i.incerteza && <Dado rotulo="Incerteza">{i.incerteza}</Dado>}
+            {i.classeExatidao && (
+              <Dado rotulo="Classe de exatidão">{i.classeExatidao}</Dado>
+            )}
+            {i.normaReferencia && (
+              <Dado rotulo="Norma de referência">{i.normaReferencia}</Dado>
+            )}
+            {(i.fabricante || i.modelo) && (
+              <Dado rotulo="Fabricante e modelo">
+                {[i.fabricante, i.modelo].filter(Boolean).join(" · ")}
+              </Dado>
+            )}
+            {i.numeroSerie && (
+              <Dado rotulo="Número de série">
+                <span className="font-mono">{i.numeroSerie}</span>
+              </Dado>
+            )}
+            {i.local && <Dado rotulo="Local">{i.local}</Dado>}
+            {i.responsavel && <Dado rotulo="Responsável">{i.responsavel}</Dado>}
+          </dl>
+        </div>
       </section>
 
       {i.situacao === "reprovado" && podeEditar && (
@@ -172,9 +180,9 @@ export default async function DetalheDoInstrumento({
       {i.emUso && podeEditar && <RegistrarCalibracao instrumento={i} />}
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>
-          Histórico de calibrações
-        </h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Histórico de calibrações</h2>
+        </header>
         {i.calibracoes.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             Nenhuma calibração registrada.
@@ -182,14 +190,14 @@ export default async function DetalheDoInstrumento({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Data</th>
-                  <th className="px-4 py-2 font-semibold">Laboratório</th>
-                  <th className="px-4 py-2 font-semibold">Certificado</th>
-                  <th className="px-4 py-2 font-semibold">Resultado</th>
-                  <th className="px-4 py-2 font-semibold">Erro encontrado</th>
-                  <th className="px-4 py-2 font-semibold">Custo</th>
+                  <th className="px-5 py-2.5 font-semibold">Data</th>
+                  <th className="px-4 py-2.5 font-semibold">Laboratório</th>
+                  <th className="px-4 py-2.5 font-semibold">Certificado</th>
+                  <th className="px-4 py-2.5 font-semibold">Resultado</th>
+                  <th className="px-4 py-2.5 font-semibold">Erro encontrado</th>
+                  <th className="px-4 py-2.5 font-semibold">Custo</th>
                   {gestor && (
                     <th className="sticky right-0 bg-superficie-2 px-4 py-2">
                       <span className="sr-only">Ações</span>
@@ -200,7 +208,7 @@ export default async function DetalheDoInstrumento({
               <tbody className="divide-y divide-borda">
                 {i.calibracoes.map((c) => (
                   <tr key={c.id} className={c.anulada ? "text-texto-3" : ""}>
-                    <td className="px-5 py-2.5 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className={c.anulada ? "line-through" : ""}>
                         {formatarData(c.data)}
                       </span>
@@ -210,8 +218,8 @@ export default async function DetalheDoInstrumento({
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5">{c.laboratorio}</td>
-                    <td className="px-4 py-2.5 font-mono text-sm">
+                    <td className="px-4 py-3">{c.laboratorio}</td>
+                    <td className="px-4 py-3 font-mono text-sm">
                       {c.certificado}
                     </td>
                     <td
@@ -219,14 +227,14 @@ export default async function DetalheDoInstrumento({
                     >
                       {c.aprovada ? "Aprovada" : "Reprovada"}
                     </td>
-                    <td className="px-4 py-2.5 text-texto-2">
+                    <td className="px-4 py-3 text-texto-2">
                       {c.erroEncontrado}
                     </td>
-                    <td className="px-4 py-2.5 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {formatarReais(c.custo)}
                     </td>
                     {gestor && (
-                      <td className="sticky right-0 bg-superficie px-4 py-2.5 text-right">
+                      <td className="sticky right-0 bg-superficie px-4 py-3 text-right">
                         {!c.anulada && (
                           <AnularCalibracao
                             instrumento={i}
@@ -246,9 +254,9 @@ export default async function DetalheDoInstrumento({
       {podeEditar && (
         <Recolhido titulo="Editar dados do instrumento">
           <p className="mb-4 max-w-2xl text-base text-texto-2">
-            Altere a identificação, as características de medição, a localização e
-            a frequência. As calibrações não se editam aqui — são registradas no
-            histórico. Ao salvar, a situação é recalculada e aparece em
+            Altere a identificação, as características de medição, a localização
+            e a frequência. As calibrações não se editam aqui — são registradas
+            no histórico. Ao salvar, a situação é recalculada e aparece em
             “Situação da calibração”, no topo.
           </p>
           <FormularioDeInstrumento instrumento={i} embutido />

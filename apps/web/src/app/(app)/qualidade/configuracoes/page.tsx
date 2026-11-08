@@ -64,7 +64,7 @@ export default async function ConfiguracoesDaQualidade() {
                 <ChevronRight
                   aria-hidden
                   size={18}
-                  strokeWidth={2}
+                  strokeWidth={1.75}
                   className="text-texto-3"
                 />
               </Link>

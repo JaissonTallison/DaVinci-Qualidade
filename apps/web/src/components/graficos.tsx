@@ -653,7 +653,7 @@ export function Linha({
                 .join(" ")}
               fill="none"
               stroke={cor}
-              strokeWidth={2.5}
+              strokeWidth={1.75}
               strokeLinejoin="round"
               strokeLinecap="round"
               pathLength={1}
@@ -704,7 +704,7 @@ export function Linha({
                   r={foco?.i === i ? 5 : 4}
                   fill={cor}
                   stroke="var(--color-superficie)"
-                  strokeWidth={2}
+                  strokeWidth={1.75}
                   className="dv-entrar"
                   style={{ "--atraso": `${300 + i * 40}ms` } as CSSProperties}
                 />

@@ -40,6 +40,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -91,11 +92,16 @@ export default async function ListaDeNcs({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.status)
     chips.push({
       rotulo: "Status",
-      valor: STATUS_NC[params.status as keyof typeof STATUS_NC] ?? params.status,
+      valor:
+        STATUS_NC[params.status as keyof typeof STATUS_NC] ?? params.status,
       href: semFiltro("status"),
     });
   if (params.gravidade)
@@ -109,11 +115,16 @@ export default async function ListaDeNcs({
   if (params.origem)
     chips.push({
       rotulo: "Origem",
-      valor: ORIGENS_NC[params.origem as keyof typeof ORIGENS_NC] ?? params.origem,
+      valor:
+        ORIGENS_NC[params.origem as keyof typeof ORIGENS_NC] ?? params.origem,
       href: semFiltro("origem"),
     });
   if (params.vencidas === "true")
-    chips.push({ rotulo: "Prazo", valor: "Só vencidas", href: semFiltro("vencidas") });
+    chips.push({
+      rotulo: "Prazo",
+      valor: "Só vencidas",
+      href: semFiltro("vencidas"),
+    });
 
   return (
     <>
@@ -196,12 +207,12 @@ export default async function ListaDeNcs({
             Só vencidas
           </label>
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="nao-conformidades" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -216,7 +227,7 @@ export default async function ListaDeNcs({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<ClipboardList aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<ClipboardList aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma NC com esses filtros."
@@ -244,7 +255,7 @@ export default async function ListaDeNcs({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -279,8 +290,8 @@ export default async function ListaDeNcs({
                     >
                       Origem
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Gravidade</th>
-                    <th className="px-4 py-2 font-semibold sm:hidden lg:table-cell">
+                    <th className="px-4 py-2.5 font-semibold">Gravidade</th>
+                    <th className="px-4 py-2.5 font-semibold sm:hidden lg:table-cell">
                       Responsável
                     </th>
                     <ThOrdenavel
@@ -310,14 +321,17 @@ export default async function ListaDeNcs({
                     const terminada =
                       nc.status === "encerrada" || nc.status === "cancelada";
                     return (
-                      <tr key={nc.id} className="relative hover:bg-campo">
-                        <td className="relative z-10 px-3 py-2">
+                      <tr
+                        key={nc.id}
+                        className="relative hover:bg-superficie-2"
+                      >
+                        <td className="relative z-10 px-3 py-3">
                           <CaixaDeSelecao
                             id={nc.id}
                             rotulo={`Selecionar a NC ${nc.numero}`}
                           />
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <Link
                             href={`${BASE}/${nc.id}`}
                             aria-label={`Abrir a NC ${nc.numero}`}
@@ -326,7 +340,7 @@ export default async function ListaDeNcs({
                             {nc.numero}
                           </Link>
                         </td>
-                        <td className="max-w-md px-4 py-2">
+                        <td className="max-w-md px-4 py-3">
                           <span className="line-clamp-2">{nc.titulo}</span>
                           {nc.ciclos >= 2 && (
                             <span className="text-xs text-atencao">
@@ -334,16 +348,16 @@ export default async function ListaDeNcs({
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {ORIGENS_NC[nc.origem]}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-3">
                           <GravidadeDaNc gravidade={nc.gravidade} />
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {nc.responsavel}
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           {formatarData(nc.prazo)}
                           {!terminada && (
                             <span
@@ -359,16 +373,19 @@ export default async function ListaDeNcs({
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2 [&_span]:whitespace-normal">
+                        <td className="px-4 py-3 [&_span]:whitespace-normal">
                           <StatusDaNc
                             status={nc.status}
                             vencida={nc.vencida}
                             prazo={nc.prazo}
                           />
                         </td>
-                        <td className="relative z-10 px-2 py-2 text-right">
+                        <td className="relative z-10 px-2 py-3 text-right">
                           <AcoesDaLinha rotulo={`Ações da NC ${nc.numero}`}>
-                            <Link href={`${BASE}/${nc.id}`} className={itemDeAcao}>
+                            <Link
+                              href={`${BASE}/${nc.id}`}
+                              className={itemDeAcao}
+                            >
                               Abrir
                             </Link>
                             <a

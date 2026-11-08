@@ -21,9 +21,9 @@ import { errosPorCampo } from "@/lib/formularios";
 
 /** Cor de cada resposta quando marcada: a mesma dos status (interface.md §5.3). */
 const MARCADA: Record<RespostaItem, string> = {
-  ok: "has-checked:border-conforme has-checked:bg-conforme/10 has-checked:text-conforme",
-  nok: "has-checked:border-nao-conforme has-checked:bg-nao-conforme/10 has-checked:text-nao-conforme",
-  na: "has-checked:border-neutro has-checked:bg-neutro/10 has-checked:text-texto",
+  ok: "has-checked:border-conforme-borda has-checked:bg-conforme-suave has-checked:text-conforme-texto",
+  nok: "has-checked:border-nao-conforme-borda has-checked:bg-nao-conforme-suave has-checked:text-nao-conforme-texto",
+  na: "has-checked:border-borda-forte has-checked:bg-superficie-2 has-checked:text-texto",
 };
 
 /**
@@ -71,10 +71,7 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
         <p className="text-sm text-texto-2">
           {respondidos} de {inspecao.itens.length} respondidos
           {pendentes > 0 && (
-            <span className="text-atencao">
-              {" "}
-              · faltam {pendentes}
-            </span>
+            <span className="text-atencao"> · faltam {pendentes}</span>
           )}
           {nok > 0 && !inspecao.plano && (
             <span className="text-nao-conforme">
@@ -119,7 +116,7 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
                     (r, i) => (
                       <label
                         key={r}
-                        className={`cursor-pointer border border-borda-forte px-3.5 py-1.5 text-sm font-semibold text-texto-2 select-none hover:bg-superficie-2 has-focus-visible:outline-2 has-focus-visible:outline-info ${i === 0 ? "rounded-l-sm" : "-ml-px"} ${i === 2 ? "rounded-r-sm" : ""} ${MARCADA[r]}`}
+                        className={`cursor-pointer border border-borda-forte px-3.5 py-1.5 text-sm font-semibold text-texto-2 select-none hover:bg-superficie-2 has-focus-visible:outline-2 has-focus-visible:outline-foco ${i === 0 ? "rounded-l-sm" : "-ml-px"} ${i === 2 ? "rounded-r-sm" : ""} ${MARCADA[r]}`}
                       >
                         <input
                           type="radio"
@@ -174,7 +171,7 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
       <div className="border-t border-borda px-5 py-4">
         <label
           htmlFor="observacoes"
-          className="text-sm font-semibold text-texto-2"
+          className="text-base font-medium text-texto"
         >
           Observações gerais
         </label>

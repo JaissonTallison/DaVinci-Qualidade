@@ -130,7 +130,7 @@ export function NovaOcorrencia({ hoje }: { hoje: string }) {
             </div>
           </div>
           <fieldset>
-            <legend className="text-sm font-semibold text-texto-2">
+            <legend className="text-base font-medium text-texto">
               O que foi atingido
             </legend>
             <div className="mt-1.5 flex flex-wrap gap-5 text-base">

@@ -1,6 +1,5 @@
 import { Alerta } from "@/components/alerta";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -16,11 +15,17 @@ import { Linha } from "@/components/graficos";
 import { atualizarMonitoramento } from "@/lib/acoes-ambiental";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { FormularioDeMonitoramento } from "../formulario";
 import { textoDoLimite } from "../limites";
 import { RegistrarResultado, SituacaoDoMonitoramento } from "./acoes";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Monitoramento" };
 const AVISOS: Record<string, string> = {
   criado: "Monitoramento cadastrado. Registre a primeira coleta.",
@@ -51,20 +56,18 @@ export default async function DetalheDoMonitoramento({
   const serie = [...resultados].reverse().slice(-12);
   return (
     <article>
-      <Link
-        href="/ambiental/monitoramentos"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/ambiental/monitoramentos", rotulo: "Monitoramentos" }}
       >
-        Monitoramentos
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="text-texto-2">{TIPOS_MONITORAMENTO[m.tipo]}</span>
-        {!m.ativo && <span className="text-texto-2">Inativo</span>}
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {m.parametro} · {m.ponto}
-      </h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="text-texto-2">{TIPOS_MONITORAMENTO[m.tipo]}</span>
+          {!m.ativo && <span className="text-texto-2">Inativo</span>}
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {m.parametro} · {m.ponto}
+        </h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Limite">{textoDoLimite(m)}</Dado>
@@ -85,7 +88,9 @@ export default async function DetalheDoMonitoramento({
       </section>
       {podeEditar && m.ativo && <RegistrarResultado monitoramento={m} />}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Resultados</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Resultados</h2>
+        </header>
         {resultados.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             Nenhuma coleta registrada.
@@ -109,26 +114,26 @@ export default async function DetalheDoMonitoramento({
             )}
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
-                    <th className="px-5 py-2 font-semibold">Data</th>
-                    <th className="px-4 py-2 text-right font-semibold">
+                    <th className="px-5 py-2.5 font-semibold">Data</th>
+                    <th className="px-4 py-2.5 text-right font-semibold">
                       Resultado
                     </th>
-                    <th className="px-4 py-2 font-semibold">Situação</th>
-                    <th className="px-4 py-2 font-semibold">Laudo</th>
+                    <th className="px-4 py-2.5 font-semibold">Situação</th>
+                    <th className="px-4 py-2.5 font-semibold">Laudo</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {resultados.map((x) => (
                     <tr key={x.id}>
-                      <td className="px-5 py-2.5 whitespace-nowrap">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         {formatarData(x.data)}
                       </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                      <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                         {x.valor.toLocaleString("pt-BR")} {m.unidade}
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-3">
                         {x.conforme ? (
                           <span className="inline-flex items-center gap-1.5 text-texto">
                             Dentro do limite
@@ -137,7 +142,7 @@ export default async function DetalheDoMonitoramento({
                           <Alerta texto="Fora do limite" />
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-texto-2">
+                      <td className="px-4 py-3 text-texto-2">
                         {x.laudo ?? "—"}
                       </td>
                     </tr>

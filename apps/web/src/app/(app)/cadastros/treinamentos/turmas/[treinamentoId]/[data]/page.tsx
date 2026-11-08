@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { DadosDoUsuario, Turma } from "@davinci/types";
+import { BotaoVoltar } from "@/components/pagina-de-cadastro";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { BotaoImprimir } from "@/components/botao-imprimir";
 import { FolhaDeDocumento } from "@/components/folha-de-documento";
@@ -35,9 +36,10 @@ export default async function TurmaImpressa({
         <style>{"@page { size: A4 portrait; margin: 14mm; }"}</style>
         <div className="mx-auto w-full max-w-4xl px-4 py-6 print:max-w-none print:p-0">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3 print:hidden">
-            <Link href="/cadastros/treinamentos/turmas" className="dv-voltar">
-              Turmas
-            </Link>
+            <BotaoVoltar
+              href="/cadastros/treinamentos/turmas"
+              rotulo="Turmas"
+            />
             <div className="flex items-center gap-2">
               <Link href="?" className="text-sm text-info hover:underline">
                 Ver lista de presença
@@ -106,7 +108,10 @@ export default async function TurmaImpressa({
       voltarHref="/cadastros/treinamentos/turmas"
       voltarRotulo="Turmas"
       acoes={
-        <Link href="?certificados=1" className="text-sm text-info hover:underline">
+        <Link
+          href="?certificados=1"
+          className="text-sm text-info hover:underline"
+        >
           Ver certificados
         </Link>
       }

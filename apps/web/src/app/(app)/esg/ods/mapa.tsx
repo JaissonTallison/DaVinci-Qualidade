@@ -314,7 +314,7 @@ export function MapaDosOds({ temas }: { temas: TemaEsg[] }) {
               height={m.h}
               fill="none"
               stroke="var(--color-menu)"
-              strokeWidth={2}
+              strokeWidth={1.75}
             />
           ))}
           {SETAS.map((s) => (
@@ -370,7 +370,7 @@ export function MapaDosOds({ temas }: { temas: TemaEsg[] }) {
                   height={c.h}
                   fill="var(--color-superficie)"
                   stroke="var(--color-borda-forte)"
-                  strokeWidth={2}
+                  strokeWidth={1.75}
                   className="group-hover:fill-[var(--color-superficie-2)]"
                 />
                 <text

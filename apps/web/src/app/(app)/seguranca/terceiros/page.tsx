@@ -20,6 +20,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -72,7 +73,11 @@ export default async function Terceiros({
       href: semFiltro("situacao"),
     });
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
 
   const chave = (t: TerceiroResumo): string => {
     switch (ordenar) {
@@ -135,12 +140,12 @@ export default async function Terceiros({
             valor={params.ordenar}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="terceiros" consulta={consulta} />
           {(filtrando || ordenar) && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -155,7 +160,7 @@ export default async function Terceiros({
           </div>
         ) : itens.length === 0 ? (
           <EstadoVazio
-            icone={<Building2 aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<Building2 aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma empresa terceirizada com esses filtros."

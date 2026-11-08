@@ -21,9 +21,10 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { FormularioDeAcidente } from "../formulario";
 import {
@@ -37,6 +38,8 @@ import { ArvoreDeCausas } from "./arvore";
 import { InvestigacaoEstruturada } from "./investigacao";
 import { LinhaDoTempoDoAcidente } from "./linha-do-tempo";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Acidente" };
 
 const AVISOS: Record<string, string> = {
@@ -82,66 +85,66 @@ export default async function DetalheDoAcidente({
 
   return (
     <article>
-      <Link
-        href="/seguranca/acidentes"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/seguranca/acidentes", rotulo: "Acidentes" }}
       >
-        Acidentes
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{a.numero}</span>
-        <StatusDoAcidente status={a.status} />
-        <TipoDoAcidente tipo={a.tipo} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {a.acidentado ? `${a.acidentado} · ${a.local}` : a.local}
-      </h1>
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-base text-texto-2">{a.numero}</span>
+          <StatusDoAcidente status={a.status} />
+          <TipoDoAcidente tipo={a.tipo} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {a.acidentado ? `${a.acidentado} · ${a.local}` : a.local}
+        </h1>
+      </CabecalhoComVoltar>
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDoAcidente a={a} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDoAcidente a={a} />
+        </div>
       </section>
 
       {ncs.length > 0 && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Não conformidades geradas</h2>
-          <ul className="mt-3 divide-y divide-borda">
-            {ncs.map((n) => (
-              <li
-                key={n.id}
-                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
-              >
-                <Link
-                  href={`/qualidade/nao-conformidades/${n.id}`}
-                  className="font-mono text-sm font-medium text-acao hover:underline"
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Não conformidades geradas</h2>
+          </header>
+          <div className="p-5">
+            <ul className="divide-y divide-borda">
+              {ncs.map((n) => (
+                <li
+                  key={n.id}
+                  className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
                 >
-                  {n.numero}
-                </Link>
-                <span className="min-w-48 flex-1">{n.titulo}</span>
-                <GravidadeDaNc gravidade={n.gravidade} />
-                <StatusDaNc status={n.status} vencida={n.vencida} />
-              </li>
-            ))}
-          </ul>
+                  <Link
+                    href={`/qualidade/nao-conformidades/${n.id}`}
+                    className="font-mono text-sm font-medium text-acao hover:underline"
+                  >
+                    {n.numero}
+                  </Link>
+                  <span className="min-w-48 flex-1">{n.titulo}</span>
+                  <GravidadeDaNc gravidade={n.gravidade} />
+                  <StatusDaNc status={n.status} vencida={n.vencida} />
+                </li>
+              ))}
+            </ul>
+          </div>
         </section>
       )}
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       {a.catAtrasada && (
-        <p
-          role="alert"
-          className="mt-4 rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="perigo" className="mt-4">
           CAT atrasada: o prazo legal era {formatarData(a.prazoCat!)} (primeiro
           dia útil depois do acidente).
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section className={`${painel} mt-6 p-5`}>
@@ -200,51 +203,59 @@ export default async function DetalheDoAcidente({
         <IniciarInvestigacao acidente={a} />
       )}
       {a.status === "em_investigacao" && podeEditar ? (
-        <section id="investigacao" className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Investigação</h2>
-          <InvestigacaoEstruturada acidente={a} />
-          {a.investigacao.fatos.length > 0 && (
-            <div className="mt-5 border-t border-borda pt-4">
-              <ArvoreDeCausas fatos={a.investigacao.fatos} />
-            </div>
-          )}
+        <section id="investigacao" className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Investigação</h2>
+          </header>
+          <div className="p-5">
+            <InvestigacaoEstruturada acidente={a} />
+            {a.investigacao.fatos.length > 0 && (
+              <div className="mt-5 border-t border-borda pt-4">
+                <ArvoreDeCausas fatos={a.investigacao.fatos} />
+              </div>
+            )}
+          </div>
         </section>
       ) : (
         temInvestigacao && (
-          <section id="investigacao" className={`${painel} mt-6 p-5`}>
-            <h2 className={tituloDaSecao}>Investigação</h2>
-            {a.investigacao.testemunhas.length > 0 && (
-              <>
-                <h3 className="mt-4 text-sm font-semibold text-texto-2">
-                  Relatos
-                </h3>
-                <ul className="mt-2 flex flex-col gap-2 text-base">
-                  {a.investigacao.testemunhas.map((t, i) => (
-                    <li key={i}>
-                      <span className="font-semibold">{t.nome}</span>
-                      {t.funcao && (
-                        <span className="text-texto-2"> · {t.funcao}</span>
-                      )}
-                      : {t.relato}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {a.investigacao.porques.length > 0 && (
-              <>
-                <h3 className="mt-4 text-sm font-semibold text-texto-2">
-                  5 porquês
-                </h3>
-                <ol className="mt-2 list-decimal pl-5 text-base">
-                  {a.investigacao.porques.map((p, i) => (
-                    <li key={i}>{p}</li>
-                  ))}
-                </ol>
-              </>
-            )}
-            <div className="mt-3">
-              <ArvoreDeCausas fatos={a.investigacao.fatos} />
+          <section id="investigacao" className={`${painel} mt-6`}>
+            <header className={cabecalhoDoPainel}>
+              <h2 className={tituloDoPainel}>Investigação</h2>
+            </header>
+            <div className="p-5">
+              {a.investigacao.testemunhas.length > 0 && (
+                <>
+                  <h3 className="mt-4 text-sm font-semibold text-texto-2">
+                    Relatos
+                  </h3>
+                  <ul className="mt-2 flex flex-col gap-2 text-base">
+                    {a.investigacao.testemunhas.map((t, i) => (
+                      <li key={i}>
+                        <span className="font-semibold">{t.nome}</span>
+                        {t.funcao && (
+                          <span className="text-texto-2"> · {t.funcao}</span>
+                        )}
+                        : {t.relato}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {a.investigacao.porques.length > 0 && (
+                <>
+                  <h3 className="mt-4 text-sm font-semibold text-texto-2">
+                    5 porquês
+                  </h3>
+                  <ol className="mt-2 list-decimal pl-5 text-base">
+                    {a.investigacao.porques.map((p, i) => (
+                      <li key={i}>{p}</li>
+                    ))}
+                  </ol>
+                </>
+              )}
+              <div className="mt-3">
+                <ArvoreDeCausas fatos={a.investigacao.fatos} />
+              </div>
             </div>
           </section>
         )
@@ -253,18 +264,29 @@ export default async function DetalheDoAcidente({
         <ConcluirInvestigacao acidente={a} />
       )}
       {a.status === "concluido" && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Conclusão da investigação</h2>
-          {a.causas && <Texto rotulo="Causas" texto={a.causas} />}
-          {a.medidas && (
-            <Texto rotulo="Medidas para evitar a repetição" texto={a.medidas} />
-          )}
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Conclusão da investigação</h2>
+          </header>
+          <div className="p-5">
+            {a.causas && <Texto rotulo="Causas" texto={a.causas} />}
+            {a.medidas && (
+              <Texto
+                rotulo="Medidas para evitar a repetição"
+                texto={a.medidas}
+              />
+            )}
+          </div>
         </section>
       )}
       {a.status === "cancelado" && a.motivoCancelamento && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Cancelamento</h2>
-          <p className="mt-2 text-base">{a.motivoCancelamento}</p>
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Cancelamento</h2>
+          </header>
+          <div className="p-5">
+            <p className="text-base">{a.motivoCancelamento}</p>
+          </div>
         </section>
       )}
 

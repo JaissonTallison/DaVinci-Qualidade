@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { tituloDaPagina } from "@/lib/estilos";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import { FormularioDaProgramacao } from "../formulario";
 
 export const metadata: Metadata = { title: "Novo item da programação" };
@@ -12,10 +11,14 @@ export default async function NovoItemDaProgramacao({
   const anoInicial = Number(ano) || new Date().getFullYear();
   return (
     <>
-      <Link href="/auditorias/programacao" className="dv-voltar">
-        Programação de auditorias
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Adicionar à programação</h1>
+      <CabecalhoDeCadastro
+        voltar={{
+          href: "/auditorias/programacao",
+          rotulo: "Programação de auditorias",
+        }}
+        titulo="Adicionar à programação"
+        descricao="Planeje quando cada setor ou processo será auditado no ano e por qual norma."
+      />
       <FormularioDaProgramacao ano={anoInicial} />
     </>
   );

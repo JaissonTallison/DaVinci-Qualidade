@@ -14,7 +14,13 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDaSecao,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   FormularioDeResiduo,
   FormularioDeSaida,
@@ -84,7 +90,9 @@ export default async function Residuos({
         </>
       )}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Inventário</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Inventário</h2>
+        </header>
         {!rs.ok ? (
           <div className="p-5">
             <AvisoDeErro erro={rs.erro} />
@@ -96,14 +104,14 @@ export default async function Residuos({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Resíduo</th>
-                  <th className="px-4 py-2 font-semibold">Classe</th>
-                  <th className="px-4 py-2 font-semibold">Origem</th>
-                  <th className="px-4 py-2 font-semibold">Armazenamento</th>
-                  <th className="px-4 py-2 font-semibold">Destinação</th>
-                  <th className="px-4 py-2 text-right font-semibold">
+                  <th className="px-5 py-2.5 font-semibold">Resíduo</th>
+                  <th className="px-4 py-2.5 font-semibold">Classe</th>
+                  <th className="px-4 py-2.5 font-semibold">Origem</th>
+                  <th className="px-4 py-2.5 font-semibold">Armazenamento</th>
+                  <th className="px-4 py-2.5 font-semibold">Destinação</th>
+                  <th className="px-4 py-2.5 text-right font-semibold">
                     Saiu no ano
                   </th>
                 </tr>
@@ -111,18 +119,18 @@ export default async function Residuos({
               <tbody className="divide-y divide-borda">
                 {rs.dados.map((r) => (
                   <tr key={r.id}>
-                    <td className="px-5 py-2.5">{r.nome}</td>
+                    <td className="px-5 py-3">{r.nome}</td>
                     <td
                       className={`px-4 py-2.5 whitespace-nowrap ${r.classe === "I" ? "font-semibold" : ""}`}
                     >
                       {CLASSES_RESIDUO[r.classe]}
                     </td>
-                    <td className="px-4 py-2.5 text-texto-2">{r.origem}</td>
-                    <td className="px-4 py-2.5 text-texto-2">
+                    <td className="px-4 py-3 text-texto-2">{r.origem}</td>
+                    <td className="px-4 py-3 text-texto-2">
                       {r.acondicionamento}
                     </td>
-                    <td className="px-4 py-2.5 text-texto-2">{r.destinacao}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                    <td className="px-4 py-3 text-texto-2">{r.destinacao}</td>
+                    <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                       {qtd(r.quantidadeNoAno)} {UNIDADES_RESIDUO[r.unidade]}
                     </td>
                   </tr>
@@ -140,7 +148,7 @@ export default async function Residuos({
               className={`inline-flex items-center gap-1.5 text-sm ${atrasados ? "text-nao-conforme" : "text-texto-2"}`}
             >
               {atrasados > 0 && (
-                <CircleAlert aria-hidden size={14} strokeWidth={2} />
+                <CircleAlert aria-hidden size={14} strokeWidth={1.75} />
               )}
               {semCdf.length} sem CDF
               {atrasados ? ` · ${atrasados} atrasados` : ""}
@@ -158,32 +166,32 @@ export default async function Residuos({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Data</th>
-                  <th className="px-4 py-2 font-semibold">Resíduo</th>
-                  <th className="px-4 py-2 text-right font-semibold">
+                  <th className="px-5 py-2.5 font-semibold">Data</th>
+                  <th className="px-4 py-2.5 font-semibold">Resíduo</th>
+                  <th className="px-4 py-2.5 text-right font-semibold">
                     Quantidade
                   </th>
-                  <th className="px-4 py-2 font-semibold">MTR</th>
-                  <th className="px-4 py-2 font-semibold">
+                  <th className="px-4 py-2.5 font-semibold">MTR</th>
+                  <th className="px-4 py-2.5 font-semibold">
                     Transportador · destinador
                   </th>
-                  <th className="px-4 py-2 font-semibold">CDF</th>
+                  <th className="px-4 py-2.5 font-semibold">CDF</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {ss.dados.map((s) => (
                   <tr key={s.id} className="align-top">
-                    <td className="px-5 py-2.5 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       {formatarData(s.data)}
                     </td>
-                    <td className="px-4 py-2.5">{s.residuoNome}</td>
-                    <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                    <td className="px-4 py-3">{s.residuoNome}</td>
+                    <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                       {qtd(s.quantidade)} {UNIDADES_RESIDUO[s.unidade]}
                     </td>
-                    <td className="px-4 py-2.5 font-mono text-sm">{s.mtr}</td>
-                    <td className="px-4 py-2.5 text-texto-2">
+                    <td className="px-4 py-3 font-mono text-sm">{s.mtr}</td>
+                    <td className="px-4 py-3 text-texto-2">
                       {s.transportador} · {s.destinador}
                       {s.custo !== null && (
                         <span className="block text-sm">
@@ -194,7 +202,7 @@ export default async function Residuos({
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3">
                       {s.cdfNumero ? (
                         <span className="whitespace-nowrap">
                           {s.cdfNumero} · {formatarData(s.cdfData!)}

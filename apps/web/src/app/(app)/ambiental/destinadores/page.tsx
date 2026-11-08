@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   TIPOS_DE_DESTINADOR,
   type DadosDoUsuario,
@@ -13,6 +12,7 @@ import { formatarData } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
 import { EditarDestinador, NovoDestinador } from "./formularios";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Transportadores e destinadores" };
 
 /** Quem transporta e quem destina os resíduos, com a licença: a saída confere a validade na data. */
@@ -27,30 +27,26 @@ export default async function Destinadores({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   return (
     <>
-      <Link
-        href="/ambiental/residuos"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/ambiental/residuos", rotulo: "Resíduos" }}
       >
-        Resíduos
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        Transportadores e destinadores
-      </h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        A empresa responde pelo resíduo até a destinação final (PNRS, Lei
-        12.305). Na saída, o sistema recusa transportador ou destinador com a
-        licença vencida na data. A licença que vence em até 60 dias aparece em
-        destaque e no painel.
-      </p>
-      <Aviso
-        avisos={{ criado: "Cadastrado.", salvo: "Salvo." }}
-        chave={aviso}
-      />
-      {podeEditar && (
-        <Recolhido titulo="Cadastrar transportador ou destinador">
-          <NovoDestinador />
-        </Recolhido>
-      )}
+        <h1 className={tituloDaPagina}>Transportadores e destinadores</h1>
+        <p className="mt-1 max-w-3xl text-base text-texto-2">
+          A empresa responde pelo resíduo até a destinação final (PNRS, Lei
+          12.305). Na saída, o sistema recusa transportador ou destinador com a
+          licença vencida na data. A licença que vence em até 60 dias aparece em
+          destaque e no painel.
+        </p>
+        <Aviso
+          avisos={{ criado: "Cadastrado.", salvo: "Salvo." }}
+          chave={aviso}
+        />
+        {podeEditar && (
+          <Recolhido titulo="Cadastrar transportador ou destinador">
+            <NovoDestinador />
+          </Recolhido>
+        )}
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6`}>
         {!r.ok ? (
           <div className="p-4">

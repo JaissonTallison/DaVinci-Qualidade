@@ -29,6 +29,7 @@ import { chamarApi } from "@/lib/api";
 import {
   botaoPrimario,
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -71,7 +72,8 @@ export default async function PermissoesDeTrabalho({
   if (params.status)
     chips.push({
       rotulo: "Status",
-      valor: STATUS_PT[params.status as keyof typeof STATUS_PT] ?? params.status,
+      valor:
+        STATUS_PT[params.status as keyof typeof STATUS_PT] ?? params.status,
       href: semFiltro("status"),
     });
   if (params.tipo)
@@ -115,12 +117,12 @@ export default async function PermissoesDeTrabalho({
             valor={params.tipo}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="permissoes-de-trabalho" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -135,7 +137,7 @@ export default async function PermissoesDeTrabalho({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<HardHat aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<HardHat aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma permissão com esses filtros."
@@ -163,7 +165,7 @@ export default async function PermissoesDeTrabalho({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -188,7 +190,9 @@ export default async function PermissoesDeTrabalho({
                     >
                       Tipo
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Local e serviço</th>
+                    <th className="px-4 py-2.5 font-semibold">
+                      Local e serviço
+                    </th>
                     <ThOrdenavel
                       campo="inicio"
                       ordenar={ordenar}
@@ -212,14 +216,14 @@ export default async function PermissoesDeTrabalho({
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {lista.dados.itens.map((p) => (
-                    <tr key={p.id} className="relative hover:bg-campo">
-                      <td className="relative z-10 px-3 py-2">
+                    <tr key={p.id} className="relative hover:bg-superficie-2">
+                      <td className="relative z-10 px-3 py-3">
                         <CaixaDeSelecao
                           id={p.id}
                           rotulo={`Selecionar a permissão ${p.numero}`}
                         />
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <Link
                           href={`${BASE}/${p.id}`}
                           aria-label={`Abrir a permissão ${p.numero}`}
@@ -228,26 +232,26 @@ export default async function PermissoesDeTrabalho({
                           {p.numero}
                         </Link>
                       </td>
-                      <td className="px-4 py-2 text-texto-2">
+                      <td className="px-4 py-3 text-texto-2">
                         {TIPOS_PT[p.tipo]}
                       </td>
-                      <td className="max-w-md px-4 py-2">
+                      <td className="max-w-md px-4 py-3">
                         {p.local}
                         <span className="block truncate text-sm text-texto-2">
                           {p.servico}
                         </span>
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {periodoDaPt(p.inicio, p.fim)}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <StatusDaPt
                           status={p.status}
                           vencida={p.vencida}
                           fim={p.fim}
                         />
                       </td>
-                      <td className="relative z-10 px-2 py-2 text-right">
+                      <td className="relative z-10 px-2 py-3 text-right">
                         <AcoesDaLinha rotulo={`Ações da permissão ${p.numero}`}>
                           <Link href={`${BASE}/${p.id}`} className={itemDeAcao}>
                             Abrir

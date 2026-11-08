@@ -14,7 +14,12 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { FormularioDeAvaliacao } from "./formulario";
 
 export const metadata: Metadata = { title: "Avaliação de fornecedores" };
@@ -96,7 +101,9 @@ export default async function Fornecedores({
         </div>
       ) : (
         <section className={`${painel} mt-6`}>
-          <h2 className={`${tituloDaSecao} px-5 pt-5`}>Situação atual</h2>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Situação atual</h2>
+          </header>
           {vigentes.length === 0 ? (
             <p className="px-5 pt-2 pb-5 text-base text-texto-2">
               Nenhum fornecedor avaliado.
@@ -104,19 +111,19 @@ export default async function Fornecedores({
           ) : (
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
-                    <th className="px-5 py-2 font-semibold">Fornecedor</th>
-                    <th className="px-4 py-2 font-semibold">Avaliado em</th>
-                    <th className="px-4 py-2 font-semibold">Q · P · A · D</th>
-                    <th className="px-4 py-2 font-semibold">Média</th>
-                    <th className="px-4 py-2 font-semibold">Classificação</th>
+                    <th className="px-5 py-2.5 font-semibold">Fornecedor</th>
+                    <th className="px-4 py-2.5 font-semibold">Avaliado em</th>
+                    <th className="px-4 py-2.5 font-semibold">Q · P · A · D</th>
+                    <th className="px-4 py-2.5 font-semibold">Média</th>
+                    <th className="px-4 py-2.5 font-semibold">Classificação</th>
                     {veRecebimento && (
-                      <th className="px-4 py-2 font-semibold">
+                      <th className="px-4 py-2.5 font-semibold">
                         Recebimento (12 meses)
                       </th>
                     )}
-                    <th className="px-4 py-2 font-semibold">
+                    <th className="px-4 py-2.5 font-semibold">
                       Próxima avaliação
                     </th>
                   </tr>
@@ -124,7 +131,7 @@ export default async function Fornecedores({
                 <tbody className="divide-y divide-borda">
                   {vigentes.map((a) => (
                     <tr key={a.id}>
-                      <td className="px-5 py-2.5">
+                      <td className="px-5 py-3">
                         <Link
                           href={`/cadastros/clientes-e-fornecedores/${a.fornecedorId}`}
                           className="text-info hover:underline"
@@ -132,23 +139,21 @@ export default async function Fornecedores({
                           {a.fornecedorNome}
                         </Link>
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {formatarData(a.data)}
                       </td>
-                      <td className="px-4 py-2.5 tabular-nums text-texto-2">
+                      <td className="px-4 py-3 tabular-nums text-texto-2">
                         {a.notas.qualidade} · {a.notas.prazo} ·{" "}
                         {a.notas.atendimento} · {a.notas.documentacao}
                       </td>
-                      <td className="px-4 py-2.5 tabular-nums">
-                        {num(a.media)}
-                      </td>
+                      <td className="px-4 py-3 tabular-nums">{num(a.media)}</td>
                       <td
                         className={`px-4 py-2.5 font-semibold ${COR[a.classificacao]}`}
                       >
                         {CLASSIFICACOES_FORNECEDOR[a.classificacao]}
                       </td>
                       {veRecebimento && (
-                        <td className="px-4 py-2.5 text-sm">
+                        <td className="px-4 py-3 text-sm">
                           {(() => {
                             const x = recebimentos.get(a.fornecedorId);
                             if (!x || x.inspecoes === 0)
@@ -175,7 +180,7 @@ export default async function Fornecedores({
                           })()}
                         </td>
                       )}
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-3">
                         <Validade validade={a.proximaAvaliacao} />
                       </td>
                     </tr>

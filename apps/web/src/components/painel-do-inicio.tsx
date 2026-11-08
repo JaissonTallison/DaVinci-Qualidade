@@ -43,12 +43,12 @@ export function PainelDoInicio({
 
   return (
     <div
-      className="dv-entrar rounded-md border border-borda bg-superficie p-5 shadow-cartao"
+      className="dv-entrar rounded-md bg-superficie p-5 shadow-cartao"
       style={{ "--atraso": "150ms" } as CSSProperties}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg text-texto">
+          <h2 className="text-md font-semibold text-texto">
             {mensalAtivo === "insp"
               ? "Inspeções por mês"
               : "Taxa de frequência de acidentes (TF)"}
@@ -114,7 +114,10 @@ export function PainelDoInicio({
                   {
                     rotulo: "Reprovadas",
                     cor: "var(--color-nao-conforme)",
-                    valor: inspecoesPorMes.reduce((t, m) => t + m.reprovadas, 0),
+                    valor: inspecoesPorMes.reduce(
+                      (t, m) => t + m.reprovadas,
+                      0,
+                    ),
                   },
                 ]}
               />

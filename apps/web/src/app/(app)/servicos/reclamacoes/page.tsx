@@ -108,18 +108,18 @@ export default async function Reclamacoes({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-borda text-left text-texto-2">
-                <th className="px-4 py-2 font-semibold">Número</th>
-                <th className="px-4 py-2 font-semibold">Cliente</th>
-                <th className="px-4 py-2 font-semibold">Recebida</th>
-                <th className="px-4 py-2 font-semibold">Responder até</th>
-                <th className="px-4 py-2 font-semibold">Situação</th>
-                <th className="px-4 py-2 font-semibold">NC</th>
+                <th className="px-4 py-2.5 font-semibold">Número</th>
+                <th className="px-4 py-2.5 font-semibold">Cliente</th>
+                <th className="px-4 py-2.5 font-semibold">Recebida</th>
+                <th className="px-4 py-2.5 font-semibold">Responder até</th>
+                <th className="px-4 py-2.5 font-semibold">Situação</th>
+                <th className="px-4 py-2.5 font-semibold">NC</th>
               </tr>
             </thead>
             <tbody>
               {r.dados.map((x) => (
                 <tr key={x.id} className="border-b border-borda last:border-0">
-                  <td data-rotulo="Número" className="px-4 py-2.5">
+                  <td data-rotulo="Número" className="px-4 py-3">
                     <Link
                       href={`/servicos/reclamacoes/${x.id}`}
                       className="font-mono text-info hover:underline"
@@ -127,14 +127,14 @@ export default async function Reclamacoes({
                       {x.numero}
                     </Link>
                   </td>
-                  <td data-rotulo="Cliente" className="px-4 py-2.5">
+                  <td data-rotulo="Cliente" className="px-4 py-3">
                     {x.clienteNome}
                     <span className="block text-texto-2">
                       {CANAIS_DE_RECLAMACAO[x.canal]}
                       {x.produto && ` · ${x.produto}`}
                     </span>
                   </td>
-                  <td data-rotulo="Recebida" className="px-4 py-2.5">
+                  <td data-rotulo="Recebida" className="px-4 py-3">
                     {formatarData(x.recebidaEm)}
                   </td>
                   <td
@@ -144,7 +144,7 @@ export default async function Reclamacoes({
                     {formatarData(x.prazoResposta)}
                     {x.atrasada && " · atrasada"}
                   </td>
-                  <td data-rotulo="Situação" className="px-4 py-2.5">
+                  <td data-rotulo="Situação" className="px-4 py-3">
                     {STATUS_DA_RECLAMACAO[x.status]}
                     {x.procedente !== null && (
                       <span className="block text-texto-2">
@@ -152,7 +152,7 @@ export default async function Reclamacoes({
                       </span>
                     )}
                   </td>
-                  <td data-rotulo="NC" className="px-4 py-2.5 font-mono">
+                  <td data-rotulo="NC" className="px-4 py-3 font-mono">
                     {x.ncId ? (
                       <Link
                         href={`/qualidade/nao-conformidades/${x.ncId}`}

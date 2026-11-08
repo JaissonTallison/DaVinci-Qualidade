@@ -75,7 +75,7 @@ export function Linha({
               className="dv-tracar"
               fill="none"
               stroke={cor}
-              strokeWidth={2}
+              strokeWidth={1.75}
               strokeLinejoin="round"
               strokeLinecap="round"
             />
@@ -89,7 +89,7 @@ export function Linha({
                 r={foco === i ? 6 : 4}
                 fill={cor}
                 stroke="var(--color-superficie)"
-                strokeWidth={2}
+                strokeWidth={1.75}
                 className="dv-entrar transition-[r]"
                 style={
                   { "--atraso": `${400 + i * 40}ms` } as React.CSSProperties

@@ -23,7 +23,7 @@ export function BotaoExportar({
       download
       className={botaoSecundario}
     >
-      <Download aria-hidden size={16} strokeWidth={2} />
+      <Download aria-hidden size={16} strokeWidth={1.75} />
       Exportar
     </Link>
   );

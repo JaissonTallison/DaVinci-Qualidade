@@ -24,15 +24,13 @@ export function ChipsDeFiltro({ itens }: { itens: ChipDeFiltro[] }) {
           key={`${c.rotulo}:${c.valor}`}
           href={c.href}
           aria-label={`Remover filtro ${c.rotulo}: ${c.valor}`}
-          className="group inline-flex items-center gap-1 rounded-sm bg-superficie-2 px-2 py-0.5 hover:bg-campo"
+          className="group inline-flex h-6.5 items-center gap-1.5 rounded-campo border border-borda-campo bg-superficie pr-1 pl-2.5 text-xs text-texto hover:border-borda-forte"
         >
-          <span className="text-texto-2">{c.rotulo}:</span>
-          <span className="font-medium text-texto">{c.valor}</span>
-          <X
-            aria-hidden
-            size={12}
-            className="text-texto-3 group-hover:text-texto"
-          />
+          <span className="font-medium text-texto-2">{c.rotulo}:</span>
+          <span className="text-texto">{c.valor}</span>
+          <span className="grid size-4.5 place-items-center rounded-xs text-texto-3 group-hover:bg-superficie-2 group-hover:text-texto">
+            <X aria-hidden size={12} strokeWidth={1.75} />
+          </span>
         </Link>
       ))}
     </div>

@@ -53,18 +53,20 @@ export default async function Contratos() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-borda text-left text-texto-2">
-                <th className="px-4 py-2 font-semibold">Número</th>
-                <th className="px-4 py-2 font-semibold">Cliente</th>
-                <th className="px-4 py-2 font-semibold">Vigência</th>
-                <th className="px-4 py-2 font-semibold">SLA</th>
-                <th className="px-4 py-2 font-semibold">No prazo (12 meses)</th>
-                <th className="px-4 py-2 font-semibold">OS abertas</th>
+                <th className="px-4 py-2.5 font-semibold">Número</th>
+                <th className="px-4 py-2.5 font-semibold">Cliente</th>
+                <th className="px-4 py-2.5 font-semibold">Vigência</th>
+                <th className="px-4 py-2.5 font-semibold">SLA</th>
+                <th className="px-4 py-2.5 font-semibold">
+                  No prazo (12 meses)
+                </th>
+                <th className="px-4 py-2.5 font-semibold">OS abertas</th>
               </tr>
             </thead>
             <tbody>
               {r.dados.map((c) => (
                 <tr key={c.id} className="border-b border-borda last:border-0">
-                  <td data-rotulo="Número" className="px-4 py-2.5">
+                  <td data-rotulo="Número" className="px-4 py-3">
                     <Link
                       href={`/servicos/contratos/${c.id}`}
                       className="font-mono text-info hover:underline"
@@ -72,7 +74,7 @@ export default async function Contratos() {
                       {c.numero}
                     </Link>
                   </td>
-                  <td data-rotulo="Cliente" className="px-4 py-2.5">
+                  <td data-rotulo="Cliente" className="px-4 py-3">
                     {c.clienteNome}
                     <span className="block text-texto-2">{c.objeto}</span>
                   </td>
@@ -85,7 +87,7 @@ export default async function Contratos() {
                       {SITUACOES_DO_CONTRATO[c.situacao]}
                     </span>
                   </td>
-                  <td data-rotulo="SLA" className="px-4 py-2.5 tabular-nums">
+                  <td data-rotulo="SLA" className="px-4 py-3 tabular-nums">
                     {c.prazoAtendimentoDias} dia(s)
                   </td>
                   <td
@@ -97,7 +99,7 @@ export default async function Contratos() {
                   </td>
                   <td
                     data-rotulo="OS abertas"
-                    className="px-4 py-2.5 tabular-nums"
+                    className="px-4 py-3 tabular-nums"
                   >
                     {c.osAbertas}
                   </td>

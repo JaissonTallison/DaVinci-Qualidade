@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   formatarDocumento,
@@ -14,11 +13,18 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { FormularioDeTerceiro } from "../formulario";
 import { SituacaoDoTerceiro } from "../situacao";
 import { RegistrarDocumento } from "./documento";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Terceiro" };
 
 const AVISOS: Record<string, string> = {
@@ -46,35 +52,30 @@ export default async function DetalheDoTerceiro({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("seguranca.editar");
   return (
     <article>
-      <Link
-        href="/seguranca/terceiros"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/seguranca/terceiros", rotulo: "Terceiros" }}
       >
-        Terceiros
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">
-          {formatarDocumento(t.cnpj)}
-        </span>
-        <SituacaoDoTerceiro situacao={t.situacao} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{t.razaoSocial}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
-      {t.pendencias.length > 0 && (
-        <div
-          role="alert"
-          className="mt-4 rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-        >
-          <p className="font-semibold">
-            Não liberar a entrada enquanto houver pendência:
-          </p>
-          <ul className="mt-1 list-disc pl-5">
-            {t.pendencias.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-base text-texto-2">
+            {formatarDocumento(t.cnpj)}
+          </span>
+          <SituacaoDoTerceiro situacao={t.situacao} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{t.razaoSocial}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+        {t.pendencias.length > 0 && (
+          <CaixaDeAlerta tom="perigo" className="mt-4">
+            <p className="font-semibold">
+              Não liberar a entrada enquanto houver pendência:
+            </p>
+            <ul className="mt-1 list-disc pl-5">
+              {t.pendencias.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+          </CaixaDeAlerta>
+        )}
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
           <div className="sm:col-span-3">
@@ -97,7 +98,9 @@ export default async function DetalheDoTerceiro({
         </dl>
       </section>
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Documentos de SST</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Documentos de SST</h2>
+        </header>
         {t.documentos.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             Nenhum documento registrado.
@@ -105,17 +108,17 @@ export default async function DetalheDoTerceiro({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Documento</th>
-                  <th className="px-4 py-2 font-semibold">Válido até</th>
-                  <th className="px-4 py-2 font-semibold">Registrado em</th>
+                  <th className="px-5 py-2.5 font-semibold">Documento</th>
+                  <th className="px-4 py-2.5 font-semibold">Válido até</th>
+                  <th className="px-4 py-2.5 font-semibold">Registrado em</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {t.documentos.map((d) => (
                   <tr key={d.id} className={d.vigente ? "" : "text-texto-3"}>
-                    <td className="px-5 py-2.5">
+                    <td className="px-5 py-3">
                       {TIPOS_DOC_TERCEIRO[d.tipo]}
                       {d.descricao && (
                         <span className="block text-sm text-texto-2">
@@ -126,14 +129,14 @@ export default async function DetalheDoTerceiro({
                         <span className="block text-xs">Substituído</span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3">
                       {d.vigente ? (
                         <Validade validade={d.validade} />
                       ) : (
                         formatarData(d.validade)
                       )}
                     </td>
-                    <td className="px-4 py-2.5 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {formatarData(d.registradoEm.slice(0, 10))}
                     </td>
                   </tr>

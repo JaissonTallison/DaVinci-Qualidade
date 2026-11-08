@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { IconeDaTela } from "@/components/icones-do-menu";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
@@ -101,39 +102,39 @@ export default async function DetalheDoFuncionario({
 
   return (
     <article>
-      <Link
-        href="/cadastros/funcionarios"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/cadastros/funcionarios", rotulo: "Profissionais" }}
       >
-        Profissionais
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{f.matricula}</span>
-        <span className={f.ativo ? "text-texto" : "text-texto-2"}>
-          {f.ativo
-            ? "Ativo"
-            : `Desligado em ${f.desligamento ? formatarData(f.desligamento) : "—"}`}
-        </span>
-      </header>
-      <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className={tituloDaPagina}>{f.nome}</h1>
-        <nav aria-label="Documentos" className="flex flex-wrap gap-4 text-sm">
-          <Link
-            href={`/cadastros/funcionarios/${f.id}/ordem-de-servico`}
-            className="text-info hover:underline"
-          >
-            Ordem de serviço de segurança
-          </Link>
-          {veEpi && (
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-base text-texto-2">
+            {f.matricula}
+          </span>
+          <span className={f.ativo ? "text-texto" : "text-texto-2"}>
+            {f.ativo
+              ? "Ativo"
+              : `Desligado em ${f.desligamento ? formatarData(f.desligamento) : "—"}`}
+          </span>
+        </header>
+        <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">
+          <h1 className={tituloDaPagina}>{f.nome}</h1>
+          <nav aria-label="Documentos" className="flex flex-wrap gap-4 text-sm">
             <Link
-              href={`/cadastros/funcionarios/${f.id}/ficha-de-epi`}
+              href={`/cadastros/funcionarios/${f.id}/ordem-de-servico`}
               className="text-info hover:underline"
             >
-              Ficha de EPI para assinar
+              Ordem de serviço de segurança
             </Link>
-          )}
-        </nav>
-      </div>
+            {veEpi && (
+              <Link
+                href={`/cadastros/funcionarios/${f.id}/ficha-de-epi`}
+                className="text-info hover:underline"
+              >
+                Ficha de EPI para assinar
+              </Link>
+            )}
+          </nav>
+        </div>
+      </CabecalhoComVoltar>
       <Aviso avisos={AVISOS} chave={aviso} />
 
       <section className={`${painel} mt-6 p-5`}>

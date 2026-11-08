@@ -26,15 +26,15 @@ export function CampoDeAcesso({
       <div className="relative">
         <Icone
           aria-hidden
-          size={18}
+          size={16}
           strokeWidth={1.75}
-          className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-texto-2"
+          className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-texto-3"
         />
         <input
           id={id}
           name={id}
           placeholder={rotulo}
-          className={`dv-acesso-campo pr-4 pl-12 ${className}`}
+          className={`dv-acesso-campo pr-3 pl-10 ${className}`}
           aria-invalid={Boolean(erro)}
           aria-describedby={erro || ajuda ? `${id}-nota` : undefined}
           {...props}

@@ -5,8 +5,14 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { FaixaDeIndicadores } from "@/components/faixa-de-indicadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { LancarHoras } from "./lancar-horas";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Indicadores de SST" };
 
@@ -83,12 +89,9 @@ export default async function Indicadores({
         </nav>
       </header>
       {aviso === "horas" && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           Horas lançadas.
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section className={`${painel} mt-6`}>
@@ -115,23 +118,25 @@ export default async function Indicadores({
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Mês a mês</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Mês a mês</h2>
+        </header>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-sm text-texto-2">
+            <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
-                <th className="px-5 py-2 font-semibold">Mês</th>
-                <th className="px-4 py-2 text-right font-semibold">
+                <th className="px-5 py-2.5 font-semibold">Mês</th>
+                <th className="px-4 py-2.5 text-right font-semibold">
                   Horas trabalhadas
                 </th>
-                <th className="px-4 py-2 text-right font-semibold">
+                <th className="px-4 py-2.5 text-right font-semibold">
                   Acidentes com afastamento
                 </th>
-                <th className="px-4 py-2 text-right font-semibold">
+                <th className="px-4 py-2.5 text-right font-semibold">
                   Dias perdidos e debitados
                 </th>
-                <th className="px-4 py-2 text-right font-semibold">TF</th>
-                <th className="px-4 py-2 text-right font-semibold">TG</th>
+                <th className="px-4 py-2.5 text-right font-semibold">TF</th>
+                <th className="px-4 py-2.5 text-right font-semibold">TG</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-borda">
@@ -139,7 +144,7 @@ export default async function Indicadores({
                 .filter((m) => m.competencia <= mesAtual)
                 .map((m) => (
                   <tr key={m.competencia}>
-                    <td className="px-5 py-2">
+                    <td className="px-5 py-3">
                       {MESES[Number(m.competencia.slice(5)) - 1]}/
                       {m.competencia.slice(0, 4)}
                     </td>
@@ -148,16 +153,16 @@ export default async function Indicadores({
                     >
                       {horas(m.horas)}
                     </td>
-                    <td className="px-4 py-2 text-right">
+                    <td className="px-4 py-3 text-right">
                       {m.acidentesComAfastamento}
                     </td>
-                    <td className="px-4 py-2 text-right">
+                    <td className="px-4 py-3 text-right">
                       {m.diasPerdidosEDebitados}
                     </td>
-                    <td className="px-4 py-2 text-right font-semibold">
+                    <td className="px-4 py-3 text-right font-semibold">
                       {taxa(m.tf)}
                     </td>
-                    <td className="px-4 py-2 text-right font-semibold">
+                    <td className="px-4 py-3 text-right font-semibold">
                       {taxa(m.tg)}
                     </td>
                   </tr>
@@ -165,18 +170,18 @@ export default async function Indicadores({
             </tbody>
             <tfoot className="border-t-2 border-borda-forte">
               <tr className="font-semibold">
-                <td className="px-5 py-2">Ano</td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-5 py-3">Ano</td>
+                <td className="px-4 py-3 text-right">
                   {horas(ind.total.horas)}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-3 text-right">
                   {ind.total.acidentesComAfastamento}
                 </td>
-                <td className="px-4 py-2 text-right">
+                <td className="px-4 py-3 text-right">
                   {ind.total.diasPerdidosEDebitados}
                 </td>
-                <td className="px-4 py-2 text-right">{taxa(ind.total.tf)}</td>
-                <td className="px-4 py-2 text-right">{taxa(ind.total.tg)}</td>
+                <td className="px-4 py-3 text-right">{taxa(ind.total.tf)}</td>
+                <td className="px-4 py-3 text-right">{taxa(ind.total.tg)}</td>
               </tr>
             </tfoot>
           </table>

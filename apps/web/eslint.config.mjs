@@ -30,11 +30,11 @@ const eslintConfig = defineConfig([
         ),
         ...proibido(
           "/(^|\\s)rounded-(lg|xl|2xl|3xl)/",
-          "Cantos de no máximo 8 px: rounded-xs (2 px), rounded-sm, rounded-md ou rounded-campo (8 px).",
+          "Cantos de no máximo 8 px: rounded-xs (4 px, selo), rounded-sm ou rounded-campo (6 px, botão e campo), rounded-md (8 px, card).",
         ),
         ...proibido(
           "/(^|\\s)shadow-(lg|xl|2xl)/",
-          "Sombra só em menu (shadow-sm) e modal (shadow-md); separe camadas com borda.",
+          "Elevação só pelos tokens: shadow-xs (campo), shadow-cartao (card), shadow-sm (menu, aviso flutuante) e shadow-md (modal).",
         ),
         ...proibido(
           "/(^|\\s)(backdrop-blur|bg-clip-text)/",
@@ -53,7 +53,7 @@ const eslintConfig = defineConfig([
           selector:
             "ImportDeclaration[source.value='next/font/google'] ImportSpecifier[imported.name=/^(Inter|Geist|Manrope|Sora|Poppins)/]",
           message:
-            "Tipografia é a família Source (Serif 4, Sans 3, Code Pro). Inter, Geist, Manrope, Sora e Poppins são a cara dos sistemas gerados por IA.",
+            "Tipografia é IBM Plex Sans e IBM Plex Mono (design system de 08/11/2026). Inter, Geist, Manrope, Sora e Poppins são a cara dos sistemas gerados por IA.",
         },
       ],
     },

@@ -57,18 +57,18 @@ export default async function Ocorrencias() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-borda text-left text-texto-2">
-                <th className="px-4 py-2 font-semibold">Número</th>
-                <th className="px-4 py-2 font-semibold">Ocorrência</th>
-                <th className="px-4 py-2 font-semibold">Data</th>
-                <th className="px-4 py-2 font-semibold">Severidade</th>
-                <th className="px-4 py-2 font-semibold">Comunicação</th>
-                <th className="px-4 py-2 font-semibold">Situação</th>
+                <th className="px-4 py-2.5 font-semibold">Número</th>
+                <th className="px-4 py-2.5 font-semibold">Ocorrência</th>
+                <th className="px-4 py-2.5 font-semibold">Data</th>
+                <th className="px-4 py-2.5 font-semibold">Severidade</th>
+                <th className="px-4 py-2.5 font-semibold">Comunicação</th>
+                <th className="px-4 py-2.5 font-semibold">Situação</th>
               </tr>
             </thead>
             <tbody>
               {r.dados.map((o) => (
                 <tr key={o.id} className="border-b border-borda last:border-0">
-                  <td data-rotulo="Número" className="px-4 py-2.5">
+                  <td data-rotulo="Número" className="px-4 py-3">
                     <Link
                       href={`/ambiental/ocorrencias/${o.id}`}
                       className="font-mono text-info hover:underline"
@@ -76,11 +76,11 @@ export default async function Ocorrencias() {
                       {o.numero}
                     </Link>
                   </td>
-                  <td data-rotulo="Ocorrência" className="px-4 py-2.5">
+                  <td data-rotulo="Ocorrência" className="px-4 py-3">
                     {TIPOS_DE_OCORRENCIA[o.tipo]}: {o.substancia}
                     <span className="block text-texto-2">{o.local}</span>
                   </td>
-                  <td data-rotulo="Data" className="px-4 py-2.5">
+                  <td data-rotulo="Data" className="px-4 py-3">
                     {formatarData(o.data)}
                   </td>
                   <td
@@ -99,7 +99,7 @@ export default async function Ocorrencias() {
                         ? `Obrigatória até ${formatarData(o.prazoComunicacao!)}`
                         : "Não obrigatória"}
                   </td>
-                  <td data-rotulo="Situação" className="px-4 py-2.5">
+                  <td data-rotulo="Situação" className="px-4 py-3">
                     {o.status === "aberta" ? "Aberta" : "Encerrada"}
                   </td>
                 </tr>

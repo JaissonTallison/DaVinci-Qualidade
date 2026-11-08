@@ -28,9 +28,9 @@ export function BotaoCopiar({
       }}
     >
       {copiado ? (
-        <Check aria-hidden size={14} strokeWidth={2} />
+        <Check aria-hidden size={14} strokeWidth={1.75} />
       ) : (
-        <Copy aria-hidden size={14} strokeWidth={2} />
+        <Copy aria-hidden size={14} strokeWidth={1.75} />
       )}
       <span aria-live="polite">{copiado ? "Copiado" : rotulo}</span>
     </button>

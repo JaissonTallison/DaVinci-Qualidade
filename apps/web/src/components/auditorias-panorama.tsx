@@ -30,7 +30,11 @@ const SEGMENTOS = [
   { chave: "nc_menor", rotulo: "NC menor", cor: "var(--color-atencao)" },
   { chave: "nc_maior", rotulo: "NC maior", cor: "var(--color-nao-conforme)" },
   { chave: "observacao", rotulo: "Observação", cor: "var(--color-texto-3)" },
-  { chave: "oportunidade", rotulo: "Oportunidade", cor: "var(--color-serie-1)" },
+  {
+    chave: "oportunidade",
+    rotulo: "Oportunidade",
+    cor: "var(--color-serie-1)",
+  },
 ] as const;
 
 /** Cor de cada situação (para o donut e o ponto da tabela). */
@@ -60,9 +64,7 @@ function Quadro({
   classe?: string;
 }) {
   return (
-    <div
-      className={`rounded-md border border-borda bg-superficie p-5 shadow-cartao ${classe}`}
-    >
+    <div className={`rounded-md bg-superficie p-5 shadow-cartao ${classe}`}>
       <h3 className="text-base font-semibold text-texto">{titulo}</h3>
       <p className="mb-4 text-sm text-texto-2">{subtitulo}</p>
       {children}
@@ -91,10 +93,15 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
   }));
 
   return (
-    <section aria-label="Panorama de auditorias" className="flex flex-col gap-4">
+    <section
+      aria-label="Panorama de auditorias"
+      className="flex flex-col gap-4"
+    >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg text-texto">Auditorias — panorama</h2>
+          <h2 className="text-md font-semibold text-texto">
+            Auditorias — panorama
+          </h2>
           <p className="text-sm text-texto-2">
             Conformidade, carga por auditor, situação e andamento.
           </p>
@@ -104,7 +111,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
           className="inline-flex items-center gap-1 text-sm font-semibold text-acao hover:underline"
         >
           Ver auditorias
-          <ChevronRight aria-hidden size={14} strokeWidth={2} />
+          <ChevronRight aria-hidden size={14} strokeWidth={1.75} />
         </Link>
       </div>
 
@@ -136,7 +143,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                           linha[s.chave] > 0 ? (
                             <span
                               key={s.chave}
-                              className="flex items-center justify-center text-[0.7rem] font-bold text-primaria-texto"
+                              className="flex items-center justify-center text-xs font-semibold text-primaria-texto"
                               style={{
                                 flexGrow: linha[s.chave],
                                 background: s.cor,
@@ -171,7 +178,9 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
         {/* Por auditor líder (barras horizontais) */}
         <Quadro titulo="Por auditor líder" subtitulo="Auditorias conduzidas">
           {porAuditor.length === 0 ? (
-            <p className="text-sm text-texto-3">Nenhuma auditoria cadastrada.</p>
+            <p className="text-sm text-texto-3">
+              Nenhuma auditoria cadastrada.
+            </p>
           ) : (
             <ul className="flex flex-col gap-2.5">
               {porAuditor.map((a) => (
@@ -185,7 +194,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                       style={{ width: `${(a.total / maxAuditor) * 100}%` }}
                     />
                   </span>
-                  <span className="w-5 text-right text-sm font-bold text-texto tabular-nums">
+                  <span className="w-5 text-right text-sm font-semibold text-texto tabular-nums">
                     {a.total}
                   </span>
                 </li>
@@ -197,7 +206,9 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
         {/* Por situação (donut) */}
         <Quadro titulo="Situação das auditorias" subtitulo="Total por status">
           {totalSituacao === 0 ? (
-            <p className="text-sm text-texto-3">Nenhuma auditoria cadastrada.</p>
+            <p className="text-sm text-texto-3">
+              Nenhuma auditoria cadastrada.
+            </p>
           ) : (
             <div className="flex items-center gap-5">
               <div className="relative size-28 shrink-0">
@@ -229,18 +240,15 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                   ))}
                 </svg>
                 <span className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-                  <span className="text-xl font-extrabold text-texto tabular-nums">
+                  <span className="text-xl font-semibold text-texto tabular-nums">
                     {totalSituacao}
                   </span>
-                  <span className="text-[0.6rem] text-texto-2">total</span>
+                  <span className="text-xs text-texto-2">total</span>
                 </span>
               </div>
               <ul className="flex-1 text-sm">
                 {porSituacao.map((s) => (
-                  <li
-                    key={s.status}
-                    className="flex items-center gap-2 py-0.5"
-                  >
+                  <li key={s.status} className="flex items-center gap-2 py-0.5">
                     <span
                       aria-hidden
                       className="size-2.5 rounded-xs"
@@ -249,7 +257,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                     <span className="text-texto-2">
                       {STATUS_AUDITORIA[s.status]}
                     </span>
-                    <span className="ml-auto font-bold text-texto tabular-nums">
+                    <span className="ml-auto font-semibold text-texto tabular-nums">
                       {s.total}
                     </span>
                   </li>
@@ -262,12 +270,14 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
 
       {/* Acompanhamento (tabela) */}
       {recentes.length > 0 && (
-        <div className="overflow-hidden rounded-md border border-borda bg-superficie shadow-cartao">
+        <div className="overflow-hidden rounded-md bg-superficie shadow-cartao">
           <div className="border-b border-borda px-5 py-3.5">
             <h3 className="text-base font-semibold text-texto">
               Auditorias recentes
             </h3>
-            <p className="text-sm text-texto-2">Últimas auditorias e situação</p>
+            <p className="text-sm text-texto-2">
+              Últimas auditorias e situação
+            </p>
           </div>
           <table className="w-full">
             <thead>
@@ -293,16 +303,16 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                       {a.numero}
                     </Link>
                   </td>
-                  <td className="px-3 py-2.5 text-sm text-texto-2">
+                  <td className="px-3 py-3.5 text-sm text-texto-2">
                     {TIPOS_AUDITORIA[a.tipo]}
                   </td>
-                  <td className="max-w-xs truncate px-3 py-2.5 text-sm text-texto">
+                  <td className="max-w-xs truncate px-3 py-3.5 text-sm text-texto">
                     {a.escopo}
                   </td>
-                  <td className="px-3 py-2.5 text-sm text-texto-2">
+                  <td className="px-3 py-3.5 text-sm text-texto-2">
                     {periodo(a.dataInicio)}
                   </td>
-                  <td className="px-3 py-2.5 pr-5">
+                  <td className="px-3 py-3.5 pr-5">
                     <span
                       className={`text-sm font-semibold ${CHIP_STATUS[a.status]}`}
                     >

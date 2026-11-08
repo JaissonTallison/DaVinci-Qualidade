@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -13,13 +12,19 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SituacaoDaLicenca } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   CumprirCondicionante,
   NovaCondicionante,
   SolicitarRenovacao,
 } from "./acoes";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Licença" };
 const AVISOS: Record<string, string> = {
   criada: "Licença cadastrada. Adicione as condicionantes que constam nela.",
@@ -49,20 +54,18 @@ export default async function DetalheDaLicenca({
   const cumpridas = l.condicionantes.filter((c) => c.cumpridaEm);
   return (
     <article>
-      <Link
-        href="/ambiental/licencas"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/ambiental/licencas", rotulo: "Licenças" }}
       >
-        Licenças
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="text-texto-2">{l.orgao}</span>
-        <SituacaoDaLicenca situacao={l.situacao} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {TIPOS_LICENCA[l.tipo]} nº {l.numero}
-      </h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="text-texto-2">{l.orgao}</span>
+          <SituacaoDaLicenca situacao={l.situacao} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {TIPOS_LICENCA[l.tipo]} nº {l.numero}
+        </h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           {l.descricao && (
@@ -96,7 +99,9 @@ export default async function DetalheDaLicenca({
           <SolicitarRenovacao licenca={l} />
         )}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Condicionantes</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Condicionantes</h2>
+        </header>
         {pendentes.length === 0 ? (
           <p className="px-5 pt-2 pb-5 text-base text-texto-2">
             {l.condicionantes.length

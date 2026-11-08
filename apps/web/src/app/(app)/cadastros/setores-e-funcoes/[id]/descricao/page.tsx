@@ -60,7 +60,7 @@ export default async function DescricaoDeCargoImpressao({
 function Secao({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
     <section>
-      <h2 className="mb-2 border-b border-borda pb-1 text-sm font-semibold tracking-wide text-texto-2 uppercase">
+      <h2 className="mb-2 border-b border-borda pb-1 text-sm font-semibold tracking-[0.04em] text-texto-2 uppercase">
         {titulo}
       </h2>
       {children}

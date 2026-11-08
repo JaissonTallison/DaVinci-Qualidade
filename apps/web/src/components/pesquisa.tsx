@@ -155,7 +155,7 @@ function Janela({
         role="dialog"
         aria-modal="true"
         aria-label="Pesquisar"
-        className="w-full max-w-xl overflow-hidden rounded-md border border-borda bg-superficie text-texto shadow-md"
+        className="w-full max-w-xl overflow-hidden rounded-md bg-superficie text-texto shadow-md"
       >
         <div className="flex items-center gap-2 border-b border-borda px-4">
           <Search

@@ -99,7 +99,7 @@ export default async function Registros({
             valor={tipo}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
         </form>
@@ -114,13 +114,13 @@ export default async function Registros({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Data</th>
-                  <th className="px-4 py-2 font-semibold">Tipo</th>
-                  <th className="px-4 py-2 font-semibold">Tema</th>
-                  <th className="px-4 py-2 font-semibold">Conduziu</th>
-                  <th className="px-4 py-2 font-semibold">Participantes</th>
+                  <th className="px-4 py-2.5 font-semibold">Data</th>
+                  <th className="px-4 py-2.5 font-semibold">Tipo</th>
+                  <th className="px-4 py-2.5 font-semibold">Tema</th>
+                  <th className="px-4 py-2.5 font-semibold">Conduziu</th>
+                  <th className="px-4 py-2.5 font-semibold">Participantes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
@@ -134,8 +134,8 @@ export default async function Registros({
                     >
                       {formatarData(x.data)}
                     </td>
-                    <td className="px-4 py-2">{CURTO[x.tipo]}</td>
-                    <td className="max-w-md px-4 py-2">
+                    <td className="px-4 py-3">{CURTO[x.tipo]}</td>
+                    <td className="max-w-md px-4 py-3">
                       <Link
                         href={`/seguranca/registros/${x.id}`}
                         className="text-info hover:underline"
@@ -148,8 +148,8 @@ export default async function Registros({
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{x.responsavel}</td>
-                    <td className="px-4 py-2 tabular-nums">
+                    <td className="px-4 py-3 text-texto-2">{x.responsavel}</td>
+                    <td className="px-4 py-3 tabular-nums">
                       {x.participantes}
                     </td>
                   </tr>

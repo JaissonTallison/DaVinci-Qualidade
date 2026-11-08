@@ -6,7 +6,7 @@ import { Suspenso } from "./suspenso";
 
 /** Classe dos itens do menu de ações (links ou botões), para ficarem iguais em todas as telas. */
 export const itemDeAcao =
-  "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-texto hover:bg-campo";
+  "flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm text-texto hover:bg-superficie-2";
 
 /**
  * Menu "⋯" de ações de uma linha da tabela. Abre ao clicar, fecha ao clicar fora, com Esc ou ao escolher.
@@ -25,7 +25,7 @@ export function AcoesDaLinha({
       rotulo={rotulo}
       largura="w-48"
       classeDoBotao="inline-flex size-8 items-center justify-center rounded-sm text-texto-3 hover:bg-campo hover:text-texto"
-      botao={<MoreHorizontal aria-hidden size={18} strokeWidth={2} />}
+      botao={<MoreHorizontal aria-hidden size={18} strokeWidth={1.75} />}
     >
       {() => <div className="py-1">{children}</div>}
     </Suspenso>

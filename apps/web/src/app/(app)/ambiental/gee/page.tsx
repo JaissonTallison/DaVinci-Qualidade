@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, CircleAlert } from "@/components/icones";
+import { ChevronLeft, ChevronRight } from "@/components/icones";
 import {
   FONTES_DE_CONSUMO,
   type DadosDoUsuario,
@@ -13,6 +13,7 @@ import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { botaoSecundario, painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeFator } from "./formulario";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Inventário de GEE" };
 const t = (n: number) =>
@@ -57,7 +58,7 @@ export default async function Gee({
             className={botaoSecundario}
             aria-label={`Ano ${ano - 1}`}
           >
-            <ChevronLeft aria-hidden size={16} strokeWidth={2} />
+            <ChevronLeft aria-hidden size={16} strokeWidth={1.75} />
           </Link>
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
@@ -68,7 +69,7 @@ export default async function Gee({
               className={botaoSecundario}
               aria-label={`Ano ${ano + 1}`}
             >
-              <ChevronRight aria-hidden size={16} strokeWidth={2} />
+              <ChevronRight aria-hidden size={16} strokeWidth={1.75} />
             </Link>
           )}
         </nav>
@@ -103,19 +104,13 @@ export default async function Gee({
             ))}
           </section>
           {r.dados.semFator.length > 0 && (
-            <p className="mt-4 inline-flex items-start gap-2 rounded-xs bg-nao-conforme/10 px-3 py-2 text-base text-nao-conforme">
-              <CircleAlert
-                aria-hidden
-                size={18}
-                strokeWidth={2}
-                className="mt-0.5 shrink-0"
-              />
+            <CaixaDeAlerta tom="perigo" className="mt-4">
               Total incompleto: falta o fator de{" "}
               {r.dados.semFator
                 .map((f) => FONTES_DE_CONSUMO[f].toLowerCase())
                 .join(", ")}{" "}
               em {ano}.
-            </p>
+            </CaixaDeAlerta>
           )}
           <section className={`${painel} mt-6`}>
             {r.dados.linhas.length === 0 ? (
@@ -132,18 +127,18 @@ export default async function Gee({
             ) : (
               <div className="relative overflow-x-auto">
                 <table className="w-full text-left">
-                  <thead className="bg-superficie-2 text-sm text-texto-2">
+                  <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                     <tr>
-                      <th className="px-5 py-2 font-semibold">Fonte</th>
-                      <th className="px-4 py-2 font-semibold">Escopo</th>
-                      <th className="px-4 py-2 text-right font-semibold">
+                      <th className="px-5 py-2.5 font-semibold">Fonte</th>
+                      <th className="px-4 py-2.5 font-semibold">Escopo</th>
+                      <th className="px-4 py-2.5 text-right font-semibold">
                         Consumo no ano
                       </th>
-                      <th className="px-4 py-2 text-right font-semibold">
+                      <th className="px-4 py-2.5 text-right font-semibold">
                         Fator (kg CO₂e)
                       </th>
-                      <th className="px-4 py-2 font-semibold">Referência</th>
-                      <th className="px-4 py-2 text-right font-semibold">
+                      <th className="px-4 py-2.5 font-semibold">Referência</th>
+                      <th className="px-4 py-2.5 text-right font-semibold">
                         Emissão (t CO₂e)
                       </th>
                     </tr>
@@ -151,11 +146,11 @@ export default async function Gee({
                   <tbody className="divide-y divide-borda">
                     {r.dados.linhas.map((l) => (
                       <tr key={l.fonte}>
-                        <td className="px-5 py-2.5">
+                        <td className="px-5 py-3">
                           {FONTES_DE_CONSUMO[l.fonte]}
                         </td>
-                        <td className="px-4 py-2.5">{l.escopo}</td>
-                        <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                        <td className="px-4 py-3">{l.escopo}</td>
+                        <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                           {l.consumo.toLocaleString("pt-BR", {
                             maximumFractionDigits: 1,
                           })}{" "}
@@ -168,10 +163,10 @@ export default async function Gee({
                             ? "Falta informar"
                             : `${l.fator.toLocaleString("pt-BR", { maximumFractionDigits: 6 })} / ${l.unidade}`}
                         </td>
-                        <td className="px-4 py-2.5 text-sm text-texto-2">
+                        <td className="px-4 py-3 text-sm text-texto-2">
                           {l.referencia ?? "—"}
                         </td>
-                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums">
+                        <td className="px-4 py-3 text-right font-semibold tabular-nums">
                           {l.emissao === null ? "—" : t(l.emissao)}
                         </td>
                       </tr>

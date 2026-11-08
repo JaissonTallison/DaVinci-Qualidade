@@ -23,6 +23,7 @@ import { chamarApi } from "@/lib/api";
 import {
   botaoPrimario,
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -141,14 +142,14 @@ export default async function EntregasDeEpi({
             valor={params.situacao}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="entregas-de-epi" consulta={consulta} />
           {filtrando && (
             <Link
               href="/seguranca/entregas-de-epi"
-              className="h-9 content-center dv-voltar"
+              className={`h-9 content-center ${linkDiscreto}`}
             >
               Limpar filtros
             </Link>
@@ -164,7 +165,7 @@ export default async function EntregasDeEpi({
           </div>
         ) : lista.dados.itens.length === 0 ? (
           <EstadoVazio
-            icone={<ShieldCheck aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<ShieldCheck aria-hidden size={28} strokeWidth={1.5} />}
             titulo={
               filtrando
                 ? "Nenhuma entrega com esses filtros."

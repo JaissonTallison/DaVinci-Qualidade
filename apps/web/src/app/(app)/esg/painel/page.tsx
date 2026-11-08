@@ -234,7 +234,7 @@ export default async function PainelEsg() {
                       className={`mt-1 inline-flex items-center gap-1.5 text-2xl font-semibold tabular-nums ${x.ruim ? "text-nao-conforme" : "text-texto"}`}
                     >
                       {x.ruim && (
-                        <CircleAlert aria-hidden size={20} strokeWidth={2} />
+                        <CircleAlert aria-hidden size={18} strokeWidth={1.75} />
                       )}
                       {x.valor}
                     </p>

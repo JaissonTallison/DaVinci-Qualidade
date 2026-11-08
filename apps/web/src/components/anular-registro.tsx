@@ -28,11 +28,11 @@ export function AnularRegistro({
       </summary>
       <form
         action={enviar}
-        className="absolute right-0 z-10 mt-1 flex w-72 flex-col gap-2 rounded-md border border-borda bg-superficie p-3 shadow-sm"
+        className="absolute right-0 z-10 mt-1 flex w-72 flex-col gap-2 rounded-md bg-superficie p-3 shadow-sm"
       >
         <label
           htmlFor={`motivo-${id}`}
-          className="text-sm font-semibold text-texto-2"
+          className="text-base font-medium text-texto"
         >
           {pergunta}
         </label>

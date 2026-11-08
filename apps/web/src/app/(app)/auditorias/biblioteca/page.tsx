@@ -99,7 +99,7 @@ export default async function Biblioteca({
             className={`${campoCompacto} w-44`}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           {r.ok && r.dados.length > 0 && (
@@ -107,7 +107,7 @@ export default async function Biblioteca({
               href={`/auditorias/biblioteca/imprimir?${filtro}`}
               className={`${botaoSecundario} ml-auto`}
             >
-              <Printer aria-hidden size={16} strokeWidth={2} />
+              <Printer aria-hidden size={16} strokeWidth={1.75} />
               Imprimir ({r.dados.length})
             </Link>
           )}

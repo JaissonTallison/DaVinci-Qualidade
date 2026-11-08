@@ -13,12 +13,15 @@ import { chamarApi } from "@/lib/api";
 import { excluirItemProgramacao } from "@/lib/acoes-programacao";
 import {
   botaoPerigo,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { FormularioDaProgramacao } from "../formulario";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Item da programação" };
 
 export default async function EditarItemDaProgramacao({
@@ -39,53 +42,58 @@ export default async function EditarItemDaProgramacao({
 
   return (
     <>
-      <Link href="/auditorias/programacao" className="dv-voltar">
-        Programação de auditorias
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {item.setor} · {item.ano}
-      </h1>
-      {erro && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-nao-conforme/40 bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-        >
-          {erro}
-        </p>
-      )}
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/auditorias/programacao",
+          rotulo: "Programação de auditorias",
+        }}
+      >
+        <h1 className={tituloDaPagina}>
+          {item.setor} · {item.ano}
+        </h1>
+        {erro && (
+          <CaixaDeAlerta tom="perigo" className="mt-4">
+            {erro}
+          </CaixaDeAlerta>
+        )}
+      </CabecalhoComVoltar>
 
       <FormularioDaProgramacao item={item} ano={item.ano} />
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Auditorias vinculadas</h2>
-        {item.realizadas.length === 0 ? (
-          <p className="mt-2 text-base text-texto-2">
-            Nenhuma auditoria vinculada a este item ainda. Ao planejar uma
-            auditoria, escolha este item da programação para vinculá-la.
-          </p>
-        ) : (
-          <ul className="mt-3 divide-y divide-borda">
-            {item.realizadas.map((a) => (
-              <li
-                key={a.id}
-                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
-              >
-                <Link
-                  href={`/auditorias/${a.id}`}
-                  className="font-mono text-sm font-medium text-info hover:underline"
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Auditorias vinculadas</h2>
+        </header>
+        <div className="p-5">
+          {item.realizadas.length === 0 ? (
+            <p className="mt-2 text-base text-texto-2">
+              Nenhuma auditoria vinculada a este item ainda. Ao planejar uma
+              auditoria, escolha este item da programação para vinculá-la.
+            </p>
+          ) : (
+            <ul className="mt-3 divide-y divide-borda">
+              {item.realizadas.map((a) => (
+                <li
+                  key={a.id}
+                  className="flex flex-wrap items-center gap-x-6 gap-y-1 py-2.5"
                 >
-                  {a.numero}
-                </Link>
-                {a.mes && (
-                  <span className="text-sm text-texto-2">
-                    {MESES_ABREVIADOS[a.mes - 1]}
-                  </span>
-                )}
-                <StatusDaAuditoria status={a.status} />
-              </li>
-            ))}
-          </ul>
-        )}
+                  <Link
+                    href={`/auditorias/${a.id}`}
+                    className="font-mono text-sm font-medium text-info hover:underline"
+                  >
+                    {a.numero}
+                  </Link>
+                  {a.mes && (
+                    <span className="text-sm text-texto-2">
+                      {MESES_ABREVIADOS[a.mes - 1]}
+                    </span>
+                  )}
+                  <StatusDaAuditoria status={a.status} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </section>
 
       {podeExcluir && (
@@ -95,7 +103,11 @@ export default async function EditarItemDaProgramacao({
             auditorias vinculadas; o histórico das auditorias não muda.
           </p>
           <form
-            action={excluirItemProgramacao.bind(null, item.id, String(item.ano))}
+            action={excluirItemProgramacao.bind(
+              null,
+              item.id,
+              String(item.ano),
+            )}
             className="mt-3"
           >
             <button type="submit" className={botaoPerigo}>

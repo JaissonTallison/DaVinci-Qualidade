@@ -1,12 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { TIPOS_MONITORAMENTO, type Monitoramento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import { botaoPrimario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 const num = (n: number | null | undefined) =>
@@ -53,6 +55,7 @@ export function FormularioDeMonitoramento({
     >
       <input
         id={id}
+        required={!rotulo.includes("(opcional)")}
         name={id}
         maxLength={max}
         defaultValue={v[id]}
@@ -74,81 +77,120 @@ export function FormularioDeMonitoramento({
     </Campo>
   );
   return (
-    <form action={enviar} noValidate className={m ? "" : `${painel} mt-6`}>
+    <form action={enviar} noValidate className={m ? "" : "mt-6"}>
       {m && <input type="hidden" name="versao" value={m.versao} />}
-      <div className={`grid gap-5 sm:grid-cols-3 ${m ? "" : "p-5"}`}>
-        {estado.erro && !estado.erro.detalhes?.length && (
-          <div className="sm:col-span-3">
-            <AvisoDeErro erro={estado.erro} />
-          </div>
-        )}
-        <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
-          <Selecao
-            id="tipo"
-            name="tipo"
-            defaultValue={v.tipo}
-            className={campo}
-            aria-invalid={Boolean(erros.tipo)}
-          >
-            <option value="">Escolha</option>
-            {Object.entries(TIPOS_MONITORAMENTO).map(([k, n]) => (
-              <option key={k} value={k}>
-                {n}
-              </option>
-            ))}
-          </Selecao>
-        </Campo>
-        {texto(
-          "ponto",
-          "Ponto de coleta",
-          150,
-          "Ex.: saída da ETE, chaminé da caldeira",
-          true,
-        )}
-        {texto(
-          "parametro",
-          "Parâmetro",
-          100,
-          "Ex.: pH, DBO, material particulado",
-        )}
-        {texto("unidade", "Unidade", 20, "Ex.: mg/L, dB(A)")}
-        <Campo
-          id="periodicidadeMeses"
-          rotulo="Coletar a cada (meses)"
-          erro={erros.periodicidadeMeses}
-        >
-          <input
-            id="periodicidadeMeses"
-            name="periodicidadeMeses"
-            type="number"
-            min={1}
-            max={60}
-            defaultValue={v.periodicidadeMeses}
-            className={campo}
-            aria-invalid={Boolean(erros.periodicidadeMeses)}
-          />
-        </Campo>
-        {numero("limiteMinimo", "Limite mínimo (opcional)")}
-        {numero("limiteMaximo", "Limite máximo")}
-        {texto(
-          "referencia",
-          "Legislação ou licença do limite (opcional)",
-          200,
-          "Ex.: CONAMA 430/2011 art. 16; LO 1234/2024",
-          false,
-        )}
-      </div>
-      <div
-        className={`flex gap-3 ${m ? "mt-5" : "justify-end border-t border-borda px-5 py-3"}`}
+      <CadastroEmBlocos
+        embutido={Boolean(m)}
+        acoesEmbutido={
+          <>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : m
+                  ? "Salvar alterações"
+                  : "Cadastrar monitoramento"}
+            </button>
+          </>
+        }
+        resumo={[
+          { rotulo: "Tipo", campo: "tipo" },
+          { rotulo: "Ponto", campo: "ponto" },
+          { rotulo: "Parâmetro", campo: "parametro" },
+        ]}
+        acoes={
+          <>
+            <Link href="/ambiental/monitoramentos" className={botaoSecundario}>
+              Cancelar
+            </Link>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : m
+                  ? "Salvar alterações"
+                  : "Cadastrar monitoramento"}
+            </button>
+          </>
+        }
       >
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando
-            ? "Salvando…"
-            : m
-              ? "Salvar alterações"
-              : "Cadastrar monitoramento"}
-        </button>
-      </div>
+        <Bloco
+          id="ponto"
+          titulo="Ponto e parâmetro"
+          descricao="Tipo, onde a amostra é coletada e o que se mede."
+        >
+          <div className="grid gap-5 sm:grid-cols-3">
+            {estado.erro && !estado.erro.detalhes?.length && (
+              <div className="sm:col-span-3">
+                <AvisoDeErro erro={estado.erro} />
+              </div>
+            )}
+            <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
+              <Selecao
+                id="tipo"
+                required
+                name="tipo"
+                defaultValue={v.tipo}
+                className={campo}
+                aria-invalid={Boolean(erros.tipo)}
+              >
+                <option value="">Escolha</option>
+                {Object.entries(TIPOS_MONITORAMENTO).map(([k, n]) => (
+                  <option key={k} value={k}>
+                    {n}
+                  </option>
+                ))}
+              </Selecao>
+            </Campo>
+            {texto(
+              "ponto",
+              "Ponto de coleta",
+              150,
+              "Ex.: saída da ETE, chaminé da caldeira",
+              true,
+            )}
+            {texto(
+              "parametro",
+              "Parâmetro",
+              100,
+              "Ex.: pH, DBO, material particulado",
+            )}
+            {texto("unidade", "Unidade", 20, "Ex.: mg/L, dB(A)")}
+          </div>
+        </Bloco>
+        <Bloco
+          id="limites"
+          titulo="Coleta e limites"
+          descricao="Periodicidade e os limites do parâmetro."
+        >
+          <div className="grid gap-5 sm:grid-cols-3">
+            <Campo
+              id="periodicidadeMeses"
+              rotulo="Coletar a cada (meses)"
+              erro={erros.periodicidadeMeses}
+            >
+              <input
+                id="periodicidadeMeses"
+                required
+                name="periodicidadeMeses"
+                type="number"
+                min={1}
+                max={60}
+                defaultValue={v.periodicidadeMeses}
+                className={campo}
+                aria-invalid={Boolean(erros.periodicidadeMeses)}
+              />
+            </Campo>
+            {numero("limiteMinimo", "Limite mínimo (opcional)")}
+            {numero("limiteMaximo", "Limite máximo")}
+            {texto(
+              "referencia",
+              "Legislação ou licença do limite (opcional)",
+              200,
+              "Ex.: CONAMA 430/2011 art. 16; LO 1234/2024",
+              false,
+            )}
+          </div>
+        </Bloco>
+      </CadastroEmBlocos>
     </form>
   );
 }

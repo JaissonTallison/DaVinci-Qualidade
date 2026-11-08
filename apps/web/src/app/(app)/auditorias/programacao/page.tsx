@@ -41,33 +41,32 @@ export default async function ProgramacaoDeAuditorias({
   const anos = [anoAtual - 1, anoAtual, anoAtual + 1];
 
   const [lista, eu] = await Promise.all([
-    chamarApi<ItemDaProgramacao[]>(
-      `/programacao-de-auditorias?ano=${ano}`,
-    ),
+    chamarApi<ItemDaProgramacao[]>(`/programacao-de-auditorias?ano=${ano}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
   ]);
   const podeEditar = eu.ok && eu.dados.permissoes.includes("auditorias.editar");
 
   return (
     <>
-      <Link href="/auditorias" className="dv-voltar">
-        Auditorias
-      </Link>
-      <header className="mt-1 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Programação de auditorias</h1>
-          <p className={subtituloDaPagina}>
-            Plano anual por setor: normas, frequência e meses planejados. As
-            auditorias realizadas se vinculam a cada item.
-          </p>
-        </div>
-        {podeEditar && (
-          <Link href={`${BASE}/nova?ano=${ano}`} className={botaoPrimario}>
-            <IconeDaTela href={BASE} />
-            Adicionar item
-          </Link>
-        )}
-      </header>
+      <CabecalhoComVoltar
+        voltar={{ href: "/auditorias", rotulo: "Auditorias" }}
+      >
+        <header className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className={tituloDaPagina}>Programação de auditorias</h1>
+            <p className={subtituloDaPagina}>
+              Plano anual por setor: normas, frequência e meses planejados. As
+              auditorias realizadas se vinculam a cada item.
+            </p>
+          </div>
+          {podeEditar && (
+            <Link href={`${BASE}/nova?ano=${ano}`} className={botaoPrimario}>
+              <IconeDaTela href={BASE} />
+              Adicionar item
+            </Link>
+          )}
+        </header>
+      </CabecalhoComVoltar>
 
       <nav aria-label="Ano" className="mt-6 flex flex-wrap gap-2">
         {anos.map((a) => (
@@ -83,12 +82,9 @@ export default async function ProgramacaoDeAuditorias({
       </nav>
 
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section className={`${painel} mt-4`}>
@@ -98,12 +94,15 @@ export default async function ProgramacaoDeAuditorias({
           </div>
         ) : lista.dados.length === 0 ? (
           <EstadoVazio
-            icone={<CalendarClock aria-hidden size={40} strokeWidth={1.5} />}
+            icone={<CalendarClock aria-hidden size={28} strokeWidth={1.5} />}
             titulo={`Nenhum item planejado para ${ano}.`}
             descricao="Adicione os setores a auditar no ano, com as normas, a frequência e os meses."
             acao={
               podeEditar ? (
-                <Link href={`${BASE}/nova?ano=${ano}`} className={botaoPrimario}>
+                <Link
+                  href={`${BASE}/nova?ano=${ano}`}
+                  className={botaoPrimario}
+                >
                   <IconeDaTela href={BASE} />
                   Adicionar o primeiro item
                 </Link>
@@ -112,28 +111,30 @@ export default async function ProgramacaoDeAuditorias({
           />
         ) : (
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-sm text-texto-2">
+            <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
-                <th className="px-4 py-2 font-semibold">Setor</th>
+                <th className="px-4 py-2.5 font-semibold">Setor</th>
                 <th className="hidden px-4 py-2 font-semibold lg:table-cell">
                   Normas
                 </th>
-                <th className="px-4 py-2 font-semibold">Frequência</th>
-                <th className="px-4 py-2 font-semibold">Meses</th>
+                <th className="px-4 py-2.5 font-semibold">Frequência</th>
+                <th className="px-4 py-2.5 font-semibold">Meses</th>
                 <th className="hidden px-4 py-2 font-semibold sm:table-cell">
                   Responsável
                 </th>
-                <th className="px-4 py-2 font-semibold">Acompanhamento</th>
+                <th className="px-4 py-2.5 font-semibold">Acompanhamento</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-borda">
               {lista.dados.map((i) => {
                 const realizados = new Set(
-                  i.realizadas.map((r) => r.mes).filter((m): m is number => !!m),
+                  i.realizadas
+                    .map((r) => r.mes)
+                    .filter((m): m is number => !!m),
                 );
                 return (
-                  <tr key={i.id} className="hover:bg-campo">
-                    <td className="px-4 py-2">
+                  <tr key={i.id} className="hover:bg-superficie-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`${BASE}/${i.id}`}
                         className="font-semibold text-info hover:underline"
@@ -141,13 +142,13 @@ export default async function ProgramacaoDeAuditorias({
                         {i.setor}
                       </Link>
                     </td>
-                    <td className="hidden px-4 py-2 text-sm text-texto-2 lg:table-cell">
+                    <td className="hidden px-4 py-3 text-sm text-texto-2 lg:table-cell">
                       {i.normas.map((n) => NORMAS[n]).join(", ")}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {FREQUENCIAS_DE_AUDITORIA[i.frequencia]}
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {MESES_ABREVIADOS.map((rotulo, idx) => {
                           const mes = idx + 1;
@@ -165,7 +166,7 @@ export default async function ProgramacaoDeAuditorias({
                               }
                               className={`inline-flex h-6 w-7 items-center justify-center rounded-sm text-xs ${
                                 feito
-                                  ? "bg-conforme/15 font-semibold text-conforme"
+                                  ? "bg-conforme-suave font-semibold text-conforme-texto"
                                   : planejado
                                     ? "border border-marinho/40 text-marinho"
                                     : "text-texto-3"
@@ -177,10 +178,10 @@ export default async function ProgramacaoDeAuditorias({
                         })}
                       </div>
                     </td>
-                    <td className="hidden px-4 py-2 whitespace-nowrap text-texto-2 sm:table-cell">
+                    <td className="hidden px-4 py-3 whitespace-nowrap text-texto-2 sm:table-cell">
                       {i.responsavel}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
                       {i.realizadas.length > 0 ? (
                         <span className="text-texto">
                           {i.realizadas.length}{" "}
@@ -202,3 +203,5 @@ export default async function ProgramacaoDeAuditorias({
     </>
   );
 }
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";

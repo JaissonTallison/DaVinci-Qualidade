@@ -161,7 +161,7 @@ export function MenuLateral({
         </div>
         <p
           title={`Versão ${VERSAO}`}
-          className="pt-2 text-[10px] text-primaria-texto/50"
+          className="pt-2 text-xs text-primaria-texto/50"
         >
           v{VERSAO}
         </p>
@@ -180,7 +180,7 @@ export function MenuLateral({
               }
               className="fixed left-[3.75rem] z-50 max-h-[calc(100vh-1rem)] w-max max-w-80 min-w-56 overflow-y-auto rounded-md border border-primaria-texto/10 bg-menu p-1.5 text-primaria-texto shadow-md"
             >
-              <p className="px-2.5 pt-1.5 pb-1 text-xs font-semibold tracking-[0.08em] text-primaria-texto/60 uppercase">
+              <p className="px-2.5 pt-1.5 pb-1 text-xs font-semibold tracking-[0.04em] text-primaria-texto/60 uppercase">
                 {painel.titulo}
               </p>
               {(painel.titulo === "Início"

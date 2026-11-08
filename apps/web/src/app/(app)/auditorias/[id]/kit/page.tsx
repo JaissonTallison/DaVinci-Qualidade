@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CircleAlert, CircleCheck, Circle, CircleDashed } from "@/components/icones";
+import {
+  CircleAlert,
+  CircleCheck,
+  Circle,
+  CircleDashed,
+} from "@/components/icones";
 import {
   MOMENTOS_DO_KIT,
   NORMAS,
@@ -20,6 +25,7 @@ import { EtapasDaAuditoria } from "../etapas";
 import { AbasDoPlanejar } from "../planejar-abas";
 import { StatusDoItem } from "./status";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Kit pré-auditoria" };
 
 /** Etapa Planejar: o que precisa estar pronto a 90, 30, 15 e 7 dias da auditoria e no dia dela. */
@@ -43,18 +49,21 @@ export default async function KitDaAuditoria({
   const atrasados = k.itens.filter((i) => i.atrasado).length;
   return (
     <article>
-      <Link href="/auditorias" className="dv-voltar">
-        Auditorias
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{a.dados.numero}</span>
-        <StatusDaAuditoria status={a.dados.status} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        Auditoria {TIPOS_AUDITORIA[a.dados.tipo].toLowerCase()} ·{" "}
-        {a.dados.normas.map((n) => NORMAS[n]).join(", ")}
-      </h1>
-      <EtapasDaAuditoria id={id} atual="planejar" />
+      <CabecalhoComVoltar
+        voltar={{ href: "/auditorias", rotulo: "Auditorias" }}
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-base text-texto-2">
+            {a.dados.numero}
+          </span>
+          <StatusDaAuditoria status={a.dados.status} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          Auditoria {TIPOS_AUDITORIA[a.dados.tipo].toLowerCase()} ·{" "}
+          {a.dados.normas.map((n) => NORMAS[n]).join(", ")}
+        </h1>
+        <EtapasDaAuditoria id={id} atual="planejar" />
+      </CabecalhoComVoltar>
       <AbasDoPlanejar id={id} atual="kit" />
 
       <section className={`${painel} mt-6 p-5`} aria-label="Prontidão">
@@ -98,7 +107,7 @@ export default async function KitDaAuditoria({
                 aria-hidden
                 className="absolute top-1 -left-[1.6rem] size-3 rounded-full bg-menu"
               />
-              <h2 className="flex flex-wrap items-baseline gap-x-3 text-sm font-semibold tracking-[0.06em] text-texto uppercase">
+              <h2 className="flex flex-wrap items-baseline gap-x-3 text-sm font-semibold tracking-[0.04em] text-texto uppercase">
                 {MOMENTOS_DO_KIT[m].rotulo}
                 {prazo && (
                   <span className="font-normal tracking-normal text-texto-2 normal-case">
@@ -115,25 +124,25 @@ export default async function KitDaAuditoria({
                     <span className="shrink-0" aria-hidden>
                       {i.status === "concluido" ? (
                         <CircleCheck
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-conforme"
                         />
                       ) : i.atrasado ? (
                         <CircleAlert
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-nao-conforme"
                         />
                       ) : i.status === "em_andamento" ? (
                         <CircleDashed
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-info"
                         />
                       ) : (
                         <Circle
-                          size={20}
+                          size={18}
                           strokeWidth={1.75}
                           className="text-texto-3"
                         />

@@ -15,9 +15,10 @@ import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import {
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { FormularioDeConsumo } from "./formulario";
 import { GraficoDeConsumo } from "./grafico";
@@ -86,7 +87,7 @@ export default async function Consumo({
             className={botaoSecundario}
             aria-label={`Ano ${ano - 1}`}
           >
-            <ChevronLeft aria-hidden size={16} strokeWidth={2} />
+            <ChevronLeft aria-hidden size={16} strokeWidth={1.75} />
           </Link>
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
@@ -97,7 +98,7 @@ export default async function Consumo({
               className={botaoSecundario}
               aria-label={`Ano ${ano + 1}`}
             >
-              <ChevronRight aria-hidden size={16} strokeWidth={2} />
+              <ChevronRight aria-hidden size={16} strokeWidth={1.75} />
             </Link>
           )}
         </nav>
@@ -121,23 +122,29 @@ export default async function Consumo({
         </p>
       ) : (
         <>
-          <section className={`${painel} mt-6 p-5`}>
-            <h2 className={tituloDaSecao}>Evolução no ano</h2>
-            <div className="mt-3">
-              <GraficoDeConsumo ano={ano} consumos={dados} fontes={fontes} />
+          <section className={`${painel} mt-6`}>
+            <header className={cabecalhoDoPainel}>
+              <h2 className={tituloDoPainel}>Evolução no ano</h2>
+            </header>
+            <div className="p-5">
+              <div>
+                <GraficoDeConsumo ano={ano} consumos={dados} fontes={fontes} />
+              </div>
             </div>
           </section>
           <section className={`${painel} mt-6`}>
-            <h2 className={`${tituloDaSecao} px-5 pt-5`}>Leituras de {ano}</h2>
+            <header className={cabecalhoDoPainel}>
+              <h2 className={tituloDoPainel}>Leituras de {ano}</h2>
+            </header>
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
-                    <th className="px-5 py-2 font-semibold">Mês</th>
+                    <th className="px-5 py-2.5 font-semibold">Mês</th>
                     {fontes.map((f) => (
                       <th
                         key={f}
-                        className="px-4 py-2 text-right font-semibold"
+                        className="px-4 py-2.5 text-right font-semibold"
                       >
                         {FONTES_DE_CONSUMO[f]} ({UNIDADE_DA_FONTE[f]})
                       </th>
@@ -147,7 +154,7 @@ export default async function Consumo({
                 <tbody className="divide-y divide-borda">
                   {Array.from({ length: meses }, (_, i) => i + 1).map((m) => (
                     <tr key={m}>
-                      <td className="px-5 py-2">{MESES[m - 1]}</td>
+                      <td className="px-5 py-3">{MESES[m - 1]}</td>
                       {fontes.map((f) => {
                         const c = valor(f, m);
                         return (
@@ -164,9 +171,9 @@ export default async function Consumo({
                 </tbody>
                 <tfoot className="border-t border-borda-forte font-semibold">
                   <tr>
-                    <td className="px-5 py-2">Total</td>
+                    <td className="px-5 py-3">Total</td>
                     {fontes.map((f) => (
-                      <td key={f} className="px-4 py-2 text-right tabular-nums">
+                      <td key={f} className="px-4 py-3 text-right tabular-nums">
                         {num(
                           dados
                             .filter((c) => c.fonte === f)

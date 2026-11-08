@@ -6,26 +6,20 @@ import {
   type RiscoDaEvidencia,
   type TipoDeEvidencia,
 } from "@davinci/types";
+import { Selo } from "./selo";
 
-/** Risco se a evidência não existir: a cor no marcador, o texto em tinta normal (interface.md §5.4). */
+/** Risco se a evidência não existir, no tom do nível. */
 export function RiscoDaEvidenciaMarcador({
   risco,
 }: {
   risco: RiscoDaEvidencia;
 }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm text-texto">
-      {RISCOS_DA_EVIDENCIA[risco]}
-    </span>
-  );
+  const tom = { alto: "perigo", medio: "atencao", baixo: "sucesso" } as const;
+  return <Selo tom={tom[risco]}>{RISCOS_DA_EVIDENCIA[risco]}</Selo>;
 }
 
 export function TipoDaEvidencia({ tipo }: { tipo: TipoDeEvidencia }) {
-  return (
-    <span className="rounded-xs bg-superficie-2 px-1.5 py-0.5 text-xs text-texto-2">
-      {TIPOS_DE_EVIDENCIA[tipo]}
-    </span>
-  );
+  return <Selo>{TIPOS_DE_EVIDENCIA[tipo]}</Selo>;
 }
 
 export function RespostaMarcador({
@@ -33,9 +27,11 @@ export function RespostaMarcador({
 }: {
   resposta: RespostaDaPergunta;
 }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm text-texto">
-      {RESPOSTAS_DA_PERGUNTA[resposta]}
-    </span>
-  );
+  const tom = {
+    pendente: "neutro",
+    conforme: "sucesso",
+    parcial: "atencao",
+    nao_conforme: "perigo",
+  } as const;
+  return <Selo tom={tom[resposta]}>{RESPOSTAS_DA_PERGUNTA[resposta]}</Selo>;
 }

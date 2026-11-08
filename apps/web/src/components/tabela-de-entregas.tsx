@@ -24,18 +24,18 @@ export function TabelaDeEntregas({
   return (
     <div className="relative overflow-x-auto">
       <table className="w-full text-left">
-        <thead className="bg-superficie-2 text-sm text-texto-2">
+        <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
           <tr>
-            <th className="px-4 py-2 font-semibold">Data</th>
+            <th className="px-4 py-2.5 font-semibold">Data</th>
             {comFuncionario && (
-              <th className="px-4 py-2 font-semibold">Profissional</th>
+              <th className="px-4 py-2.5 font-semibold">Profissional</th>
             )}
-            <th className="px-4 py-2 font-semibold">EPI</th>
-            <th className="px-4 py-2 font-semibold">Qtd.</th>
-            <th className="px-4 py-2 font-semibold">Motivo</th>
-            <th className="px-4 py-2 font-semibold">Termo</th>
-            <th className="px-4 py-2 font-semibold">Próxima troca</th>
-            <th className="px-4 py-2 font-semibold">Situação</th>
+            <th className="px-4 py-2.5 font-semibold">EPI</th>
+            <th className="px-4 py-2.5 font-semibold">Qtd.</th>
+            <th className="px-4 py-2.5 font-semibold">Motivo</th>
+            <th className="px-4 py-2.5 font-semibold">Termo</th>
+            <th className="px-4 py-2.5 font-semibold">Próxima troca</th>
+            <th className="px-4 py-2.5 font-semibold">Situação</th>
             {(podeEditar || gestor) && (
               <th className="px-4 py-2">
                 <span className="sr-only">Ações</span>
@@ -50,7 +50,7 @@ export function TabelaDeEntregas({
               e.situacao === "em_uso" || e.situacao === "troca_vencida";
             return (
               <tr key={e.id} className={anulada ? "text-texto-3" : ""}>
-                <td className="px-4 py-2.5 whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap">
                   <span className={anulada ? "line-through" : ""}>
                     {formatarData(e.data)}
                   </span>
@@ -61,7 +61,7 @@ export function TabelaDeEntregas({
                   )}
                 </td>
                 {comFuncionario && (
-                  <td className="px-4 py-2.5">
+                  <td className="px-4 py-3">
                     <Link
                       href={`/cadastros/funcionarios/${e.funcionarioId}`}
                       className="text-info hover:underline"
@@ -73,17 +73,17 @@ export function TabelaDeEntregas({
                     </span>
                   </td>
                 )}
-                <td className="px-4 py-2.5">
+                <td className="px-4 py-3">
                   {e.epiNome}
                   <span className="block font-mono text-xs text-texto-3">
                     CA {e.ca}
                   </span>
                 </td>
-                <td className="px-4 py-2.5 tabular-nums">{e.quantidade}</td>
-                <td className="px-4 py-2.5 text-texto-2">
+                <td className="px-4 py-3 tabular-nums">{e.quantidade}</td>
+                <td className="px-4 py-3 text-texto-2">
                   {MOTIVOS_ENTREGA[e.motivo]}
                 </td>
-                <td className="px-4 py-2.5 whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap">
                   {e.termoAssinado ? (
                     "Assinado"
                   ) : (
@@ -92,7 +92,7 @@ export function TabelaDeEntregas({
                     </span>
                   )}
                 </td>
-                <td className="px-4 py-2.5 whitespace-nowrap">
+                <td className="px-4 py-3 whitespace-nowrap">
                   {e.devolvidoEm ? (
                     <span className="text-texto-2">
                       Devolvido em {formatarData(e.devolvidoEm)}
@@ -112,11 +112,11 @@ export function TabelaDeEntregas({
                     "—"
                   )}
                 </td>
-                <td className="px-4 py-2.5">
+                <td className="px-4 py-3">
                   <SituacaoDaEntrega situacao={e.situacao} />
                 </td>
                 {(podeEditar || gestor) && (
-                  <td className="px-4 py-2.5 text-right whitespace-nowrap">
+                  <td className="px-4 py-3 text-right whitespace-nowrap">
                     <span className="inline-flex gap-4">
                       {podeEditar && aberta && (
                         <DevolverEntrega entrega={e} voltar={voltar} />

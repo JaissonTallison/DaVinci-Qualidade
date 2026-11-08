@@ -92,11 +92,11 @@ export function AcaoDaEtapa({
             {(erros, v) => (
               <>
                 <fieldset className="flex flex-col gap-2">
-                  <legend className="text-sm font-semibold text-texto-2">
+                  <legend className="text-base font-medium text-texto">
                     Resultado da verificação
                   </legend>
                   <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
-                    <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
+                    <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-acao has-[:checked]:bg-info-suave">
                       <input
                         type="radio"
                         name="eficaz"
@@ -111,7 +111,7 @@ export function AcaoDaEtapa({
                         </span>
                       </span>
                     </label>
-                    <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
+                    <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-acao has-[:checked]:bg-info-suave">
                       <input
                         type="radio"
                         name="eficaz"
@@ -171,7 +171,11 @@ export function CancelarNc({ nc }: { nc: NaoConformidade }) {
         perigo
       >
         {(erros, v) => (
-          <Campo id="motivo" rotulo="Motivo do cancelamento" erro={erros.motivo}>
+          <Campo
+            id="motivo"
+            rotulo="Motivo do cancelamento"
+            erro={erros.motivo}
+          >
             <textarea
               id="motivo"
               name="motivo"
@@ -240,8 +244,7 @@ function FormularioTratamento({
                 opcoes={Object.fromEntries(
                   [
                     ...causas,
-                    ...(v.causaTipo &&
-                    !causas.includes(v.causaTipo as string)
+                    ...(v.causaTipo && !causas.includes(v.causaTipo as string)
                       ? [v.causaTipo as string]
                       : nc.causaTipo && !causas.includes(nc.causaTipo)
                         ? [nc.causaTipo]
@@ -263,7 +266,7 @@ function FormularioTratamento({
             )}
           </Campo>
           <fieldset className="flex flex-col gap-2">
-            <legend className="text-sm font-semibold text-texto-2">
+            <legend className="text-base font-medium text-texto">
               Porquês (até 5)
             </legend>
             {[0, 1, 2, 3, 4].map((i) => (

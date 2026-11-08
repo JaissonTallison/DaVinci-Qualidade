@@ -43,18 +43,18 @@ export function LinhaDoTempoDaInovacao({ m }: { m: Mudanca }) {
                 aria-hidden
                 className={`flex size-7 shrink-0 items-center justify-center rounded-sm text-sm font-semibold ${
                   concluido
-                    ? "bg-conforme/12 text-conforme"
+                    ? "bg-conforme-suave text-conforme-texto"
                     : corrente
                       ? "bg-acao text-primaria-texto"
                       : "border border-borda-forte text-texto-3"
                 }`}
               >
-                {concluido ? <Check size={15} strokeWidth={2.5} /> : i + 1}
+                {concluido ? <Check size={14} strokeWidth={1.75} /> : i + 1}
               </span>
               {!ultimo && (
                 <span
                   aria-hidden
-                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme/40" : "bg-borda"}`}
+                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme-borda" : "bg-borda"}`}
                 />
               )}
             </div>
@@ -86,9 +86,9 @@ export function LinhaDoTempoDaInovacao({ m }: { m: Mudanca }) {
         <li className="flex gap-3">
           <span
             aria-hidden
-            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme/12 text-nao-conforme"
+            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme-suave text-nao-conforme-texto"
           >
-            <X size={15} strokeWidth={2.5} />
+            <X size={14} strokeWidth={1.75} />
           </span>
           <p className="text-base font-semibold text-nao-conforme">Reprovada</p>
         </li>

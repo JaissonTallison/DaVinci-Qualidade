@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -13,13 +12,19 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   EditarEquipamento,
   InspecionarEquipamento,
   SituacaoDoEquipamento,
 } from "../formularios";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Equipamento" };
 
 export default async function DetalheDoEquipamento({
@@ -40,45 +45,46 @@ export default async function DetalheDoEquipamento({
   const hoje = hojeEmBrasilia();
   return (
     <article>
-      <Link
-        href="/seguranca/equipamentos"
-        className="dv-voltar"
-      >
-        Equipamentos de emergência
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-mono text-lg text-texto-2">
-          {e.identificacao}
-        </span>
-        <span
-          className={
-            e.vencido && e.ativo
-              ? "font-semibold text-nao-conforme"
-              : e.pendencia
-                ? "text-atencao"
-                : ""
-          }
-        >
-          {!e.ativo
-            ? "Fora de uso"
-            : e.vencido
-              ? "Vencido"
-              : e.pendencia
-                ? "Com pendência"
-                : "Em condição"}
-        </span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>
-        {NOMES_DAS_CATEGORIAS[e.categoria]} · {e.local}
-      </h1>
-      <Aviso
-        avisos={{
-          criado: "Equipamento cadastrado.",
-          salvo: "Equipamento salvo.",
-          inspecionado: "Inspeção registrada.",
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/seguranca/equipamentos",
+          rotulo: "Equipamentos de emergência",
         }}
-        chave={aviso}
-      />
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="font-mono text-base text-texto-2">
+            {e.identificacao}
+          </span>
+          <span
+            className={
+              e.vencido && e.ativo
+                ? "font-semibold text-nao-conforme"
+                : e.pendencia
+                  ? "text-atencao"
+                  : ""
+            }
+          >
+            {!e.ativo
+              ? "Fora de uso"
+              : e.vencido
+                ? "Vencido"
+                : e.pendencia
+                  ? "Com pendência"
+                  : "Em condição"}
+          </span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>
+          {NOMES_DAS_CATEGORIAS[e.categoria]} · {e.local}
+        </h1>
+        <Aviso
+          avisos={{
+            criado: "Equipamento cadastrado.",
+            salvo: "Equipamento salvo.",
+            inspecionado: "Inspeção registrada.",
+          }}
+          chave={aviso}
+        />
+      </CabecalhoComVoltar>
       <section
         className={`${painel} mt-6 grid gap-x-8 gap-y-4 p-5 sm:grid-cols-4`}
       >
@@ -104,7 +110,9 @@ export default async function DetalheDoEquipamento({
         />
       )}
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Inspeções</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Inspeções</h2>
+        </header>
         {e.inspecoes.length === 0 ? (
           <p className="px-5 py-5 text-base text-texto-2">
             Nenhuma inspeção registrada.

@@ -110,8 +110,7 @@ export default async function Satisfacao({
               itens={[
                 {
                   rotulo: "Satisfação (ISC)",
-                  valor:
-                    r.dados.indice === null ? null : `${r.dados.indice}%`,
+                  valor: r.dados.indice === null ? null : `${r.dados.indice}%`,
                   alerta: r.dados.total > 0 && !r.dados.atingiu,
                 },
                 { rotulo: "Meta", valor: `≥ ${r.dados.meta}%` },
@@ -163,27 +162,27 @@ export default async function Satisfacao({
             ) : (
               <div className="relative overflow-x-auto">
                 <table className="w-full text-left">
-                  <thead className="bg-superficie-2 text-sm text-texto-2">
+                  <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                     <tr>
-                      <th className="px-4 py-2 font-semibold">Data</th>
-                      <th className="px-4 py-2 font-semibold">Cliente</th>
-                      <th className="px-4 py-2 font-semibold">Nota</th>
-                      <th className="px-4 py-2 font-semibold">Comentário</th>
+                      <th className="px-4 py-2.5 font-semibold">Data</th>
+                      <th className="px-4 py-2.5 font-semibold">Cliente</th>
+                      <th className="px-4 py-2.5 font-semibold">Nota</th>
+                      <th className="px-4 py-2.5 font-semibold">Comentário</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-borda">
                     {r.dados.respostas.map((x) => (
                       <tr key={x.id}>
-                        <td className="px-4 py-2 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           {formatarData(x.data)}
                         </td>
-                        <td className="px-4 py-2">{x.clienteNome}</td>
+                        <td className="px-4 py-3">{x.clienteNome}</td>
                         <td
                           className={`px-4 py-2 tabular-nums ${x.nota <= 6 ? "text-nao-conforme" : x.nota >= 9 ? "text-conforme" : ""}`}
                         >
                           {x.nota}
                         </td>
-                        <td className="max-w-md px-4 py-2 text-texto-2">
+                        <td className="max-w-md px-4 py-3 text-texto-2">
                           {x.comentario}
                         </td>
                       </tr>

@@ -37,11 +37,17 @@ export function ThOrdenavel({
   q.set("ordenar", campo);
   q.set("ordem", proxima);
   q.delete("pagina");
-  const Icone = ativo ? (ordem === "asc" ? ArrowUp : ArrowDown) : ChevronsUpDown;
+  const Icone = ativo
+    ? ordem === "asc"
+      ? ArrowUp
+      : ArrowDown
+    : ChevronsUpDown;
   return (
     <th
-      aria-sort={ativo ? (ordem === "asc" ? "ascending" : "descending") : "none"}
-      className={`px-4 py-2 font-semibold ${className}`}
+      aria-sort={
+        ativo ? (ordem === "asc" ? "ascending" : "descending") : "none"
+      }
+      className={`px-4 py-2.5 font-semibold whitespace-nowrap ${className}`}
     >
       <Link
         href={`${base}?${q}`}
@@ -53,7 +59,7 @@ export function ThOrdenavel({
         <Icone
           aria-hidden
           size={14}
-          strokeWidth={2}
+          strokeWidth={1.75}
           className={
             ativo
               ? "text-texto"

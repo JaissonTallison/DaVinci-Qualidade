@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { Printer } from "@/components/icones";
 import {
   STATUS_DO_PASSO,
@@ -17,9 +18,10 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
 import {
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaPagina,
-  tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { LinkDaPesquisa } from "@/components/link-da-pesquisa";
 import { AvaliarOs, CancelarOs, ConcluirOs, IniciarOs } from "./acoes";
@@ -65,40 +67,42 @@ export default async function DetalheDaOs({
     : undefined;
   return (
     <article>
-      <Link
-        href="/servicos/ordens"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/servicos/ordens", rotulo: "Ordens de serviço" }}
       >
-        Ordens de serviço
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-mono text-lg text-texto-2">{o.numero}</span>
-        <StatusDaOs status={o.status} atrasada={o.atrasada} prazo={o.prazo} />
-      </header>
-      <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className={tituloDaPagina}>{o.titulo}</h1>
-        <div className="flex flex-wrap gap-2">
-          {podeEditar && o.status === "concluida" && o.nota === null && (
-            <EnviarPesquisa
-              clienteId={o.clienteId}
-              osId={o.id}
-              voltar={`/servicos/ordens/${o.id}`}
-            />
-          )}
-          <Link
-            href={`/servicos/ordens/${o.id}/imprimir`}
-            className={botaoSecundario}
-          >
-            <Printer aria-hidden size={16} strokeWidth={2} />
-            Relatório da OS
-          </Link>
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="font-mono text-base text-texto-2">{o.numero}</span>
+          <StatusDaOs status={o.status} atrasada={o.atrasada} prazo={o.prazo} />
+        </header>
+        <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">
+          <h1 className={tituloDaPagina}>{o.titulo}</h1>
+          <div className="flex flex-wrap gap-2">
+            {podeEditar && o.status === "concluida" && o.nota === null && (
+              <EnviarPesquisa
+                clienteId={o.clienteId}
+                osId={o.id}
+                voltar={`/servicos/ordens/${o.id}`}
+              />
+            )}
+            <Link
+              href={`/servicos/ordens/${o.id}/imprimir`}
+              className={botaoSecundario}
+            >
+              <Printer aria-hidden size={16} strokeWidth={1.75} />
+              Relatório da OS
+            </Link>
+          </div>
         </div>
-      </div>
+      </CabecalhoComVoltar>
       <Aviso avisos={AVISOS} chave={aviso} />
       {conviteNovo && <LinkDaPesquisa convite={conviteNovo} />}
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDaOs o={o} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDaOs o={o} />
+        </div>
       </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">

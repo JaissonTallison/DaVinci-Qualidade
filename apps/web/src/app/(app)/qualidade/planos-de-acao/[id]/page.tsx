@@ -13,7 +13,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Progresso, StatusDoPlano } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { formatarReais } from "@/lib/valores";
 import { AnexosDoItem } from "@/components/anexos-do-item";
 import { AcoesDaTarefa, AcoesDoPlano } from "./acoes";
@@ -21,6 +26,8 @@ import { Anexos } from "@/components/anexos";
 import { linkDaOrigemDoPlano } from "@/lib/origem-plano";
 import { LinhaDoTempoDoPlano } from "./linha-do-tempo";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Plano de ação" };
 
 const AVISOS: Record<string, string> = {
@@ -57,109 +64,123 @@ export default async function DetalheDoPlano({
 
   return (
     <article>
-      <Link
-        href="/qualidade/planos-de-acao"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/qualidade/planos-de-acao", rotulo: "Planos de ação" }}
       >
-        Planos de ação
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-        <span className="font-mono text-lg text-texto-2">{p.numero}</span>
-        <StatusDoPlano
-          status={p.status}
-          atrasado={p.atrasado}
-          prazo={p.prazo}
-        />
-        <Progresso
-          valor={p.progresso}
-          feitos={p.tarefas.filter((t) => t.situacao === "concluida").length}
-          total={p.tarefas.filter((t) => t.situacao !== "cancelada").length}
-        />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
+        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <span className="font-mono text-base text-texto-2">{p.numero}</span>
+          <StatusDoPlano
+            status={p.status}
+            atrasado={p.atrasado}
+            prazo={p.prazo}
+          />
+          <Progresso
+            valor={p.progresso}
+            feitos={p.tarefas.filter((t) => t.situacao === "concluida").length}
+            total={p.tarefas.filter((t) => t.situacao !== "cancelada").length}
+          />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
+        {/* Resumo rápido: responsável e prazo do plano logo abaixo do título. */}
+        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
+          <span>
+            Responsável:{" "}
+            <span className="font-medium text-texto">{p.responsavel}</span>
+          </span>
+          <span>
+            Prazo:{" "}
+            <span className="font-medium text-texto">
+              {formatarData(p.prazo)}
+            </span>
+            {!terminado && ` · ${prazoRelativo(p.prazo)}`}
+          </span>
+        </div>
+      </CabecalhoComVoltar>
 
-      {/* Resumo rápido: responsável e prazo do plano logo abaixo do título. */}
-      <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
-        <span>
-          Responsável:{" "}
-          <span className="font-medium text-texto">{p.responsavel}</span>
-        </span>
-        <span>
-          Prazo:{" "}
-          <span className="font-medium text-texto">{formatarData(p.prazo)}</span>
-          {!terminado && ` · ${prazoRelativo(p.prazo)}`}
-        </span>
-      </div>
-
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDoPlano p={p} />
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDoPlano p={p} />
+        </div>
       </section>
 
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
 
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Objetivo</h2>
-        <p className="mt-3 max-w-[72ch] text-md whitespace-pre-line">
-          {p.objetivo}
-        </p>
-        <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Dado rotulo="Tipo">{TIPOS_PLANO[p.tipo]}</Dado>
-          <Dado rotulo="Origem">
-            {ORIGENS_PLANO[p.origem]}
-            {p.origemRef &&
-              (() => {
-                const href = linkDaOrigemDoPlano(p.origem, p.origemRef, p.ncId);
-                return href ? (
-                  <Link
-                    href={href}
-                    className="ml-1 font-mono text-sm font-medium text-acao hover:underline"
-                  >
-                    {p.origemRef}
-                  </Link>
-                ) : (
-                  <span className="ml-1 font-mono text-sm">{p.origemRef}</span>
-                );
-              })()}
-          </Dado>
-          {p.custoPrevisto && (
-            <Dado rotulo="Custo previsto">
-              {formatarReais(p.custoPrevisto)}
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Objetivo</h2>
+        </header>
+        <div className="p-5">
+          <p className="max-w-[72ch] text-md whitespace-pre-line">
+            {p.objetivo}
+          </p>
+          <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+            <Dado rotulo="Tipo">{TIPOS_PLANO[p.tipo]}</Dado>
+            <Dado rotulo="Origem">
+              {ORIGENS_PLANO[p.origem]}
+              {p.origemRef &&
+                (() => {
+                  const href = linkDaOrigemDoPlano(
+                    p.origem,
+                    p.origemRef,
+                    p.ncId,
+                  );
+                  return href ? (
+                    <Link
+                      href={href}
+                      className="ml-1 font-mono text-sm font-medium text-acao hover:underline"
+                    >
+                      {p.origemRef}
+                    </Link>
+                  ) : (
+                    <span className="ml-1 font-mono text-sm">
+                      {p.origemRef}
+                    </span>
+                  );
+                })()}
             </Dado>
-          )}
-        </dl>
+            {p.custoPrevisto && (
+              <Dado rotulo="Custo previsto">
+                {formatarReais(p.custoPrevisto)}
+              </Dado>
+            )}
+          </dl>
+        </div>
       </section>
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Tarefas</h2>
-        <p className="px-5 pt-1 text-base text-texto-2">
-          {pendentes === 0
-            ? "Todas as tarefas concluídas."
-            : `${pendentes} ${pendentes === 1 ? "tarefa pendente" : "tarefas pendentes"}`}
-          {atrasadas > 0 && (
-            <span className="font-medium text-nao-conforme">
-              {" · "}
-              {atrasadas} {atrasadas === 1 ? "atrasada" : "atrasadas"}
-            </span>
-          )}
-        </p>
+        <header className={cabecalhoDoPainel}>
+          <div className="min-w-0">
+            <h2 className={tituloDoPainel}>Tarefas</h2>
+            <p className="text-sm text-texto-2">
+              {pendentes === 0
+                ? "Todas as tarefas concluídas."
+                : `${pendentes} ${pendentes === 1 ? "tarefa pendente" : "tarefas pendentes"}`}
+              {atrasadas > 0 && (
+                <span className="font-medium text-nao-conforme">
+                  {" · "}
+                  {atrasadas} {atrasadas === 1 ? "atrasada" : "atrasadas"}
+                </span>
+              )}
+            </p>
+          </div>
+        </header>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-sm text-texto-2">
+            <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
-                <th className="px-5 py-2 font-semibold">O que fazer</th>
-                <th className="px-4 py-2 font-semibold">Quem</th>
-                <th className="px-4 py-2 font-semibold">Até quando</th>
-                <th className="px-4 py-2 font-semibold">Situação</th>
+                <th className="px-5 py-2.5 font-semibold">O que fazer</th>
+                <th className="px-4 py-2.5 font-semibold">Quem</th>
+                <th className="px-4 py-2.5 font-semibold">Até quando</th>
+                <th className="px-4 py-2.5 font-semibold">Situação</th>
                 {podeEditar && (
-                  <th className="px-4 py-2 font-semibold">
+                  <th className="px-4 py-2.5 font-semibold">
                     <span className="sr-only">Ações</span>
                   </th>
                 )}
@@ -171,7 +192,7 @@ export default async function DetalheDoPlano({
                   key={t.id}
                   className={t.situacao === "cancelada" ? "text-texto-3" : ""}
                 >
-                  <td className="max-w-xl px-5 py-2.5">
+                  <td className="max-w-xl px-5 py-3">
                     <span
                       className={
                         t.situacao === "cancelada" ? "line-through" : ""
@@ -190,10 +211,10 @@ export default async function DetalheDoPlano({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {t.responsavel}
                   </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {formatarData(t.prazo)}
                     {t.situacao === "pendente" && (
                       <span
@@ -203,7 +224,7 @@ export default async function DetalheDoPlano({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <span
                       className={
                         t.situacao === "concluida"
@@ -222,7 +243,7 @@ export default async function DetalheDoPlano({
                     )}
                   </td>
                   {podeEditar && (
-                    <td className="px-4 py-2.5 text-right whitespace-nowrap">
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
                       <AcoesDaTarefa
                         planoId={p.id}
                         versao={p.versao}
@@ -245,7 +266,9 @@ export default async function DetalheDoPlano({
       )}
 
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>Evidências das tarefas</h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Evidências das tarefas</h2>
+        </header>
         <p className="px-5 text-base text-texto-2">
           O registro que comprova cada tarefa feita: documento revisado, lista
           de presença, foto, tela do sistema.
@@ -279,36 +302,44 @@ export default async function DetalheDoPlano({
       </section>
 
       {p.eficaz !== null && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Verificação de eficácia</h2>
-          <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-3">
-            <Dado rotulo="Resultado da última verificação">
-              {p.eficaz ? "Objetivo alcançado" : "Objetivo não alcançado"}
-            </Dado>
-            {p.verificadoEm && (
-              <Dado rotulo="Verificada em">
-                {formatarMomento(p.verificadoEm)}
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Verificação de eficácia</h2>
+          </header>
+          <div className="p-5">
+            <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-3">
+              <Dado rotulo="Resultado da última verificação">
+                {p.eficaz ? "Objetivo alcançado" : "Objetivo não alcançado"}
               </Dado>
+              {p.verificadoEm && (
+                <Dado rotulo="Verificada em">
+                  {formatarMomento(p.verificadoEm)}
+                </Dado>
+              )}
+            </dl>
+            {p.parecerEficacia && (
+              <p className="mt-4 max-w-[72ch] text-base whitespace-pre-line">
+                {p.parecerEficacia}
+              </p>
             )}
-          </dl>
-          {p.parecerEficacia && (
-            <p className="mt-4 max-w-[72ch] text-base whitespace-pre-line">
-              {p.parecerEficacia}
-            </p>
-          )}
+          </div>
         </section>
       )}
 
       {p.status === "cancelado" && p.motivoCancelamento && (
-        <section className={`${painel} mt-6 p-5`}>
-          <h2 className={tituloDaSecao}>Cancelamento</h2>
-          {p.canceladoEm && (
-            <p className="mt-2 text-sm text-texto-2">
-              {formatarMomento(p.canceladoEm)}
-              {p.canceladoPorNome ? ` · por ${p.canceladoPorNome}` : ""}
-            </p>
-          )}
-          <p className="mt-2 text-base">{p.motivoCancelamento}</p>
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Cancelamento</h2>
+          </header>
+          <div className="p-5">
+            {p.canceladoEm && (
+              <p className="mt-2 text-sm text-texto-2">
+                {formatarMomento(p.canceladoEm)}
+                {p.canceladoPorNome ? ` · por ${p.canceladoPorNome}` : ""}
+              </p>
+            )}
+            <p className="mt-2 text-base">{p.motivoCancelamento}</p>
+          </div>
         </section>
       )}
 

@@ -15,7 +15,13 @@ import {
   anularTreinamentoRealizado,
 } from "@/lib/acoes-exames-e-treinamentos";
 import { formatarData } from "@/lib/datas";
-import { botaoSecundario, painel, tituloDaSecao } from "@/lib/estilos";
+import {
+  botaoSecundario,
+  cabecalhoDoPainel,
+  painel,
+  tituloDaSecao,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { RegistrarAso } from "./registrar-aso";
 
 /** Exames ocupacionais e treinamentos da pessoa. O vigente é o mais recente; os antigos ficam como histórico. */
@@ -38,9 +44,9 @@ export async function ExamesETreinamentos({
   return (
     <>
       <section className={`${painel} mt-6`}>
-        <h2 className={`${tituloDaSecao} px-5 pt-5`}>
-          Exames ocupacionais (ASO)
-        </h2>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Exames ocupacionais (ASO)</h2>
+        </header>
         {!asos.ok ? (
           <div className="p-5">
             <AvisoDeErro erro={asos.erro} />
@@ -52,13 +58,13 @@ export async function ExamesETreinamentos({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Data</th>
-                  <th className="px-4 py-2 font-semibold">Tipo</th>
-                  <th className="px-4 py-2 font-semibold">Resultado</th>
-                  <th className="px-4 py-2 font-semibold">Próximo exame</th>
-                  <th className="px-4 py-2 font-semibold">Médico</th>
+                  <th className="px-5 py-2.5 font-semibold">Data</th>
+                  <th className="px-4 py-2.5 font-semibold">Tipo</th>
+                  <th className="px-4 py-2.5 font-semibold">Resultado</th>
+                  <th className="px-4 py-2.5 font-semibold">Próximo exame</th>
+                  <th className="px-4 py-2.5 font-semibold">Médico</th>
                   {podeEditar && (
                     <th className="px-4 py-2">
                       <span className="sr-only">Ações</span>
@@ -71,7 +77,7 @@ export async function ExamesETreinamentos({
                   const anulado = Boolean(a.motivoAnulacao);
                   return (
                     <tr key={a.id} className={anulado ? "text-texto-3" : ""}>
-                      <td className="px-5 py-2.5 whitespace-nowrap">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         <span className={anulado ? "line-through" : ""}>
                           {formatarData(a.data)}
                         </span>
@@ -81,7 +87,7 @@ export async function ExamesETreinamentos({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5">{TIPOS_ASO[a.tipo]}</td>
+                      <td className="px-4 py-3">{TIPOS_ASO[a.tipo]}</td>
                       <td
                         className={`px-4 py-2.5 ${!anulado && a.resultado === "inapto" ? "font-semibold text-nao-conforme" : ""}`}
                       >
@@ -92,7 +98,7 @@ export async function ExamesETreinamentos({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-3">
                         {!a.proximoExame ? (
                           "—"
                         ) : a === asoVigente ? (
@@ -101,13 +107,13 @@ export async function ExamesETreinamentos({
                           formatarData(a.proximoExame)
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-texto-2">
+                      <td className="px-4 py-3 text-texto-2">
                         {[a.medico, a.crm && `CRM ${a.crm}`]
                           .filter(Boolean)
                           .join(" · ")}
                       </td>
                       {podeEditar && (
-                        <td className="px-4 py-2.5 text-right">
+                        <td className="px-4 py-3 text-right">
                           {!anulado && (
                             <AnularRegistro
                               id={a.id}
@@ -153,13 +159,13 @@ export async function ExamesETreinamentos({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Data</th>
-                  <th className="px-4 py-2 font-semibold">Treinamento</th>
-                  <th className="px-4 py-2 font-semibold">Carga</th>
-                  <th className="px-4 py-2 font-semibold">Validade</th>
-                  <th className="px-4 py-2 font-semibold">Instrutor</th>
+                  <th className="px-5 py-2.5 font-semibold">Data</th>
+                  <th className="px-4 py-2.5 font-semibold">Treinamento</th>
+                  <th className="px-4 py-2.5 font-semibold">Carga</th>
+                  <th className="px-4 py-2.5 font-semibold">Validade</th>
+                  <th className="px-4 py-2.5 font-semibold">Instrutor</th>
                   {podeEditar && (
                     <th className="px-4 py-2">
                       <span className="sr-only">Ações</span>
@@ -178,7 +184,7 @@ export async function ExamesETreinamentos({
                     ) === t;
                   return (
                     <tr key={t.id} className={anulado ? "text-texto-3" : ""}>
-                      <td className="px-5 py-2.5 whitespace-nowrap">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         <span className={anulado ? "line-through" : ""}>
                           {formatarData(t.data)}
                         </span>
@@ -188,7 +194,7 @@ export async function ExamesETreinamentos({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-3">
                         {t.treinamentoNome}
                         {t.norma && (
                           <span className="ml-1.5 text-sm text-texto-2">
@@ -196,10 +202,10 @@ export async function ExamesETreinamentos({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2.5 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {t.cargaHoraria} h
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-3">
                         {!t.validade ? (
                           "Sem validade"
                         ) : maisRecente ? (
@@ -208,11 +214,9 @@ export async function ExamesETreinamentos({
                           formatarData(t.validade)
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-texto-2">
-                        {t.instrutor}
-                      </td>
+                      <td className="px-4 py-3 text-texto-2">{t.instrutor}</td>
                       {podeEditar && (
-                        <td className="px-4 py-2.5 text-right">
+                        <td className="px-4 py-3 text-right">
                           {!anulado && (
                             <AnularRegistro
                               id={t.id}

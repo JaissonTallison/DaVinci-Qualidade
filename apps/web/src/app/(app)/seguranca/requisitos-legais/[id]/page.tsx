@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -18,6 +17,7 @@ import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeRequisitoSst } from "../formulario";
 import { AvaliarRequisitoSst } from "./avaliar";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Requisito legal de SST" };
 const AVISOS: Record<string, string> = {
   criado: "Requisito cadastrado. Registre a primeira avaliação de atendimento.",
@@ -41,17 +41,21 @@ export default async function DetalheDoRequisitoSst({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("seguranca.editar");
   return (
     <article>
-      <Link href="/seguranca/requisitos-legais" className="dv-voltar">
-        Requisitos legais de SST
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="text-texto-2">
-          {ESFERAS[q.esfera]} · {q.tema}
-        </span>
-        <AtendimentoDoRequisito atendimento={q.atendimento} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{q.norma}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/seguranca/requisitos-legais",
+          rotulo: "Requisitos legais de SST",
+        }}
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="text-texto-2">
+            {ESFERAS[q.esfera]} · {q.tema}
+          </span>
+          <AtendimentoDoRequisito atendimento={q.atendimento} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{q.norma}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="O que exige" largo>

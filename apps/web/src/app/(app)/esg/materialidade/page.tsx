@@ -81,7 +81,7 @@ export default async function MatrizDeMaterialidade() {
                           title={`Impacto ${impacto} × relevância ${relevancia} = ${nota}`}
                           className={`flex aspect-square min-h-12 flex-wrap content-start gap-1 rounded-xs p-1.5 ${FUNDO[nivelDeMaterialidade(nota)]}`}
                         >
-                          <span className="w-full text-[10px] leading-none text-texto-3 tabular-nums">
+                          <span className="w-full text-xs leading-none text-texto-3 tabular-nums">
                             {nota}
                           </span>
                           {temas.map((t) => (
@@ -148,21 +148,21 @@ export default async function MatrizDeMaterialidade() {
           ) : (
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
-                    <th className="px-5 py-2 font-semibold">Nº</th>
-                    <th className="px-4 py-2 font-semibold">Tema</th>
-                    <th className="px-4 py-2 font-semibold">Pilar</th>
-                    <th className="px-4 py-2 font-semibold">Materialidade</th>
+                    <th className="px-5 py-2.5 font-semibold">Nº</th>
+                    <th className="px-4 py-2.5 font-semibold">Tema</th>
+                    <th className="px-4 py-2.5 font-semibold">Pilar</th>
+                    <th className="px-4 py-2.5 font-semibold">Materialidade</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {avaliados.map((t) => (
                     <tr key={t.id} className="">
-                      <td className="px-5 py-2 font-semibold tabular-nums">
+                      <td className="px-5 py-3 font-semibold tabular-nums">
                         {numero.get(t.id)}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <Link
                           href={`/esg/temas/${t.id}`}
                           className="text-info hover:underline"
@@ -170,10 +170,10 @@ export default async function MatrizDeMaterialidade() {
                           {t.nome}
                         </Link>
                       </td>
-                      <td className="px-4 py-2 text-texto-2">
+                      <td className="px-4 py-3 text-texto-2">
                         {PILARES[t.pilar]}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <Materialidade nivel={t.nivel} nota={t.nota} />
                       </td>
                     </tr>

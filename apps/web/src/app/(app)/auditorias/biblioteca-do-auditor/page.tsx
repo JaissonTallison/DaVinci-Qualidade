@@ -81,7 +81,7 @@ function ListaDeRecursos({ itens }: { itens: Recurso[] }) {
             <ChevronRight
               aria-hidden
               size={18}
-              strokeWidth={2}
+              strokeWidth={1.75}
               className="text-texto-3"
             />
           </Link>
@@ -103,8 +103,8 @@ export default async function BibliotecaDoAuditor() {
     <>
       <h1 className={tituloDaPagina}>Biblioteca do Auditor</h1>
       <p className={subtituloDaPagina}>
-        Critérios, perguntas, evidências e modelos de NC usados no planejamento e
-        na execução das auditorias.
+        Critérios, perguntas, evidências e modelos de NC usados no planejamento
+        e na execução das auditorias.
       </p>
       {!eu.ok ? (
         <div className="mt-6">

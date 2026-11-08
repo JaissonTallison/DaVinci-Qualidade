@@ -6,6 +6,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Turmas de treinamento" };
 
 /** Turmas recentes: lista de presença e certificados para imprimir. */
@@ -13,17 +14,15 @@ export default async function Turmas() {
   const r = await chamarApi<ResumoDaTurma[]>("/turmas-de-treinamento");
   return (
     <>
-      <Link
-        href="/cadastros/treinamentos"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{ href: "/cadastros/treinamentos", rotulo: "Treinamentos" }}
       >
-        Treinamentos
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Turmas de treinamento</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Cada turma tem a lista de presença para assinar e os certificados dos
-        participantes.
-      </p>
+        <h1 className={tituloDaPagina}>Turmas de treinamento</h1>
+        <p className="mt-1 max-w-3xl text-base text-texto-2">
+          Cada turma tem a lista de presença para assinar e os certificados dos
+          participantes.
+        </p>
+      </CabecalhoComVoltar>
       <section className={`${painel} mt-6`}>
         {!r.ok ? (
           <div className="p-4">

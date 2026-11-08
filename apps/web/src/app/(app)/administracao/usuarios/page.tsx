@@ -35,13 +35,13 @@ export default async function Usuarios() {
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Nome</th>
-                  <th className="px-4 py-2 font-semibold">E-mail</th>
-                  <th className="px-4 py-2 font-semibold">Perfil</th>
-                  <th className="px-4 py-2 font-semibold">Último acesso</th>
-                  <th className="px-4 py-2 font-semibold">Situação</th>
+                  <th className="px-4 py-2.5 font-semibold">Nome</th>
+                  <th className="px-4 py-2.5 font-semibold">E-mail</th>
+                  <th className="px-4 py-2.5 font-semibold">Perfil</th>
+                  <th className="px-4 py-2.5 font-semibold">Último acesso</th>
+                  <th className="px-4 py-2.5 font-semibold">Situação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
@@ -50,7 +50,7 @@ export default async function Usuarios() {
                     key={u.id}
                     className={` ${u.ativo ? "" : "text-texto-3"}`}
                   >
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`/administracao/usuarios/${u.id}`}
                         className="font-medium text-info hover:underline"
@@ -63,14 +63,14 @@ export default async function Usuarios() {
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{u.email}</td>
-                    <td className="px-4 py-2">{u.perfil.nome}</td>
-                    <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3 text-texto-2">{u.email}</td>
+                    <td className="px-4 py-3">{u.perfil.nome}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {u.ultimoAcessoEm
                         ? formatarMomento(u.ultimoAcessoEm)
                         : "Nunca entrou"}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {!u.ativo ? (
                         "Sem acesso"
                       ) : u.deveTrocarSenha ? (

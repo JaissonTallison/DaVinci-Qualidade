@@ -1,6 +1,12 @@
 "use client";
 
-import { CalendarClock, TriangleAlert, House, Menu, Plus } from "@/components/icones";
+import {
+  CalendarClock,
+  TriangleAlert,
+  House,
+  Menu,
+  Plus,
+} from "@/components/icones";
 import type { LucideIcon } from "@/components/icones";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -78,7 +84,7 @@ export function BarraInferior({
                 onClick={() => setFolha(true)}
                 className="flex size-11 items-center justify-center rounded-md bg-menu text-primaria-texto active:opacity-90"
               >
-                <Plus aria-hidden size={22} strokeWidth={2} />
+                <Plus aria-hidden size={22} strokeWidth={1.75} />
               </button>
             </div>
           )}
@@ -111,7 +117,7 @@ export function BarraInferior({
               aria-hidden
               className="mx-auto mb-2 h-1 w-10 rounded-xs bg-borda-forte"
             />
-            <p className="px-5 pb-2 text-xs font-semibold tracking-[0.08em] text-texto-2 uppercase">
+            <p className="px-5 pb-2 text-xs font-semibold tracking-[0.04em] text-texto-2 uppercase">
               Novo
             </p>
             <ul>

@@ -78,13 +78,13 @@ export function RegistrarCalibracao({
               </Campo>
             </div>
             <fieldset className="flex flex-col gap-2">
-              <legend className="text-sm font-semibold text-texto-2">
+              <legend className="text-base font-medium text-texto">
                 Resultado *
                 {instrumento.criterioAceitacao &&
                   `, pelo critério: ${instrumento.criterioAceitacao}`}
               </legend>
               <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
-                <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
+                <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-acao has-[:checked]:bg-info-suave">
                   <input
                     type="radio"
                     name="aprovada"
@@ -100,7 +100,7 @@ export function RegistrarCalibracao({
                     </span>
                   </span>
                 </label>
-                <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-marinho has-[:checked]:bg-campo">
+                <label className="flex flex-1 items-start gap-2 rounded-md border border-borda-campo p-3 has-[:checked]:border-acao has-[:checked]:bg-info-suave">
                   <input
                     type="radio"
                     name="aprovada"
@@ -206,7 +206,7 @@ export function AnularCalibracao({
       <input type="hidden" name="calibracaoId" value={calibracaoId} />
       <label
         htmlFor={`motivo-${calibracaoId}`}
-        className="text-sm font-semibold text-texto-2"
+        className="text-base font-medium text-texto"
       >
         Por que anular este registro?
       </label>

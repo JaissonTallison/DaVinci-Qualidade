@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   TIPOS_INOVACAO,
@@ -12,11 +11,17 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { StatusDaMudanca } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import { Dado } from "../../dado";
 import { DecidirInovacao, ImplementarInovacao } from "./acoes";
 import { LinhaDoTempoDaInovacao } from "./linha-do-tempo";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Inovação" };
 const AVISOS: Record<string, string> = {
   proposta: "Inovação proposta. Agora um gestor avalia.",
@@ -43,18 +48,23 @@ export default async function DetalheDaInovacao({
   const permissoes = eu.ok ? eu.dados.permissoes : [];
   return (
     <article>
-      <Link href="/sgi/inovacao" className="dv-voltar">
-        Gestão de inovação
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-mono text-lg text-texto-2">{m.numero}</span>
-        <StatusDaMudanca status={m.status} />
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{m.titulo}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDaInovacao m={m} />
+      <CabecalhoComVoltar
+        voltar={{ href: "/sgi/inovacao", rotulo: "Gestão de inovação" }}
+      >
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="font-mono text-base text-texto-2">{m.numero}</span>
+          <StatusDaMudanca status={m.status} />
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{m.titulo}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDaInovacao m={m} />
+        </div>
       </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">

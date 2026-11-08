@@ -21,6 +21,7 @@ import { chamarApi } from "@/lib/api";
 import { aba as estiloDaAba, painel, trilho } from "@/lib/estilos";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { RespostaDaPergunta } from "./resposta";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Auditar" };
 
@@ -68,7 +69,7 @@ export default async function Execucao({
     <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="auditar" />
       {aud.status === "planejada" && (
-        <p className="mt-6 rounded-sm border border-borda bg-superficie px-4 py-3 text-base">
+        <CaixaDeAlerta tom="info" className="mt-6">
           A auditoria ainda está planejada.{" "}
           <Link
             href={`/auditorias/${id}`}
@@ -77,7 +78,7 @@ export default async function Execucao({
             Inicie no resumo
           </Link>{" "}
           para registrar as respostas.
-        </p>
+        </CaixaDeAlerta>
       )}
       <section
         className={`${painel} mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 px-5 py-3`}
@@ -175,7 +176,7 @@ export default async function Execucao({
                   className="rounded-sm bg-superficie-2 p-3"
                   aria-label="O que pedir nesta cláusula"
                 >
-                  <p className="text-xs font-semibold tracking-[0.06em] text-texto-2 uppercase">
+                  <p className="text-xs font-semibold tracking-[0.04em] text-texto-2 uppercase">
                     O que pedir nesta cláusula
                   </p>
                   {pedir.length === 0 ? (

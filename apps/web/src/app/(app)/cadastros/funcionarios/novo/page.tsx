@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import Link from "next/link";
 import type { Funcao, SetorDaEmpresa } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoLink, tituloDaPagina } from "@/lib/estilos";
+import { botaoLink } from "@/lib/estilos";
 import { FormularioDeFuncionario } from "../formulario";
 
 export const metadata: Metadata = { title: "Cadastrar profissional" };
@@ -19,13 +20,10 @@ export default async function NovoFuncionario() {
     (setores.dados.length === 0 || funcoes.dados.length === 0);
   return (
     <>
-      <Link
-        href="/cadastros/funcionarios"
-        className="dv-voltar"
-      >
-        Profissionais
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Cadastrar profissional</h1>
+      <CabecalhoDeCadastro
+        voltar={{ href: "/cadastros/funcionarios", rotulo: "Profissionais" }}
+        titulo="Cadastrar profissional"
+      />
       {!setores.ok ? (
         <div className="mt-6">
           <AvisoDeErro erro={setores.erro} />

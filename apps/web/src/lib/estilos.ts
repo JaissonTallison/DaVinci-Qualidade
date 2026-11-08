@@ -3,36 +3,83 @@
  * em vez de inventar outro tamanho, outra cor ou outro canto.
  */
 
-export const rotulo = "text-sm font-semibold text-texto-2";
-/** Campo sem largura: para filtros e linhas de controles, onde cada campo tem a sua. */
-export const campoCompacto =
-  "h-9 rounded-campo border border-borda-campo bg-campo px-3 text-base text-texto placeholder:text-texto-3 focus:bg-superficie aria-invalid:border-nao-conforme disabled:bg-superficie-2";
-/** Campo de formulário: ocupa a coluna. */
-export const campo = `${campoCompacto} w-full`;
-export const areaDeTexto =
-  "min-h-24 w-full rounded-campo border border-borda-campo bg-campo px-3 py-2 text-base text-texto focus:bg-superficie aria-invalid:border-nao-conforme";
+export const rotulo = "text-base font-medium text-texto";
+
+/** Contorno, fundo e estados de todo controle de digitação: borda leve, sombra mínima, escurece no hover. */
+const controle =
+  "rounded-campo border border-borda-campo bg-superficie px-3 text-base text-texto shadow-xs transition-colors placeholder:text-texto-3 hover:border-borda-forte focus:border-foco aria-invalid:border-nao-conforme disabled:cursor-not-allowed disabled:bg-afundado disabled:text-texto-2 disabled:shadow-none read-only:bg-afundado";
+/** Campo sem largura, 36 px: para filtros e barras de ferramentas, onde cada campo tem a sua. */
+export const campoCompacto = `h-9 ${controle}`;
+/** Campo de formulário, 40 px: ocupa a coluna. */
+export const campo = `h-10 w-full ${controle}`;
+export const areaDeTexto = `min-h-24 w-full py-2 ${controle}`;
 export const erroDoCampo = "text-sm text-nao-conforme";
 export const ajudaDoCampo = "text-sm text-texto-3";
 
 const botao =
-  "inline-flex h-9 items-center justify-center gap-2 rounded-campo px-4 text-base font-semibold transition-colors disabled:opacity-60";
-export const botaoPrimario = `${botao} bg-acao text-primaria-texto hover:bg-acao-escuro`;
-export const botaoSecundario = `${botao} border border-borda-campo bg-superficie text-texto hover:bg-campo`;
-export const botaoPerigo = `${botao} border border-nao-conforme bg-superficie text-nao-conforme hover:bg-nao-conforme/10`;
+  "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-campo border px-4 text-base font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+/** Um por tela: a ação que resolve. Azul da marca. */
+export const botaoPrimario = `${botao} border-transparent bg-acao text-primaria-texto shadow-xs hover:bg-acao-escuro`;
+export const botaoSecundario = `${botao} border-borda-campo bg-superficie text-texto shadow-xs hover:border-borda-forte hover:bg-superficie-2`;
+/** Ação sem moldura (Cancelar ao lado do primário em barra estreita, ações de linha). */
+export const botaoFantasma = `${botao} border-transparent bg-transparent text-texto-2 hover:bg-superficie-2 hover:text-texto`;
+/** Excluir, anular, cancelar registro: vermelho cheio, sempre com confirmação. */
+export const botaoPerigo = `${botao} border-transparent bg-nao-conforme text-primaria-texto shadow-xs hover:bg-nao-conforme-texto`;
+/** Botão de 30 px para ações na linha da tabela ou dentro de um card. */
+export const botaoPequeno = `${botao} h-7.5 border-borda-campo bg-superficie px-3 text-sm text-texto shadow-xs hover:border-borda-forte hover:bg-superficie-2`;
+/** Botão só com ícone (36 × 36), com `aria-label`. */
+export const botaoIcone = `${botao} w-9 border-borda-campo bg-superficie px-0 text-texto-2 shadow-xs hover:border-borda-forte hover:bg-superficie-2 hover:text-texto`;
 export const botaoLink =
-  "text-base font-semibold text-info underline-offset-2 hover:underline";
+  "text-base font-medium text-info underline-offset-2 hover:underline";
 
-export const painel = "rounded-md border border-borda bg-superficie shadow-cartao";
-export const tituloDaPagina = "text-2xl text-texto";
+/** Link de texto neutro para ações secundárias da tela ("Limpar filtros", "Inativar"). */
+export const linkDiscreto =
+  "text-sm font-semibold text-texto-2 underline-offset-2 hover:text-texto hover:underline";
+/** Card e painel: sem borda visível, a sombra do cartão já traz o contorno de 1 px. */
+export const painel = "rounded-md bg-superficie shadow-cartao";
+/** Cabeçalho de card: título de 15 px e a linha de baixo. */
+export const cabecalhoDoPainel =
+  "flex min-h-14 items-center gap-3 border-b border-borda px-5 py-3";
+export const tituloDoPainel = "text-md font-semibold text-texto";
+export const tituloDaPagina = "text-2xl font-semibold text-texto";
 /** Linha abaixo do título da página: explica, em cinza, para que serve a tela. */
-export const subtituloDaPagina = "mt-1 text-sm text-texto-2";
-export const tituloDaSecao = "text-xl text-texto";
+export const subtituloDaPagina = "mt-1 text-base text-texto-2";
+export const tituloDaSecao = "text-xl font-semibold text-texto";
+/** Rótulo pequeno em caixa alta (cabeçalho de tabela, título de grupo de campos). */
+export const sobretitulo =
+  "text-xs font-semibold uppercase tracking-[0.04em] text-texto-2";
 
 /**
  * Abas e seletores (período, filtro por situação): trilho cinza-gelo com a opção ativa em branco, sombra leve e
  * texto em azul petróleo. O mesmo desenho em todo o sistema.
  */
 export const trilho =
-  "inline-flex max-w-full flex-wrap items-center gap-1 rounded-md border border-borda-campo bg-campo p-1";
+  "inline-flex max-w-full flex-wrap items-center gap-0.5 rounded-campo border border-borda bg-afundado p-0.5";
 export const aba = (ativa: boolean, pequena = false) =>
-  `inline-flex items-center gap-1.5 rounded-sm whitespace-nowrap transition-colors ${pequena ? "px-3 py-1 text-sm" : "px-3.5 py-1.5 text-base"} ${ativa ? "bg-superficie font-semibold text-marinho shadow-sm" : "text-texto-2 hover:bg-superficie/70 hover:text-texto"}`;
+  `inline-flex items-center gap-1.5 rounded-xs whitespace-nowrap font-medium transition-colors ${pequena ? "h-7 px-3 text-sm" : "h-8 px-3.5 text-base"} ${ativa ? "bg-superficie text-texto shadow-xs ring-1 ring-borda-campo" : "text-texto-2 hover:text-texto"}`;
+
+/** Opção do seletor segmentado feito com rádio (`<input className="peer sr-only">` + este `<span>`), dentro do `trilho`. */
+export const opcaoSegmentada =
+  "flex h-8 cursor-pointer items-center justify-center rounded-xs px-3.5 text-base font-medium text-texto-2 transition-colors hover:text-texto peer-checked:bg-superficie peer-checked:text-texto peer-checked:shadow-xs peer-checked:ring-1 peer-checked:ring-borda-campo peer-focus-visible:outline-2 peer-focus-visible:outline-foco";
+
+/** Abas de página (seções de um registro, situação de uma lista): sublinhado na cor da marca. */
+export const linhaDeAbas = "flex gap-1 overflow-x-auto border-b border-borda";
+export const abaDePagina = (ativa: boolean) =>
+  `-mb-px inline-flex h-10 items-center gap-2 whitespace-nowrap border-b-2 px-3 text-base font-medium transition-colors ${ativa ? "border-acao text-texto" : "border-transparent text-texto-2 hover:text-texto"}`;
+
+/**
+ * Selo de status (badge): retângulo de 22 px, canto de 4 px, só texto, sem ponto colorido.
+ * Perigo: pendência, vencido, reprovado. Atenção: vence em breve, atrasado. Sucesso: conforme, válido.
+ * Info: em andamento, em análise. Neutro: rascunho, encerrado, não se aplica.
+ */
+export type TomDoSelo = "perigo" | "atencao" | "sucesso" | "info" | "neutro";
+const TONS: Record<TomDoSelo, string> = {
+  perigo:
+    "border-nao-conforme-borda bg-nao-conforme-suave text-nao-conforme-texto",
+  atencao: "border-atencao-borda bg-atencao-suave text-atencao-texto",
+  sucesso: "border-conforme-borda bg-conforme-suave text-conforme-texto",
+  info: "border-info-borda bg-info-suave text-info",
+  neutro: "border-borda bg-superficie-2 text-texto-2",
+};
+export const selo = (tom: TomDoSelo = "neutro") =>
+  `inline-flex h-[22px] items-center gap-1 whitespace-nowrap rounded-xs border px-2 align-middle text-xs font-medium ${TONS[tom]}`;

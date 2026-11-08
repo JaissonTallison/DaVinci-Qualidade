@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import type {
   AcidenteResumo,
   AuditoriaResumo,
@@ -11,7 +11,6 @@ import type {
 } from "@davinci/types";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { tituloDaPagina } from "@/lib/estilos";
 import { FormularioNovoPlano, type Inicial } from "./formulario";
 
 export const metadata: Metadata = { title: "Criar plano de ação" };
@@ -87,28 +86,22 @@ export default async function NovoPlano({
       : undefined;
   return (
     <>
-      <Link
-        href={
-          nc?.ok
+      <CabecalhoDeCadastro
+        voltar={{
+          href: nc?.ok
             ? `/qualidade/nao-conformidades/${nc.dados.id}`
             : acidente?.ok
               ? `/seguranca/acidentes/${acidente.dados.id}`
-              : "/qualidade/planos-de-acao"
-        }
-        className="dv-voltar"
-      >
-        {nc?.ok
-          ? nc.dados.numero
-          : acidente?.ok
-            ? acidente.dados.numero
-            : "Planos de ação"}
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Criar plano de ação</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Defina o resultado esperado e as tarefas: o que fazer, quem faz e até
-        quando. O plano termina quando as tarefas estão concluídas e o resultado
-        é verificado.
-      </p>
+              : "/qualidade/planos-de-acao",
+          rotulo: nc?.ok
+            ? nc.dados.numero
+            : acidente?.ok
+              ? acidente.dados.numero
+              : "Planos de ação",
+        }}
+        titulo="Criar plano de ação"
+        descricao="Defina o resultado esperado e as tarefas: o que fazer, quem faz e até quando. O plano termina quando as tarefas estão concluídas e o resultado é verificado."
+      />
       <FormularioNovoPlano
         hoje={hojeEmBrasilia()}
         inicial={inicial}

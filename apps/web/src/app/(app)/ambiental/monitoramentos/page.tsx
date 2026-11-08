@@ -59,20 +59,22 @@ export default async function Monitoramentos() {
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Parâmetro</th>
-                  <th className="px-4 py-2 font-semibold">Ponto</th>
-                  <th className="px-4 py-2 font-semibold">Tipo</th>
-                  <th className="px-4 py-2 font-semibold">Limite</th>
-                  <th className="px-4 py-2 font-semibold">Último resultado</th>
-                  <th className="px-4 py-2 font-semibold">Próxima coleta</th>
+                  <th className="px-4 py-2.5 font-semibold">Parâmetro</th>
+                  <th className="px-4 py-2.5 font-semibold">Ponto</th>
+                  <th className="px-4 py-2.5 font-semibold">Tipo</th>
+                  <th className="px-4 py-2.5 font-semibold">Limite</th>
+                  <th className="px-4 py-2.5 font-semibold">
+                    Último resultado
+                  </th>
+                  <th className="px-4 py-2.5 font-semibold">Próxima coleta</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {r.dados.map((m) => (
                   <tr key={m.id} className="">
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`/ambiental/monitoramentos/${m.id}`}
                         className="text-info hover:underline"
@@ -80,14 +82,14 @@ export default async function Monitoramentos() {
                         {m.parametro}
                       </Link>
                     </td>
-                    <td className="px-4 py-2">{m.ponto}</td>
-                    <td className="px-4 py-2 text-texto-2">
+                    <td className="px-4 py-3">{m.ponto}</td>
+                    <td className="px-4 py-3 text-texto-2">
                       {TIPOS_MONITORAMENTO[m.tipo]}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {textoDoLimite(m)}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {m.ultimo ? (
                         m.ultimo.conforme ? (
                           <span className="tabular-nums">

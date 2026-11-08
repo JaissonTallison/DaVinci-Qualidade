@@ -18,10 +18,9 @@ import {
   type EstadoDaAcao,
 } from "@/lib/acoes-planos";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { areaDeTexto, campoCompacto } from "@/lib/estilos";
+import { areaDeTexto, botaoPequeno, campoCompacto } from "@/lib/estilos";
 
-const botaoDaLinha =
-  "h-8 rounded-campo border border-borda-campo bg-superficie px-3 text-sm font-semibold text-texto hover:bg-superficie-2 disabled:opacity-60";
+const botaoDaLinha = botaoPequeno;
 
 /** Concluir, reabrir ou cancelar a tarefa, na própria linha. O erro (ex.: plano alterado por outra pessoa) aparece embaixo. */
 export function AcoesDaTarefa({
@@ -60,10 +59,10 @@ export function AcoesDaTarefa({
             <summary className="cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
               Cancelar
             </summary>
-            <div className="absolute right-0 z-10 mt-1 flex w-72 flex-col gap-2 rounded-md border border-borda bg-superficie p-3 text-left shadow-sm">
+            <div className="absolute right-0 z-10 mt-1 flex w-72 flex-col gap-2 rounded-md bg-superficie p-3 text-left shadow-sm">
               <label
                 htmlFor={`motivo-${tarefa.id}`}
-                className="text-sm font-semibold text-texto-2"
+                className="text-base font-medium text-texto"
               >
                 Por que cancelar esta tarefa?
               </label>
@@ -127,7 +126,7 @@ export function AcoesDoPlano({
             {(erros, v) => (
               <>
                 <fieldset className="flex flex-col gap-1.5">
-                  <legend className="text-sm font-semibold text-texto-2">
+                  <legend className="text-base font-medium text-texto">
                     Resultado
                   </legend>
                   <div className="flex gap-6 text-base">

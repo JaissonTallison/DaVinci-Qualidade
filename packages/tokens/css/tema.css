@@ -14,7 +14,7 @@
   --text-*: initial;
 
   /* Marca */
-  --color-marinho: #102a43;
+  --color-marinho: #172477;
   --color-ouro: var(--dv-ouro);
   /* Âmbar da paleta: só marcador (ponto, faixa, ícone); como texto reprova (2,15:1). Texto de atenção usa `atencao` */
   --color-ambar: var(--dv-ambar);
@@ -57,6 +57,20 @@
   --color-atencao: var(--dv-atencao);
   --color-info: var(--dv-info);
   --color-neutro: var(--dv-neutro);
+  --color-conforme-suave: var(--dv-conforme-suave);
+  --color-conforme-borda: var(--dv-conforme-borda);
+  --color-conforme-texto: var(--dv-conforme-texto);
+  --color-nao-conforme-suave: var(--dv-nao-conforme-suave);
+  --color-nao-conforme-borda: var(--dv-nao-conforme-borda);
+  --color-nao-conforme-texto: var(--dv-nao-conforme-texto);
+  --color-atencao-suave: var(--dv-atencao-suave);
+  --color-atencao-borda: var(--dv-atencao-borda);
+  --color-atencao-texto: var(--dv-atencao-texto);
+  --color-info-suave: var(--dv-info-suave);
+  --color-info-borda: var(--dv-info-borda);
+  /* Campo desabilitado, trilho do seletor e da barra de progresso */
+  --color-afundado: var(--dv-afundado);
+  --color-foco: var(--dv-foco);
 
   /* Escala de nível (só no marcador; o texto fica em texto) */
   --color-nivel-baixo: #1d7044;
@@ -68,52 +82,59 @@
   --color-current: currentColor;
   --color-white: #ffffff;
 
-  /* Tipografia: Source Serif 4 (títulos), Source Sans 3 (interface), Source Code Pro (números de registro) */
+  /* Tipografia: IBM Plex Sans (interface e títulos) e IBM Plex Mono (números de registro, CNPJ). Sem serifa. */
   --font-sans: var(--dv-fonte-sans), system-ui, sans-serif;
-  --font-serif: var(--dv-fonte-serif), Georgia, serif;
+  --font-serif: var(--dv-fonte-sans), system-ui, sans-serif;
   --font-mono: var(--dv-fonte-mono), ui-monospace, monospace;
 
-  /* Escala de trabalho (16/10/2026): texto principal de 15 px, nada abaixo de 12,5 px */
-  --text-xs: 0.78125rem;
-  --text-xs--line-height: 1.125rem;
-  --text-sm: 0.875rem;
+  /* Escala do design system: corpo 14, rótulo 13, legenda 12, card 15, seção 18, página 24 */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.8125rem;
   --text-sm--line-height: 1.25rem;
-  --text-base: 0.9375rem;
-  --text-base--line-height: 1.4rem;
-  --text-md: 1.0625rem;
-  --text-md--line-height: 1.6rem;
-  --text-lg: 1.1875rem;
-  --text-lg--line-height: 1.7rem;
-  --text-xl: 1.4375rem;
-  --text-xl--line-height: 1.875rem;
-  --text-2xl: 1.75rem;
-  --text-2xl--line-height: 2.125rem;
-  /* Número em destaque dos cards do início */
-  --text-3xl: 2.125rem;
-  --text-3xl--line-height: 2.375rem;
+  --text-base: 0.875rem;
+  --text-base--line-height: 1.25rem;
+  --text-md: 0.9375rem;
+  --text-md--line-height: 1.375rem;
+  --text-lg: 1rem;
+  --text-lg--line-height: 1.5rem;
+  --text-xl: 1.125rem;
+  --text-xl--line-height: 1.625rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  /* Número em destaque dos indicadores */
+  --text-3xl: 1.75rem;
+  --text-3xl--line-height: 2.25rem;
 
-  /* Cantos de 2 a 6 px; nada maior existe */
-  --radius-xs: 2px;
-  --radius-sm: 8px;
+  /* Cantos em meio termo (08/11/2026): 4 px em selo e caixa de marcar, 6 px em botão, campo e alerta,
+     8 px em card, tabela, modal (máximo do sistema). Pílula só em avatar e chave liga/desliga. */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
   --radius-md: 8px;
-  /* Campos, botões, painéis e cartões: todos com 8 px (padrão da tela de entrar, 16/10/2026) */
-  --radius-campo: 8px;
+  --radius-campo: 6px;
   --radius-full: 9999px;
 
-  /* Sombra só em menu suspenso (sm) e modal (md) */
-  /* Cards e painéis: profundidade suave em tom petróleo (16/10/2026) */
-  --shadow-cartao: 0 1px 2px rgb(16 42 67 / 0.05), 0 4px 12px rgb(16 42 67 / 0.06);
-  --shadow-sm: 0 2px 6px rgb(16 42 67 / 0.1);
-  --shadow-md: 0 8px 24px rgb(16 42 67 / 0.16);
+  /* Elevação em camadas sobre o fundo: xs campo e botão secundário; cartão em card e painel (já traz o
+     contorno de 1 px); sm menu suspenso, aviso flutuante e barra de salvar; md modal e painel lateral. */
+  --shadow-xs: 0 1px 1px rgb(19 26 51 / 0.06);
+  --shadow-cartao:
+    0 0 0 1px rgb(19 26 51 / 0.04), 0 1px 2px rgb(19 26 51 / 0.08),
+    0 2px 6px rgb(19 26 51 / 0.06);
+  --shadow-sm:
+    0 0 0 1px rgb(19 26 51 / 0.05), 0 4px 8px -2px rgb(19 26 51 / 0.14),
+    0 2px 4px -2px rgb(19 26 51 / 0.08);
+  --shadow-md:
+    0 0 0 1px rgb(19 26 51 / 0.06), 0 16px 32px -8px rgb(19 26 51 / 0.24),
+    0 6px 12px -6px rgb(19 26 51 / 0.12);
 }
 
 :root {
   color-scheme: light;
-  --dv-fundo: #f4f7fa;
+  --dv-fundo: #eef1f6;
   --dv-superficie: #ffffff;
-  --dv-superficie-2: #eef0f3;
+  --dv-superficie-2: #f8f9fc;
   --dv-ouro-claro: #d9a441;
-  --dv-menu: #101f78;
+  --dv-menu: #172477;
   --dv-barra: #f8fafc;
   /* Séries dos gráficos, uma por módulo, em ordem fixa (validadas para daltonismo; três abaixo de 3:1 → sempre com legenda e tabela) */
   --dv-serie-1: #2a78d6;
@@ -141,29 +162,39 @@
   --dv-ods-15: #56c02b;
   --dv-ods-16: #00689d;
   --dv-ods-17: #19486a;
-  /* Destaque do início (decisão Q14): o único degradê do sistema */
-  --dv-destaque-1: #102a43;
-  --dv-destaque-2: #0b1f33;
-  --dv-destaque-3: #0d5f59;
-  --dv-borda: #d5dae1;
-  --dv-borda-forte: #9aa3b0;
-  --dv-texto: #0e1a2b;
-  --dv-texto-2: #334155;
-  --dv-texto-3: #5f6b7c;
+  --dv-borda: #dfe3ea;
+  --dv-borda-forte: #8c94a8;
+  --dv-texto: #131a33;
+  --dv-texto-2: #4f5870;
+  --dv-texto-3: #677087;
   --dv-ouro: #a06d10;
   --dv-ouro-texto: #986600;
-  --dv-primaria: #102a43;
+  --dv-primaria: #172477;
   --dv-primaria-texto: #ffffff;
-  --dv-acao: #0f766e;
-  --dv-acao-escuro: #0b5e58;
-  --dv-campo: #f5f7fb;
-  --dv-borda-campo: #dfe5ee;
-  --dv-conforme: #0f766e;
-  --dv-nao-conforme: #b3261e;
+  --dv-acao: #172477;
+  --dv-acao-escuro: #101a5c;
+  --dv-campo: #f8f9fc;
+  --dv-borda-campo: #d3d8e2;
+  --dv-conforme: #157a52;
+  --dv-nao-conforme: #b42318;
   --dv-atencao: #b45309;
   --dv-ambar: #f59e0b;
-  --dv-info: #2b5597;
-  --dv-neutro: #586273;
+  --dv-info: #24339a;
+  --dv-neutro: #4f5870;
+  /* Fundos e bordas suaves de status (badge, alerta): design system de 08/11/2026 */
+  --dv-afundado: #e7ebf1;
+  --dv-foco: #3b4fd1;
+  --dv-conforme-suave: #e7f5ee;
+  --dv-conforme-borda: #b3dcc8;
+  --dv-conforme-texto: #0f6342;
+  --dv-nao-conforme-suave: #fdeeec;
+  --dv-nao-conforme-borda: #f2c4be;
+  --dv-nao-conforme-texto: #a01d13;
+  --dv-atencao-suave: #fff5e5;
+  --dv-atencao-borda: #f3d29b;
+  --dv-atencao-texto: #8a4500;
+  --dv-info-suave: #e9ecf8;
+  --dv-info-borda: #c3cbee;
 }
 
 @layer base {
@@ -182,11 +213,12 @@
   h1,
   h2 {
     font-family: var(--font-sans);
-    font-weight: 700;
-    letter-spacing: -0.005em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
+  /* Anel de foco do design system: 2 px na cor de foco, com folga de 2 px */
   :focus-visible {
-    outline: 2px solid var(--dv-info);
+    outline: 2px solid var(--dv-foco);
     outline-offset: 2px;
   }
 }

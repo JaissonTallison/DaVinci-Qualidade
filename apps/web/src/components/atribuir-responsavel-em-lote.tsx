@@ -28,7 +28,7 @@ export function AtribuirResponsavelEmLote({
       classeDoBotao={botaoSecundario}
       botao={
         <>
-          <UserPlus aria-hidden size={16} strokeWidth={2} />
+          <UserPlus aria-hidden size={16} strokeWidth={1.75} />
           Atribuir responsável
         </>
       }

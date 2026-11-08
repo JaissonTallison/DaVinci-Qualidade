@@ -50,14 +50,14 @@ export default async function Licencas() {
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Licença</th>
-                  <th className="px-4 py-2 font-semibold">Órgão</th>
-                  <th className="px-4 py-2 font-semibold">Validade</th>
-                  <th className="px-4 py-2 font-semibold">Renovar até</th>
-                  <th className="px-4 py-2 font-semibold">Situação</th>
-                  <th className="px-4 py-2 font-semibold">Condicionantes</th>
+                  <th className="px-4 py-2.5 font-semibold">Licença</th>
+                  <th className="px-4 py-2.5 font-semibold">Órgão</th>
+                  <th className="px-4 py-2.5 font-semibold">Validade</th>
+                  <th className="px-4 py-2.5 font-semibold">Renovar até</th>
+                  <th className="px-4 py-2.5 font-semibold">Situação</th>
+                  <th className="px-4 py-2.5 font-semibold">Condicionantes</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
@@ -68,7 +68,7 @@ export default async function Licencas() {
                   const vencidas = pendentes.filter((c) => c.vencida).length;
                   return (
                     <tr key={l.id} className="">
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <Link
                           href={`/ambiental/licencas/${l.id}`}
                           className="text-info hover:underline"
@@ -76,16 +76,16 @@ export default async function Licencas() {
                           {TIPOS_LICENCA[l.tipo]} nº {l.numero}
                         </Link>
                       </td>
-                      <td className="px-4 py-2 text-texto-2">{l.orgao}</td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 text-texto-2">{l.orgao}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {formatarData(l.validade)}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                      <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                         {l.renovacaoProtocolo
                           ? `Protocolo ${l.renovacaoProtocolo}`
                           : formatarData(l.renovarAte)}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <SituacaoDaLicenca situacao={l.situacao} />
                       </td>
                       <td

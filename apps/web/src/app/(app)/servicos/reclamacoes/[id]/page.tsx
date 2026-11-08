@@ -13,7 +13,12 @@ import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
+import {
+  cabecalhoDoPainel,
+  painel,
+  tituloDaPagina,
+  tituloDoPainel,
+} from "@/lib/estilos";
 import {
   AnalisarReclamacao,
   EncerrarReclamacao,
@@ -21,6 +26,7 @@ import {
 } from "../formularios";
 import { LinhaDoTempoDaReclamacao } from "./linha-do-tempo";
 
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 export const metadata: Metadata = { title: "Reclamação" };
 const AVISOS = {
   registrada: "Reclamação registrada.",
@@ -47,24 +53,29 @@ export default async function DetalheDaReclamacao({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
     <article>
-      <Link
-        href="/servicos/reclamacoes"
-        className="dv-voltar"
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/servicos/reclamacoes",
+          rotulo: "Reclamações de clientes",
+        }}
       >
-        Reclamações de clientes
-      </Link>
-      <header className="mt-1 flex flex-wrap items-baseline gap-x-4">
-        <span className="font-mono text-lg text-texto-2">{x.numero}</span>
-        <span className={x.atrasada ? "font-semibold text-nao-conforme" : ""}>
-          {STATUS_DA_RECLAMACAO[x.status]}
-          {x.atrasada && " · resposta atrasada"}
-        </span>
-      </header>
-      <h1 className={`${tituloDaPagina} mt-1`}>{x.clienteNome}</h1>
-      <Aviso avisos={AVISOS} chave={aviso} />
-      <section className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Linha do tempo</h2>
-        <LinhaDoTempoDaReclamacao r={x} />
+        <header className="flex flex-wrap items-baseline gap-x-4">
+          <span className="font-mono text-base text-texto-2">{x.numero}</span>
+          <span className={x.atrasada ? "font-semibold text-nao-conforme" : ""}>
+            {STATUS_DA_RECLAMACAO[x.status]}
+            {x.atrasada && " · resposta atrasada"}
+          </span>
+        </header>
+        <h1 className={`${tituloDaPagina} mt-1`}>{x.clienteNome}</h1>
+        <Aviso avisos={AVISOS} chave={aviso} />
+      </CabecalhoComVoltar>
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Linha do tempo</h2>
+        </header>
+        <div className="p-5">
+          <LinhaDoTempoDaReclamacao r={x} />
+        </div>
       </section>
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-4">

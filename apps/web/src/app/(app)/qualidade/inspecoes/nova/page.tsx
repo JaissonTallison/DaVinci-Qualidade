@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import type {
   DadosDoUsuario,
   ModeloDeInspecao,
@@ -8,7 +8,6 @@ import type {
 } from "@davinci/types";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { tituloDaPagina } from "@/lib/estilos";
 import { FormularioNovaInspecao } from "./formulario";
 
 export const metadata: Metadata = { title: "Nova inspeção" };
@@ -26,17 +25,11 @@ export default async function NovaInspecao() {
       : null;
   return (
     <>
-      <Link
-        href="/qualidade/inspecoes"
-        className="dv-voltar"
-      >
-        Inspeções
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Nova inspeção</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Identifique o que está sendo inspecionado. Os itens vêm do modelo
-        escolhido; em seguida, responda cada um como OK, NOK ou N/A.
-      </p>
+      <CabecalhoDeCadastro
+        voltar={{ href: "/qualidade/inspecoes", rotulo: "Inspeções" }}
+        titulo="Nova inspeção"
+        descricao="Identifique o que está sendo inspecionado. Os itens vêm do modelo escolhido; em seguida, responda cada um como OK, NOK ou N/A."
+      />
       <FormularioNovaInspecao
         modelos={modelos.ok ? modelos.dados : []}
         hoje={hojeEmBrasilia()}

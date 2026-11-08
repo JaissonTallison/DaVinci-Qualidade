@@ -22,12 +22,15 @@ import { formatarMomento } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
+  cabecalhoDoPainel,
   painel,
   tituloDaSecao,
+  tituloDoPainel,
 } from "@/lib/estilos";
 import { ConcluirAuditoria } from "../acoes";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { PontosFortes } from "./encerramento";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Relatório de auditoria" };
 
@@ -67,12 +70,9 @@ export default async function Relatorio({
     <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="entregar" />
       {aviso === "pontos" && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           Pontos fortes salvos.
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section
@@ -100,7 +100,7 @@ export default async function Relatorio({
             href={`/auditorias/${id}/relatorio/imprimir?modelo=classico`}
             className={botaoPrimario}
           >
-            <Printer aria-hidden size={16} strokeWidth={2} />
+            <Printer aria-hidden size={16} strokeWidth={1.75} />
             PDF clássico
           </Link>
           <Link
@@ -130,7 +130,7 @@ export default async function Relatorio({
               <CircleDashed
                 aria-hidden
                 size={16}
-                strokeWidth={2}
+                strokeWidth={1.75}
                 className="shrink-0 text-atencao"
               />
               <span className="font-semibold">{v.titulo}</span>
@@ -256,30 +256,34 @@ export default async function Relatorio({
         )}
       </section>
 
-      <section id="encerramento" className={`${painel} mt-6 p-5`}>
-        <h2 className={tituloDaSecao}>Encerramento</h2>
-        {podeEditar &&
-        aud.status !== "concluida" &&
-        aud.status !== "cancelada" ? (
-          <PontosFortes auditoria={aud} />
-        ) : (
-          aud.plano.pontosFortes && (
-            <p className="mt-3 text-base whitespace-pre-line">
-              {aud.plano.pontosFortes}
-            </p>
-          )
-        )}
-        {aud.status === "concluida" && aud.conclusao && (
-          <div className="mt-5">
-            <h3 className="text-sm font-semibold text-texto-2">
-              Conclusão{" "}
-              {aud.concluidaEm && `· ${formatarMomento(aud.concluidaEm)}`}
-            </h3>
-            <p className="mt-1 max-w-[72ch] text-base whitespace-pre-line">
-              {aud.conclusao}
-            </p>
-          </div>
-        )}
+      <section id="encerramento" className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Encerramento</h2>
+        </header>
+        <div className="p-5">
+          {podeEditar &&
+          aud.status !== "concluida" &&
+          aud.status !== "cancelada" ? (
+            <PontosFortes auditoria={aud} />
+          ) : (
+            aud.plano.pontosFortes && (
+              <p className="mt-3 text-base whitespace-pre-line">
+                {aud.plano.pontosFortes}
+              </p>
+            )
+          )}
+          {aud.status === "concluida" && aud.conclusao && (
+            <div className="mt-5">
+              <h3 className="text-sm font-semibold text-texto-2">
+                Conclusão{" "}
+                {aud.concluidaEm && `· ${formatarMomento(aud.concluidaEm)}`}
+              </h3>
+              <p className="mt-1 max-w-[72ch] text-base whitespace-pre-line">
+                {aud.conclusao}
+              </p>
+            </div>
+          )}
+        </div>
       </section>
       {podeEditar && aud.status === "em_andamento" && (
         <ConcluirAuditoria auditoria={aud} />
