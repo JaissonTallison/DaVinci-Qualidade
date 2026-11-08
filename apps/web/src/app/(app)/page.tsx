@@ -355,7 +355,7 @@ export default async function Inicio() {
                     iconeDireita={ArrowRight}
                     className="mt-5 w-full"
                   >
-                    Resolver {pior.nome.toLowerCase()}
+                    Resolver agora
                   </Botao>
                 </>
               ) : (
