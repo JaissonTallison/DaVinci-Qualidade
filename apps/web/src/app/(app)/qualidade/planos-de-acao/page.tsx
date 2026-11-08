@@ -232,7 +232,7 @@ export default async function ListaDePlanos({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -267,10 +267,10 @@ export default async function ListaDePlanos({
                     >
                       Origem
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold sm:hidden lg:table-cell">
+                    <th className="px-4 py-2.5 font-semibold sm:hidden lg:table-cell">
                       Responsável
                     </th>
-                    <th className="px-4 py-2 font-semibold">Prazo</th>
+                    <th className="px-4 py-2.5 font-semibold">Prazo</th>
                     <ThOrdenavel
                       campo="status"
                       ordenar={ordenar}
@@ -280,7 +280,7 @@ export default async function ListaDePlanos({
                     >
                       Status
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Progresso</th>
+                    <th className="px-4 py-2.5 font-semibold">Progresso</th>
                     <th className="w-10 px-2 py-2" />
                   </tr>
                 </thead>
@@ -289,14 +289,14 @@ export default async function ListaDePlanos({
                     const terminado =
                       p.status === "encerrado" || p.status === "cancelado";
                     return (
-                      <tr key={p.id} className="relative hover:bg-campo">
-                        <td className="relative z-10 px-3 py-2">
+                      <tr key={p.id} className="relative hover:bg-superficie-2">
+                        <td className="relative z-10 px-3 py-3">
                           <CaixaDeSelecao
                             id={p.id}
                             rotulo={`Selecionar o plano ${p.numero}`}
                           />
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           <Link
                             href={`${BASE}/${p.id}`}
                             aria-label={`Abrir o plano ${p.numero}`}
@@ -305,13 +305,13 @@ export default async function ListaDePlanos({
                             {p.numero}
                           </Link>
                         </td>
-                        <td className="max-w-md px-4 py-2">
+                        <td className="max-w-md px-4 py-3">
                           <span className="line-clamp-2">{p.titulo}</span>
                           <span className="text-xs text-texto-3">
                             {TIPOS_PLANO[p.tipo]}
                           </span>
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {ORIGENS_PLANO[p.origem]}
                           {p.origemRef && (
                             <span className="block font-mono text-xs">
@@ -319,10 +319,10 @@ export default async function ListaDePlanos({
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                           {p.responsavel}
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap">
+                        <td className="px-4 py-3 whitespace-nowrap">
                           {formatarData(p.prazo)}
                           {!terminado && !p.atrasado && (
                             <span className="block text-xs text-texto-3">
@@ -330,14 +330,14 @@ export default async function ListaDePlanos({
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-3">
                           <StatusDoPlano
                             status={p.status}
                             atrasado={p.atrasado}
                             prazo={p.prazo}
                           />
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-3">
                           <Progresso valor={p.progresso} />
                           {!terminado && p.tarefasPendentes > 0 && (
                             <span className="block text-xs text-texto-3">
@@ -348,7 +348,7 @@ export default async function ListaDePlanos({
                             </span>
                           )}
                         </td>
-                        <td className="relative z-10 px-2 py-2 text-right">
+                        <td className="relative z-10 px-2 py-3 text-right">
                           <AcoesDaLinha rotulo={`Ações do plano ${p.numero}`}>
                             <Link
                               href={`${BASE}/${p.id}`}

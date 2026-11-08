@@ -30,7 +30,11 @@ const SEGMENTOS = [
   { chave: "nc_menor", rotulo: "NC menor", cor: "var(--color-atencao)" },
   { chave: "nc_maior", rotulo: "NC maior", cor: "var(--color-nao-conforme)" },
   { chave: "observacao", rotulo: "Observação", cor: "var(--color-texto-3)" },
-  { chave: "oportunidade", rotulo: "Oportunidade", cor: "var(--color-serie-1)" },
+  {
+    chave: "oportunidade",
+    rotulo: "Oportunidade",
+    cor: "var(--color-serie-1)",
+  },
 ] as const;
 
 /** Cor de cada situação (para o donut e o ponto da tabela). */
@@ -91,7 +95,10 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
   }));
 
   return (
-    <section aria-label="Panorama de auditorias" className="flex flex-col gap-4">
+    <section
+      aria-label="Panorama de auditorias"
+      className="flex flex-col gap-4"
+    >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg text-texto">Auditorias — panorama</h2>
@@ -171,7 +178,9 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
         {/* Por auditor líder (barras horizontais) */}
         <Quadro titulo="Por auditor líder" subtitulo="Auditorias conduzidas">
           {porAuditor.length === 0 ? (
-            <p className="text-sm text-texto-3">Nenhuma auditoria cadastrada.</p>
+            <p className="text-sm text-texto-3">
+              Nenhuma auditoria cadastrada.
+            </p>
           ) : (
             <ul className="flex flex-col gap-2.5">
               {porAuditor.map((a) => (
@@ -197,7 +206,9 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
         {/* Por situação (donut) */}
         <Quadro titulo="Situação das auditorias" subtitulo="Total por status">
           {totalSituacao === 0 ? (
-            <p className="text-sm text-texto-3">Nenhuma auditoria cadastrada.</p>
+            <p className="text-sm text-texto-3">
+              Nenhuma auditoria cadastrada.
+            </p>
           ) : (
             <div className="flex items-center gap-5">
               <div className="relative size-28 shrink-0">
@@ -237,10 +248,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
               </div>
               <ul className="flex-1 text-sm">
                 {porSituacao.map((s) => (
-                  <li
-                    key={s.status}
-                    className="flex items-center gap-2 py-0.5"
-                  >
+                  <li key={s.status} className="flex items-center gap-2 py-0.5">
                     <span
                       aria-hidden
                       className="size-2.5 rounded-xs"
@@ -267,7 +275,9 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
             <h3 className="text-base font-semibold text-texto">
               Auditorias recentes
             </h3>
-            <p className="text-sm text-texto-2">Últimas auditorias e situação</p>
+            <p className="text-sm text-texto-2">
+              Últimas auditorias e situação
+            </p>
           </div>
           <table className="w-full">
             <thead>
@@ -293,16 +303,16 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                       {a.numero}
                     </Link>
                   </td>
-                  <td className="px-3 py-2.5 text-sm text-texto-2">
+                  <td className="px-3 py-3.5 text-sm text-texto-2">
                     {TIPOS_AUDITORIA[a.tipo]}
                   </td>
-                  <td className="max-w-xs truncate px-3 py-2.5 text-sm text-texto">
+                  <td className="max-w-xs truncate px-3 py-3.5 text-sm text-texto">
                     {a.escopo}
                   </td>
-                  <td className="px-3 py-2.5 text-sm text-texto-2">
+                  <td className="px-3 py-3.5 text-sm text-texto-2">
                     {periodo(a.dataInicio)}
                   </td>
-                  <td className="px-3 py-2.5 pr-5">
+                  <td className="px-3 py-3.5 pr-5">
                     <span
                       className={`text-sm font-semibold ${CHIP_STATUS[a.status]}`}
                     >

@@ -85,22 +85,25 @@ export async function ListaDeRo({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">{cfg.classe}</th>
-                  <th className="px-4 py-2 font-semibold">Processo</th>
-                  <th className="px-4 py-2 font-semibold">Descrição</th>
-                  <th className="px-4 py-2 font-semibold">Prazo</th>
+                  <th className="px-4 py-2.5 font-semibold">{cfg.classe}</th>
+                  <th className="px-4 py-2.5 font-semibold">Processo</th>
+                  <th className="px-4 py-2.5 font-semibold">Descrição</th>
+                  <th className="px-4 py-2.5 font-semibold">Prazo</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.map((r) => (
-                  <tr key={r.id} className={r.encerradoEm ? "text-texto-3" : ""}>
-                    <td className="px-4 py-2">
+                  <tr
+                    key={r.id}
+                    className={r.encerradoEm ? "text-texto-3" : ""}
+                  >
+                    <td className="px-4 py-3">
                       <ClasseDoRo classe={r.classe} />
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{r.processo}</td>
-                    <td className="max-w-md px-4 py-2">
+                    <td className="px-4 py-3 text-texto-2">{r.processo}</td>
+                    <td className="max-w-md px-4 py-3">
                       <Link
                         href={`${cfg.base}/${r.id}`}
                         className="text-info hover:underline"
@@ -108,7 +111,7 @@ export async function ListaDeRo({
                         {r.descricao}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {r.encerradoEm ? (
                         "Encerrado"
                       ) : r.prazo ? (

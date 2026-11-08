@@ -217,17 +217,17 @@ export default async function DetalheDaInspecao({
         <section className={`${painel} mt-6`}>
           <h2 className={`${tituloDaSecao} px-5 pt-5`}>Itens</h2>
           <table className="mt-3 w-full text-left">
-            <thead className="bg-superficie-2 text-sm text-texto-2">
+            <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
-                <th className="px-5 py-2 font-semibold">Item</th>
-                <th className="px-4 py-2 font-semibold">Resposta</th>
-                <th className="px-4 py-2 font-semibold">Observação</th>
+                <th className="px-5 py-2.5 font-semibold">Item</th>
+                <th className="px-4 py-2.5 font-semibold">Resposta</th>
+                <th className="px-4 py-2.5 font-semibold">Observação</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-borda">
               {i.itens.map((item) => (
                 <tr key={item.id}>
-                  <td className="max-w-xl px-5 py-2.5">
+                  <td className="max-w-xl px-5 py-3">
                     <span className="mr-2 text-texto-3">{item.ordem + 1}.</span>
                     {item.verificar}
                     {item.criterio && (
@@ -243,9 +243,7 @@ export default async function DetalheDaInspecao({
                       ? RESPOSTAS_ITEM[item.resposta]
                       : "Sem resposta"}
                   </td>
-                  <td className="px-4 py-2.5 text-texto-2">
-                    {item.observacao}
-                  </td>
+                  <td className="px-4 py-3 text-texto-2">{item.observacao}</td>
                 </tr>
               ))}
             </tbody>

@@ -148,38 +148,40 @@ export default async function Inventario({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-borda text-left text-texto-2">
-                <th className="px-4 py-2 font-semibold">Resíduo</th>
-                <th className="px-4 py-2 font-semibold">Classe</th>
-                <th className="px-4 py-2 font-semibold">Destinação</th>
-                <th className="px-4 py-2 text-right font-semibold">Saídas</th>
-                <th className="px-4 py-2 text-right font-semibold">
+                <th className="px-4 py-2.5 font-semibold">Resíduo</th>
+                <th className="px-4 py-2.5 font-semibold">Classe</th>
+                <th className="px-4 py-2.5 font-semibold">Destinação</th>
+                <th className="px-4 py-2.5 text-right font-semibold">Saídas</th>
+                <th className="px-4 py-2.5 text-right font-semibold">
                   Quantidade
                 </th>
-                <th className="px-4 py-2 text-right font-semibold">Custo</th>
-                <th className="px-4 py-2 text-right font-semibold">Sem CDF</th>
+                <th className="px-4 py-2.5 text-right font-semibold">Custo</th>
+                <th className="px-4 py-2.5 text-right font-semibold">
+                  Sem CDF
+                </th>
               </tr>
             </thead>
             <tbody>
               {i.linhas.map((l) => (
                 <tr key={l.residuoId} className="border-b border-borda">
-                  <td data-rotulo="Resíduo" className="px-4 py-2">
+                  <td data-rotulo="Resíduo" className="px-4 py-3">
                     {l.nome}
                   </td>
-                  <td data-rotulo="Classe" className="px-4 py-2">
+                  <td data-rotulo="Classe" className="px-4 py-3">
                     {CLASSES_RESIDUO[l.classe as ClasseResiduo]}
                   </td>
-                  <td data-rotulo="Destinação" className="px-4 py-2">
+                  <td data-rotulo="Destinação" className="px-4 py-3">
                     {l.destinacao}
                   </td>
                   <td
                     data-rotulo="Saídas"
-                    className="px-4 py-2 text-right tabular-nums"
+                    className="px-4 py-3 text-right tabular-nums"
                   >
                     {l.saidas}
                   </td>
                   <td
                     data-rotulo="Quantidade"
-                    className="px-4 py-2 text-right tabular-nums"
+                    className="px-4 py-3 text-right tabular-nums"
                   >
                     {l.quantidade.toLocaleString("pt-BR", {
                       maximumFractionDigits: 3,
@@ -188,7 +190,7 @@ export default async function Inventario({
                   </td>
                   <td
                     data-rotulo="Custo"
-                    className="px-4 py-2 text-right tabular-nums"
+                    className="px-4 py-3 text-right tabular-nums"
                   >
                     {brl(l.custo)}
                   </td>
@@ -203,10 +205,10 @@ export default async function Inventario({
             </tbody>
             <tfoot>
               <tr className="font-semibold">
-                <td className="px-4 py-2" colSpan={5}>
+                <td className="px-4 py-3" colSpan={5}>
                   Custo total da destinação
                 </td>
-                <td className="px-4 py-2 text-right tabular-nums">
+                <td className="px-4 py-3 text-right tabular-nums">
                   {brl(i.custoTotal)}
                 </td>
                 <td />

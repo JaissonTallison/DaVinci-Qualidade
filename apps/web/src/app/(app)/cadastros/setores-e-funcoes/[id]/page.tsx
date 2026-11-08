@@ -191,7 +191,7 @@ export default async function CompetenciasDaFuncao({
                       <span className="block max-w-28 truncate">{r.nome}</span>
                     </th>
                   ))}
-                  <th className="px-4 py-2 text-right font-semibold">
+                  <th className="px-4 py-2.5 text-right font-semibold">
                     Pendências
                   </th>
                 </tr>
@@ -202,7 +202,7 @@ export default async function CompetenciasDaFuncao({
                     key={l.funcionarioId}
                     className="border-b border-borda last:border-0"
                   >
-                    <td className="sticky left-0 bg-superficie px-4 py-2">
+                    <td className="sticky left-0 bg-superficie px-4 py-3">
                       <Link
                         href={`/cadastros/funcionarios/${l.funcionarioId}`}
                         className="text-info hover:underline"
@@ -218,7 +218,7 @@ export default async function CompetenciasDaFuncao({
                       return (
                         <td
                           key={chaveDoRequisito(r)}
-                          className="px-2 py-2 text-center"
+                          className="px-2 py-3 text-center"
                         >
                           {s && (
                             <SituacaoDoRequisitoMarcador situacao={s} curto />

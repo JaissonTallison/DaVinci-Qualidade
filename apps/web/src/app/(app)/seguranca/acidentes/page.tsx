@@ -189,7 +189,7 @@ export default async function ListaDeAcidentes({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -223,9 +223,9 @@ export default async function ListaDeAcidentes({
                     >
                       Tipo
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold">Acidentado</th>
-                    <th className="px-4 py-2 font-semibold">Local</th>
-                    <th className="px-4 py-2 font-semibold">Dias perdidos</th>
+                    <th className="px-4 py-2.5 font-semibold">Acidentado</th>
+                    <th className="px-4 py-2.5 font-semibold">Local</th>
+                    <th className="px-4 py-2.5 font-semibold">Dias perdidos</th>
                     <ThOrdenavel
                       campo="status"
                       ordenar={ordenar}
@@ -240,14 +240,14 @@ export default async function ListaDeAcidentes({
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {lista.dados.itens.map((a) => (
-                    <tr key={a.id} className="relative hover:bg-campo">
-                      <td className="relative z-10 px-3 py-2">
+                    <tr key={a.id} className="relative hover:bg-superficie-2">
+                      <td className="relative z-10 px-3 py-3">
                         <CaixaDeSelecao
                           id={a.id}
                           rotulo={`Selecionar o acidente ${a.numero}`}
                         />
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <Link
                           href={`${BASE}/${a.id}`}
                           aria-label={`Abrir o acidente ${a.numero}`}
@@ -256,22 +256,22 @@ export default async function ListaDeAcidentes({
                           {a.numero}
                         </Link>
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {formatarData(a.data)}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <TipoDoAcidente tipo={a.tipo} />
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {a.acidentado ?? "—"}
                       </td>
-                      <td className="max-w-xs px-4 py-2 text-texto-2">
+                      <td className="max-w-xs px-4 py-3 text-texto-2">
                         {a.local}
                       </td>
-                      <td className="px-4 py-2 text-right">
+                      <td className="px-4 py-3 text-right">
                         {a.diasPerdidos || "—"}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <StatusDoAcidente status={a.status} />
                         {a.catAtrasada && (
                           <span className="block text-xs font-semibold text-nao-conforme">
@@ -279,7 +279,7 @@ export default async function ListaDeAcidentes({
                           </span>
                         )}
                       </td>
-                      <td className="relative z-10 px-2 py-2 text-right">
+                      <td className="relative z-10 px-2 py-3 text-right">
                         <AcoesDaLinha rotulo={`Ações do acidente ${a.numero}`}>
                           <Link href={`${BASE}/${a.id}`} className={itemDeAcao}>
                             Abrir

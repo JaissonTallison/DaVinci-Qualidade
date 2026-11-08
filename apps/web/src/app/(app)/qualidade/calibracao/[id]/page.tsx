@@ -181,14 +181,14 @@ export default async function DetalheDoInstrumento({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Data</th>
-                  <th className="px-4 py-2 font-semibold">Laboratório</th>
-                  <th className="px-4 py-2 font-semibold">Certificado</th>
-                  <th className="px-4 py-2 font-semibold">Resultado</th>
-                  <th className="px-4 py-2 font-semibold">Erro encontrado</th>
-                  <th className="px-4 py-2 font-semibold">Custo</th>
+                  <th className="px-5 py-2.5 font-semibold">Data</th>
+                  <th className="px-4 py-2.5 font-semibold">Laboratório</th>
+                  <th className="px-4 py-2.5 font-semibold">Certificado</th>
+                  <th className="px-4 py-2.5 font-semibold">Resultado</th>
+                  <th className="px-4 py-2.5 font-semibold">Erro encontrado</th>
+                  <th className="px-4 py-2.5 font-semibold">Custo</th>
                   {gestor && (
                     <th className="sticky right-0 bg-superficie-2 px-4 py-2">
                       <span className="sr-only">Ações</span>
@@ -199,7 +199,7 @@ export default async function DetalheDoInstrumento({
               <tbody className="divide-y divide-borda">
                 {i.calibracoes.map((c) => (
                   <tr key={c.id} className={c.anulada ? "text-texto-3" : ""}>
-                    <td className="px-5 py-2.5 whitespace-nowrap">
+                    <td className="px-5 py-3 whitespace-nowrap">
                       <span className={c.anulada ? "line-through" : ""}>
                         {formatarData(c.data)}
                       </span>
@@ -209,8 +209,8 @@ export default async function DetalheDoInstrumento({
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5">{c.laboratorio}</td>
-                    <td className="px-4 py-2.5 font-mono text-sm">
+                    <td className="px-4 py-3">{c.laboratorio}</td>
+                    <td className="px-4 py-3 font-mono text-sm">
                       {c.certificado}
                     </td>
                     <td
@@ -218,14 +218,14 @@ export default async function DetalheDoInstrumento({
                     >
                       {c.aprovada ? "Aprovada" : "Reprovada"}
                     </td>
-                    <td className="px-4 py-2.5 text-texto-2">
+                    <td className="px-4 py-3 text-texto-2">
                       {c.erroEncontrado}
                     </td>
-                    <td className="px-4 py-2.5 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {formatarReais(c.custo)}
                     </td>
                     {gestor && (
-                      <td className="sticky right-0 bg-superficie px-4 py-2.5 text-right">
+                      <td className="sticky right-0 bg-superficie px-4 py-3 text-right">
                         {!c.anulada && (
                           <AnularCalibracao
                             instrumento={i}

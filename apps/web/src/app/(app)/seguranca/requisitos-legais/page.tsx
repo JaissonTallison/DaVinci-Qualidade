@@ -42,8 +42,8 @@ export default async function RequisitosSst({
             Requisitos legais de SST (segurança e saúde no trabalho)
           </h1>
           <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Normas aplicáveis (NR e demais) e a avaliação de atendimento, refeita
-            ao menos uma vez por ano.
+            Normas aplicáveis (NR e demais) e a avaliação de atendimento,
+            refeita ao menos uma vez por ano.
             {r.ok && vencidas > 0 && (
               <span className="text-nao-conforme">
                 {" "}
@@ -86,19 +86,21 @@ export default async function RequisitosSst({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Norma</th>
-                  <th className="px-4 py-2 font-semibold">Esfera</th>
-                  <th className="px-4 py-2 font-semibold">Tema</th>
-                  <th className="px-4 py-2 font-semibold">Atendimento</th>
-                  <th className="px-4 py-2 font-semibold">Próxima avaliação</th>
+                  <th className="px-4 py-2.5 font-semibold">Norma</th>
+                  <th className="px-4 py-2.5 font-semibold">Esfera</th>
+                  <th className="px-4 py-2.5 font-semibold">Tema</th>
+                  <th className="px-4 py-2.5 font-semibold">Atendimento</th>
+                  <th className="px-4 py-2.5 font-semibold">
+                    Próxima avaliação
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {r.dados.map((q) => (
                   <tr key={q.id}>
-                    <td className="max-w-md px-4 py-2">
+                    <td className="max-w-md px-4 py-3">
                       <Link
                         href={`/seguranca/requisitos-legais/${q.id}`}
                         className="text-info hover:underline"
@@ -106,11 +108,11 @@ export default async function RequisitosSst({
                         {q.norma}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {ESFERAS[q.esfera]}
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{q.tema}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3 text-texto-2">{q.tema}</td>
+                    <td className="px-4 py-3">
                       <AtendimentoDoRequisito atendimento={q.atendimento} />
                     </td>
                     <td

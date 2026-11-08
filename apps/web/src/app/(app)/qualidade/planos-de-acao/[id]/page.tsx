@@ -152,14 +152,14 @@ export default async function DetalheDoPlano({
         </p>
         <div className="relative mt-3 overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-sm text-texto-2">
+            <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
-                <th className="px-5 py-2 font-semibold">O que fazer</th>
-                <th className="px-4 py-2 font-semibold">Quem</th>
-                <th className="px-4 py-2 font-semibold">Até quando</th>
-                <th className="px-4 py-2 font-semibold">Situação</th>
+                <th className="px-5 py-2.5 font-semibold">O que fazer</th>
+                <th className="px-4 py-2.5 font-semibold">Quem</th>
+                <th className="px-4 py-2.5 font-semibold">Até quando</th>
+                <th className="px-4 py-2.5 font-semibold">Situação</th>
                 {podeEditar && (
-                  <th className="px-4 py-2 font-semibold">
+                  <th className="px-4 py-2.5 font-semibold">
                     <span className="sr-only">Ações</span>
                   </th>
                 )}
@@ -171,7 +171,7 @@ export default async function DetalheDoPlano({
                   key={t.id}
                   className={t.situacao === "cancelada" ? "text-texto-3" : ""}
                 >
-                  <td className="max-w-xl px-5 py-2.5">
+                  <td className="max-w-xl px-5 py-3">
                     <span
                       className={
                         t.situacao === "cancelada" ? "line-through" : ""
@@ -190,10 +190,10 @@ export default async function DetalheDoPlano({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {t.responsavel}
                   </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     {formatarData(t.prazo)}
                     {t.situacao === "pendente" && (
                       <span
@@ -203,7 +203,7 @@ export default async function DetalheDoPlano({
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <span
                       className={
                         t.situacao === "concluida"
@@ -222,7 +222,7 @@ export default async function DetalheDoPlano({
                     )}
                   </td>
                   {podeEditar && (
-                    <td className="px-4 py-2.5 text-right whitespace-nowrap">
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
                       <AcoesDaTarefa
                         planoId={p.id}
                         versao={p.versao}

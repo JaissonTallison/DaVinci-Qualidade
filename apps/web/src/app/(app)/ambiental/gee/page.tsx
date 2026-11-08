@@ -132,18 +132,18 @@ export default async function Gee({
             ) : (
               <div className="relative overflow-x-auto">
                 <table className="w-full text-left">
-                  <thead className="bg-superficie-2 text-sm text-texto-2">
+                  <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                     <tr>
-                      <th className="px-5 py-2 font-semibold">Fonte</th>
-                      <th className="px-4 py-2 font-semibold">Escopo</th>
-                      <th className="px-4 py-2 text-right font-semibold">
+                      <th className="px-5 py-2.5 font-semibold">Fonte</th>
+                      <th className="px-4 py-2.5 font-semibold">Escopo</th>
+                      <th className="px-4 py-2.5 text-right font-semibold">
                         Consumo no ano
                       </th>
-                      <th className="px-4 py-2 text-right font-semibold">
+                      <th className="px-4 py-2.5 text-right font-semibold">
                         Fator (kg CO₂e)
                       </th>
-                      <th className="px-4 py-2 font-semibold">Referência</th>
-                      <th className="px-4 py-2 text-right font-semibold">
+                      <th className="px-4 py-2.5 font-semibold">Referência</th>
+                      <th className="px-4 py-2.5 text-right font-semibold">
                         Emissão (t CO₂e)
                       </th>
                     </tr>
@@ -151,11 +151,11 @@ export default async function Gee({
                   <tbody className="divide-y divide-borda">
                     {r.dados.linhas.map((l) => (
                       <tr key={l.fonte}>
-                        <td className="px-5 py-2.5">
+                        <td className="px-5 py-3">
                           {FONTES_DE_CONSUMO[l.fonte]}
                         </td>
-                        <td className="px-4 py-2.5">{l.escopo}</td>
-                        <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                        <td className="px-4 py-3">{l.escopo}</td>
+                        <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                           {l.consumo.toLocaleString("pt-BR", {
                             maximumFractionDigits: 1,
                           })}{" "}
@@ -168,10 +168,10 @@ export default async function Gee({
                             ? "Falta informar"
                             : `${l.fator.toLocaleString("pt-BR", { maximumFractionDigits: 6 })} / ${l.unidade}`}
                         </td>
-                        <td className="px-4 py-2.5 text-sm text-texto-2">
+                        <td className="px-4 py-3 text-sm text-texto-2">
                           {l.referencia ?? "—"}
                         </td>
-                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums">
+                        <td className="px-4 py-3 text-right font-semibold tabular-nums">
                           {l.emissao === null ? "—" : t(l.emissao)}
                         </td>
                       </tr>

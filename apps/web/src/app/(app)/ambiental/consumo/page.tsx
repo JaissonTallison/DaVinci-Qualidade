@@ -131,13 +131,13 @@ export default async function Consumo({
             <h2 className={`${tituloDaSecao} px-5 pt-5`}>Leituras de {ano}</h2>
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
-                    <th className="px-5 py-2 font-semibold">Mês</th>
+                    <th className="px-5 py-2.5 font-semibold">Mês</th>
                     {fontes.map((f) => (
                       <th
                         key={f}
-                        className="px-4 py-2 text-right font-semibold"
+                        className="px-4 py-2.5 text-right font-semibold"
                       >
                         {FONTES_DE_CONSUMO[f]} ({UNIDADE_DA_FONTE[f]})
                       </th>
@@ -147,7 +147,7 @@ export default async function Consumo({
                 <tbody className="divide-y divide-borda">
                   {Array.from({ length: meses }, (_, i) => i + 1).map((m) => (
                     <tr key={m}>
-                      <td className="px-5 py-2">{MESES[m - 1]}</td>
+                      <td className="px-5 py-3">{MESES[m - 1]}</td>
                       {fontes.map((f) => {
                         const c = valor(f, m);
                         return (
@@ -164,9 +164,9 @@ export default async function Consumo({
                 </tbody>
                 <tfoot className="border-t border-borda-forte font-semibold">
                   <tr>
-                    <td className="px-5 py-2">Total</td>
+                    <td className="px-5 py-3">Total</td>
                     {fontes.map((f) => (
-                      <td key={f} className="px-4 py-2 text-right tabular-nums">
+                      <td key={f} className="px-4 py-3 text-right tabular-nums">
                         {num(
                           dados
                             .filter((c) => c.fonte === f)

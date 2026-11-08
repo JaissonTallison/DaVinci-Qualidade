@@ -133,23 +133,23 @@ export default async function ListaDeFuncionarios({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Matrícula</th>
-                  <th className="px-4 py-2 font-semibold">Nome</th>
-                  <th className="px-4 py-2 font-semibold">Setor</th>
-                  <th className="px-4 py-2 font-semibold">Função</th>
-                  <th className="px-4 py-2 font-semibold">Admissão</th>
-                  <th className="px-4 py-2 font-semibold">Situação</th>
+                  <th className="px-4 py-2.5 font-semibold">Matrícula</th>
+                  <th className="px-4 py-2.5 font-semibold">Nome</th>
+                  <th className="px-4 py-2.5 font-semibold">Setor</th>
+                  <th className="px-4 py-2.5 font-semibold">Função</th>
+                  <th className="px-4 py-2.5 font-semibold">Admissão</th>
+                  <th className="px-4 py-2.5 font-semibold">Situação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.itens.map((f) => (
                   <tr key={f.id} className="">
-                    <td className="px-4 py-2 font-mono text-sm whitespace-nowrap">
+                    <td className="px-4 py-3 font-mono text-sm whitespace-nowrap">
                       {f.matricula}
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`/cadastros/funcionarios/${f.id}`}
                         className="font-medium text-info hover:underline"
@@ -157,12 +157,12 @@ export default async function ListaDeFuncionarios({
                         {f.nome}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{f.setorNome}</td>
-                    <td className="px-4 py-2 text-texto-2">{f.funcaoNome}</td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 text-texto-2">{f.setorNome}</td>
+                    <td className="px-4 py-3 text-texto-2">{f.funcaoNome}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {formatarData(f.admissao)}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {f.ativo ? (
                         "Ativo"
                       ) : (

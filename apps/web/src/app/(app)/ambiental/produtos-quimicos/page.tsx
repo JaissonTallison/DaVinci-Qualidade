@@ -103,14 +103,14 @@ export default async function Produtos({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Produto</th>
-                  <th className="px-4 py-2 font-semibold">Fabricante</th>
-                  <th className="px-4 py-2 font-semibold">Perigos</th>
-                  <th className="px-4 py-2 font-semibold">Local</th>
-                  <th className="px-4 py-2 font-semibold">Máximo</th>
-                  <th className="px-4 py-2 font-semibold">
+                  <th className="px-4 py-2.5 font-semibold">Produto</th>
+                  <th className="px-4 py-2.5 font-semibold">Fabricante</th>
+                  <th className="px-4 py-2.5 font-semibold">Perigos</th>
+                  <th className="px-4 py-2.5 font-semibold">Local</th>
+                  <th className="px-4 py-2.5 font-semibold">Máximo</th>
+                  <th className="px-4 py-2.5 font-semibold">
                     Próxima revisão da FDS
                   </th>
                 </tr>
@@ -121,7 +121,7 @@ export default async function Produtos({
                     key={p.id}
                     className={` ${p.ativo ? "" : "text-texto-3"}`}
                   >
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`/ambiental/produtos-quimicos/${p.id}`}
                         className="text-info hover:underline"
@@ -129,14 +129,14 @@ export default async function Produtos({
                         {p.nome}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{p.fabricante}</td>
-                    <td className="max-w-xs px-4 py-2 text-sm">
+                    <td className="px-4 py-3 text-texto-2">{p.fabricante}</td>
+                    <td className="max-w-xs px-4 py-3 text-sm">
                       {p.perigos.length
                         ? p.perigos.map((x) => PERIGOS_GHS[x]).join(", ")
                         : "—"}
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{p.local}</td>
-                    <td className="px-4 py-2 tabular-nums whitespace-nowrap">
+                    <td className="px-4 py-3 text-texto-2">{p.local}</td>
+                    <td className="px-4 py-3 tabular-nums whitespace-nowrap">
                       {p.quantidadeMaxima !== null
                         ? `${p.quantidadeMaxima.toLocaleString("pt-BR")} ${UNIDADES_PRODUTO[p.unidade]}`
                         : "—"}

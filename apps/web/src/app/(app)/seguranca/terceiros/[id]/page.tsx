@@ -103,17 +103,17 @@ export default async function DetalheDoTerceiro({
         ) : (
           <div className="relative mt-3 overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-5 py-2 font-semibold">Documento</th>
-                  <th className="px-4 py-2 font-semibold">Válido até</th>
-                  <th className="px-4 py-2 font-semibold">Registrado em</th>
+                  <th className="px-5 py-2.5 font-semibold">Documento</th>
+                  <th className="px-4 py-2.5 font-semibold">Válido até</th>
+                  <th className="px-4 py-2.5 font-semibold">Registrado em</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {t.documentos.map((d) => (
                   <tr key={d.id} className={d.vigente ? "" : "text-texto-3"}>
-                    <td className="px-5 py-2.5">
+                    <td className="px-5 py-3">
                       {TIPOS_DOC_TERCEIRO[d.tipo]}
                       {d.descricao && (
                         <span className="block text-sm text-texto-2">
@@ -124,14 +124,14 @@ export default async function DetalheDoTerceiro({
                         <span className="block text-xs">Substituído</span>
                       )}
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3">
                       {d.vigente ? (
                         <Validade validade={d.validade} />
                       ) : (
                         formatarData(d.validade)
                       )}
                     </td>
-                    <td className="px-4 py-2.5 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {formatarData(d.registradoEm.slice(0, 10))}
                     </td>
                   </tr>

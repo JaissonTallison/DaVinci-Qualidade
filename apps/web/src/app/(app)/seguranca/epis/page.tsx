@@ -78,19 +78,19 @@ export default async function CatalogoDeEpis({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">EPI</th>
-                  <th className="px-4 py-2 font-semibold">CA</th>
-                  <th className="px-4 py-2 font-semibold">Validade do CA</th>
-                  <th className="px-4 py-2 font-semibold">Vida útil</th>
-                  <th className="px-4 py-2 font-semibold">Situação</th>
+                  <th className="px-4 py-2.5 font-semibold">EPI</th>
+                  <th className="px-4 py-2.5 font-semibold">CA</th>
+                  <th className="px-4 py-2.5 font-semibold">Validade do CA</th>
+                  <th className="px-4 py-2.5 font-semibold">Vida útil</th>
+                  <th className="px-4 py-2.5 font-semibold">Situação</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.map((e) => (
                   <tr key={e.id} className="">
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`/seguranca/epis/${e.id}`}
                         className="font-medium text-info hover:underline"
@@ -98,20 +98,20 @@ export default async function CatalogoDeEpis({
                         {e.nome}
                       </Link>
                     </td>
-                    <td className="px-4 py-2 font-mono text-sm">{e.ca}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3 font-mono text-sm">{e.ca}</td>
+                    <td className="px-4 py-3">
                       <ValidadeDoCa
                         validade={e.validadeCa}
                         vencido={e.caVencido}
                         venceEmBreve={e.caVenceEmBreve}
                       />
                     </td>
-                    <td className="px-4 py-2 text-texto-2">
+                    <td className="px-4 py-3 text-texto-2">
                       {e.vidaUtilDias
                         ? `${e.vidaUtilDias} ${e.vidaUtilDias === 1 ? "dia" : "dias"}`
                         : "—"}
                     </td>
-                    <td className="px-4 py-2 text-texto-2">
+                    <td className="px-4 py-3 text-texto-2">
                       {e.ativo ? "Ativo" : "Inativo"}
                     </td>
                   </tr>

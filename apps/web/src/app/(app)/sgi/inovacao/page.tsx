@@ -74,20 +74,20 @@ export default async function Inovacoes({
         ) : (
           <div className="relative overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-superficie-2 text-sm text-texto-2">
+              <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                 <tr>
-                  <th className="px-4 py-2 font-semibold">Número</th>
-                  <th className="px-4 py-2 font-semibold">Inovação</th>
-                  <th className="px-4 py-2 font-semibold">Tipo</th>
-                  <th className="px-4 py-2 font-semibold">Responsável</th>
-                  <th className="px-4 py-2 font-semibold">Prevista</th>
-                  <th className="px-4 py-2 font-semibold">Status</th>
+                  <th className="px-4 py-2.5 font-semibold">Número</th>
+                  <th className="px-4 py-2.5 font-semibold">Inovação</th>
+                  <th className="px-4 py-2.5 font-semibold">Tipo</th>
+                  <th className="px-4 py-2.5 font-semibold">Responsável</th>
+                  <th className="px-4 py-2.5 font-semibold">Prevista</th>
+                  <th className="px-4 py-2.5 font-semibold">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-borda">
                 {lista.dados.map((m) => (
                   <tr key={m.id}>
-                    <td className="px-4 py-2 font-mono text-sm whitespace-nowrap">
+                    <td className="px-4 py-3 font-mono text-sm whitespace-nowrap">
                       <Link
                         href={`/sgi/inovacao/${m.id}`}
                         className="text-info hover:underline"
@@ -95,15 +95,15 @@ export default async function Inovacoes({
                         {m.numero}
                       </Link>
                     </td>
-                    <td className="max-w-md px-4 py-2">{m.titulo}</td>
-                    <td className="px-4 py-2 text-texto-2">
+                    <td className="max-w-md px-4 py-3">{m.titulo}</td>
+                    <td className="px-4 py-3 text-texto-2">
                       {TIPOS_INOVACAO[m.tipoInovacao] ?? "—"}
                     </td>
-                    <td className="px-4 py-2 text-texto-2">{m.responsavel}</td>
-                    <td className="px-4 py-2 whitespace-nowrap">
+                    <td className="px-4 py-3 text-texto-2">{m.responsavel}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
                       {formatarData(m.dataPrevista)}
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <StatusDaMudanca status={m.status} />
                     </td>
                   </tr>

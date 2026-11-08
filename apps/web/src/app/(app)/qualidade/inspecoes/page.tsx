@@ -219,7 +219,7 @@ export default async function ListaDeInspecoes({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos
@@ -263,10 +263,10 @@ export default async function ListaDeInspecoes({
                     >
                       Data
                     </ThOrdenavel>
-                    <th className="px-4 py-2 font-semibold sm:hidden lg:table-cell">
+                    <th className="px-4 py-2.5 font-semibold sm:hidden lg:table-cell">
                       Inspetor
                     </th>
-                    <th className="px-4 py-2 font-semibold">Itens</th>
+                    <th className="px-4 py-2.5 font-semibold">Itens</th>
                     <ThOrdenavel
                       campo="status"
                       ordenar={ordenar}
@@ -281,14 +281,14 @@ export default async function ListaDeInspecoes({
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {lista.dados.itens.map((i) => (
-                    <tr key={i.id} className="relative hover:bg-campo">
-                      <td className="relative z-10 px-3 py-2">
+                    <tr key={i.id} className="relative hover:bg-superficie-2">
+                      <td className="relative z-10 px-3 py-3">
                         <CaixaDeSelecao
                           id={i.id}
                           rotulo={`Selecionar a inspeção ${i.numero}`}
                         />
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         <Link
                           href={`${BASE}/${i.id}`}
                           aria-label={`${i.status === "em_andamento" ? "Continuar" : "Abrir"} a inspeção ${i.numero}`}
@@ -297,7 +297,7 @@ export default async function ListaDeInspecoes({
                           {i.numero}
                         </Link>
                       </td>
-                      <td className="max-w-md px-4 py-2">
+                      <td className="max-w-md px-4 py-3">
                         <span className="line-clamp-2">{i.objeto}</span>
                         {i.lote && (
                           <span className="font-mono text-xs text-texto-3">
@@ -305,10 +305,10 @@ export default async function ListaDeInspecoes({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                      <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                         {TIPOS_INSPECAO[i.tipo]}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {formatarData(i.data)}
                         {i.status === "em_andamento" && i.data < hoje && (
                           <span className="block text-xs font-medium text-nao-conforme">
@@ -316,10 +316,10 @@ export default async function ListaDeInspecoes({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                      <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
                         {i.inspetor}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap text-sm text-texto-2">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm text-texto-2">
                         {i.status === "em_andamento"
                           ? `${i.respondidos} de ${i.totalDeItens} respondidos`
                           : `${i.totalDeItens} itens`}
@@ -329,10 +329,10 @@ export default async function ListaDeInspecoes({
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <StatusDaInspecao status={i.status} />
                       </td>
-                      <td className="relative z-10 px-2 py-2 text-right">
+                      <td className="relative z-10 px-2 py-3 text-right">
                         <AcoesDaLinha rotulo={`Ações da inspeção ${i.numero}`}>
                           <Link href={`${BASE}/${i.id}`} className={itemDeAcao}>
                             {i.status === "em_andamento"

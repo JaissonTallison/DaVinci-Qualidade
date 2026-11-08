@@ -235,7 +235,7 @@ export default async function Pgr({
           <SelecaoDeLinhas>
             <div className="relative overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
                     <th className="w-10 px-3 py-2">
                       <CaixaSelecionarTodos ids={itens.map((r) => r.id)} />
@@ -299,18 +299,18 @@ export default async function Pgr({
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {itens.map((r) => (
-                    <tr key={r.id} className="relative hover:bg-campo">
-                      <td className="relative z-10 px-3 py-2">
+                    <tr key={r.id} className="relative hover:bg-superficie-2">
+                      <td className="relative z-10 px-3 py-3">
                         <CaixaDeSelecao
                           id={r.id}
                           rotulo={`Selecionar o risco: ${r.perigo}`}
                         />
                       </td>
-                      <td className="px-4 py-2">
+                      <td className="px-4 py-3">
                         <NivelDoRisco nivel={r.nivel} />
                       </td>
-                      <td className="px-4 py-2">{r.local}</td>
-                      <td className="max-w-md px-4 py-2">
+                      <td className="px-4 py-3">{r.local}</td>
+                      <td className="max-w-md px-4 py-3">
                         <Link
                           href={`${BASE}/${r.id}`}
                           aria-label={`Abrir o risco: ${r.perigo}`}
@@ -319,13 +319,13 @@ export default async function Pgr({
                           {r.perigo}
                         </Link>
                       </td>
-                      <td className="px-4 py-2 text-texto-2">
+                      <td className="px-4 py-3 text-texto-2">
                         {GRUPOS_DE_RISCO[r.grupo]}
                       </td>
-                      <td className="px-4 py-2 tabular-nums text-texto-2">
+                      <td className="px-4 py-3 tabular-nums text-texto-2">
                         {r.severidade} × {r.probabilidade}
                       </td>
-                      <td className="px-4 py-2 whitespace-nowrap">
+                      <td className="px-4 py-3 whitespace-nowrap">
                         {r.prazo ? (
                           <span
                             className={r.acaoVencida ? "text-nao-conforme" : ""}
@@ -337,7 +337,7 @@ export default async function Pgr({
                           "—"
                         )}
                       </td>
-                      <td className="relative z-10 px-2 py-2 text-right">
+                      <td className="relative z-10 px-2 py-3 text-right">
                         <AcoesDaLinha rotulo={`Ações do risco ${r.perigo}`}>
                           <Link href={`${BASE}/${r.id}`} className={itemDeAcao}>
                             Abrir

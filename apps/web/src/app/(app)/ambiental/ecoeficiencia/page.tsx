@@ -95,22 +95,24 @@ export default async function Ecoeficiencia({
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-borda text-left text-texto-2">
-              <th className="px-4 py-2 font-semibold">Mês</th>
-              <th className="px-4 py-2 text-right font-semibold">
+              <th className="px-4 py-2.5 font-semibold">Mês</th>
+              <th className="px-4 py-2.5 text-right font-semibold">
                 Produção ({u})
               </th>
-              <th className="px-4 py-2 text-right font-semibold">Água (m³)</th>
-              <th className="px-4 py-2 text-right font-semibold">
+              <th className="px-4 py-2.5 text-right font-semibold">
+                Água (m³)
+              </th>
+              <th className="px-4 py-2.5 text-right font-semibold">
                 Energia (kWh)
               </th>
-              <th className="px-4 py-2 text-right font-semibold">
+              <th className="px-4 py-2.5 text-right font-semibold">
                 Resíduos (kg)
               </th>
-              <th className="px-4 py-2 text-right font-semibold">
+              <th className="px-4 py-2.5 text-right font-semibold">
                 Emissões (kg CO₂e)
               </th>
-              <th className="px-4 py-2 text-right font-semibold">Água/{u}</th>
-              <th className="px-4 py-2 text-right font-semibold">kWh/{u}</th>
+              <th className="px-4 py-2.5 text-right font-semibold">Água/{u}</th>
+              <th className="px-4 py-2.5 text-right font-semibold">kWh/{u}</th>
             </tr>
           </thead>
           <tbody>

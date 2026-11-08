@@ -1,8 +1,9 @@
+import { Selo } from "@/components/selo";
 import { diasEntre, formatarData, hojeEmBrasilia } from "@/lib/datas";
 
 /**
- * Situação que exige ação (vencido, atrasado, reprovado): texto em vermelho com há quanto tempo e, embaixo,
- * o detalhe e a data em tom discreto. Sem caixa, sem ícone, sem ponto (interface.md §8).
+ * Situação que exige ação (vencido, atrasado, reprovado): selo vermelho com há quanto tempo e, embaixo,
+ * o detalhe e a data em tom discreto (interface.md §8).
  */
 export function Alerta({
   texto,
@@ -21,12 +22,14 @@ export function Alerta({
     .filter(Boolean)
     .join(" · ");
   return (
-    <span className="inline-flex flex-col leading-tight whitespace-nowrap">
-      <span className="font-semibold text-nao-conforme">
+    <span className="inline-flex flex-col items-start gap-1 whitespace-nowrap">
+      <Selo tom="perigo">
         {texto}
         {dias > 0 && ` há ${dias === 1 ? "1 dia" : `${dias} dias`}`}
-      </span>
-      {segunda && <span className="text-xs text-texto-3">{segunda}</span>}
+      </Selo>
+      {segunda && (
+        <span className="text-xs leading-none text-texto-3">{segunda}</span>
+      )}
     </span>
   );
 }

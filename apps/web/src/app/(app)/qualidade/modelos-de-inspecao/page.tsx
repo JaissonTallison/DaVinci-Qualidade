@@ -121,17 +121,17 @@ export default async function ListaDeModelos({
           </p>
         ) : (
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-sm text-texto-2">
+            <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
-                <th className="px-4 py-2 font-semibold">Nome</th>
-                <th className="px-4 py-2 font-semibold">Tipo</th>
-                <th className="px-4 py-2 font-semibold">Itens</th>
+                <th className="px-4 py-2.5 font-semibold">Nome</th>
+                <th className="px-4 py-2.5 font-semibold">Tipo</th>
+                <th className="px-4 py-2.5 font-semibold">Itens</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-borda">
               {lista.dados.map((m) => (
-                <tr key={m.id} className="hover:bg-campo">
-                  <td className="px-4 py-2">
+                <tr key={m.id} className="hover:bg-superficie-2">
+                  <td className="px-4 py-3">
                     <Link
                       href={`/qualidade/modelos-de-inspecao/${m.id}`}
                       className="font-semibold text-info hover:underline"
@@ -139,10 +139,10 @@ export default async function ListaDeModelos({
                       {m.nome}
                     </Link>
                   </td>
-                  <td className="px-4 py-2 text-texto-2">
+                  <td className="px-4 py-3 text-texto-2">
                     {TIPOS_INSPECAO[m.tipo]}
                   </td>
-                  <td className="px-4 py-2 text-texto-2">{m.itens.length}</td>
+                  <td className="px-4 py-3 text-texto-2">{m.itens.length}</td>
                 </tr>
               ))}
             </tbody>

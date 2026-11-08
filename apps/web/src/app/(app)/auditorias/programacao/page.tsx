@@ -114,18 +114,18 @@ export default async function ProgramacaoDeAuditorias({
           />
         ) : (
           <table className="w-full text-left">
-            <thead className="bg-superficie-2 text-sm text-texto-2">
+            <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
               <tr>
-                <th className="px-4 py-2 font-semibold">Setor</th>
+                <th className="px-4 py-2.5 font-semibold">Setor</th>
                 <th className="hidden px-4 py-2 font-semibold lg:table-cell">
                   Normas
                 </th>
-                <th className="px-4 py-2 font-semibold">Frequência</th>
-                <th className="px-4 py-2 font-semibold">Meses</th>
+                <th className="px-4 py-2.5 font-semibold">Frequência</th>
+                <th className="px-4 py-2.5 font-semibold">Meses</th>
                 <th className="hidden px-4 py-2 font-semibold sm:table-cell">
                   Responsável
                 </th>
-                <th className="px-4 py-2 font-semibold">Acompanhamento</th>
+                <th className="px-4 py-2.5 font-semibold">Acompanhamento</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-borda">
@@ -136,8 +136,8 @@ export default async function ProgramacaoDeAuditorias({
                     .filter((m): m is number => !!m),
                 );
                 return (
-                  <tr key={i.id} className="hover:bg-campo">
-                    <td className="px-4 py-2">
+                  <tr key={i.id} className="hover:bg-superficie-2">
+                    <td className="px-4 py-3">
                       <Link
                         href={`${BASE}/${i.id}`}
                         className="font-semibold text-info hover:underline"
@@ -145,13 +145,13 @@ export default async function ProgramacaoDeAuditorias({
                         {i.setor}
                       </Link>
                     </td>
-                    <td className="hidden px-4 py-2 text-sm text-texto-2 lg:table-cell">
+                    <td className="hidden px-4 py-3 text-sm text-texto-2 lg:table-cell">
                       {i.normas.map((n) => NORMAS[n]).join(", ")}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-texto-2">
+                    <td className="px-4 py-3 whitespace-nowrap text-texto-2">
                       {FREQUENCIAS_DE_AUDITORIA[i.frequencia]}
                     </td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {MESES_ABREVIADOS.map((rotulo, idx) => {
                           const mes = idx + 1;
@@ -181,10 +181,10 @@ export default async function ProgramacaoDeAuditorias({
                         })}
                       </div>
                     </td>
-                    <td className="hidden px-4 py-2 whitespace-nowrap text-texto-2 sm:table-cell">
+                    <td className="hidden px-4 py-3 whitespace-nowrap text-texto-2 sm:table-cell">
                       {i.responsavel}
                     </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-sm">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm">
                       {i.realizadas.length > 0 ? (
                         <span className="text-texto">
                           {i.realizadas.length}{" "}

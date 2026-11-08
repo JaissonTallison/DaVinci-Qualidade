@@ -107,26 +107,26 @@ export default async function DetalheDoMonitoramento({
             )}
             <div className="relative mt-3 overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-superficie-2 text-sm text-texto-2">
+                <thead className="bg-superficie-2 text-xs uppercase tracking-[0.04em] text-texto-2">
                   <tr>
-                    <th className="px-5 py-2 font-semibold">Data</th>
-                    <th className="px-4 py-2 text-right font-semibold">
+                    <th className="px-5 py-2.5 font-semibold">Data</th>
+                    <th className="px-4 py-2.5 text-right font-semibold">
                       Resultado
                     </th>
-                    <th className="px-4 py-2 font-semibold">Situação</th>
-                    <th className="px-4 py-2 font-semibold">Laudo</th>
+                    <th className="px-4 py-2.5 font-semibold">Situação</th>
+                    <th className="px-4 py-2.5 font-semibold">Laudo</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-borda">
                   {resultados.map((x) => (
                     <tr key={x.id}>
-                      <td className="px-5 py-2.5 whitespace-nowrap">
+                      <td className="px-5 py-3 whitespace-nowrap">
                         {formatarData(x.data)}
                       </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums whitespace-nowrap">
+                      <td className="px-4 py-3 text-right tabular-nums whitespace-nowrap">
                         {x.valor.toLocaleString("pt-BR")} {m.unidade}
                       </td>
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-3">
                         {x.conforme ? (
                           <span className="inline-flex items-center gap-1.5 text-texto">
                             Dentro do limite
@@ -135,7 +135,7 @@ export default async function DetalheDoMonitoramento({
                           <Alerta texto="Fora do limite" />
                         )}
                       </td>
-                      <td className="px-4 py-2.5 text-texto-2">
+                      <td className="px-4 py-3 text-texto-2">
                         {x.laudo ?? "—"}
                       </td>
                     </tr>
