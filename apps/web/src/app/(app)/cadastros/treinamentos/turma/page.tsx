@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { FuncionarioResumo, Pagina, Treinamento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoLink, tituloDaPagina } from "@/lib/estilos";
+import { botaoLink } from "@/lib/estilos";
 import { FormularioDeTurma } from "./formulario";
 
 export const metadata: Metadata = { title: "Registrar turma" };

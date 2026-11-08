@@ -133,6 +133,22 @@ function Secao({
   );
 }
 
+/** Preenche os campos do formulário a partir de um item do catálogo. */
+function doModelo(item: ItemDoCatalogoDeCalibracao): Record<string, string> {
+  return {
+    tag: item.tagSugerida ? `${item.tagSugerida}-` : "",
+    descricao: item.instrumento,
+    grandeza: item.grandeza,
+    unidade: item.unidade,
+    faixa: item.faixa,
+    criterioAceitacao: item.criterioAceitacao,
+    normaReferencia: item.normaReferencia,
+    frequenciaMeses: String(item.frequenciaMeses),
+  };
+}
+
+/** Cadastrar (sem `instrumento`) ou editar um instrumento. */
+
 export function FormularioDeInstrumento({
   instrumento,
   embutido = false,
