@@ -1,18 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { TIPOS_INSPECAO, type ModeloDeInspecao } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { LinhasDeItem } from "@/components/linhas-de-item";
 import { Selecao } from "@/components/selecao";
 import { salvarModelo, type EstadoDaAcao } from "@/lib/acoes-inspecoes";
-import {
-  botaoPrimario,
-  campo,
-  painel,
-  tituloDaSecao,
-} from "@/lib/estilos";
+import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 
 /** Criar (sem `modelo`) ou editar um modelo de inspeção. */
@@ -35,72 +32,94 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
 
   return (
-    <form action={acao} noValidate className={`${painel} mt-6`}>
+    <form action={acao} noValidate className="mt-6">
       {modelo && <input type="hidden" name="versao" value={modelo.versao} />}
-      <div className="flex flex-col gap-5 p-5">
-        {erroGeral && <AvisoDeErro erro={erroGeral} />}
-        <p className="max-w-2xl text-base text-texto-2">
-          Ao criar uma inspeção com este modelo, os itens abaixo são copiados
-          para ela. Mudar o modelo depois não altera as inspeções já feitas.
-        </p>
-        <div className="grid gap-5 sm:grid-cols-3">
-          <Campo
-            id="nome"
-            rotulo="Nome *"
-            erro={erros.nome}
-            ajuda="Como o modelo aparece na escolha. Ex.: Recebimento de eixos"
-            className="sm:col-span-2"
-          >
-            <input
-              id="nome"
-              name="nome"
-              defaultValue={v.nome}
-              maxLength={120}
-              className={campo}
-              aria-invalid={Boolean(erros.nome)}
-            />
-          </Campo>
-          <Campo id="tipo" rotulo="Tipo *" erro={erros.tipo}>
-            <Selecao
-              id="tipo"
-              name="tipo"
-              defaultValue={v.tipo ?? ""}
-              className={campo}
-              aria-invalid={Boolean(erros.tipo)}
+      {erroGeral && (
+        <div className="mb-5">
+          <AvisoDeErro erro={erroGeral} />
+        </div>
+      )}
+      <CadastroEmBlocos
+        resumo={[
+          { rotulo: "Modelo", campo: "nome" },
+          { rotulo: "Tipo", campo: "tipo" },
+        ]}
+        acoes={
+          <>
+            <Link
+              href="/qualidade/modelos-de-inspecao"
+              className={botaoSecundario}
             >
-              <option value="" disabled>
-                Escolha
-              </option>
-              {Object.entries(TIPOS_INSPECAO).map(([chave, nome]) => (
-                <option key={chave} value={chave}>
-                  {nome}
-                </option>
-              ))}
-            </Selecao>
-          </Campo>
-        </div>
-      </div>
-      <div className="border-t border-borda p-5">
-        <h2 className={tituloDaSecao}>Itens a verificar</h2>
-        <p className="mt-1 max-w-2xl text-base text-texto-2">
-          O que o inspetor confere em cada item e, quando houver, o critério que
-          decide aprovado ou reprovado. Inclua ao menos um item.
-        </p>
-        {erros.itens && (
-          <p className="mt-1 text-sm text-nao-conforme">{erros.itens}</p>
-        )}
-        <div className="mt-3">
+              Cancelar
+            </Link>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : modelo
+                  ? "Salvar modelo"
+                  : "Criar modelo"}
+            </button>
+          </>
+        }
+      >
+        <Bloco id="modelo" titulo="Modelo" descricao="Nome e tipo de inspeção.">
+          <div className="flex flex-col gap-5">
+            <p className="max-w-2xl text-sm text-texto-2">
+              Ao criar uma inspeção com este modelo, os itens abaixo são
+              copiados para ela. Mudar o modelo depois não altera as inspeções
+              já feitas.
+            </p>
+            <div className="grid gap-5 sm:grid-cols-3">
+              <Campo
+                id="nome"
+                rotulo="Nome *"
+                erro={erros.nome}
+                ajuda="Como o modelo aparece na escolha. Ex.: Recebimento de eixos"
+                className="sm:col-span-2"
+              >
+                <input
+                  id="nome"
+                  required
+                  name="nome"
+                  defaultValue={v.nome}
+                  maxLength={120}
+                  className={campo}
+                  aria-invalid={Boolean(erros.nome)}
+                />
+              </Campo>
+              <Campo id="tipo" rotulo="Tipo *" erro={erros.tipo}>
+                <Selecao
+                  id="tipo"
+                  required
+                  name="tipo"
+                  defaultValue={v.tipo ?? ""}
+                  className={campo}
+                  aria-invalid={Boolean(erros.tipo)}
+                >
+                  <option value="" disabled>
+                    Escolha
+                  </option>
+                  {Object.entries(TIPOS_INSPECAO).map(([chave, nome]) => (
+                    <option key={chave} value={chave}>
+                      {nome}
+                    </option>
+                  ))}
+                </Selecao>
+              </Campo>
+            </div>
+          </div>
+        </Bloco>
+        <Bloco
+          id="itens"
+          titulo="Itens a verificar"
+          descricao="O que o inspetor confere em cada item e, quando houver, o critério que decide aprovado ou reprovado. Inclua ao menos um item."
+        >
+          {erros.itens && (
+            <p className="mb-3 text-sm text-nao-conforme">{erros.itens}</p>
+          )}
           <LinhasDeItem valores={itens} erros={erros} />
-        </div>
-      </div>
-      <div className="flex flex-wrap items-center justify-end gap-3 border-t border-borda px-5 py-3">
-        <p className="mr-auto text-sm text-texto-3">
-          Os campos com <span aria-hidden>*</span> são obrigatórios.
-        </p>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : modelo ? "Salvar modelo" : "Criar modelo"}
-        </button>
-      </div>
+        </Bloco>
+      </CadastroEmBlocos>
     </form>
   );
 }

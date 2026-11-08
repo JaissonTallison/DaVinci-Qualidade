@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { tituloDaPagina } from "@/lib/estilos";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import { FormularioDeModelo } from "../formulario";
 
 export const metadata: Metadata = { title: "Criar modelo de inspeção" };
@@ -8,13 +7,13 @@ export const metadata: Metadata = { title: "Criar modelo de inspeção" };
 export default function NovoModelo() {
   return (
     <>
-      <Link
-        href="/qualidade/modelos-de-inspecao"
-        className="dv-voltar"
-      >
-        Modelos de inspeção
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Criar modelo de inspeção</h1>
+      <CabecalhoDeCadastro
+        voltar={{
+          href: "/qualidade/modelos-de-inspecao",
+          rotulo: "Modelos de inspeção",
+        }}
+        titulo="Criar modelo de inspeção"
+      />
       <FormularioDeModelo />
     </>
   );
