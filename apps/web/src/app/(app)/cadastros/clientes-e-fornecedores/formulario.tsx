@@ -256,6 +256,21 @@ export function FormularioDeParceiro({
     papeis.has(k),
   ).map(([, n]) => n);
 
+  const botoes = (
+    <>
+      <Botao href="/cadastros/clientes-e-fornecedores" tamanho="grande">
+        Cancelar
+      </Botao>
+      <Botao
+        type="submit"
+        disabled={salvando}
+        variante="primario"
+        tamanho="grande"
+      >
+        {textoDoBotao}
+      </Botao>
+    </>
+  );
   return (
     <form action={acao} noValidate className="mt-6">
       {oculto}
@@ -286,6 +301,7 @@ export function FormularioDeParceiro({
           </SecaoDoCadastro>
         </div>
         <ColunaDeResumo
+          acoes={botoes}
           itens={[
             {
               rotulo: tipoPessoa === "PF" ? "CPF" : "CNPJ",
@@ -310,23 +326,14 @@ export function FormularioDeParceiro({
         />
       </div>
       <BarraDeAcoes
+        soAbaixoDoComputador
         situacao={
           faltamIdentificacao
             ? `${faltamIdentificacao} ${faltamIdentificacao === 1 ? "campo obrigatório pendente" : "campos obrigatórios pendentes"}`
             : "Campos obrigatórios preenchidos"
         }
       >
-        <Botao href="/cadastros/clientes-e-fornecedores" tamanho="grande">
-          Cancelar
-        </Botao>
-        <Botao
-          type="submit"
-          disabled={salvando}
-          variante="primario"
-          tamanho="grande"
-        >
-          {textoDoBotao}
-        </Botao>
+        {botoes}
       </BarraDeAcoes>
     </form>
   );

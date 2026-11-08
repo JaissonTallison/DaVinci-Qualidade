@@ -367,6 +367,21 @@ export function FormularioDeRo({
     ),
   });
 
+  const botoes = (
+    <>
+      <Botao href={cfg.base} tamanho="grande">
+        Cancelar
+      </Botao>
+      <Botao
+        type="submit"
+        disabled={salvando}
+        variante="primario"
+        tamanho="grande"
+      >
+        {textoDoBotao}
+      </Botao>
+    </>
+  );
   return (
     <form action={acao} noValidate className="mt-6">
       {ocultos}
@@ -386,6 +401,7 @@ export function FormularioDeRo({
           ))}
         </div>
         <ColunaDeResumo
+          acoes={botoes}
           itens={[
             {
               rotulo: cfg.classe,
@@ -434,23 +450,14 @@ export function FormularioDeRo({
         />
       </div>
       <BarraDeAcoes
+        soAbaixoDoComputador
         situacao={
           faltam
             ? `${faltam} ${faltam === 1 ? "campo obrigatório pendente" : "campos obrigatórios pendentes"}`
             : "Campos obrigatórios preenchidos"
         }
       >
-        <Botao href={cfg.base} tamanho="grande">
-          Cancelar
-        </Botao>
-        <Botao
-          type="submit"
-          disabled={salvando}
-          variante="primario"
-          tamanho="grande"
-        >
-          {textoDoBotao}
-        </Botao>
+        {botoes}
       </BarraDeAcoes>
     </form>
   );

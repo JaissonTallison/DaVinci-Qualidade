@@ -38,6 +38,7 @@ export function LinhasDeItem({
           <div className="flex min-w-60 flex-[3] flex-col gap-1">
             <input
               name="item_verificar"
+              required={i === 0}
               aria-label={`Item ${i + 1}: o que verificar`}
               defaultValue={valores?.[i]?.verificar}
               maxLength={300}

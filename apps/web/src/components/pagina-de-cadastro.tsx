@@ -78,10 +78,16 @@ export function ColunaDeResumo({
   itens,
   obrigatorios,
   secoes,
+  acoes,
 }: {
   itens: { rotulo: string; valor: ReactNode }[];
   obrigatorios: { feitos: number; total: number };
   secoes: { id: string; titulo: string; situacao: SituacaoDaSecao }[];
+  /**
+   * Botões do cadastro (Cancelar e o primário por último). No computador ficam no fim do card de
+   * preenchimento, fixo ao rolar; abaixo de 1024 px, na barra de ações (`BarraDeAcoes` com `soAbaixoDoComputador`).
+   */
+  acoes?: ReactNode;
 }) {
   const pct = obrigatorios.total
     ? Math.round((100 * obrigatorios.feitos) / obrigatorios.total)
@@ -162,24 +168,34 @@ export function ColunaDeResumo({
             ))}
           </ul>
         </div>
+        {acoes && (
+          <div className="hidden flex-col-reverse gap-2 border-t border-borda p-4 lg:flex [&>*]:w-full">
+            {acoes}
+          </div>
+        )}
       </section>
     </aside>
   );
 }
 
 /**
- * Ações do cadastro, fixas no rodapé no computador e no tablet (no celular ficam no fim da página,
- * acima da barra inferior). À esquerda, a situação; à direita, Cancelar e a ação primária por último.
+ * Ações do cadastro num card fixo: no tablet, preso ao pé da tela ao rolar; no celular, no fim da página
+ * (acima da barra inferior). À esquerda, a situação; à direita, Cancelar e a ação primária por último.
+ * Com `soAbaixoDoComputador`, some a partir de 1024 px, onde as ações ficam no card de preenchimento.
  */
 export function BarraDeAcoes({
   situacao,
+  soAbaixoDoComputador = false,
   children,
 }: {
   situacao?: ReactNode;
+  soAbaixoDoComputador?: boolean;
   children: ReactNode;
 }) {
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-borda bg-superficie px-4 py-3 shadow-cartao sm:-mx-6 sm:px-6 md:sticky md:bottom-0 md:z-10 xl:-mx-8 xl:px-8">
+    <div
+      className={`${painel} mt-6 flex flex-wrap items-center gap-3 px-4 py-3 md:sticky md:bottom-4 md:z-10 md:shadow-sm ${soAbaixoDoComputador ? "lg:hidden" : ""}`}
+    >
       {situacao && <p className="mr-auto text-sm text-texto-2">{situacao}</p>}
       <div className="ml-auto flex items-center gap-3">{children}</div>
     </div>
