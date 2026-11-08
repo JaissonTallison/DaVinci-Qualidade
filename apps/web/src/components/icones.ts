@@ -71,7 +71,6 @@ export {
   Lightbulb,
   ListChecks,
   ListFilter,
-  LoaderCircle,
   Lock,
   LogOut,
   Mail,

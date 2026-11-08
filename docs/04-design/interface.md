@@ -317,7 +317,7 @@ Todo botão é o componente `Botao` (`components/botao.tsx`); só com ícone, `B
 
 **Verbos de criar:** Abrir (NC, OS), Registrar (eventos: acidente, inspeção, entrega, análise, turma), Cadastrar (cadastros: instrumento, terceiro, licença, produto, requisito, aspecto, tema, profissional, risco) e os do domínio (Solicitar PT, Planejar auditoria, Propor inovação, Criar plano). Nada de "Novo X".
 
-**Estados:** `carregando` mostra o giro, troca o texto ("Salvando…") e trava o botão; desabilitado leva `motivo`, que aparece ao passar o mouse. Com `href` o botão é link; com `download` ou endereço de fora (e-mail, WhatsApp), âncora comum.
+**Estados:** `carregando` troca o texto ("Salvando…"), tira o ícone e trava o botão, sem giro (o sistema não anima); desabilitado leva `motivo`, que aparece ao passar o mouse. Com `href` o botão é link; com `download` ou endereço de fora (e-mail, WhatsApp), âncora comum.
 
 ---
 

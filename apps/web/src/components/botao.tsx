@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
-import { LoaderCircle, type LucideIcon } from "@/components/icones";
+import type { LucideIcon } from "@/components/icones";
 import {
   estiloDoBotao,
   type TamanhoDoBotao,
@@ -27,7 +27,7 @@ type Comum = {
 type ComoBotao = Comum &
   Omit<ComponentProps<"button">, "className" | "children"> & {
     href?: undefined;
-    /** Ação em andamento: mostra o giro, troca o texto e trava o botão. */
+    /** Ação em andamento: troca o texto e trava o botão (sem animação). */
     carregando?: boolean;
     /** Texto durante o carregamento ("Salvando…"); padrão: o próprio texto. */
     textoCarregando?: string;
@@ -54,15 +54,9 @@ function Conteudo({
   const tam = tamanho === "pequeno" ? 14 : 16;
   return (
     <>
-      {carregando ? (
-        <LoaderCircle
-          aria-hidden
-          size={tam}
-          strokeWidth={1.75}
-          className="animate-spin motion-reduce:animate-none"
-        />
-      ) : (
-        Icone && <Icone aria-hidden size={tam} strokeWidth={1.75} />
+      {/* Carregando: sem giro (o sistema não anima); o texto muda ("Salvando…") e o ícone sai. */}
+      {!carregando && Icone && (
+        <Icone aria-hidden size={tam} strokeWidth={1.75} />
       )}
       {children}
       {IconeDireita && (
