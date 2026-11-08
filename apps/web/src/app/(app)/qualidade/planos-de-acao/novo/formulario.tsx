@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState, type ReactNode } from "react";
 import {
   MAXIMO_DE_TAREFAS,
@@ -9,6 +10,7 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { LinhasDeTarefa } from "@/components/linhas-de-tarefa";
 import { Selecao } from "@/components/selecao";
 import { criarPlano, type EstadoDaAcao } from "@/lib/acoes-planos";
@@ -18,7 +20,6 @@ import {
   botaoSecundario,
   campo,
   painel,
-  tituloDaSecao,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { ORIGEM_PLANO_VINCULAVEL } from "@/lib/origem-plano";
@@ -28,13 +29,22 @@ export interface Inicial {
   tarefas?: Record<string, string>[];
 }
 
-/** Agrupa campos relacionados sob um subtítulo sóbrio, para o cadastro ler como etapas. */
-function Secao({ titulo, children }: { titulo: string; children: ReactNode }) {
+/** Um bloco do cadastro (interface.md §7.2): os campos empilhados dentro do painel da seção. */
+function Secao({
+  id,
+  titulo,
+  descricao,
+  children,
+}: {
+  id: string;
+  titulo: string;
+  descricao?: string;
+  children: ReactNode;
+}) {
   return (
-    <section className="flex flex-col gap-5">
-      <h2 className="text-sm font-semibold text-texto-2">{titulo}</h2>
-      {children}
-    </section>
+    <Bloco id={id} titulo={titulo} descricao={descricao}>
+      <div className="flex flex-col gap-5">{children}</div>
+    </Bloco>
   );
 }
 
@@ -68,12 +78,35 @@ export function FormularioNovoPlano({
   const invalido = (nome: string) => ({ "aria-invalid": Boolean(erros[nome]) });
 
   return (
-    <form action={acao} noValidate className={`${painel} mt-6`}>
-      <div className="flex flex-col gap-8 p-5">
-        {erroGeral && <AvisoDeErro erro={erroGeral} />}
-        {v.ncId && <input type="hidden" name="ncId" value={v.ncId} />}
-
-        <Secao titulo="O plano">
+    <form action={acao} noValidate className="mt-6">
+      {v.ncId && <input type="hidden" name="ncId" value={v.ncId} />}
+      {erroGeral && (
+        <div className="mb-5">
+          <AvisoDeErro erro={erroGeral} />
+        </div>
+      )}
+      <CadastroEmBlocos
+        resumo={[
+          { rotulo: "Tipo", campo: "tipo" },
+          { rotulo: "Origem", campo: "origem" },
+          { rotulo: "Responsável", campo: "responsavel" },
+        ]}
+        acoes={
+          <>
+            <Link href="/qualidade/planos-de-acao" className={botaoSecundario}>
+              Cancelar
+            </Link>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando ? "Criando…" : "Criar plano"}
+            </button>
+          </>
+        }
+      >
+        <Secao
+          id="plano"
+          titulo="O plano"
+          descricao="O que o plano resolve e qual resultado se espera."
+        >
           <Campo
             id="titulo"
             rotulo="Título *"
@@ -82,6 +115,7 @@ export function FormularioNovoPlano({
           >
             <input
               id="titulo"
+              required
               name="titulo"
               defaultValue={v.titulo}
               maxLength={150}
@@ -97,6 +131,7 @@ export function FormularioNovoPlano({
           >
             <textarea
               id="objetivo"
+              required
               name="objetivo"
               rows={2}
               defaultValue={v.objetivo}
@@ -106,7 +141,11 @@ export function FormularioNovoPlano({
           </Campo>
         </Secao>
 
-        <Secao titulo="Classificação e vínculo">
+        <Secao
+          id="classificacao"
+          titulo="Classificação e vínculo"
+          descricao="Tipo de ação, de onde vem, quem responde e o custo previsto."
+        >
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <Campo id="tipo" rotulo="Tipo *" erro={erros.tipo}>
               <Opcoes id="tipo" opcoes={TIPOS_PLANO} valor={v.tipo} />
@@ -139,7 +178,9 @@ export function FormularioNovoPlano({
                 defaultValue={v.origemRef}
                 maxLength={60}
                 disabled={semOrigem}
-                placeholder={semOrigem ? "Escolha a origem primeiro" : undefined}
+                placeholder={
+                  semOrigem ? "Escolha a origem primeiro" : undefined
+                }
                 className={`${campo} font-mono disabled:cursor-not-allowed disabled:opacity-60`}
                 list={
                   vinc && registros.length > 0 ? "registros-origem" : undefined
@@ -161,6 +202,7 @@ export function FormularioNovoPlano({
             >
               <input
                 id="responsavel"
+                required
                 name="responsavel"
                 list="pessoas"
                 defaultValue={v.responsavel}
@@ -188,51 +230,42 @@ export function FormularioNovoPlano({
           </Campo>
         </Secao>
 
-        <p className="text-sm text-texto-3">
-          Os campos com <span aria-hidden>*</span> são obrigatórios.
-        </p>
-      </div>
-
-      <div className="border-t border-borda p-5">
-        <h2 className={tituloDaSecao}>Tarefas</h2>
-        <p className="mt-1 text-base text-texto-2">
-          O que o plano vai executar. “O que fazer”, “Quem” e “Até quando” são
-          obrigatórios em cada tarefa; “Onde” e “Como” (5W2H) são opcionais.
-          Inclua ao menos uma tarefa.
-        </p>
-        {erros.tarefas && (
-          <p className="mt-1 text-sm text-nao-conforme">{erros.tarefas}</p>
-        )}
-        <LinhasDeTarefa
-          quantidade={linhas}
-          hoje={hoje}
-          valores={estado.tarefas ?? inicial?.tarefas}
-          erros={erros}
-        />
-        {linhas < MAXIMO_DE_TAREFAS && (
-          <button
-            type="button"
-            onClick={() => setLinhas((n) => n + 1)}
-            className={`${botaoSecundario} mt-3`}
-          >
-            Incluir tarefa
-          </button>
-        )}
-      </div>
-
-      <div className="flex flex-wrap items-center justify-end gap-3 border-t border-borda px-5 py-3">
-        <p className="mr-auto text-sm text-texto-2">
-          Ao criar, o plano entra em execução e o acompanhamento das tarefas
-          começa.
-        </p>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Criando…" : "Criar plano"}
-        </button>
-      </div>
+        <Secao
+          id="tarefas"
+          titulo="Tarefas"
+          descricao="“O que fazer”, “Quem” e “Até quando” são obrigatórios em cada tarefa; “Onde” e “Como” (5W2H) são opcionais. Inclua ao menos uma tarefa."
+        >
+          <div>
+            {erros.tarefas && (
+              <p className="mb-3 text-sm text-nao-conforme">{erros.tarefas}</p>
+            )}
+            <LinhasDeTarefa
+              quantidade={linhas}
+              hoje={hoje}
+              valores={estado.tarefas ?? inicial?.tarefas}
+              erros={erros}
+            />
+            {linhas < MAXIMO_DE_TAREFAS && (
+              <button
+                type="button"
+                onClick={() => setLinhas((n) => n + 1)}
+                className={`${botaoSecundario} mt-3`}
+              >
+                Incluir tarefa
+              </button>
+            )}
+          </div>
+          <p className="text-sm text-texto-2">
+            Ao criar, o plano entra em execução e o acompanhamento das tarefas
+            começa.
+          </p>
+        </Secao>
+      </CadastroEmBlocos>
     </form>
   );
 }
 
+/** Lista de escolha obrigatória (tipo e origem do plano). */
 function Opcoes({
   id,
   opcoes,
@@ -248,6 +281,7 @@ function Opcoes({
     <Selecao
       id={id}
       name={id}
+      required
       defaultValue={valor ?? ""}
       className={campo}
       onChange={onChange}
