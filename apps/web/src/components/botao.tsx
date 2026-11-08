@@ -144,13 +144,14 @@ export function Botao({
   );
 }
 
-/** Botão só com ícone: quadrado, com o rótulo para leitor de tela e no `title`. */
+/** Botão só com ícone: quadrado, com o rótulo para leitor de tela e no `title`. Com `href`, link. */
 export function BotaoIcone({
   rotulo,
   icone: Icone,
   variante = "fantasma",
   tamanho = "medio",
   className = "",
+  href,
   ...resto
 }: Omit<ComponentProps<"button">, "children" | "className"> & {
   rotulo: string;
@@ -158,20 +159,33 @@ export function BotaoIcone({
   variante?: "secundario" | "fantasma" | "perigo";
   tamanho?: TamanhoDoBotao;
   className?: string;
+  /** Vira link (ex.: ano anterior e seguinte). */
+  href?: string;
 }) {
+  const classe =
+    `${estiloDoBotao(variante, tamanho, true)} ${className}`.trim();
+  const icone = (
+    <Icone
+      aria-hidden
+      size={tamanho === "pequeno" ? 14 : 16}
+      strokeWidth={1.75}
+    />
+  );
+  if (href)
+    return (
+      <Link href={href} aria-label={rotulo} title={rotulo} className={classe}>
+        {icone}
+      </Link>
+    );
   return (
     <button
       type="button"
       {...resto}
       aria-label={rotulo}
       title={rotulo}
-      className={`${estiloDoBotao(variante, tamanho, true)} ${className}`.trim()}
+      className={classe}
     >
-      <Icone
-        aria-hidden
-        size={tamanho === "pequeno" ? 14 : 16}
-        strokeWidth={1.75}
-      />
+      {icone}
     </button>
   );
 }

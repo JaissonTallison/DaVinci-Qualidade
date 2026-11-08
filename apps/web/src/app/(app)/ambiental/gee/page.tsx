@@ -14,7 +14,7 @@ import { hojeEmBrasilia } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeFator } from "./formulario";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
-import { Botao } from "@/components/botao";
+import { BotaoIcone } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Inventário de GEE" };
 const t = (n: number) =>
@@ -54,22 +54,22 @@ export default async function Gee({
           </p>
         </div>
         <nav aria-label="Ano" className="flex items-center gap-2">
-          <Botao
+          <BotaoIcone
             href={`/ambiental/gee?ano=${ano - 1}`}
-            aria-label={`Ano ${ano - 1}`}
-            tamanho="grande"
+            rotulo={`Ano ${ano - 1}`}
+            variante="secundario"
             icone={ChevronLeft}
-          ></Botao>
+          />
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
           </span>
           {ano < anoAtual && (
-            <Botao
+            <BotaoIcone
               href={`/ambiental/gee?ano=${ano + 1}`}
-              aria-label={`Ano ${ano + 1}`}
-              tamanho="grande"
-              iconeDireita={ChevronRight}
-            ></Botao>
+              rotulo={`Ano ${ano + 1}`}
+              variante="secundario"
+              icone={ChevronRight}
+            />
           )}
         </nav>
       </header>

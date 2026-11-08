@@ -20,7 +20,7 @@ import {
 } from "@/lib/estilos";
 import { FormularioDeConsumo } from "./formulario";
 import { GraficoDeConsumo } from "./grafico";
-import { Botao } from "@/components/botao";
+import { BotaoIcone } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Consumo de água e energia" };
 const MESES = [
@@ -81,22 +81,22 @@ export default async function Consumo({
           </p>
         </div>
         <nav aria-label="Ano" className="flex items-center gap-2">
-          <Botao
+          <BotaoIcone
             href={`/ambiental/consumo?ano=${ano - 1}`}
-            aria-label={`Ano ${ano - 1}`}
-            tamanho="grande"
+            rotulo={`Ano ${ano - 1}`}
+            variante="secundario"
             icone={ChevronLeft}
-          ></Botao>
+          />
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
           </span>
           {ano < anoAtual && (
-            <Botao
+            <BotaoIcone
               href={`/ambiental/consumo?ano=${ano + 1}`}
-              aria-label={`Ano ${ano + 1}`}
-              tamanho="grande"
-              iconeDireita={ChevronRight}
-            ></Botao>
+              rotulo={`Ano ${ano + 1}`}
+              variante="secundario"
+              icone={ChevronRight}
+            />
           )}
         </nav>
       </header>
