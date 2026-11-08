@@ -81,7 +81,7 @@ export default async function MatrizDeMaterialidade() {
                           title={`Impacto ${impacto} × relevância ${relevancia} = ${nota}`}
                           className={`flex aspect-square min-h-12 flex-wrap content-start gap-1 rounded-xs p-1.5 ${FUNDO[nivelDeMaterialidade(nota)]}`}
                         >
-                          <span className="w-full text-[10px] leading-none text-texto-3 tabular-nums">
+                          <span className="w-full text-xs leading-none text-texto-3 tabular-nums">
                             {nota}
                           </span>
                           {temas.map((t) => (

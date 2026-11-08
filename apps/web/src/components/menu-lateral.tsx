@@ -161,7 +161,7 @@ export function MenuLateral({
         </div>
         <p
           title={`Versão ${VERSAO}`}
-          className="pt-2 text-[10px] text-primaria-texto/50"
+          className="pt-2 text-xs text-primaria-texto/50"
         >
           v{VERSAO}
         </p>
