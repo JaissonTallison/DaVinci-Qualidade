@@ -1,16 +1,15 @@
-import Link from "next/link";
-import { tituloDaPagina } from "@/lib/estilos";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import type { ConfigRo } from "./config";
 import { FormularioDeRo } from "./formulario";
 
 export function NovoRo({ cfg }: { cfg: ConfigRo }) {
   return (
     <>
-      <Link href={cfg.base} className="dv-voltar">
-        {cfg.titulo}
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>{cfg.registrar}</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">{cfg.intro}</p>
+      <CabecalhoDeCadastro
+        voltar={{ href: cfg.base, rotulo: cfg.titulo }}
+        titulo={cfg.registrar}
+        descricao={cfg.intro}
+      />
       <FormularioDeRo cfg={cfg} />
     </>
   );
