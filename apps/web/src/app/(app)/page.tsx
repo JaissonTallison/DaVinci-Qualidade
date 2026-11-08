@@ -276,10 +276,13 @@ export default async function Inicio() {
 
       {componentes.length > 0 && (
         <div
-          className="dv-entrar grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]"
+          className="dv-entrar grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]"
           style={{ "--atraso": "60ms" } as CSSProperties}
         >
-          <section className={painel} aria-labelledby="saude-titulo">
+          <section
+            className={`${painel} flex flex-col`}
+            aria-labelledby="saude-titulo"
+          >
             <header className={`${cabecalhoDoPainel} justify-between`}>
               <div className="min-w-0">
                 <h2 id="saude-titulo" className={tituloDoPainel}>
@@ -291,7 +294,7 @@ export default async function Inicio() {
                 </p>
               </div>
             </header>
-            <div className="flex flex-col gap-6 p-5 sm:flex-row sm:items-center">
+            <div className="flex flex-1 flex-col gap-6 p-5 sm:flex-row sm:items-center">
               <AnelDaSaude valor={saude} />
               <ul className="min-w-0 flex-1 divide-y divide-borda">
                 {componentes.map((c) => (
@@ -317,7 +320,7 @@ export default async function Inicio() {
                       >
                         {c.pct}%
                       </span>
-                      <span className="col-span-3 truncate text-sm text-texto-2 sm:col-span-1 sm:col-start-2">
+                      <span className="col-span-3 text-sm text-texto-2 sm:col-span-2 sm:col-start-2">
                         {c.detalhe}
                       </span>
                     </Link>
@@ -327,13 +330,21 @@ export default async function Inicio() {
             </div>
           </section>
 
-          <section className={painel} aria-labelledby="prioridade-titulo">
+          <section
+            className={`${painel} flex flex-col`}
+            aria-labelledby="prioridade-titulo"
+          >
             <header className={cabecalhoDoPainel}>
-              <h2 id="prioridade-titulo" className={tituloDoPainel}>
-                Prioridade agora
-              </h2>
+              <div className="min-w-0">
+                <h2 id="prioridade-titulo" className={tituloDoPainel}>
+                  Prioridade agora
+                </h2>
+                <p className="text-sm text-texto-2">
+                  O componente mais baixo e onde resolver.
+                </p>
+              </div>
             </header>
-            <div className="p-5">
+            <div className="flex flex-1 flex-col p-5">
               {pior && pior.pct < 100 ? (
                 <>
                   <Selo tom={pior.pct < 70 ? "perigo" : "atencao"}>
@@ -348,12 +359,13 @@ export default async function Inicio() {
                     É o componente mais baixo da saúde do sistema de gestão.
                     Resolver aqui sobe a média mais depressa.
                   </p>
+                  <span aria-hidden className="block min-h-5 flex-1" />
                   <Botao
                     href={pior.href}
                     variante="primario"
                     tamanho="grande"
                     iconeDireita={ArrowRight}
-                    className="mt-5 w-full"
+                    className="mt-auto w-full"
                   >
                     Resolver agora
                   </Botao>
@@ -368,11 +380,12 @@ export default async function Inicio() {
                     Nada pede ação agora. Os próximos prazos aparecem no painel
                     de vencimentos.
                   </p>
+                  <span aria-hidden className="block min-h-5 flex-1" />
                   <Botao
                     href="/paineis/vencimentos"
                     tamanho="grande"
                     iconeDireita={ArrowRight}
-                    className="mt-5 w-full"
+                    className="mt-auto w-full"
                   >
                     Ver vencimentos
                   </Botao>
