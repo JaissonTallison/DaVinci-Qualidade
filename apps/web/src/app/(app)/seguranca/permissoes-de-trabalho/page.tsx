@@ -29,6 +29,7 @@ import { chamarApi } from "@/lib/api";
 import {
   botaoPrimario,
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -71,7 +72,8 @@ export default async function PermissoesDeTrabalho({
   if (params.status)
     chips.push({
       rotulo: "Status",
-      valor: STATUS_PT[params.status as keyof typeof STATUS_PT] ?? params.status,
+      valor:
+        STATUS_PT[params.status as keyof typeof STATUS_PT] ?? params.status,
       href: semFiltro("status"),
     });
   if (params.tipo)
@@ -120,7 +122,7 @@ export default async function PermissoesDeTrabalho({
           </button>
           <BotaoExportar recurso="permissoes-de-trabalho" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}

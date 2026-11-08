@@ -22,7 +22,11 @@ export const botaoPerigo = `${botao} border border-nao-conforme bg-superficie te
 export const botaoLink =
   "text-base font-semibold text-info underline-offset-2 hover:underline";
 
-export const painel = "rounded-md border border-borda bg-superficie shadow-cartao";
+/** Link de texto neutro para ações secundárias da tela ("Limpar filtros", "Inativar"). */
+export const linkDiscreto =
+  "text-sm font-semibold text-texto-2 underline-offset-2 hover:text-texto hover:underline";
+export const painel =
+  "rounded-md border border-borda bg-superficie shadow-cartao";
 export const tituloDaPagina = "text-2xl text-texto";
 /** Linha abaixo do título da página: explica, em cinza, para que serve a tela. */
 export const subtituloDaPagina = "mt-1 text-sm text-texto-2";

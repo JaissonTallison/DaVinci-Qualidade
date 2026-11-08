@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { Download } from "@/components/icones";
 import {
   CLASSES_RESIDUO,
@@ -96,25 +97,27 @@ export default async function Inventario({
     : null;
   return (
     <article>
-      <div className="print:hidden">
-        <Link
-          href="/ambiental/residuos"
-          className="dv-voltar"
-        >
-          Resíduos
-        </Link>
-      </div>
-      <div className="mt-1 flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className={tituloDaPagina}>Inventário de resíduos de {ano}</h1>
-        <nav aria-label="Ano" className="flex gap-3 text-sm print:hidden">
-          <Link href={`?ano=${ano - 1}`} className="text-info hover:underline">
-            {ano - 1}
-          </Link>
-          <Link href={`?ano=${ano + 1}`} className="text-info hover:underline">
-            {ano + 1}
-          </Link>
-        </nav>
-      </div>
+      <CabecalhoComVoltar
+        voltar={{ href: "/ambiental/residuos", rotulo: "Resíduos" }}
+      >
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h1 className={tituloDaPagina}>Inventário de resíduos de {ano}</h1>
+          <nav aria-label="Ano" className="flex gap-3 text-sm print:hidden">
+            <Link
+              href={`?ano=${ano - 1}`}
+              className="text-info hover:underline"
+            >
+              {ano - 1}
+            </Link>
+            <Link
+              href={`?ano=${ano + 1}`}
+              className="text-info hover:underline"
+            >
+              {ano + 1}
+            </Link>
+          </nav>
+        </div>
+      </CabecalhoComVoltar>
       <div className="mt-4 flex flex-wrap gap-2 print:hidden">
         <a
           href={csvInventario}

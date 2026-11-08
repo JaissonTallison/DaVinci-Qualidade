@@ -236,7 +236,7 @@ Vale para registrar e editar em página (mais de 6 campos; até 6, modal). Peça
 3. **Coluna de resumo** (`ColunaDeResumo`, 288 px, fixa ao rolar no computador): **Resumo** com os valores que importam (inclusive os calculados, como o nível do risco) e **Preenchimento** com "5 de 7 obrigatórios · 71%" em texto e a lista das seções, que leva até cada uma.
 4. **Regra condicional à vista:** quando um valor torna campos obrigatórios (nível alto exige ação, responsável e prazo), a seção mostra o aviso e os rótulos perdem o "(opcional)".
 5. **Barra de ações** (`BarraDeAcoes`): fixa no rodapé no computador e no tablet; à esquerda quantos obrigatórios faltam; à direita Cancelar e a ação primária por último.
-6. **Voltar nas outras telas:** o link `.dv-voltar` ("← Riscos") fica acima do título, discreto, sem borda nem fundo.
+6. **Voltar nas outras telas** (detalhe, configuração, documento para imprimir): o mesmo botão quadrado, ao lado do título. Use `CabecalhoComVoltar` (`components/pagina-de-cadastro.tsx`) envolvendo o que forma o cabeçalho (número e status, título, ações, resumo rápido); na barra de impressão, `BotaoVoltar` sozinho. O botão some no papel (`print:hidden`). Ações de texto secundárias ("Limpar filtros", "Inativar") usam `linkDiscreto` (`lib/estilos.ts`), nunca uma seta de voltar.
 
 **Como montar um cadastro novo.** Use `CadastroEmBlocos` e `Bloco` (`components/cadastro-em-blocos.tsx`) dentro do `<form noValidate>`: cada `Bloco` é uma seção; o componente lê os campos e monta a situação de cada bloco, o "x de y obrigatórios", o resumo e a barra de ações. Regras:
 

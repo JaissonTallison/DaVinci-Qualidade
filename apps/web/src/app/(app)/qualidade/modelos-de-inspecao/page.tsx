@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   TIPOS_INSPECAO,
@@ -44,39 +45,43 @@ export default async function ListaDeModelos({
 
   return (
     <>
-      <Link href="/qualidade/configuracoes" className="dv-voltar">
-        Configurações da qualidade
-      </Link>
-      <header className="mt-1 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Modelos de inspeção</h1>
-          {lista.ok && lista.dados.length > 0 && (
-            <p className="mt-1 text-base text-texto-2">
-              {lista.dados.length}{" "}
-              {verInativos
-                ? lista.dados.length === 1
-                  ? "inativo"
-                  : "inativos"
-                : lista.dados.length === 1
-                  ? "ativo"
-                  : "ativos"}
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/qualidade/configuracoes",
+          rotulo: "Configurações da qualidade",
+        }}
+      >
+        <header className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className={tituloDaPagina}>Modelos de inspeção</h1>
+            {lista.ok && lista.dados.length > 0 && (
+              <p className="mt-1 text-base text-texto-2">
+                {lista.dados.length}{" "}
+                {verInativos
+                  ? lista.dados.length === 1
+                    ? "inativo"
+                    : "inativos"
+                  : lista.dados.length === 1
+                    ? "ativo"
+                    : "ativos"}
+              </p>
+            )}
+            <p className="mt-0.5 max-w-2xl text-sm text-texto-3">
+              Listas de itens que se repetem. Ao criar a inspeção, os itens são
+              copiados: mudar o modelo depois não altera inspeções já feitas.
             </p>
+          </div>
+          {podeEditar && (
+            <Link
+              href="/qualidade/modelos-de-inspecao/novo"
+              className={botaoPrimario}
+            >
+              <IconeDaTela href={"/qualidade/modelos-de-inspecao/novo"} />
+              Criar modelo
+            </Link>
           )}
-          <p className="mt-0.5 max-w-2xl text-sm text-texto-3">
-            Listas de itens que se repetem. Ao criar a inspeção, os itens são
-            copiados: mudar o modelo depois não altera inspeções já feitas.
-          </p>
-        </div>
-        {podeEditar && (
-          <Link
-            href="/qualidade/modelos-de-inspecao/novo"
-            className={botaoPrimario}
-          >
-            <IconeDaTela href={"/qualidade/modelos-de-inspecao/novo"} />
-            Criar modelo
-          </Link>
-        )}
-      </header>
+        </header>
+      </CabecalhoComVoltar>
       {aviso && AVISOS[aviso] && (
         <p
           role="status"

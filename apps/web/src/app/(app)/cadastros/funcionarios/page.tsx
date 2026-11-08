@@ -15,6 +15,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   tituloDaPagina,
 } from "@/lib/estilos";
@@ -113,7 +114,7 @@ export default async function ListaDeFuncionarios({
           {filtrando && (
             <Link
               href="/cadastros/funcionarios"
-              className="h-9 content-center dv-voltar"
+              className={`h-9 content-center ${linkDiscreto}`}
             >
               Limpar filtros
             </Link>

@@ -40,6 +40,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -91,11 +92,16 @@ export default async function ListaDeNcs({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.status)
     chips.push({
       rotulo: "Status",
-      valor: STATUS_NC[params.status as keyof typeof STATUS_NC] ?? params.status,
+      valor:
+        STATUS_NC[params.status as keyof typeof STATUS_NC] ?? params.status,
       href: semFiltro("status"),
     });
   if (params.gravidade)
@@ -109,11 +115,16 @@ export default async function ListaDeNcs({
   if (params.origem)
     chips.push({
       rotulo: "Origem",
-      valor: ORIGENS_NC[params.origem as keyof typeof ORIGENS_NC] ?? params.origem,
+      valor:
+        ORIGENS_NC[params.origem as keyof typeof ORIGENS_NC] ?? params.origem,
       href: semFiltro("origem"),
     });
   if (params.vencidas === "true")
-    chips.push({ rotulo: "Prazo", valor: "Só vencidas", href: semFiltro("vencidas") });
+    chips.push({
+      rotulo: "Prazo",
+      valor: "Só vencidas",
+      href: semFiltro("vencidas"),
+    });
 
   return (
     <>
@@ -201,7 +212,7 @@ export default async function ListaDeNcs({
           </button>
           <BotaoExportar recurso="nao-conformidades" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -368,7 +379,10 @@ export default async function ListaDeNcs({
                         </td>
                         <td className="relative z-10 px-2 py-2 text-right">
                           <AcoesDaLinha rotulo={`Ações da NC ${nc.numero}`}>
-                            <Link href={`${BASE}/${nc.id}`} className={itemDeAcao}>
+                            <Link
+                              href={`${BASE}/${nc.id}`}
+                              className={itemDeAcao}
+                            >
                               Abrir
                             </Link>
                             <a

@@ -20,6 +20,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -72,7 +73,11 @@ export default async function Terceiros({
       href: semFiltro("situacao"),
     });
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
 
   const chave = (t: TerceiroResumo): string => {
     switch (ordenar) {
@@ -140,7 +145,7 @@ export default async function Terceiros({
           </button>
           <BotaoExportar recurso="terceiros" consulta={consulta} />
           {(filtrando || ordenar) && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}

@@ -35,6 +35,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -83,7 +84,11 @@ export default async function ListaDePlanos({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.status)
     chips.push({
       rotulo: "Status",
@@ -101,7 +106,11 @@ export default async function ListaDePlanos({
       href: semFiltro("origem"),
     });
   if (params.atrasados === "true")
-    chips.push({ rotulo: "Prazo", valor: "Só atrasados", href: semFiltro("atrasados") });
+    chips.push({
+      rotulo: "Prazo",
+      valor: "Só atrasados",
+      href: semFiltro("atrasados"),
+    });
 
   return (
     <>
@@ -180,7 +189,7 @@ export default async function ListaDePlanos({
           </button>
           <BotaoExportar recurso="planos-de-acao" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -341,7 +350,10 @@ export default async function ListaDePlanos({
                         </td>
                         <td className="relative z-10 px-2 py-2 text-right">
                           <AcoesDaLinha rotulo={`Ações do plano ${p.numero}`}>
-                            <Link href={`${BASE}/${p.id}`} className={itemDeAcao}>
+                            <Link
+                              href={`${BASE}/${p.id}`}
+                              className={itemDeAcao}
+                            >
                               Abrir
                             </Link>
                             <a

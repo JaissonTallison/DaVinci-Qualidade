@@ -33,6 +33,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -41,7 +42,14 @@ import {
 export const metadata: Metadata = { title: "Auditorias" };
 
 const BASE = "/auditorias";
-const FILTROS = ["busca", "status", "tipo", "ordenar", "ordem", "pagina"] as const;
+const FILTROS = [
+  "busca",
+  "status",
+  "tipo",
+  "ordenar",
+  "ordem",
+  "pagina",
+] as const;
 const NAO_FILTRAM = new Set(["ordenar", "ordem", "pagina"]);
 
 export default async function ListaDeAuditorias({
@@ -82,7 +90,11 @@ export default async function ListaDeAuditorias({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.status)
     chips.push({
       rotulo: "Status",
@@ -174,7 +186,7 @@ export default async function ListaDeAuditorias({
           </button>
           <BotaoExportar recurso="auditorias" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}

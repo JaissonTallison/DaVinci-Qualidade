@@ -30,6 +30,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -85,7 +86,11 @@ export default async function Pgr({
       href: semFiltro("nivel"),
     });
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
 
   const niveis = Object.keys(NIVEIS_DE_RISCO);
   const chave = (r: Risco): string | number => {
@@ -187,7 +192,7 @@ export default async function Pgr({
           </button>
           <BotaoExportar recurso="pgr" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}

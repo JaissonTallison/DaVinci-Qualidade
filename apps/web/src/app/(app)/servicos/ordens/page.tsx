@@ -31,6 +31,7 @@ import { formatarData } from "@/lib/datas";
 import {
   botaoPrimario,
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -70,7 +71,8 @@ export default async function Ordens({
   if (params.status)
     chips.push({
       rotulo: "Status",
-      valor: STATUS_OS[params.status as keyof typeof STATUS_OS] ?? params.status,
+      valor:
+        STATUS_OS[params.status as keyof typeof STATUS_OS] ?? params.status,
       href: semFiltro("status"),
     });
 
@@ -104,7 +106,7 @@ export default async function Ordens({
           </button>
           <BotaoExportar recurso="ordens" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
@@ -222,7 +224,9 @@ export default async function Ordens({
                         </Link>
                       </td>
                       <td className="max-w-md px-4 py-2">{o.titulo}</td>
-                      <td className="px-4 py-2 text-texto-2">{o.clienteNome}</td>
+                      <td className="px-4 py-2 text-texto-2">
+                        {o.clienteNome}
+                      </td>
                       <td className="px-4 py-2 whitespace-nowrap">
                         {formatarData(o.prazo)}
                       </td>

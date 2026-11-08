@@ -295,34 +295,6 @@ main :is(input, select, textarea) {
   text-decoration: underline;
 }
 
-/* Voltar à listagem (interface.md §7): link discreto acima do título, seta + nome da tela de origem.
-   Sem borda nem fundo; a tela de cadastro usa o botão ao lado do título (CabecalhoDeCadastro). */
-.dv-voltar {
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 0.25rem;
-  padding-left: 1.35rem;
-  background: transparent
-    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='15'%20height='15'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%235F6B7C'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%2019-7-7%207-7'/%3E%3Cpath%20d='M19%2012H5'/%3E%3C/svg%3E")
-    0 center / 15px 15px no-repeat;
-  color: var(--color-texto-2);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  line-height: 1.75rem;
-  white-space: nowrap;
-  text-underline-offset: 2px;
-  transition: color 150ms;
-}
-.dv-voltar:hover {
-  color: var(--color-texto);
-  text-decoration: underline;
-}
-.dv-voltar:focus-visible {
-  outline: 2px solid var(--color-info);
-  outline-offset: 2px;
-  border-radius: var(--radius-xs);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .dv-entrar,
   .dv-crescer,

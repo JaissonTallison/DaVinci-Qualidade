@@ -41,33 +41,32 @@ export default async function ProgramacaoDeAuditorias({
   const anos = [anoAtual - 1, anoAtual, anoAtual + 1];
 
   const [lista, eu] = await Promise.all([
-    chamarApi<ItemDaProgramacao[]>(
-      `/programacao-de-auditorias?ano=${ano}`,
-    ),
+    chamarApi<ItemDaProgramacao[]>(`/programacao-de-auditorias?ano=${ano}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
   ]);
   const podeEditar = eu.ok && eu.dados.permissoes.includes("auditorias.editar");
 
   return (
     <>
-      <Link href="/auditorias" className="dv-voltar">
-        Auditorias
-      </Link>
-      <header className="mt-1 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Programação de auditorias</h1>
-          <p className={subtituloDaPagina}>
-            Plano anual por setor: normas, frequência e meses planejados. As
-            auditorias realizadas se vinculam a cada item.
-          </p>
-        </div>
-        {podeEditar && (
-          <Link href={`${BASE}/nova?ano=${ano}`} className={botaoPrimario}>
-            <IconeDaTela href={BASE} />
-            Adicionar item
-          </Link>
-        )}
-      </header>
+      <CabecalhoComVoltar
+        voltar={{ href: "/auditorias", rotulo: "Auditorias" }}
+      >
+        <header className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h1 className={tituloDaPagina}>Programação de auditorias</h1>
+            <p className={subtituloDaPagina}>
+              Plano anual por setor: normas, frequência e meses planejados. As
+              auditorias realizadas se vinculam a cada item.
+            </p>
+          </div>
+          {podeEditar && (
+            <Link href={`${BASE}/nova?ano=${ano}`} className={botaoPrimario}>
+              <IconeDaTela href={BASE} />
+              Adicionar item
+            </Link>
+          )}
+        </header>
+      </CabecalhoComVoltar>
 
       <nav aria-label="Ano" className="mt-6 flex flex-wrap gap-2">
         {anos.map((a) => (
@@ -103,7 +102,10 @@ export default async function ProgramacaoDeAuditorias({
             descricao="Adicione os setores a auditar no ano, com as normas, a frequência e os meses."
             acao={
               podeEditar ? (
-                <Link href={`${BASE}/nova?ano=${ano}`} className={botaoPrimario}>
+                <Link
+                  href={`${BASE}/nova?ano=${ano}`}
+                  className={botaoPrimario}
+                >
                   <IconeDaTela href={BASE} />
                   Adicionar o primeiro item
                 </Link>
@@ -129,7 +131,9 @@ export default async function ProgramacaoDeAuditorias({
             <tbody className="divide-y divide-borda">
               {lista.dados.map((i) => {
                 const realizados = new Set(
-                  i.realizadas.map((r) => r.mes).filter((m): m is number => !!m),
+                  i.realizadas
+                    .map((r) => r.mes)
+                    .filter((m): m is number => !!m),
                 );
                 return (
                   <tr key={i.id} className="hover:bg-campo">
@@ -202,3 +206,4 @@ export default async function ProgramacaoDeAuditorias({
     </>
   );
 }
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";

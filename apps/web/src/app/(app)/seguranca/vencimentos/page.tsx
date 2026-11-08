@@ -15,6 +15,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import {
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -119,7 +120,7 @@ export default async function Vencimentos({
           </button>
           <BotaoExportar recurso="vencimentos" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}

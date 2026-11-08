@@ -13,6 +13,7 @@ import {
   type SituacaoDoRequisito,
   type Treinamento,
 } from "@davinci/types";
+import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
@@ -117,24 +118,28 @@ export default async function CompetenciasDaFuncao({
 
   return (
     <article>
-      <Link href="/cadastros/setores-e-funcoes" className="dv-voltar">
-        Setores e funções
-      </Link>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <h1 className={`${tituloDaPagina} mt-1`}>{funcao.nome}</h1>
-        <Link
-          href={`/cadastros/setores-e-funcoes/${id}/descricao`}
-          className={botaoSecundario}
-        >
-          <Printer aria-hidden size={16} strokeWidth={2} />
-          Descrição de cargo
-        </Link>
-      </div>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        O que esta função exige de quem a ocupa e quem está em dia. O ASO vale
-        para todas as funções (NR-7); os EPIs podem citar o risco do PGR que os
-        justifica.
-      </p>
+      <CabecalhoComVoltar
+        voltar={{
+          href: "/cadastros/setores-e-funcoes",
+          rotulo: "Setores e funções",
+        }}
+      >
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h1 className={`${tituloDaPagina} mt-1`}>{funcao.nome}</h1>
+          <Link
+            href={`/cadastros/setores-e-funcoes/${id}/descricao`}
+            className={botaoSecundario}
+          >
+            <Printer aria-hidden size={16} strokeWidth={2} />
+            Descrição de cargo
+          </Link>
+        </div>
+        <p className="mt-1 max-w-3xl text-base text-texto-2">
+          O que esta função exige de quem a ocupa e quem está em dia. O ASO vale
+          para todas as funções (NR-7); os EPIs podem citar o risco do PGR que
+          os justifica.
+        </p>
+      </CabecalhoComVoltar>
       <Aviso avisos={AVISOS} chave={aviso} />
       {matrizE && !matrizE.ok && <AvisoDeErro erro={matrizE.erro} />}
 

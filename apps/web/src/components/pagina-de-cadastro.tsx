@@ -27,7 +27,7 @@ export function BotaoVoltar({
       href={href}
       aria-label={texto}
       title={texto}
-      className="mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-campo border border-borda-campo bg-superficie text-texto-2 shadow-cartao transition-colors hover:bg-campo hover:text-texto"
+      className="mt-0.5 inline-flex size-9 print:hidden shrink-0 items-center justify-center rounded-campo border border-borda-campo bg-superficie text-texto-2 shadow-cartao transition-colors hover:bg-campo hover:text-texto"
     >
       <ArrowLeft aria-hidden size={18} strokeWidth={1.75} />
     </Link>

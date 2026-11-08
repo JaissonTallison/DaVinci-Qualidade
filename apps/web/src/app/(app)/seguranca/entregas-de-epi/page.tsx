@@ -23,6 +23,7 @@ import { chamarApi } from "@/lib/api";
 import {
   botaoPrimario,
   botaoSecundario,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -148,7 +149,7 @@ export default async function EntregasDeEpi({
           {filtrando && (
             <Link
               href="/seguranca/entregas-de-epi"
-              className="h-9 content-center dv-voltar"
+              className={`h-9 content-center ${linkDiscreto}`}
             >
               Limpar filtros
             </Link>

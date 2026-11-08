@@ -31,6 +31,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -82,7 +83,11 @@ export default async function ListaDeInstrumentos({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.situacao)
     chips.push({
       rotulo: "Situação",
@@ -136,7 +141,11 @@ export default async function ListaDeInstrumentos({
                       href={`${BASE}?situacao=reprovado`}
                       className="hover:underline"
                     >
-                      {plural(resumo.dados.reprovados, "reprovado", "reprovados")}
+                      {plural(
+                        resumo.dados.reprovados,
+                        "reprovado",
+                        "reprovados",
+                      )}
                     </Link>
                   )}
                 </p>
@@ -180,7 +189,7 @@ export default async function ListaDeInstrumentos({
           </button>
           <BotaoExportar recurso="calibracao" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}

@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { BotaoImprimir } from "./botao-imprimir";
 
@@ -56,9 +55,7 @@ export function FolhaDeDocumento({
         className={`mx-auto w-full px-4 py-6 print:max-w-none print:p-0 ${paisagem ? "max-w-6xl" : "max-w-4xl"}`}
       >
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3 print:hidden">
-          <Link href={voltarHref} className="dv-voltar">
-            {voltarRotulo}
-          </Link>
+          <BotaoVoltar href={voltarHref} rotulo={voltarRotulo} />
           <div className="flex items-center gap-2">
             {acoes}
             <BotaoImprimir />
@@ -99,9 +96,7 @@ export function FolhaDeDocumento({
             <section className="mt-12 grid break-inside-avoid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {assinaturas.map((a, i) => (
                 <div key={i} className="border-t border-texto pt-1.5 text-sm">
-                  <p className="font-semibold text-texto">
-                    {a.nome || " "}
-                  </p>
+                  <p className="font-semibold text-texto">{a.nome || " "}</p>
                   <p className="text-texto-2">{a.papel}</p>
                 </div>
               ))}
@@ -117,3 +112,4 @@ export function FolhaDeDocumento({
     </div>
   );
 }
+import { BotaoVoltar } from "@/components/pagina-de-cadastro";

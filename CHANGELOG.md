@@ -71,7 +71,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
-- Link de voltar (`.dv-voltar`) discreto, sem borda nem fundo, acima do título em todas as telas que o usam.
+- Voltar das telas internas (detalhes, configurações, documentos para imprimir) passa a ser o botão quadrado ao lado do título, como no cadastro (`CabecalhoComVoltar`, `BotaoVoltar`); a classe `.dv-voltar` saiu. "Limpar filtros" e "Inativar" viram link de texto (`linkDiscreto`), sem a seta de voltar.
 - O sistema é sempre claro, mesmo com o computador no modo escuro (decisão Q12).
 
 ### Corrigido

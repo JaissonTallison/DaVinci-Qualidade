@@ -31,6 +31,7 @@ import {
   botaoPrimario,
   botaoSecundario,
   campoCompacto,
+  linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
@@ -39,7 +40,14 @@ import {
 export const metadata: Metadata = { title: "Acidentes" };
 
 const BASE = "/seguranca/acidentes";
-const FILTROS = ["busca", "tipo", "status", "ordenar", "ordem", "pagina"] as const;
+const FILTROS = [
+  "busca",
+  "tipo",
+  "status",
+  "ordenar",
+  "ordem",
+  "pagina",
+] as const;
 const NAO_FILTRAM = new Set(["ordenar", "ordem", "pagina"]);
 
 export default async function ListaDeAcidentes({
@@ -69,7 +77,11 @@ export default async function ListaDeAcidentes({
   };
   const chips: ChipDeFiltro[] = [];
   if (params.busca)
-    chips.push({ rotulo: "Busca", valor: params.busca, href: semFiltro("busca") });
+    chips.push({
+      rotulo: "Busca",
+      valor: params.busca,
+      href: semFiltro("busca"),
+    });
   if (params.tipo)
     chips.push({
       rotulo: "Tipo",
@@ -134,7 +146,7 @@ export default async function ListaDeAcidentes({
           </button>
           <BotaoExportar recurso="acidentes" consulta={consulta} />
           {filtrando && (
-            <Link href={BASE} className="h-9 content-center dv-voltar">
+            <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
               Limpar filtros
             </Link>
           )}
