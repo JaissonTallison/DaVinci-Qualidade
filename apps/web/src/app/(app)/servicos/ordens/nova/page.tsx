@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import Link from "next/link";
 import type { Contrato, Pagina, ParceiroResumo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -15,13 +16,10 @@ export default async function NovaOs() {
   ]);
   return (
     <>
-      <Link
-        href="/servicos/ordens"
-        className="dv-voltar"
-      >
-        Ordens de serviço
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Abrir ordem de serviço</h1>
+      <CabecalhoDeCadastro
+        voltar={{ href: "/servicos/ordens", rotulo: "Ordens de serviço" }}
+        titulo="Abrir ordem de serviço"
+      />
       {!clientes.ok ? (
         <div className="mt-6">
           <AvisoDeErro erro={clientes.erro} />

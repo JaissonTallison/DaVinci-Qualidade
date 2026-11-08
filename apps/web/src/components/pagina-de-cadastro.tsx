@@ -94,6 +94,7 @@ export function SecaoDoCadastro({
   return (
     <section
       id={id}
+      data-bloco={titulo}
       aria-labelledby={`${id}-titulo`}
       className={`${painel} scroll-mt-20`}
     >

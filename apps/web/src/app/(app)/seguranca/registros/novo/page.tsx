@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import { TIPOS_REGISTRO_SST, type TipoRegistroSst } from "@davinci/types";
-import { tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeRegistro } from "./formulario";
 
 export const metadata: Metadata = { title: "Novo registro de segurança" };
@@ -12,13 +11,13 @@ export default async function NovoRegistro({
   const { tipo } = (await searchParams) as { tipo?: string };
   return (
     <>
-      <Link
-        href="/seguranca/registros"
-        className="dv-voltar"
-      >
-        Registros de segurança
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Novo registro</h1>
+      <CabecalhoDeCadastro
+        voltar={{
+          href: "/seguranca/registros",
+          rotulo: "Registros de segurança",
+        }}
+        titulo="Novo registro"
+      />
       <FormularioDeRegistro
         tipoInicial={
           tipo && tipo in TIPOS_REGISTRO_SST

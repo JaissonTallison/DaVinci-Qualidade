@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import Link from "next/link";
 import type {
   EntregaEpi,
@@ -9,12 +10,7 @@ import type {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import {
-  botaoLink,
-  botaoSecundario,
-  campoCompacto,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { botaoLink, botaoSecundario, campoCompacto } from "@/lib/estilos";
 import { FormularioDeEntrega } from "./formulario";
 
 export const metadata: Metadata = { title: "Registrar entrega de EPI" };
@@ -67,14 +63,14 @@ export default async function NovaEntrega({
 
   return (
     <>
-      <Link href={voltar} className="dv-voltar">
-        {funcionarioId ? "Profissional" : "Entregas de EPI"}
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Registrar entrega de EPI</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Só entra EPI com CA válido na data da entrega e só para profissional
-        ativo. A entrega vai para a ficha de EPI da pessoa.
-      </p>
+      <CabecalhoDeCadastro
+        voltar={{
+          href: voltar,
+          rotulo: funcionarioId ? "Profissional" : "Entregas de EPI",
+        }}
+        titulo="Registrar entrega de EPI"
+        descricao="Só entra EPI com CA válido na data da entrega e só para profissional ativo. A entrega vai para a ficha de EPI da pessoa."
+      />
       {erro ? (
         <div className="mt-6">
           <AvisoDeErro erro={erro} />
