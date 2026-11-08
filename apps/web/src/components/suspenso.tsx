@@ -32,7 +32,7 @@ export function Suspenso({
     if (!aberto) return;
     const posicionar = () => {
       const b = botaoRef.current?.getBoundingClientRect();
-      if (b) setPos({ top: b.bottom + 8, right: window.innerWidth - b.right });
+      if (b) setPos({ top: b.bottom + 6, right: window.innerWidth - b.right });
     };
     posicionar();
     const fora = (e: MouseEvent) => {

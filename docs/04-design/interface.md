@@ -181,7 +181,18 @@ As classes prontas ficam em `lib/estilos.ts`: `campo`, `campoCompacto`, `areaDeT
 
 ## 7. Estrutura de tela
 
-**Profundidade dos cards:** todo card e painel tem a sombra `shadow-cartao` (suave, em tom petróleo), junto com a borda fina. Menus suspensos e modais seguem com `shadow-sm` e `shadow-md`.
+**Profundidade dos cards:** todo card e painel tem a sombra `shadow-cartao`, que já traz o contorno de 1 px (sem `border`). Menus suspensos seguem com `shadow-sm` e modais com `shadow-md`.
+
+**Barra superior (`BarraSuperior`, 08/11/2026):** 56 px, `superficie`, linha de baixo em `borda`, igual em todas as telas autenticadas. Da esquerda para a direita:
+
+1. **Recolher o menu**: botão fantasma de 36 px, ícone de 18 px; no tablet, o botão da gaveta; abaixo de 1024 px, o símbolo da marca.
+2. **Trilha**: Módulo › Tela › Detalhe na mesma caixa, 13 px, anteriores em `texto-2` como links, a atual em `texto` 500; estrela para fixar a tela nos favoritos.
+3. **Busca** de 300 px e 34 px em `superficie-2`, com `Ctrl K`; no celular, só a lupa.
+4. **Novo**: botão secundário com `chevron-down`; menu "Criar registro" com o ícone de cada tela.
+5. **Notificações** (`bell`): contador em `nao-conforme` (até "99+") com anel branco; painel de 400 px com título, os prazos vencidos (ícone na cor da situação, título de 13 px, origem e há quanto tempo em 12 px) e "Ver todos os vencimentos".
+6. **Menu do usuário**: avatar redondo de 32 px, nome, **empresa ativa sempre à vista** e `chevrons-up-down`. Abre com nome e e-mail, **Empresa ativa** (nome, CNPJ em mono e o check na atual), Alterar senha e Sair (em vermelho).
+
+Menus suspensos: largura fixa, 6 px abaixo do botão, itens de 36 px com canto de 8 px, fecham com `Esc` e clique fora. Botões só com ícone têm `aria-label` e `title`.
 
 **Cabeçalho da página (16/10/2026):** só o título e as ações à direita. O módulo já aparece no caminho da barra superior e não se repete. Abaixo do título, uma linha em vermelho (`Pendencias`) só quando algo pede ação ("1 vencido · 2 reprovados"); com tudo em dia, nada. Nada de faixa de números grandes: isso é painel, não tela de trabalho.
 
@@ -328,7 +339,7 @@ Biblioteca única: **Lucide** (`lucide-react`, versão fixa no catálogo do mono
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Menu lateral       | Um ícone por grupo (18 px) e por tela (16 px), mapeados em `components/icones-do-menu.tsx`. Tela nova ganha ícone lá                                                                                                                                  |
 | Botões             | Criar e registrar: `Plus`. Filtrar: `ListFilter`. Voltar: `ArrowLeft`. Anexar: `Paperclip`. Ícone antes do texto, 16 px                                                                                                                               |
-| Barra superior     | Recolher o menu, empresa, usuário e sair                                                                                                                                                                                                              |
+| Barra superior     | Recolher o menu, trilha, busca, Novo, notificações e o menu do usuário com a empresa ativa (§7)                                                                                                                                                       |
 | Avisos e situações | Sucesso: `CircleCheck` verde. Erro: `CircleAlert`. Situação que exige ação (vencido, bloqueado, pendente) usa o componente `Alerta` (texto em vermelho com há quanto tempo; sem caixa nem ícone) em vez de `CircleAlert`, para não depender só da cor |
 
 Sempre `aria-hidden`: o texto ao lado já diz o que é. Nunca dentro de círculo colorido.

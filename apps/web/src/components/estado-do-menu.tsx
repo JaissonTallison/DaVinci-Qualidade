@@ -100,7 +100,7 @@ export function BotaoRecolherMenu() {
       onClick={alternar}
       title={rotulo}
       aria-label={rotulo}
-      className="hidden h-9 w-9 items-center justify-center rounded-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-foco lg:flex"
+      className="hidden h-9 w-9 items-center justify-center rounded-campo text-texto-2 transition-colors hover:bg-superficie-2 hover:text-texto focus-visible:outline-2 focus-visible:outline-foco lg:flex"
     >
       <IconeRecolher compacto={compacto} />
     </button>
@@ -108,7 +108,7 @@ export function BotaoRecolherMenu() {
 }
 
 /**
- * Gaveta do menu abaixo de 1024 px: o mesmo menu verde-petróleo, entrando pela esquerda. Fecha ao navegar, ao
+ * Gaveta do menu abaixo de 1024 px: o mesmo menu azul da marca, entrando pela esquerda. Fecha ao navegar, ao
  * tocar fora, no X e com Esc. Fechada fica `inert` (fora do foco e dos leitores de tela).
  */
 export function GavetaDoMenu({ children }: { children: ReactNode }) {
@@ -161,7 +161,7 @@ export function BotaoAbrirGaveta() {
       type="button"
       onClick={() => abrirGaveta(true)}
       aria-label="Abrir o menu"
-      className="hidden h-9 w-9 items-center justify-center rounded-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-foco md:flex lg:hidden"
+      className="hidden h-9 w-9 items-center justify-center rounded-campo text-texto-2 transition-colors hover:bg-superficie-2 hover:text-texto focus-visible:outline-2 focus-visible:outline-foco md:flex lg:hidden"
     >
       <Menu aria-hidden size={18} strokeWidth={1.75} />
     </button>

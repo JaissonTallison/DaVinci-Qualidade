@@ -1,6 +1,7 @@
 import { ChevronRight } from "@/components/icones";
 import Link from "next/link";
 import { IconeDaTela } from "./icones-do-menu";
+import { Selo } from "./selo";
 
 /** Tela cujo ícone representa cada tipo de prazo (o ícone diz o assunto; o selo diz a situação). */
 const TELA_DO_TIPO: Record<string, string> = {
@@ -35,9 +36,14 @@ const TELA_DO_TIPO: Record<string, string> = {
 
 export type TomDoSelo = "vencido" | "proximo" | "aguardando";
 
-const COR_DO_SELO: Record<TomDoSelo, string> = {
-  vencido: "text-nao-conforme",
-  proximo: "text-atencao",
+const TOM: Record<TomDoSelo, "perigo" | "atencao" | "neutro"> = {
+  vencido: "perigo",
+  proximo: "atencao",
+  aguardando: "neutro",
+};
+const COR_DO_ICONE: Record<TomDoSelo, string> = {
+  vencido: "text-nao-conforme-texto",
+  proximo: "text-atencao-texto",
   aguardando: "text-texto-2",
 };
 
@@ -51,8 +57,9 @@ export function telaDoIcone(tipo: string | undefined, href: string): string {
 }
 
 /**
- * Linha de prazo ou pendência, igual no início, no sino e no painel de vencimentos: ícone do assunto num quadrado neutro,
- * o assunto em destaque e o tipo e o módulo embaixo, a situação em texto colorido. A linha inteira é o link.
+ * Linha de prazo ou pendência, igual no início, no sino e no painel de vencimentos: o assunto em destaque, o tipo
+ * e o módulo embaixo, a situação em selo. A linha inteira é o link. Compacta (painel do sino): notificação do
+ * design system, com o ícone solto na cor da situação e textos de 13/12 px.
  */
 export function LinhaDePrazo({
   href,
@@ -80,15 +87,33 @@ export function LinhaDePrazo({
   const contexto = [i > 0 ? titulo.slice(0, i) : null, detalhe]
     .filter(Boolean)
     .join(" · ");
+  if (compacta)
+    return (
+      <Link
+        href={href}
+        onClick={aoClicar}
+        className="flex gap-3 rounded-md p-2.5 transition-colors hover:bg-superficie-2"
+      >
+        <span className={`flex pt-0.5 ${COR_DO_ICONE[tom]}`}>
+          <IconeDaTela href={icone} />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-semibold text-texto">
+            {assunto}
+          </span>
+          <span className="mt-0.5 block truncate text-xs text-texto-2">
+            {[contexto, selo].filter(Boolean).join(" · ")}
+          </span>
+        </span>
+      </Link>
+    );
   return (
     <Link
       href={href}
       onClick={aoClicar}
-      className={`group flex items-center gap-3 transition-colors hover:bg-campo ${compacta ? "px-4 py-2.5" : "px-5 py-3"}`}
+      className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-superficie-2"
     >
-      <span
-        className={`flex shrink-0 items-center justify-center rounded-sm bg-campo text-texto-2 group-hover:bg-superficie ${compacta ? "size-8" : "size-9"}`}
-      >
+      <span className="flex shrink-0 text-texto-2">
         <IconeDaTela href={icone} />
       </span>
       <span className="min-w-0 flex-1">
@@ -101,11 +126,7 @@ export function LinhaDePrazo({
           </span>
         )}
       </span>
-      <span
-        className={`shrink-0 text-sm font-semibold whitespace-nowrap ${COR_DO_SELO[tom]}`}
-      >
-        {selo}
-      </span>
+      <Selo tom={TOM[tom]}>{selo}</Selo>
       <ChevronRight
         aria-hidden
         size={16}
