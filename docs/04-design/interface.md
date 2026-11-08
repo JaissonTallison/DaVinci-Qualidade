@@ -1,6 +1,6 @@
 # Interface: o padrão visual da DaVinci Qualidade
 
-> **Status:** vigente (v1) · **Atualizado em:** 15/10/2026
+> **Status:** vigente (v1) · **Atualizado em:** 08/11/2026
 > Vale para toda tela do `apps/web`. A estrutura do projeto segue a DaVinci Finance; **o visual não**. Layout, cores e tipografia são da Qualidade e estão definidos aqui.
 
 ---
@@ -227,6 +227,30 @@ O mesmo modelo da DaVinci Finance:
 - **Celular estreito (< 640 px):** toda tabela com cabeçalho vira **lista de cartões**: a primeira coluna com texto é o título, as outras aparecem como "rótulo valor" (o rótulo vem do cabeçalho, copiado por `components/rotulos-das-tabelas.tsx`). Tabela que precisa continuar tabela: `data-tabela="fixa"`. Abas numa linha só, com rolagem lateral; filtros e campos na largura toda.
 - Regras globais em `app/globals.css`. Evite largura fixa (`w-64`, `min-w-60`) sem prefixo `sm:`.
 
+### 7.2 Tela de cadastro (08/11/2026)
+
+Vale para registrar e editar em página (mais de 6 campos; até 6, modal). Peças em `components/pagina-de-cadastro.tsx`; modelo: Gestão do SGI › Riscos e Oportunidades (`sgi/_ro`).
+
+1. **Cabeçalho** (`CabecalhoDeCadastro`): botão de voltar quadrado, só com `ArrowLeft` (`aria-label` "Voltar para …"), à esquerda do título com verbo ("Registrar risco"); uma linha de descrição embaixo.
+2. **Uma seção por bloco** (`SecaoDoCadastro`): painel com título, para que serve e a situação do preenchimento em texto ("Completa", "2 obrigatórios pendentes", "Opcional"). Nunca o formulário inteiro num único quadro, nem campos soltos no fundo da página.
+3. **Coluna de resumo** (`ColunaDeResumo`, 288 px, fixa ao rolar no computador): **Resumo** com os valores que importam (inclusive os calculados, como o nível do risco) e **Preenchimento** com "5 de 7 obrigatórios · 71%" em texto e a lista das seções, que leva até cada uma.
+4. **Regra condicional à vista:** quando um valor torna campos obrigatórios (nível alto exige ação, responsável e prazo), a seção mostra o aviso e os rótulos perdem o "(opcional)".
+5. **Barra de ações** (`BarraDeAcoes`): fixa no rodapé no computador e no tablet; à esquerda quantos obrigatórios faltam; à direita Cancelar e a ação primária por último.
+6. **Voltar nas outras telas:** o link `.dv-voltar` ("← Riscos") fica acima do título, discreto, sem borda nem fundo.
+
+### 7.3 Telas de erro (08/11/2026)
+
+Peças em `components/pagina-de-erro.tsx` e `components/erros-do-sistema.tsx`. Mesma estrutura em todas: código em mono ("Erro 404"), título em linguagem comum, causa provável, ações e **detalhes técnicos copiáveis** (endereço, data e hora, ID do erro) para o suporte. Sem ilustração, sem número gigante, sem "Ops!".
+
+| Arquivo                   | Quando                                                   | Onde aparece                                 | Ação primária    |
+| ------------------------- | -------------------------------------------------------- | -------------------------------------------- | ---------------- |
+| `app/(app)/not-found.tsx` | `notFound()` numa tela do sistema (registro inexistente) | Dentro do sistema, com menu e barra superior | Ir para o início |
+| `app/not-found.tsx`       | Endereço que não existe                                  | Página independente (logo, sem menu)         | Ir para o início |
+| `app/(app)/error.tsx`     | Falha ao montar uma tela                                 | Dentro do sistema                            | Tentar novamente |
+| `app/global-error.tsx`    | Falha no layout raiz                                     | Página independente                          | Tentar novamente |
+
+O "ID do erro" é o `digest` do Next, o mesmo que fica no log do servidor.
+
 ---
 
 ## 8. Componentes do QSSMA
@@ -271,6 +295,7 @@ Antes do merge, quem abriu o PR confere:
 - [ ] Ouro aparece só no menu (barra do ativo e ícones dos grupos, em `ouro-claro`) e na logo
 - [ ] Títulos em Source Serif 4, números de registro em Source Code Pro
 - [ ] Textos com verbo + objeto e mensagens de erro que dizem como corrigir
+- [ ] Cadastro em página segue a §7.2 (voltar, um bloco por seção, resumo, barra de ações)
 - [ ] Conferida em 1280 px e 390 px de largura
 - [ ] Dados de demonstração plausíveis, sem _lorem ipsum_
 - [ ] Uma pessoa olhou a tela pronta e responderia "não" para "isso parece feito por IA?"

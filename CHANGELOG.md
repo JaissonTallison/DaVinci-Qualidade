@@ -6,6 +6,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Adicionado
 
+- Tela de cadastro em blocos ([interface.md §7.2](docs/04-design/interface.md#72-tela-de-cadastro-08112026)): voltar ao lado do título, uma seção por painel com a situação do preenchimento, coluna de resumo com os obrigatórios em texto e barra de ações fixa. Primeira tela: registrar risco e oportunidade, com a matriz 5×5 clicável.
+- Telas de erro ([interface.md §7.3](docs/04-design/interface.md#73-telas-de-erro-08112026)): 404 dentro do sistema e fora dele, falha ao montar a tela e falha geral, com detalhes técnicos copiáveis para o suporte.
 - Serviços ([módulo](docs/05-modulos/servicos.md)): reclamações de clientes com prazo de resposta, análise de procedência e NC na Qualidade; contratos com SLA medido nas OS; catálogo de serviços com checklist de execução, horas e materiais na OS e relatório para o aceite do cliente; pesquisa de satisfação por link, respondida sem login.
 - Segurança do Trabalho: eSocial SST ([módulo](docs/05-modulos/esocial.md)) com os eventos S-2210, S-2220 e S-2240 no leiaute S-1.3, pendências e registro do recibo; investigação de acidente com testemunhas, 5 porquês e árvore de causas, plano de ação a partir do acidente e CAT para imprimir; equipamentos de emergência com inspeção, recarga e teste hidrostático, brigada e plano de emergência ([módulo](docs/05-modulos/emergencia.md)); ordem de serviço de segurança por função (NR-1), ficha de EPI, lista de presença e certificados para assinar.
 - Meio Ambiente ([módulo](docs/05-modulos/ambiental.md)): ocorrências ambientais com comunicação obrigatória ao órgão e NC; obrigações legais em calendário; transportadores e destinadores com licença conferida na saída, custo e inventário anual de resíduos com planilhas; ecoeficiência por unidade produzida e programas com metas.
@@ -69,6 +71,7 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
+- Link de voltar (`.dv-voltar`) discreto, sem borda nem fundo, acima do título em todas as telas que o usam.
 - O sistema é sempre claro, mesmo com o computador no modo escuro (decisão Q12).
 
 ### Corrigido
