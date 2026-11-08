@@ -114,7 +114,7 @@ export function MenuLateral({
         aria-current={marcado ? "page" : undefined}
         className={`flex items-center border-l-[3px] py-1.5 pr-3 pl-3.5 text-base ${FOCO} ${marcado ? MARCADO : NORMAL}`}
       >
-        <span className="min-w-0 truncate">{rotulo}</span>
+        <span className="min-w-0 line-clamp-2 leading-tight">{rotulo}</span>
       </Link>
     );
   };
@@ -199,7 +199,9 @@ export function MenuLateral({
                     className={`flex items-center gap-2 rounded-sm border-l-[3px] py-1.5 pr-3 pl-2 text-base ${FOCO} ${marcado ? MARCADO : NORMAL}`}
                   >
                     <IconeDaTela href={i.href} />
-                    <span className="min-w-0 truncate">{i.rotulo}</span>
+                    <span className="min-w-0 line-clamp-2 leading-tight">
+                      {i.rotulo}
+                    </span>
                   </Link>
                 );
               })}
@@ -249,7 +251,9 @@ export function MenuLateral({
                     className={`flex w-full items-center gap-2.5 py-1.5 pr-3 pl-4 text-left text-base font-semibold ${FOCO} ${temAtivo ? "text-primaria-texto" : "text-primaria-texto/75 hover:bg-primaria-texto/10 hover:text-primaria-texto"}`}
                   >
                     <IconeDoGrupo titulo={g.titulo} />
-                    <span className="min-w-0 flex-1 truncate">{g.titulo}</span>
+                    <span className="min-w-0 flex-1 line-clamp-2 leading-tight">
+                      {g.titulo}
+                    </span>
                     {!temAtivo && (
                       <span className="text-primaria-texto/50">
                         <IconeSeta aberto={aberto} />

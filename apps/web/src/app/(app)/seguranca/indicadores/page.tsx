@@ -56,7 +56,9 @@ export default async function Indicadores({
     <>
       <header className="flex flex-wrap items-baseline justify-between gap-4">
         <div>
-          <h1 className={tituloDaPagina}>Indicadores de SST · {ano}</h1>
+          <h1 className={tituloDaPagina}>
+            Indicadores de SST (segurança e saúde no trabalho) · {ano}
+          </h1>
           <p className="mt-1 text-base text-texto-2">
             Taxas por milhão de horas-homem trabalhadas (NBR 14280). Mês sem
             horas lançadas fica sem taxa, mas seus acidentes e dias continuam no

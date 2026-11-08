@@ -150,7 +150,7 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "servicos.ver",
       },
       {
-        rotulo: "Contratos e SLA (nível de serviço)",
+        rotulo: "Contratos e SLA",
         href: "/servicos/contratos",
         permissao: "servicos.ver",
       },
@@ -166,17 +166,17 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "seguranca.ver",
       },
       {
-        rotulo: "Indicadores de SST (segurança e saúde no trabalho)",
+        rotulo: "Indicadores de SST",
         href: "/seguranca/indicadores",
         permissao: "seguranca.ver",
       },
       {
-        rotulo: "PGR (programa de gerenciamento de riscos) · Inventário de riscos",
+        rotulo: "PGR · Inventário de riscos",
         href: "/seguranca/pgr",
         permissao: "seguranca.ver",
       },
       {
-        rotulo: "Requisitos legais de SST (segurança e saúde no trabalho)",
+        rotulo: "Requisitos legais de SST",
         href: "/seguranca/requisitos-legais",
         permissao: "seguranca.ver",
       },
@@ -196,7 +196,7 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "seguranca.ver",
       },
       {
-        rotulo: "Vencimentos de ASO (atestado de saúde ocupacional) e treinamentos",
+        rotulo: "Vencimentos de ASO e treinamentos",
         href: "/seguranca/vencimentos",
         permissao: "funcionarios.ver",
       },
@@ -257,7 +257,7 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         permissao: "ambiental.ver",
       },
       {
-        rotulo: "Inventário de GEE (gases de efeito estufa)",
+        rotulo: "Inventário de GEE",
         href: "/ambiental/gee",
         permissao: "ambiental.ver",
       },
@@ -469,7 +469,7 @@ export const ATALHOS_DE_CRIACAO: AtalhoDeCriacao[] = [
     recurso: "seguranca",
   },
   {
-    rotulo: "Risco no PGR (programa de gerenciamento de riscos)",
+    rotulo: "Risco no PGR",
     href: "/seguranca/pgr/novo",
     permissao: "seguranca.editar",
     recurso: "seguranca",

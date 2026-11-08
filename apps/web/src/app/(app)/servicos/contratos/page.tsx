@@ -27,7 +27,9 @@ export default async function Contratos() {
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
     <>
-      <h1 className={tituloDaPagina}>Contratos e SLA</h1>
+      <h1 className={tituloDaPagina}>
+        Contratos e SLA (acordo de nível de serviço)
+      </h1>
       <p className="mt-1 max-w-3xl text-base text-texto-2">
         Cada contrato define o prazo de atendimento (SLA) das OS abertas nele e
         a meta de OS concluídas no prazo. O cumprimento é medido nos últimos 12

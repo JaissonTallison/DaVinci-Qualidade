@@ -92,7 +92,9 @@ export default async function Vencimentos({
 
   return (
     <>
-      <h1 className={tituloDaPagina}>Vencimentos de ASO e treinamentos</h1>
+      <h1 className={tituloDaPagina}>
+        Vencimentos de ASO (atestado de saúde ocupacional) e treinamentos
+      </h1>
       <p className={subtituloDaPagina}>
         ASOs e treinamentos com validade, do mais próximo de vencer ao mais
         distante.

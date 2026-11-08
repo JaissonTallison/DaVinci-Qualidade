@@ -124,7 +124,9 @@ export default async function Pgr({
     <>
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className={tituloDaPagina}>PGR · Inventário de riscos</h1>
+          <h1 className={tituloDaPagina}>
+            PGR (programa de gerenciamento de riscos) · Inventário de riscos
+          </h1>
           <p className={subtituloDaPagina}>
             Inventário de riscos do PGR e as ações de controle de cada um.
           </p>
