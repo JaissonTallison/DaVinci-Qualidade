@@ -12,28 +12,35 @@ export function LinhaDoTempoDaOs({ o }: { o: OrdemDeServico }) {
     : ORDEM.indexOf(o.status as (typeof ORDEM)[number]);
   const atrasada = o.atrasada && !cancelada && o.status !== "concluida";
 
-  const passos: { titulo: string; detalhe?: string | null; alerta?: boolean }[] =
-    [
-      {
-        titulo: "Aberta",
-        detalhe: `Prazo ${formatarData(o.prazo)}`,
-        alerta: atrasada,
-      },
-      {
-        titulo: "Em execução",
-        detalhe: o.iniciadaEm
-          ? formatarMomento(o.iniciadaEm)
-          : "Iniciar o atendimento",
-      },
-      {
-        titulo: "Concluída",
-        detalhe: o.concluidaEm
-          ? `${formatarMomento(o.concluidaEm)}${
-              o.noPrazo === null ? "" : o.noPrazo ? " · no prazo" : " · fora do prazo"
-            }`
-          : "Registrar o relatório e o aceite",
-      },
-    ];
+  const passos: {
+    titulo: string;
+    detalhe?: string | null;
+    alerta?: boolean;
+  }[] = [
+    {
+      titulo: "Aberta",
+      detalhe: `Prazo ${formatarData(o.prazo)}`,
+      alerta: atrasada,
+    },
+    {
+      titulo: "Em execução",
+      detalhe: o.iniciadaEm
+        ? formatarMomento(o.iniciadaEm)
+        : "Iniciar o atendimento",
+    },
+    {
+      titulo: "Concluída",
+      detalhe: o.concluidaEm
+        ? `${formatarMomento(o.concluidaEm)}${
+            o.noPrazo === null
+              ? ""
+              : o.noPrazo
+                ? " · no prazo"
+                : " · fora do prazo"
+          }`
+        : "Registrar o relatório e o aceite",
+    },
+  ];
 
   return (
     <ol className="mt-4 flex flex-col">
@@ -49,7 +56,7 @@ export function LinhaDoTempoDaOs({ o }: { o: OrdemDeServico }) {
                 aria-hidden
                 className={`flex size-7 shrink-0 items-center justify-center rounded-sm text-sm font-semibold ${
                   concluido
-                    ? "bg-conforme/12 text-conforme"
+                    ? "bg-conforme-suave text-conforme-texto"
                     : corrente
                       ? alertaCorrente
                         ? "bg-nao-conforme text-primaria-texto"
@@ -57,12 +64,12 @@ export function LinhaDoTempoDaOs({ o }: { o: OrdemDeServico }) {
                       : "border border-borda-forte text-texto-3"
                 }`}
               >
-                {concluido ? <Check size={15} strokeWidth={2.5} /> : i + 1}
+                {concluido ? <Check size={15} strokeWidth={1.75} /> : i + 1}
               </span>
               {!ultimo && (
                 <span
                   aria-hidden
-                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme/40" : "bg-borda"}`}
+                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme-borda" : "bg-borda"}`}
                 />
               )}
             </div>
@@ -96,9 +103,9 @@ export function LinhaDoTempoDaOs({ o }: { o: OrdemDeServico }) {
         <li className="flex gap-3">
           <span
             aria-hidden
-            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme/12 text-nao-conforme"
+            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme-suave text-nao-conforme-texto"
           >
-            <X size={15} strokeWidth={2.5} />
+            <X size={15} strokeWidth={1.75} />
           </span>
           <p className="text-base font-semibold text-nao-conforme">Cancelada</p>
         </li>

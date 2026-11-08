@@ -57,22 +57,18 @@ export function LinhaDoTempoNc({ nc }: { nc: NaoConformidade }) {
                 aria-hidden
                 className={`flex size-7 shrink-0 items-center justify-center rounded-sm text-sm font-semibold ${
                   concluido
-                    ? "bg-conforme/12 text-conforme"
+                    ? "bg-conforme-suave text-conforme-texto"
                     : corrente
                       ? "bg-acao text-primaria-texto"
                       : "border border-borda-forte text-texto-3"
                 }`}
               >
-                {concluido ? (
-                  <Check size={15} strokeWidth={2.5} />
-                ) : (
-                  i + 1
-                )}
+                {concluido ? <Check size={15} strokeWidth={1.75} /> : i + 1}
               </span>
               {!ultimo && (
                 <span
                   aria-hidden
-                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme/40" : "bg-borda"}`}
+                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme-borda" : "bg-borda"}`}
                 />
               )}
             </div>
@@ -93,9 +89,7 @@ export function LinhaDoTempoNc({ nc }: { nc: NaoConformidade }) {
                   </span>
                 )}
               </p>
-              {p.detalhe && (
-                <p className="text-sm text-texto-2">{p.detalhe}</p>
-              )}
+              {p.detalhe && <p className="text-sm text-texto-2">{p.detalhe}</p>}
             </div>
           </li>
         );
@@ -104,9 +98,9 @@ export function LinhaDoTempoNc({ nc }: { nc: NaoConformidade }) {
         <li className="flex gap-3">
           <span
             aria-hidden
-            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme/12 text-nao-conforme"
+            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme-suave text-nao-conforme-texto"
           >
-            <X size={15} strokeWidth={2.5} />
+            <X size={15} strokeWidth={1.75} />
           </span>
           <div>
             <p className="text-base font-semibold text-nao-conforme">

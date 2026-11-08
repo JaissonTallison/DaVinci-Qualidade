@@ -14,6 +14,7 @@ import { botaoSecundario, painel } from "@/lib/estilos";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { AbasDoPlanejar } from "../planejar-abas";
 import { FormularioDoPlano } from "./formulario";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Plano de auditoria" };
 
@@ -47,17 +48,14 @@ export default async function Plano({
           href={`/auditorias/${id}/plano/imprimir`}
           className={botaoSecundario}
         >
-          <Printer aria-hidden size={16} strokeWidth={2} />
+          <Printer aria-hidden size={16} strokeWidth={1.75} />
           Plano para imprimir
         </Link>
       </div>
       {aviso === "salvo" && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           Plano salvo.
-        </p>
+        </CaixaDeAlerta>
       )}
       {podeEditar ? (
         <section className={`${painel} mt-4 p-5`}>

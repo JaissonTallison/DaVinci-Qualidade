@@ -44,7 +44,7 @@ export default async function DocumentoDoPgr() {
       ]}
     >
       <section className="mt-6 break-inside-avoid">
-        <h2 className="text-base font-bold text-texto">
+        <h2 className="text-base font-semibold text-texto">
           1. Inventário de riscos ocupacionais
         </h2>
         {riscos.length === 0 ? (
@@ -86,7 +86,7 @@ export default async function DocumentoDoPgr() {
       </section>
 
       <section className="mt-8 break-inside-avoid">
-        <h2 className="text-base font-bold text-texto">2. Plano de ação</h2>
+        <h2 className="text-base font-semibold text-texto">2. Plano de ação</h2>
         {comPlano.length === 0 ? (
           <p className="mt-2 text-sm text-texto-2">
             Nenhuma medida a implementar registrada.
@@ -130,7 +130,7 @@ export default async function DocumentoDoPgr() {
       </section>
 
       <section className="mt-8 break-inside-avoid">
-        <h2 className="text-base font-bold text-texto">3. Base legal</h2>
+        <h2 className="text-base font-semibold text-texto">3. Base legal</h2>
         <p className="mt-1 text-sm text-texto-2">
           {BASE_LEGAL_PGR.norma}. {BASE_LEGAL_PGR.ementa}
         </p>

@@ -59,7 +59,7 @@ export function ThOrdenavel({
         <Icone
           aria-hidden
           size={14}
-          strokeWidth={2}
+          strokeWidth={1.75}
           className={
             ativo
               ? "text-texto"

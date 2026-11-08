@@ -107,7 +107,7 @@ export default async function KitDaAuditoria({
                 aria-hidden
                 className="absolute top-1 -left-[1.6rem] size-3 rounded-full bg-menu"
               />
-              <h2 className="flex flex-wrap items-baseline gap-x-3 text-sm font-semibold tracking-[0.06em] text-texto uppercase">
+              <h2 className="flex flex-wrap items-baseline gap-x-3 text-sm font-semibold tracking-[0.04em] text-texto uppercase">
                 {MOMENTOS_DO_KIT[m].rotulo}
                 {prazo && (
                   <span className="font-normal tracking-normal text-texto-2 normal-case">

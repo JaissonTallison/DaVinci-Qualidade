@@ -100,7 +100,7 @@ function Janela({
       <summary className="cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
         {rotulo}
       </summary>
-      <div className="absolute right-0 z-10 mt-1 w-72 rounded-md border border-borda bg-superficie p-3 shadow-sm">
+      <div className="absolute right-0 z-10 mt-1 w-72 rounded-md bg-superficie p-3 shadow-sm">
         {children}
         {erro && <p className="mt-2 text-sm text-nao-conforme">{erro}</p>}
       </div>

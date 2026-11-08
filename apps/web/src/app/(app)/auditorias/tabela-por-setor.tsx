@@ -95,7 +95,7 @@ export function TabelaPorSetor({
             aria-label={`Remover o setor ${i + 1}`}
             className="pt-1.5 text-texto-3 hover:text-nao-conforme"
           >
-            <X aria-hidden size={18} strokeWidth={2} />
+            <X aria-hidden size={18} strokeWidth={1.75} />
           </button>
         </fieldset>
       ))}

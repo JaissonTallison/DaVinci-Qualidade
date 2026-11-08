@@ -82,12 +82,9 @@ export default async function ProgramacaoDeAuditorias({
       </nav>
 
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section className={`${painel} mt-4`}>
@@ -169,7 +166,7 @@ export default async function ProgramacaoDeAuditorias({
                               }
                               className={`inline-flex h-6 w-7 items-center justify-center rounded-sm text-xs ${
                                 feito
-                                  ? "bg-conforme/15 font-semibold text-conforme"
+                                  ? "bg-conforme-suave font-semibold text-conforme-texto"
                                   : planejado
                                     ? "border border-marinho/40 text-marinho"
                                     : "text-texto-3"
@@ -207,3 +204,4 @@ export default async function ProgramacaoDeAuditorias({
   );
 }
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";

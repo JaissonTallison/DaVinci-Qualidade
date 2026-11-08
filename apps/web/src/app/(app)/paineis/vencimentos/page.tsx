@@ -22,6 +22,7 @@ import {
   tituloDaSecao,
 } from "@/lib/estilos";
 import { EnviarAvisos } from "./enviar-avisos";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Painel de vencimentos" };
 
@@ -52,14 +53,11 @@ export default async function Vencimentos({
         {podeAvisar && <EnviarAvisos />}
       </header>
       {r.dados.indisponiveis.length > 0 && (
-        <p
-          role="alert"
-          className="mt-4 rounded-sm border border-atencao px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="atencao" className="mt-4">
           Sem resposta de:{" "}
           {r.dados.indisponiveis.map((m) => MODULOS_DO_PAINEL[m]).join(", ")}.
           Os prazos desses módulos não aparecem agora; recarregue em instantes.
-        </p>
+        </CaixaDeAlerta>
       )}
       <form className="mt-6 flex flex-wrap items-end gap-3">
         <SelecaoDeFiltro
@@ -69,7 +67,7 @@ export default async function Vencimentos({
           valor={modulo}
         />
         <button type="submit" className={botaoSecundario}>
-          <ListFilter aria-hidden size={16} strokeWidth={2} />
+          <ListFilter aria-hidden size={16} strokeWidth={1.75} />
           Filtrar
         </button>
       </form>

@@ -25,6 +25,8 @@ export const botaoSecundario = `${botao} border-borda-campo bg-superficie text-t
 export const botaoFantasma = `${botao} border-transparent bg-transparent text-texto-2 hover:bg-superficie-2 hover:text-texto`;
 /** Excluir, anular, cancelar registro: vermelho cheio, sempre com confirmação. */
 export const botaoPerigo = `${botao} border-transparent bg-nao-conforme text-primaria-texto shadow-xs hover:bg-nao-conforme-texto`;
+/** Botão de 30 px para ações na linha da tabela ou dentro de um card. */
+export const botaoPequeno = `${botao} h-7.5 border-borda-campo bg-superficie px-3 text-sm text-texto shadow-xs hover:border-borda-forte hover:bg-superficie-2`;
 /** Botão só com ícone (36 × 36), com `aria-label`. */
 export const botaoIcone = `${botao} w-9 border-borda-campo bg-superficie px-0 text-texto-2 shadow-xs hover:border-borda-forte hover:bg-superficie-2 hover:text-texto`;
 export const botaoLink =

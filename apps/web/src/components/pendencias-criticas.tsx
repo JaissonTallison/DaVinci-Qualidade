@@ -8,8 +8,7 @@ const ROTULO_TIPO: Record<string, string> = { NC: "Não conformidade" };
 
 /** Dias em atraso de um prazo vencido. */
 function diasEmAtraso(data: string, hoje: string): number {
-  const ms =
-    Date.parse(`${hoje}T00:00:00Z`) - Date.parse(`${data}T00:00:00Z`);
+  const ms = Date.parse(`${hoje}T00:00:00Z`) - Date.parse(`${data}T00:00:00Z`);
   return Math.max(0, Math.round(ms / 86_400_000));
 }
 
@@ -42,41 +41,23 @@ export function PendenciasCriticas({
   const itens = vencidos.slice(0, 5);
 
   return (
-    <div
-      className="dv-entrar relative"
-      style={{ "--atraso": "150ms" } as CSSProperties}
-    >
-      {/* aba azul em fita à esquerda, com dobra (decisão de design do Início) */}
-      <span
-        aria-hidden
-        className="absolute top-2 bottom-0 -left-1.5 w-24 max-w-[26%] rounded-md"
-        style={{
-          background:
-            "linear-gradient(180deg, var(--color-menu) 0%, color-mix(in srgb, var(--color-menu) 62%, #000) 100%)",
-          boxShadow: "0 10px 22px rgb(16 31 120/.3)",
-        }}
-      />
-      <span
-        aria-hidden
-        className="absolute -bottom-1.5 -left-1.5 size-5"
-        style={{
-          background: "color-mix(in srgb, var(--color-menu) 55%, #000)",
-          clipPath: "polygon(0 0,100% 100%,0 100%)",
-        }}
-      />
-
+    <div className="dv-entrar" style={{ "--atraso": "150ms" } as CSSProperties}>
       <section
-        className="relative rounded-md border border-borda bg-superficie p-5 pl-7 shadow-cartao"
+        className="rounded-md bg-superficie p-5 shadow-cartao"
         aria-label="Precisa da sua atenção"
       >
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg text-texto">Precisa da sua atenção</h2>
-            <p className="text-sm text-texto-2">Pendências críticas do sistema</p>
+            <h2 className="text-md font-semibold text-texto">
+              Precisa da sua atenção
+            </h2>
+            <p className="text-sm text-texto-2">
+              Pendências críticas do sistema
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <span aria-hidden className="h-9 w-px bg-borda" />
-            <span className="text-3xl font-bold text-nao-conforme tabular-nums">
+            <span className="text-3xl font-semibold text-nao-conforme tabular-nums">
               {String(vencidos.length).padStart(2, "0")}
             </span>
             <span className="text-sm leading-tight text-texto-2">
@@ -92,12 +73,12 @@ export function PendenciasCriticas({
             <li key={`${it.href}-${i}`}>
               <Link
                 href={it.href}
-                className="flex h-full flex-col rounded-md border border-nao-conforme/15 bg-nao-conforme/5 p-3 transition-colors hover:bg-nao-conforme/10"
+                className="flex h-full flex-col rounded-md border border-nao-conforme-borda bg-nao-conforme-suave p-3 transition-colors hover:bg-nao-conforme-suave"
               >
-                <span className="text-xs font-bold text-texto-2">
+                <span className="text-xs font-semibold text-texto-2">
                   {it.codigo ?? " "}
                 </span>
-                <span className="mt-1.5 text-2xl leading-none font-extrabold text-nao-conforme tabular-nums">
+                <span className="mt-1.5 text-2xl leading-none font-semibold text-nao-conforme tabular-nums">
                   {it.dias} {it.dias === 1 ? "dia" : "dias"}
                 </span>
                 <span className="text-xs text-texto-2">em atraso</span>
@@ -117,7 +98,7 @@ export function PendenciasCriticas({
           className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-acao hover:underline"
         >
           Ver todos os registros
-          <ChevronRight aria-hidden size={14} strokeWidth={2} />
+          <ChevronRight aria-hidden size={14} strokeWidth={1.75} />
         </Link>
       </section>
     </div>

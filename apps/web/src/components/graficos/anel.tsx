@@ -54,7 +54,7 @@ export function Anel({
             </>
           )}
         </span>
-        <span className="text-xs tracking-wide uppercase opacity-80">
+        <span className="text-xs tracking-[0.04em] uppercase opacity-80">
           {rotulo}
         </span>
       </div>

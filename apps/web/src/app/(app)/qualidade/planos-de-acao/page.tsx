@@ -184,7 +184,7 @@ export default async function ListaDePlanos({
             Só atrasados
           </label>
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="planos-de-acao" consulta={consulta} />

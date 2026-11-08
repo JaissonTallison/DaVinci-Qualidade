@@ -38,6 +38,7 @@ import { InvestigacaoEstruturada } from "./investigacao";
 import { LinhaDoTempoDoAcidente } from "./linha-do-tempo";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Acidente" };
 
 const AVISOS: Record<string, string> = {
@@ -125,22 +126,16 @@ export default async function DetalheDoAcidente({
         </section>
       )}
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       {a.catAtrasada && (
-        <p
-          role="alert"
-          className="mt-4 rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="perigo" className="mt-4">
           CAT atrasada: o prazo legal era {formatarData(a.prazoCat!)} (primeiro
           dia útil depois do acidente).
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section className={`${painel} mt-6 p-5`}>

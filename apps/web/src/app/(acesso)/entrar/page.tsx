@@ -3,6 +3,7 @@ import { ChartColumn, Leaf, Settings } from "@/components/icones";
 import { lerCookie } from "@/lib/cookie";
 import { COOKIE_LEMBRAR, COOKIE_RECUSA } from "@/lib/sessao";
 import { FormularioEntrar } from "./formulario-entrar";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Entrar" };
 
@@ -31,12 +32,9 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
         Acesse seu ambiente de trabalho.
       </p>
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie-2 px-4 py-2.5 text-base text-texto-2"
-        >
+        <CaixaDeAlerta tom="info" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
       <FormularioEntrar
         volta={volta}

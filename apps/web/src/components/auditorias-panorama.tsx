@@ -64,9 +64,7 @@ function Quadro({
   classe?: string;
 }) {
   return (
-    <div
-      className={`rounded-md border border-borda bg-superficie p-5 shadow-cartao ${classe}`}
-    >
+    <div className={`rounded-md bg-superficie p-5 shadow-cartao ${classe}`}>
       <h3 className="text-base font-semibold text-texto">{titulo}</h3>
       <p className="mb-4 text-sm text-texto-2">{subtitulo}</p>
       {children}
@@ -111,7 +109,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
           className="inline-flex items-center gap-1 text-sm font-semibold text-acao hover:underline"
         >
           Ver auditorias
-          <ChevronRight aria-hidden size={14} strokeWidth={2} />
+          <ChevronRight aria-hidden size={14} strokeWidth={1.75} />
         </Link>
       </div>
 
@@ -143,7 +141,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                           linha[s.chave] > 0 ? (
                             <span
                               key={s.chave}
-                              className="flex items-center justify-center text-[0.7rem] font-bold text-primaria-texto"
+                              className="flex items-center justify-center text-xs font-semibold text-primaria-texto"
                               style={{
                                 flexGrow: linha[s.chave],
                                 background: s.cor,
@@ -194,7 +192,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                       style={{ width: `${(a.total / maxAuditor) * 100}%` }}
                     />
                   </span>
-                  <span className="w-5 text-right text-sm font-bold text-texto tabular-nums">
+                  <span className="w-5 text-right text-sm font-semibold text-texto tabular-nums">
                     {a.total}
                   </span>
                 </li>
@@ -240,10 +238,10 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                   ))}
                 </svg>
                 <span className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-                  <span className="text-xl font-extrabold text-texto tabular-nums">
+                  <span className="text-xl font-semibold text-texto tabular-nums">
                     {totalSituacao}
                   </span>
-                  <span className="text-[0.6rem] text-texto-2">total</span>
+                  <span className="text-xs text-texto-2">total</span>
                 </span>
               </div>
               <ul className="flex-1 text-sm">
@@ -257,7 +255,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                     <span className="text-texto-2">
                       {STATUS_AUDITORIA[s.status]}
                     </span>
-                    <span className="ml-auto font-bold text-texto tabular-nums">
+                    <span className="ml-auto font-semibold text-texto tabular-nums">
                       {s.total}
                     </span>
                   </li>
@@ -270,7 +268,7 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
 
       {/* Acompanhamento (tabela) */}
       {recentes.length > 0 && (
-        <div className="overflow-hidden rounded-md border border-borda bg-superficie shadow-cartao">
+        <div className="overflow-hidden rounded-md bg-superficie shadow-cartao">
           <div className="border-b border-borda px-5 py-3.5">
             <h3 className="text-base font-semibold text-texto">
               Auditorias recentes

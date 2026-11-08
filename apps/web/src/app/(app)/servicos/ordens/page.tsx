@@ -101,7 +101,7 @@ export default async function Ordens({
             valor={params.status}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="ordens" consulta={consulta} />

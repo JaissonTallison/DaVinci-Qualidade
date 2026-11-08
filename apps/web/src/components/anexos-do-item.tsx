@@ -32,7 +32,7 @@ export async function AnexosDoItem({
               <Paperclip
                 aria-hidden
                 size={14}
-                strokeWidth={2}
+                strokeWidth={1.75}
                 className="shrink-0 text-texto-3"
               />
               <a

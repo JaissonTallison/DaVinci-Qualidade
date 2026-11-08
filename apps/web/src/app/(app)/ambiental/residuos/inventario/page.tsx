@@ -124,7 +124,7 @@ export default async function Inventario({
           download={`inventario-residuos-${ano}.csv`}
           className={botaoSecundario}
         >
-          <Download aria-hidden size={16} strokeWidth={2} />
+          <Download aria-hidden size={16} strokeWidth={1.75} />
           Inventário em planilha
         </a>
         {csvMtr && (
@@ -133,7 +133,7 @@ export default async function Inventario({
             download={`saidas-mtr-${ano}.csv`}
             className={botaoSecundario}
           >
-            <Download aria-hidden size={16} strokeWidth={2} />
+            <Download aria-hidden size={16} strokeWidth={1.75} />
             Saídas com MTR (para o SINIR)
           </a>
         )}

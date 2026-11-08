@@ -29,6 +29,7 @@ import {
 } from "./acoes";
 import { Anexos } from "@/components/anexos";
 import { CabecalhoDaAuditoria } from "./cabecalho";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Auditoria" };
 
@@ -119,12 +120,9 @@ export default async function DetalheDaAuditoria({
     <article>
       <CabecalhoDaAuditoria auditoria={a} etapa="resumo" />
       {textoDoAviso && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {textoDoAviso}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section
@@ -132,7 +130,7 @@ export default async function DetalheDaAuditoria({
         aria-label="Próximo passo"
       >
         <div>
-          <p className="text-xs font-semibold tracking-[0.06em] text-texto-2 uppercase">
+          <p className="text-xs font-semibold tracking-[0.04em] text-texto-2 uppercase">
             Próximo passo
           </p>
           <p className="mt-1 text-lg font-semibold">{passo.titulo}</p>

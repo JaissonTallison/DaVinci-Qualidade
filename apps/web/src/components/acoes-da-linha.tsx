@@ -25,7 +25,7 @@ export function AcoesDaLinha({
       rotulo={rotulo}
       largura="w-48"
       classeDoBotao="inline-flex size-8 items-center justify-center rounded-sm text-texto-3 hover:bg-campo hover:text-texto"
-      botao={<MoreHorizontal aria-hidden size={18} strokeWidth={2} />}
+      botao={<MoreHorizontal aria-hidden size={18} strokeWidth={1.75} />}
     >
       {() => <div className="py-1">{children}</div>}
     </Suspenso>

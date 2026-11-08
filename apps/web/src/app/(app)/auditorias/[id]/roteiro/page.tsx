@@ -114,7 +114,7 @@ export default async function RoteiroDaAuditoriaPage({
                 href={`/auditorias/${id}/roteiro/imprimir`}
                 className={botaoSecundario}
               >
-                <Printer aria-hidden size={16} strokeWidth={2} />
+                <Printer aria-hidden size={16} strokeWidth={1.75} />
                 Roteiro de campo
               </Link>
             )}
@@ -128,7 +128,7 @@ export default async function RoteiroDaAuditoriaPage({
             <div className="mt-3">
               {porProcesso.map((g) => (
                 <div key={g.k} className="border-t border-borda">
-                  <p className="bg-superficie-2 px-5 py-1.5 text-xs font-semibold tracking-[0.06em] text-texto-2 uppercase">
+                  <p className="bg-superficie-2 px-5 py-1.5 text-xs font-semibold tracking-[0.04em] text-texto-2 uppercase">
                     {g.n} · {g.perguntas.length}
                   </p>
                   <ul className="divide-y divide-borda">
@@ -194,7 +194,7 @@ export default async function RoteiroDaAuditoriaPage({
               className={`${campoCompacto} w-40`}
             />
             <button type="submit" className={botaoSecundario}>
-              <ListFilter aria-hidden size={16} strokeWidth={2} />
+              <ListFilter aria-hidden size={16} strokeWidth={1.75} />
               Filtrar
             </button>
           </form>

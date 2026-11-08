@@ -140,7 +140,7 @@ export default async function Residuos({
               className={`inline-flex items-center gap-1.5 text-sm ${atrasados ? "text-nao-conforme" : "text-texto-2"}`}
             >
               {atrasados > 0 && (
-                <CircleAlert aria-hidden size={14} strokeWidth={2} />
+                <CircleAlert aria-hidden size={14} strokeWidth={1.75} />
               )}
               {semCdf.length} sem CDF
               {atrasados ? ` · ${atrasados} atrasados` : ""}

@@ -15,7 +15,7 @@ export function BotaoImprimir({
       onClick={() => window.print()}
       className={`${botaoPrimario} print:hidden`}
     >
-      <Printer aria-hidden size={16} strokeWidth={2} />
+      <Printer aria-hidden size={16} strokeWidth={1.75} />
       {rotulo}
     </button>
   );

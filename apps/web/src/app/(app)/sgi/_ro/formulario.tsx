@@ -10,7 +10,6 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
-import { TriangleAlert } from "@/components/icones";
 import { ClasseDoRo } from "@/components/marcadores";
 import { MatrizDeNivel } from "@/components/matriz-de-nivel";
 import {
@@ -31,6 +30,7 @@ import {
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import type { ConfigRo } from "./config";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 const MARCADOR: Record<ClasseRo, string> = {
   baixa: "bg-nivel-baixo",
@@ -359,18 +359,9 @@ export function FormularioDeRo({
     conteudo: (
       <>
         {acaoObrigatoria && (
-          <p
-            role="status"
-            className="mb-5 flex items-start gap-2 rounded-campo border border-atencao/30 bg-atencao/10 px-3 py-2.5 text-sm text-texto"
-          >
-            <TriangleAlert
-              aria-hidden
-              size={16}
-              strokeWidth={1.75}
-              className="mt-0.5 shrink-0 text-atencao"
-            />
+          <CaixaDeAlerta tom="atencao" className="mb-5">
             {cfg.acaoAlta}
-          </p>
+          </CaixaDeAlerta>
         )}
         <div className="grid gap-5 sm:grid-cols-3">
           <div className="sm:col-span-3">{campoAcao}</div>

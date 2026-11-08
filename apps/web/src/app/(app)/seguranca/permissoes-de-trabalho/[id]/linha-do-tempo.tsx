@@ -12,28 +12,31 @@ export function LinhaDoTempoDaPt({ pt }: { pt: PermissaoDeTrabalho }) {
     ? ORDEM.indexOf("liberada")
     : ORDEM.indexOf(pt.status as (typeof ORDEM)[number]);
 
-  const passos: { titulo: string; detalhe?: string | null; alerta?: boolean }[] =
-    [
-      {
-        titulo: "Solicitada",
-        detalhe: periodoDaPt(pt.inicio, pt.fim),
-      },
-      {
-        titulo: "Liberada",
-        detalhe: pt.liberadaEm
-          ? formatarMomento(pt.liberadaEm)
-          : "Outra pessoa autorizada precisa liberar",
-      },
-      {
-        titulo: "Encerrada",
-        detalhe: pt.encerradaEm
-          ? formatarMomento(pt.encerradaEm)
-          : pt.vencida
-            ? "Prazo vencido: encerre a PT"
-            : "Encerrar ao fim do serviço",
-        alerta: pt.vencida && !pt.encerradaEm,
-      },
-    ];
+  const passos: {
+    titulo: string;
+    detalhe?: string | null;
+    alerta?: boolean;
+  }[] = [
+    {
+      titulo: "Solicitada",
+      detalhe: periodoDaPt(pt.inicio, pt.fim),
+    },
+    {
+      titulo: "Liberada",
+      detalhe: pt.liberadaEm
+        ? formatarMomento(pt.liberadaEm)
+        : "Outra pessoa autorizada precisa liberar",
+    },
+    {
+      titulo: "Encerrada",
+      detalhe: pt.encerradaEm
+        ? formatarMomento(pt.encerradaEm)
+        : pt.vencida
+          ? "Prazo vencido: encerre a PT"
+          : "Encerrar ao fim do serviço",
+      alerta: pt.vencida && !pt.encerradaEm,
+    },
+  ];
 
   return (
     <ol className="mt-4 flex flex-col">
@@ -48,7 +51,7 @@ export function LinhaDoTempoDaPt({ pt }: { pt: PermissaoDeTrabalho }) {
                 aria-hidden
                 className={`flex size-7 shrink-0 items-center justify-center rounded-sm text-sm font-semibold ${
                   concluido
-                    ? "bg-conforme/12 text-conforme"
+                    ? "bg-conforme-suave text-conforme-texto"
                     : corrente
                       ? passo.alerta
                         ? "bg-nao-conforme text-primaria-texto"
@@ -56,12 +59,12 @@ export function LinhaDoTempoDaPt({ pt }: { pt: PermissaoDeTrabalho }) {
                       : "border border-borda-forte text-texto-3"
                 }`}
               >
-                {concluido ? <Check size={15} strokeWidth={2.5} /> : i + 1}
+                {concluido ? <Check size={15} strokeWidth={1.75} /> : i + 1}
               </span>
               {!ultimo && (
                 <span
                   aria-hidden
-                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme/40" : "bg-borda"}`}
+                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme-borda" : "bg-borda"}`}
                 />
               )}
             </div>
@@ -95,9 +98,9 @@ export function LinhaDoTempoDaPt({ pt }: { pt: PermissaoDeTrabalho }) {
         <li className="flex gap-3">
           <span
             aria-hidden
-            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme/12 text-nao-conforme"
+            className="flex size-7 shrink-0 items-center justify-center rounded-sm bg-nao-conforme-suave text-nao-conforme-texto"
           >
-            <X size={15} strokeWidth={2.5} />
+            <X size={15} strokeWidth={1.75} />
           </span>
           <p className="text-base font-semibold text-nao-conforme">Cancelada</p>
         </li>

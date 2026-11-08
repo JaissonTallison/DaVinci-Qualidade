@@ -27,7 +27,7 @@ export function EnviarPesquisa({
       {osId && <input type="hidden" name="osId" value={osId} />}
       {estado.erro && <AvisoDeErro erro={estado.erro} />}
       <button type="submit" className={botaoSecundario} disabled={enviando}>
-        <Send aria-hidden size={16} strokeWidth={2} />
+        <Send aria-hidden size={16} strokeWidth={1.75} />
         {enviando ? "Gerando…" : "Gerar link da pesquisa"}
       </button>
     </form>

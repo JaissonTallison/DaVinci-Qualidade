@@ -18,6 +18,7 @@ import { painel, tituloDaSecao } from "@/lib/estilos";
 import { FormalizarNc } from "../acoes";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { RegistrarAchado } from "./formulario";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Registrar achados" };
 
@@ -76,12 +77,9 @@ export default async function Achados({
     <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="registrar" />
       {texto && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {texto}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section className={`${painel} mt-6`}>

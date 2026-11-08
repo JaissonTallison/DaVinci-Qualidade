@@ -16,6 +16,7 @@ import {
   tituloDaPagina,
   trilho,
 } from "@/lib/estilos";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Modelos de inspeção" };
 
@@ -83,12 +84,9 @@ export default async function ListaDeModelos({
         </header>
       </CabecalhoComVoltar>
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <nav aria-label="Situação" className={`mt-6 ${trilho}`}>

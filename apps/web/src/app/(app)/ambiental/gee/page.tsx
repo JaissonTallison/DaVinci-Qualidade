@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, CircleAlert } from "@/components/icones";
+import { ChevronLeft, ChevronRight } from "@/components/icones";
 import {
   FONTES_DE_CONSUMO,
   type DadosDoUsuario,
@@ -13,6 +13,7 @@ import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { botaoSecundario, painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeFator } from "./formulario";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Inventário de GEE" };
 const t = (n: number) =>
@@ -57,7 +58,7 @@ export default async function Gee({
             className={botaoSecundario}
             aria-label={`Ano ${ano - 1}`}
           >
-            <ChevronLeft aria-hidden size={16} strokeWidth={2} />
+            <ChevronLeft aria-hidden size={16} strokeWidth={1.75} />
           </Link>
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
@@ -68,7 +69,7 @@ export default async function Gee({
               className={botaoSecundario}
               aria-label={`Ano ${ano + 1}`}
             >
-              <ChevronRight aria-hidden size={16} strokeWidth={2} />
+              <ChevronRight aria-hidden size={16} strokeWidth={1.75} />
             </Link>
           )}
         </nav>
@@ -103,19 +104,13 @@ export default async function Gee({
             ))}
           </section>
           {r.dados.semFator.length > 0 && (
-            <p className="mt-4 inline-flex items-start gap-2 rounded-xs bg-nao-conforme/10 px-3 py-2 text-base text-nao-conforme">
-              <CircleAlert
-                aria-hidden
-                size={18}
-                strokeWidth={2}
-                className="mt-0.5 shrink-0"
-              />
+            <CaixaDeAlerta tom="perigo" className="mt-4">
               Total incompleto: falta o fator de{" "}
               {r.dados.semFator
                 .map((f) => FONTES_DE_CONSUMO[f].toLowerCase())
                 .join(", ")}{" "}
               em {ano}.
-            </p>
+            </CaixaDeAlerta>
           )}
           <section className={`${painel} mt-6`}>
             {r.dados.linhas.length === 0 ? (

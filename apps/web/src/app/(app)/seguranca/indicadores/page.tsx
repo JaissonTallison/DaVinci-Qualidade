@@ -7,6 +7,7 @@ import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import { LancarHoras } from "./lancar-horas";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Indicadores de SST" };
 
@@ -83,12 +84,9 @@ export default async function Indicadores({
         </nav>
       </header>
       {aviso === "horas" && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           Horas lançadas.
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section className={`${painel} mt-6`}>

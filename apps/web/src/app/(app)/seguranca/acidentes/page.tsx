@@ -141,7 +141,7 @@ export default async function ListaDeAcidentes({
             valor={params.status}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="acidentes" consulta={consulta} />

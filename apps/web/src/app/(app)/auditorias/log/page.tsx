@@ -59,7 +59,7 @@ export default async function LogDoAuditorPage({
           />
         </label>
         <button type="submit" className={botaoSecundario}>
-          <Search aria-hidden size={16} strokeWidth={2} />
+          <Search aria-hidden size={16} strokeWidth={1.75} />
           Consultar
         </button>
       </form>
@@ -126,7 +126,7 @@ export default async function LogDoAuditorPage({
                 Anonimizar as organizações (Organização A, B, C…)
               </label>
               <button type="submit" className={botaoPrimario}>
-                <FileText aria-hidden size={16} strokeWidth={2} />
+                <FileText aria-hidden size={16} strokeWidth={1.75} />
                 Gerar declaração
               </button>
             </form>

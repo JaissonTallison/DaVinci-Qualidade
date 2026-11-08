@@ -62,40 +62,49 @@ export default async function IndicadoresGerais() {
   const pode = (p: string) => eu.permissoes.includes(p as never);
   const hoje = hojeEmBrasilia();
 
-  const [painelR, ncsR, planosR, calR, sgiR, sstR, pgrR, ptsR, vencR, ambR, servR] =
-    await Promise.all([
-      pode("paineis.ver")
-        ? chamarApi<PainelDeVencimentos>("/paineis/vencimentos?dias=30")
-        : null,
-      pode("qualidade.ver")
-        ? chamarApi<ResumoNcs>("/nao-conformidades/resumo")
-        : null,
-      pode("qualidade.ver")
-        ? chamarApi<ResumoPlanos>("/planos-de-acao/resumo")
-        : null,
-      pode("qualidade.ver")
-        ? chamarApi<ResumoCalibracao>("/instrumentos/resumo")
-        : null,
-      pode("sgi.ver") ? chamarApi<ResumoSgi>("/sgi/resumo") : null,
-      pode("seguranca.ver")
-        ? chamarApi<IndicadoresSst>(
-            `/acidentes/indicadores?ano=${hoje.slice(0, 4)}`,
-          )
-        : null,
-      pode("seguranca.ver") ? chamarApi<ResumoPgr>("/riscos/resumo") : null,
-      pode("seguranca.ver")
-        ? chamarApi<ResumoPts>("/permissoes-de-trabalho/resumo")
-        : null,
-      pode("seguranca.ver") && pode("funcionarios.ver")
-        ? chamarApi<ResumoVencimentos>("/vencimentos/resumo")
-        : null,
-      pode("ambiental.ver")
-        ? chamarApi<ResumoAmbiental>("/ambiental/resumo")
-        : null,
-      pode("servicos.ver")
-        ? chamarApi<ResumoServicos>("/servicos/resumo")
-        : null,
-    ]);
+  const [
+    painelR,
+    ncsR,
+    planosR,
+    calR,
+    sgiR,
+    sstR,
+    pgrR,
+    ptsR,
+    vencR,
+    ambR,
+    servR,
+  ] = await Promise.all([
+    pode("paineis.ver")
+      ? chamarApi<PainelDeVencimentos>("/paineis/vencimentos?dias=30")
+      : null,
+    pode("qualidade.ver")
+      ? chamarApi<ResumoNcs>("/nao-conformidades/resumo")
+      : null,
+    pode("qualidade.ver")
+      ? chamarApi<ResumoPlanos>("/planos-de-acao/resumo")
+      : null,
+    pode("qualidade.ver")
+      ? chamarApi<ResumoCalibracao>("/instrumentos/resumo")
+      : null,
+    pode("sgi.ver") ? chamarApi<ResumoSgi>("/sgi/resumo") : null,
+    pode("seguranca.ver")
+      ? chamarApi<IndicadoresSst>(
+          `/acidentes/indicadores?ano=${hoje.slice(0, 4)}`,
+        )
+      : null,
+    pode("seguranca.ver") ? chamarApi<ResumoPgr>("/riscos/resumo") : null,
+    pode("seguranca.ver")
+      ? chamarApi<ResumoPts>("/permissoes-de-trabalho/resumo")
+      : null,
+    pode("seguranca.ver") && pode("funcionarios.ver")
+      ? chamarApi<ResumoVencimentos>("/vencimentos/resumo")
+      : null,
+    pode("ambiental.ver")
+      ? chamarApi<ResumoAmbiental>("/ambiental/resumo")
+      : null,
+    pode("servicos.ver") ? chamarApi<ResumoServicos>("/servicos/resumo") : null,
+  ]);
 
   const painelV = ok(painelR);
   const ncs = ok(ncsR);
@@ -122,8 +131,17 @@ export default async function IndicadoresGerais() {
           titulo: "Prazos (próximos 30 dias)",
           href: "/paineis/vencimentos",
           itens: [
-            { rotulo: "Vencidos", valor: vencidos, alerta: pos(vencidos), href: "/paineis/vencimentos" },
-            { rotulo: "Vencem em breve", valor: proximos, href: "/paineis/vencimentos" },
+            {
+              rotulo: "Vencidos",
+              valor: vencidos,
+              alerta: pos(vencidos),
+              href: "/paineis/vencimentos",
+            },
+            {
+              rotulo: "Vencem em breve",
+              valor: proximos,
+              href: "/paineis/vencimentos",
+            },
           ],
         }
       : null,
@@ -132,10 +150,29 @@ export default async function IndicadoresGerais() {
           titulo: "Qualidade",
           href: "/qualidade/nao-conformidades",
           itens: [
-            { rotulo: "NCs abertas", valor: ncs?.abertas ?? null, href: "/qualidade/nao-conformidades" },
-            { rotulo: "NCs vencidas", valor: ncs?.vencidas ?? null, alerta: pos(ncs?.vencidas), href: "/qualidade/nao-conformidades" },
-            { rotulo: "Planos atrasados", valor: planos?.atrasados ?? null, alerta: pos(planos?.atrasados), href: "/qualidade/planos-de-acao" },
-            { rotulo: "Instrumentos vencidos", valor: cal?.vencidos ?? null, alerta: pos(cal?.vencidos), href: "/qualidade/calibracao" },
+            {
+              rotulo: "NCs abertas",
+              valor: ncs?.abertas ?? null,
+              href: "/qualidade/nao-conformidades",
+            },
+            {
+              rotulo: "NCs vencidas",
+              valor: ncs?.vencidas ?? null,
+              alerta: pos(ncs?.vencidas),
+              href: "/qualidade/nao-conformidades",
+            },
+            {
+              rotulo: "Planos atrasados",
+              valor: planos?.atrasados ?? null,
+              alerta: pos(planos?.atrasados),
+              href: "/qualidade/planos-de-acao",
+            },
+            {
+              rotulo: "Instrumentos vencidos",
+              valor: cal?.vencidos ?? null,
+              alerta: pos(cal?.vencidos),
+              href: "/qualidade/calibracao",
+            },
           ],
         }
       : null,
@@ -144,12 +181,41 @@ export default async function IndicadoresGerais() {
           titulo: "Segurança do Trabalho",
           href: "/seguranca/pgr",
           itens: [
-            { rotulo: "Riscos críticos", valor: pgr?.criticos ?? null, alerta: pos(pgr?.criticos), href: "/seguranca/pgr?nivel=critico" },
-            { rotulo: "Ações do PGR vencidas", valor: pgr?.acoesVencidas ?? null, alerta: pos(pgr?.acoesVencidas), href: "/seguranca/pgr" },
-            { rotulo: "Revisões do PGR vencidas", valor: pgr?.revisoesVencidas ?? null, alerta: pos(pgr?.revisoesVencidas), href: "/seguranca/pgr" },
-            { rotulo: "PTs vencidas", valor: pts?.vencidas ?? null, alerta: pos(pts?.vencidas), href: "/seguranca/permissoes-de-trabalho" },
-            { rotulo: "ASO/treino vencidos", valor: venc?.vencidos ?? null, alerta: pos(venc?.vencidos), href: "/seguranca/vencimentos" },
-            { rotulo: "Dias sem acidente", valor: sst?.diasSemAcidente ?? null, href: "/seguranca/indicadores" },
+            {
+              rotulo: "Riscos críticos",
+              valor: pgr?.criticos ?? null,
+              alerta: pos(pgr?.criticos),
+              href: "/seguranca/pgr?nivel=critico",
+            },
+            {
+              rotulo: "Ações do PGR vencidas",
+              valor: pgr?.acoesVencidas ?? null,
+              alerta: pos(pgr?.acoesVencidas),
+              href: "/seguranca/pgr",
+            },
+            {
+              rotulo: "Revisões do PGR vencidas",
+              valor: pgr?.revisoesVencidas ?? null,
+              alerta: pos(pgr?.revisoesVencidas),
+              href: "/seguranca/pgr",
+            },
+            {
+              rotulo: "PTs vencidas",
+              valor: pts?.vencidas ?? null,
+              alerta: pos(pts?.vencidas),
+              href: "/seguranca/permissoes-de-trabalho",
+            },
+            {
+              rotulo: "ASO/treino vencidos",
+              valor: venc?.vencidos ?? null,
+              alerta: pos(venc?.vencidos),
+              href: "/seguranca/vencimentos",
+            },
+            {
+              rotulo: "Dias sem acidente",
+              valor: sst?.diasSemAcidente ?? null,
+              href: "/seguranca/indicadores",
+            },
           ],
         }
       : null,
@@ -158,10 +224,29 @@ export default async function IndicadoresGerais() {
           titulo: "Gestão do SGI",
           href: "/sgi/riscos",
           itens: [
-            { rotulo: "Riscos altos abertos", valor: sgi?.rosAltosAbertos ?? null, alerta: pos(sgi?.rosAltosAbertos), href: "/sgi/riscos" },
-            { rotulo: "R&O com prazo vencido", valor: sgi?.rosComPrazoVencido ?? null, alerta: pos(sgi?.rosComPrazoVencido), href: "/sgi/riscos" },
-            { rotulo: "Objetivos fora da meta", valor: sgi?.objetivosFora ?? null, alerta: pos(sgi?.objetivosFora), href: "/sgi/objetivos" },
-            { rotulo: "Inovações aguardando", valor: sgi?.mudancasAguardandoDecisao ?? null, href: "/sgi/inovacao" },
+            {
+              rotulo: "Riscos altos abertos",
+              valor: sgi?.rosAltosAbertos ?? null,
+              alerta: pos(sgi?.rosAltosAbertos),
+              href: "/sgi/riscos",
+            },
+            {
+              rotulo: "R&O com prazo vencido",
+              valor: sgi?.rosComPrazoVencido ?? null,
+              alerta: pos(sgi?.rosComPrazoVencido),
+              href: "/sgi/riscos",
+            },
+            {
+              rotulo: "Objetivos fora da meta",
+              valor: sgi?.objetivosFora ?? null,
+              alerta: pos(sgi?.objetivosFora),
+              href: "/sgi/objetivos",
+            },
+            {
+              rotulo: "Inovações aguardando",
+              valor: sgi?.mudancasAguardandoDecisao ?? null,
+              href: "/sgi/inovacao",
+            },
           ],
         }
       : null,
@@ -170,10 +255,31 @@ export default async function IndicadoresGerais() {
           titulo: "Serviços",
           href: "/servicos/ordens",
           itens: [
-            { rotulo: "OS abertas", valor: serv?.osAbertas ?? null, href: "/servicos/ordens" },
-            { rotulo: "OS atrasadas", valor: serv?.osAtrasadas ?? null, alerta: pos(serv?.osAtrasadas), href: "/servicos/ordens" },
-            { rotulo: "Satisfação ISC (%)", valor: serv?.satisfacao12Meses ?? null, alerta: serv?.satisfacao12Meses != null && serv.satisfacao12Meses < META_ISC, href: "/servicos/nps" },
-            { rotulo: "Fornecedores reprovados", valor: serv?.fornecedoresReprovados ?? null, alerta: pos(serv?.fornecedoresReprovados), href: "/servicos/fornecedores" },
+            {
+              rotulo: "OS abertas",
+              valor: serv?.osAbertas ?? null,
+              href: "/servicos/ordens",
+            },
+            {
+              rotulo: "OS atrasadas",
+              valor: serv?.osAtrasadas ?? null,
+              alerta: pos(serv?.osAtrasadas),
+              href: "/servicos/ordens",
+            },
+            {
+              rotulo: "Satisfação ISC (%)",
+              valor: serv?.satisfacao12Meses ?? null,
+              alerta:
+                serv?.satisfacao12Meses != null &&
+                serv.satisfacao12Meses < META_ISC,
+              href: "/servicos/nps",
+            },
+            {
+              rotulo: "Fornecedores reprovados",
+              valor: serv?.fornecedoresReprovados ?? null,
+              alerta: pos(serv?.fornecedoresReprovados),
+              href: "/servicos/fornecedores",
+            },
           ],
         }
       : null,
@@ -182,10 +288,30 @@ export default async function IndicadoresGerais() {
           titulo: "Meio Ambiente",
           href: "/ambiental/requisitos",
           itens: [
-            { rotulo: "Requisitos não atendidos", valor: amb?.requisitosNaoAtendidos ?? null, alerta: pos(amb?.requisitosNaoAtendidos), href: "/ambiental/requisitos" },
-            { rotulo: "Licenças a renovar", valor: amb?.licencasParaRenovar ?? null, alerta: pos(amb?.licencasParaRenovar), href: "/ambiental/licencas" },
-            { rotulo: "Licenças vencidas", valor: amb?.licencasVencidas ?? null, alerta: pos(amb?.licencasVencidas), href: "/ambiental/licencas" },
-            { rotulo: "FDS vencidas", valor: amb?.fdsVencidas ?? null, alerta: pos(amb?.fdsVencidas), href: "/ambiental/produtos-quimicos" },
+            {
+              rotulo: "Requisitos não atendidos",
+              valor: amb?.requisitosNaoAtendidos ?? null,
+              alerta: pos(amb?.requisitosNaoAtendidos),
+              href: "/ambiental/requisitos",
+            },
+            {
+              rotulo: "Licenças a renovar",
+              valor: amb?.licencasParaRenovar ?? null,
+              alerta: pos(amb?.licencasParaRenovar),
+              href: "/ambiental/licencas",
+            },
+            {
+              rotulo: "Licenças vencidas",
+              valor: amb?.licencasVencidas ?? null,
+              alerta: pos(amb?.licencasVencidas),
+              href: "/ambiental/licencas",
+            },
+            {
+              rotulo: "FDS vencidas",
+              valor: amb?.fdsVencidas ?? null,
+              alerta: pos(amb?.fdsVencidas),
+              href: "/ambiental/produtos-quimicos",
+            },
           ],
         }
       : null,
@@ -200,12 +326,9 @@ export default async function IndicadoresGerais() {
         Clique em um número para abrir a tela de origem.
       </p>
       {visiveis.map((area) => (
-        <section
-          key={area.titulo}
-          className={`${painel} mt-6 overflow-hidden`}
-        >
+        <section key={area.titulo} className={`${painel} mt-6 overflow-hidden`}>
           <div className="flex items-center justify-between px-5 pt-4 pb-2">
-            <h2 className="text-sm font-semibold tracking-wide text-texto-2 uppercase">
+            <h2 className="text-sm font-semibold tracking-[0.04em] text-texto-2 uppercase">
               {area.titulo}
             </h2>
             <Link
@@ -216,7 +339,7 @@ export default async function IndicadoresGerais() {
               <ArrowRight
                 aria-hidden
                 size={14}
-                strokeWidth={2}
+                strokeWidth={1.75}
                 className="transition-transform group-hover:translate-x-0.5"
               />
             </Link>

@@ -19,6 +19,7 @@ import { SituacaoDoTerceiro } from "../situacao";
 import { RegistrarDocumento } from "./documento";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Terceiro" };
 
 const AVISOS: Record<string, string> = {
@@ -58,10 +59,7 @@ export default async function DetalheDoTerceiro({
         <h1 className={`${tituloDaPagina} mt-1`}>{t.razaoSocial}</h1>
         <Aviso avisos={AVISOS} chave={aviso} />
         {t.pendencias.length > 0 && (
-          <div
-            role="alert"
-            className="mt-4 rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-          >
+          <CaixaDeAlerta tom="perigo" className="mt-4">
             <p className="font-semibold">
               Não liberar a entrada enquanto houver pendência:
             </p>
@@ -70,7 +68,7 @@ export default async function DetalheDoTerceiro({
                 <li key={p}>{p}</li>
               ))}
             </ul>
-          </div>
+          </CaixaDeAlerta>
         )}
       </CabecalhoComVoltar>
       <section className={`${painel} mt-6 p-5`}>

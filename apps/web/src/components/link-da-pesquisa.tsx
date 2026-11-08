@@ -4,6 +4,7 @@ import { BotaoCopiar } from "@/components/botao-copiar";
 import { formatarData } from "@/lib/datas";
 import { enderecoDoSistema } from "@/lib/endereco-do-sistema";
 import { botaoSecundario } from "@/lib/estilos";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 /** O link do convite, com copiar, e-mail e WhatsApp prontos. */
 export async function LinkDaPesquisa({
@@ -14,10 +15,7 @@ export async function LinkDaPesquisa({
   const url = `${await enderecoDoSistema()}/pesquisa/${convite.token}`;
   const texto = `Olá! Pode avaliar nosso serviço${convite.osNumero ? ` (${convite.osNumero})` : ""}? Leva 1 minuto: ${url}`;
   return (
-    <div
-      role="status"
-      className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-3 text-base"
-    >
+    <CaixaDeAlerta tom="info" className="mt-4">
       <p className="font-semibold">
         Link da pesquisa para {convite.clienteNome}
       </p>
@@ -31,7 +29,7 @@ export async function LinkDaPesquisa({
           href={`mailto:?subject=${encodeURIComponent("Pesquisa de satisfação")}&body=${encodeURIComponent(texto)}`}
           className={`${botaoSecundario} h-8 text-sm`}
         >
-          <Mail aria-hidden size={14} strokeWidth={2} />
+          <Mail aria-hidden size={14} strokeWidth={1.75} />
           <span>Enviar por e-mail</span>
         </a>
         <a
@@ -40,10 +38,10 @@ export async function LinkDaPesquisa({
           rel="noreferrer"
           className={`${botaoSecundario} h-8 text-sm`}
         >
-          <MessageCircle aria-hidden size={14} strokeWidth={2} />
+          <MessageCircle aria-hidden size={14} strokeWidth={1.75} />
           <span>Enviar por WhatsApp</span>
         </a>
       </div>
-    </div>
+    </CaixaDeAlerta>
   );
 }

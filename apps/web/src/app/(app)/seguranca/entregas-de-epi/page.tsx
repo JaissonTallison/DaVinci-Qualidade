@@ -142,7 +142,7 @@ export default async function EntregasDeEpi({
             valor={params.situacao}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="entregas-de-epi" consulta={consulta} />

@@ -100,7 +100,7 @@ export function BotaoRecolherMenu() {
       onClick={alternar}
       title={rotulo}
       aria-label={rotulo}
-      className="hidden h-9 w-9 items-center justify-center rounded-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-info lg:flex"
+      className="hidden h-9 w-9 items-center justify-center rounded-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-foco lg:flex"
     >
       <IconeRecolher compacto={compacto} />
     </button>
@@ -161,7 +161,7 @@ export function BotaoAbrirGaveta() {
       type="button"
       onClick={() => abrirGaveta(true)}
       aria-label="Abrir o menu"
-      className="hidden h-9 w-9 items-center justify-center rounded-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-info md:flex lg:hidden"
+      className="hidden h-9 w-9 items-center justify-center rounded-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-foco md:flex lg:hidden"
     >
       <Menu aria-hidden size={20} strokeWidth={1.75} />
     </button>

@@ -80,7 +80,7 @@ export function Suspenso({
             id={id}
             role="menu"
             style={{ position: "fixed", top: pos.top, right: pos.right }}
-            className={`z-50 ${largura} max-w-[calc(100vw-1rem)] rounded-md border border-borda bg-superficie text-texto shadow-sm`}
+            className={`z-50 ${largura} max-w-[calc(100vw-1rem)] rounded-md bg-superficie text-texto shadow-sm`}
           >
             {children(() => setAberto(false))}
           </div>,

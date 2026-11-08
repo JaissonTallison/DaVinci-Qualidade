@@ -23,7 +23,9 @@ const Contexto = createContext<Selecao | null>(null);
 export function useSelecao(): Selecao {
   const c = useContext(Contexto);
   if (!c)
-    throw new Error("Use os componentes de seleção dentro de <SelecaoDeLinhas>.");
+    throw new Error(
+      "Use os componentes de seleção dentro de <SelecaoDeLinhas>.",
+    );
   return c;
 }
 
@@ -43,7 +45,8 @@ export function SelecaoDeLinhas({ children }: { children: ReactNode }) {
   const definir = (ids: string[], marcar: boolean) =>
     setSelecionados((s) => {
       const n = new Set(s);
-      for (const id of ids) if (marcar) n.add(id);
+      for (const id of ids)
+        if (marcar) n.add(id);
         else n.delete(id);
       return n;
     });
@@ -109,7 +112,7 @@ export function BarraDeSelecao({
   if (n === 0) return null;
   const ids = [...selecionados];
   return (
-    <div className="sticky bottom-4 z-20 mx-4 my-3 flex flex-wrap items-center gap-3 rounded-md border border-borda bg-superficie px-4 py-2.5 shadow-sm">
+    <div className="sticky bottom-4 z-20 mx-4 my-3 flex flex-wrap items-center gap-3 rounded-md bg-superficie px-4 py-2.5 shadow-sm">
       <span className="text-sm font-semibold text-texto">
         {n} {n === 1 ? rotulo[0] : rotulo[1]}
       </span>
@@ -128,7 +131,7 @@ export function BarraDeSelecao({
         onClick={limpar}
         className="ml-auto inline-flex items-center gap-1 text-sm text-texto-2 hover:text-texto"
       >
-        <X aria-hidden size={14} strokeWidth={2} />
+        <X aria-hidden size={14} strokeWidth={1.75} />
         Limpar seleção
       </button>
     </div>

@@ -28,6 +28,7 @@ import { RespostasDaInspecao } from "./respostas";
 import { Anexos } from "@/components/anexos";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Inspeção" };
 
 const AVISOS: Record<string, string> = {
@@ -83,12 +84,9 @@ export default async function DetalheDaInspecao({
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{i.objeto}</h1>
         {aviso && AVISOS[aviso] && (
-          <p
-            role="status"
-            className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-          >
+          <CaixaDeAlerta tom="sucesso" className="mt-4">
             {AVISOS[aviso]}
-          </p>
+          </CaixaDeAlerta>
         )}
       </CabecalhoComVoltar>
 

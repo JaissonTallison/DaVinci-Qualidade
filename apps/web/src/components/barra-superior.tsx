@@ -37,7 +37,7 @@ const SUBTELAS: { href: string; rotulo: string }[] = [];
 
 /** Botão na barra: fundo só no passar do mouse. */
 const naBarra =
-  "flex h-9 items-center gap-1.5 rounded-sm px-2 text-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-info aria-expanded:bg-superficie-2";
+  "flex h-9 items-center gap-1.5 rounded-sm px-2 text-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-foco aria-expanded:bg-superficie-2";
 
 /**
  * Barra superior (branco gelo, 64 px, mesmo padrão da Finance): recolher o menu, caminho com a estrela de favorito,
@@ -136,7 +136,7 @@ function Trilha({
   const favoritos = useFavoritos(usuarioId);
   if (atual === "/")
     return (
-      <span className="ml-1 hidden truncate text-xs font-semibold tracking-[0.08em] text-texto-2 uppercase sm:inline">
+      <span className="ml-1 hidden truncate text-xs font-semibold tracking-[0.04em] text-texto-2 uppercase sm:inline">
         Início
       </span>
     );
@@ -189,7 +189,7 @@ function Trilha({
     >
       <Link
         href={achada.g.itens[0]!.href}
-        className="truncate text-xs font-semibold tracking-[0.08em] uppercase hover:text-texto"
+        className="truncate text-xs font-semibold tracking-[0.04em] uppercase hover:text-texto"
       >
         {achada.g.titulo}
       </Link>
@@ -204,7 +204,10 @@ function Trilha({
               {p.rotulo}
             </Link>
           ) : (
-            <span aria-current="page" className="truncate font-medium text-texto">
+            <span
+              aria-current="page"
+              className="truncate font-medium text-texto"
+            >
               {p.rotulo}
             </span>
           )}
@@ -319,7 +322,7 @@ function MenuDoUsuario({ eu }: { eu: DadosDoUsuario }) {
         <>
           <span
             aria-hidden
-            className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-acao/12 text-sm font-semibold text-acao"
+            className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-info-suave text-sm font-semibold text-info"
           >
             {iniciais(eu.usuario.nome)}
           </span>
@@ -345,7 +348,7 @@ function MenuDoUsuario({ eu }: { eu: DadosDoUsuario }) {
           <div className="flex items-center gap-3 px-2.5 pt-1.5 pb-2.5">
             <span
               aria-hidden
-              className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-acao/12 text-sm font-semibold text-acao"
+              className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-info-suave text-sm font-semibold text-info"
             >
               {iniciais(eu.usuario.nome)}
             </span>
@@ -358,7 +361,7 @@ function MenuDoUsuario({ eu }: { eu: DadosDoUsuario }) {
               </span>
             </span>
           </div>
-          <p className="px-2.5 pt-1 pb-1 text-xs font-semibold tracking-wide text-texto-3 uppercase">
+          <p className="px-2.5 pt-1 pb-1 text-xs font-semibold tracking-[0.04em] text-texto-3 uppercase">
             Empresa
           </p>
           <ul className="flex flex-col gap-px">

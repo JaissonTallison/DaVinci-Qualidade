@@ -88,7 +88,7 @@ export default async function Parceiros({
             valor={params.situacao}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
         </form>

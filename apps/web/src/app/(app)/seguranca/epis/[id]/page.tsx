@@ -12,6 +12,7 @@ import { FormularioDeEpi } from "../formulario";
 import { SituacaoDoEpi } from "./situacao";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "EPI" };
 
 const AVISOS: Record<string, string> = {
@@ -84,10 +85,10 @@ export default async function DetalheDoEpi({
       </section>
 
       {podeEditar && e.caVencido && e.ativo && (
-        <p className="mt-6 max-w-3xl rounded-sm border border-nao-conforme bg-nao-conforme/10 px-4 py-2.5 text-base text-texto">
+        <CaixaDeAlerta tom="perigo" className="mt-6">
           CA vencido: nenhuma entrega deste EPI é aceita. Se chegou lote com CA
           novo, atualize o número e a validade abaixo.
-        </p>
+        </CaixaDeAlerta>
       )}
       {podeEditar && (
         <Bloco

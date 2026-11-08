@@ -28,6 +28,7 @@ import {
 import { ConcluirAuditoria } from "../acoes";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { PontosFortes } from "./encerramento";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Relatório de auditoria" };
 
@@ -67,12 +68,9 @@ export default async function Relatorio({
     <article>
       <CabecalhoDaAuditoria auditoria={aud} etapa="entregar" />
       {aviso === "pontos" && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           Pontos fortes salvos.
-        </p>
+        </CaixaDeAlerta>
       )}
 
       <section
@@ -100,7 +98,7 @@ export default async function Relatorio({
             href={`/auditorias/${id}/relatorio/imprimir?modelo=classico`}
             className={botaoPrimario}
           >
-            <Printer aria-hidden size={16} strokeWidth={2} />
+            <Printer aria-hidden size={16} strokeWidth={1.75} />
             PDF clássico
           </Link>
           <Link
@@ -130,7 +128,7 @@ export default async function Relatorio({
               <CircleDashed
                 aria-hidden
                 size={16}
-                strokeWidth={2}
+                strokeWidth={1.75}
                 className="shrink-0 text-atencao"
               />
               <span className="font-semibold">{v.titulo}</span>

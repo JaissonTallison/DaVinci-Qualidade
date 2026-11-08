@@ -117,7 +117,7 @@ export default async function PermissoesDeTrabalho({
             valor={params.tipo}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="permissoes-de-trabalho" consulta={consulta} />

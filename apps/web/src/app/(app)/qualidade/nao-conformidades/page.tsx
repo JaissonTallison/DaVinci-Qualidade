@@ -207,7 +207,7 @@ export default async function ListaDeNcs({
             Só vencidas
           </label>
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
           <BotaoExportar recurso="nao-conformidades" consulta={consulta} />

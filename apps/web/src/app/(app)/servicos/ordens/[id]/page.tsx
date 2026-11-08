@@ -87,7 +87,7 @@ export default async function DetalheDaOs({
               href={`/servicos/ordens/${o.id}/imprimir`}
               className={botaoSecundario}
             >
-              <Printer aria-hidden size={16} strokeWidth={2} />
+              <Printer aria-hidden size={16} strokeWidth={1.75} />
               Relatório da OS
             </Link>
           </div>

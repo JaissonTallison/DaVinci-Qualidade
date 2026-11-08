@@ -8,38 +8,41 @@ const ORDEM = ["aberta", "analisada", "respondida", "encerrada"] as const;
 export function LinhaDoTempoDaReclamacao({ r }: { r: Reclamacao }) {
   const atual = ORDEM.indexOf(r.status as (typeof ORDEM)[number]);
 
-  const passos: { titulo: string; detalhe?: string | null; alerta?: boolean }[] =
-    [
-      {
-        titulo: "Aberta",
-        detalhe: `Recebida em ${formatarData(r.recebidaEm)} · responder até ${formatarData(r.prazoResposta)}`,
-        alerta: r.atrasada,
-      },
-      {
-        titulo: "Analisada",
-        detalhe:
-          r.procedente === null
-            ? "Avaliar se a reclamação procede"
-            : `${r.procedente ? "Procedente" : "Improcedente"}${
-                r.ncNumero ? ` · NC ${r.ncNumero}` : ""
-              }`,
-      },
-      {
-        titulo: "Respondida",
-        detalhe: r.respondidaEm
-          ? `Respondida em ${formatarData(r.respondidaEm)}`
-          : "Comunicar a solução ao cliente",
-      },
-      {
-        titulo: "Encerrada",
-        detalhe:
-          r.clienteSatisfeito === null
-            ? "Confirmar a solução com o cliente"
-            : r.clienteSatisfeito
-              ? "Cliente satisfeito"
-              : "Cliente não satisfeito",
-      },
-    ];
+  const passos: {
+    titulo: string;
+    detalhe?: string | null;
+    alerta?: boolean;
+  }[] = [
+    {
+      titulo: "Aberta",
+      detalhe: `Recebida em ${formatarData(r.recebidaEm)} · responder até ${formatarData(r.prazoResposta)}`,
+      alerta: r.atrasada,
+    },
+    {
+      titulo: "Analisada",
+      detalhe:
+        r.procedente === null
+          ? "Avaliar se a reclamação procede"
+          : `${r.procedente ? "Procedente" : "Improcedente"}${
+              r.ncNumero ? ` · NC ${r.ncNumero}` : ""
+            }`,
+    },
+    {
+      titulo: "Respondida",
+      detalhe: r.respondidaEm
+        ? `Respondida em ${formatarData(r.respondidaEm)}`
+        : "Comunicar a solução ao cliente",
+    },
+    {
+      titulo: "Encerrada",
+      detalhe:
+        r.clienteSatisfeito === null
+          ? "Confirmar a solução com o cliente"
+          : r.clienteSatisfeito
+            ? "Cliente satisfeito"
+            : "Cliente não satisfeito",
+    },
+  ];
 
   return (
     <ol className="mt-4 flex flex-col">
@@ -55,7 +58,7 @@ export function LinhaDoTempoDaReclamacao({ r }: { r: Reclamacao }) {
                 aria-hidden
                 className={`flex size-7 shrink-0 items-center justify-center rounded-sm text-sm font-semibold ${
                   concluido
-                    ? "bg-conforme/12 text-conforme"
+                    ? "bg-conforme-suave text-conforme-texto"
                     : corrente
                       ? alertaCorrente
                         ? "bg-nao-conforme text-primaria-texto"
@@ -63,12 +66,12 @@ export function LinhaDoTempoDaReclamacao({ r }: { r: Reclamacao }) {
                       : "border border-borda-forte text-texto-3"
                 }`}
               >
-                {concluido ? <Check size={15} strokeWidth={2.5} /> : i + 1}
+                {concluido ? <Check size={15} strokeWidth={1.75} /> : i + 1}
               </span>
               {!ultimo && (
                 <span
                   aria-hidden
-                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme/40" : "bg-borda"}`}
+                  className={`w-0.5 flex-1 ${concluido ? "bg-conforme-borda" : "bg-borda"}`}
                 />
               )}
             </div>

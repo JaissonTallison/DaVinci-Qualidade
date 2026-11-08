@@ -103,7 +103,7 @@ export default async function Temas({ searchParams }: PageProps<"/esg/temas">) {
             valor={pilar}
           />
           <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={2} />
+            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
             Filtrar
           </button>
         </form>

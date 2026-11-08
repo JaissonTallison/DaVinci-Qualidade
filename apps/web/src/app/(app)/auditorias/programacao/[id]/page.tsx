@@ -20,6 +20,7 @@ import {
 import { FormularioDaProgramacao } from "../formulario";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Item da programação" };
 
 export default async function EditarItemDaProgramacao({
@@ -50,12 +51,9 @@ export default async function EditarItemDaProgramacao({
           {item.setor} · {item.ano}
         </h1>
         {erro && (
-          <p
-            role="status"
-            className="mt-4 rounded-sm border border-nao-conforme/40 bg-nao-conforme/10 px-4 py-2.5 text-base text-texto"
-          >
+          <CaixaDeAlerta tom="perigo" className="mt-4">
             {erro}
-          </p>
+          </CaixaDeAlerta>
         )}
       </CabecalhoComVoltar>
 

@@ -123,7 +123,7 @@ export default async function Tratar({
                 <p className="mt-2 text-base whitespace-pre-line">
                   {c.descricao}
                 </p>
-                <h3 className="mt-4 text-xs font-semibold tracking-[0.06em] text-texto-2 uppercase">
+                <h3 className="mt-4 text-xs font-semibold tracking-[0.04em] text-texto-2 uppercase">
                   Rastreabilidade
                 </h3>
                 <ol className="mt-2 grid gap-px overflow-hidden rounded-sm border border-borda bg-borda text-sm sm:grid-cols-2 lg:grid-cols-5">

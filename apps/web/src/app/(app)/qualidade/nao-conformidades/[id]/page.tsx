@@ -30,6 +30,7 @@ import { Anexos } from "@/components/anexos";
 import { linkDaOrigem } from "@/lib/origem-nc";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 export const metadata: Metadata = { title: "Não conformidade" };
 
 const AVISOS: Record<string, string> = {
@@ -283,18 +284,14 @@ export default async function DetalheDaNc({
       </CabecalhoComVoltar>
 
       {aviso && AVISOS[aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base text-texto"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {AVISOS[aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
 
       {cancelada && (
-        <section className="mt-6 rounded-md border border-nao-conforme/40 bg-superficie p-5">
-          <p className="font-semibold text-nao-conforme">NC cancelada</p>
-          <p className="mt-1 text-base text-texto-2">
+        <CaixaDeAlerta tom="perigo" titulo="NC cancelada" className="mt-6">
+          <p className="text-base text-texto-2">
             {nc.canceladaEm ? formatarMomento(nc.canceladaEm) : ""}
             {nc.canceladaPorNome ? ` · por ${nc.canceladaPorNome}` : ""}
           </p>
@@ -303,7 +300,7 @@ export default async function DetalheDaNc({
               {nc.motivoCancelamento}
             </p>
           )}
-        </section>
+        </CaixaDeAlerta>
       )}
 
       <nav className="mt-6" aria-label="Etapas da não conformidade">
@@ -454,12 +451,12 @@ function Etapa({
         estado === "atual"
           ? "bg-marinho text-primaria-texto"
           : estado === "concluida"
-            ? "bg-conforme/15 text-conforme"
+            ? "bg-conforme-suave text-conforme-texto"
             : "border border-borda-campo text-texto-3"
       }`}
     >
       {estado === "concluida" ? (
-        <Check aria-hidden size={14} strokeWidth={2.5} />
+        <Check aria-hidden size={14} strokeWidth={1.75} />
       ) : (
         n
       )}
@@ -492,7 +489,7 @@ function Etapa({
           <ChevronDown
             aria-hidden
             size={18}
-            strokeWidth={2}
+            strokeWidth={1.75}
             className="text-texto-3"
           />
         </summary>

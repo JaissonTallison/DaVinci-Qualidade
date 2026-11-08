@@ -130,7 +130,7 @@ export default async function CompetenciasDaFuncao({
             href={`/cadastros/setores-e-funcoes/${id}/descricao`}
             className={botaoSecundario}
           >
-            <Printer aria-hidden size={16} strokeWidth={2} />
+            <Printer aria-hidden size={16} strokeWidth={1.75} />
             Descrição de cargo
           </Link>
         </div>

@@ -32,6 +32,7 @@ import {
   NovoCriterio,
   NovoModeloNc,
 } from "./formularios";
+import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
 export const metadata: Metadata = { title: "Minha biblioteca" };
 
@@ -95,12 +96,9 @@ export default async function MinhaBiblioteca({
         roteiros, na biblioteca e no banco de NCs.
       </p>
       {f.aviso && avisos[f.aviso] && (
-        <p
-          role="status"
-          className="mt-4 rounded-sm border border-borda bg-superficie px-4 py-2.5 text-base"
-        >
+        <CaixaDeAlerta tom="sucesso" className="mt-4">
           {avisos[f.aviso]}
-        </p>
+        </CaixaDeAlerta>
       )}
       {erro && !erro.ok && <AvisoDeErro erro={erro.erro} />}
       <nav aria-label="Minha biblioteca" className={`mt-6 ${trilho}`}>

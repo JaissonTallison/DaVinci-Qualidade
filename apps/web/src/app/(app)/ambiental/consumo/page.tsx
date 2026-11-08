@@ -86,7 +86,7 @@ export default async function Consumo({
             className={botaoSecundario}
             aria-label={`Ano ${ano - 1}`}
           >
-            <ChevronLeft aria-hidden size={16} strokeWidth={2} />
+            <ChevronLeft aria-hidden size={16} strokeWidth={1.75} />
           </Link>
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
@@ -97,7 +97,7 @@ export default async function Consumo({
               className={botaoSecundario}
               aria-label={`Ano ${ano + 1}`}
             >
-              <ChevronRight aria-hidden size={16} strokeWidth={2} />
+              <ChevronRight aria-hidden size={16} strokeWidth={1.75} />
             </Link>
           )}
         </nav>
