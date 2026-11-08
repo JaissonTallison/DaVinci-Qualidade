@@ -119,6 +119,23 @@ export function FormularioNovaNc({
   };
   const secoes = Object.values(SECOES);
 
+  const botoes = (
+    <>
+      <Botao href="/qualidade/nao-conformidades" tamanho="grande">
+        Cancelar
+      </Botao>
+      <Botao
+        type="submit"
+        carregando={salvando}
+        textoCarregando="Abrindo…"
+        variante="primario"
+        tamanho="grande"
+        icone={Plus}
+      >
+        Abrir NC
+      </Botao>
+    </>
+  );
   return (
     <form action={acao} noValidate className="mt-6">
       {erroGeral && (
@@ -432,6 +449,7 @@ export function FormularioNovaNc({
           </SecaoDoCadastro>
         </div>
         <ColunaDeResumo
+          acoes={botoes}
           itens={[
             {
               rotulo: "Origem",
@@ -459,25 +477,14 @@ export function FormularioNovaNc({
         />
       </div>
       <BarraDeAcoes
+        soAbaixoDoComputador
         situacao={
           faltam
             ? `${faltam} ${faltam === 1 ? "campo obrigatório pendente" : "campos obrigatórios pendentes"}`
             : "Campos obrigatórios preenchidos"
         }
       >
-        <Botao href="/qualidade/nao-conformidades" tamanho="grande">
-          Cancelar
-        </Botao>
-        <Botao
-          type="submit"
-          carregando={salvando}
-          textoCarregando="Abrindo…"
-          variante="primario"
-          tamanho="grande"
-          icone={Plus}
-        >
-          Abrir NC
-        </Botao>
+        {botoes}
       </BarraDeAcoes>
     </form>
   );

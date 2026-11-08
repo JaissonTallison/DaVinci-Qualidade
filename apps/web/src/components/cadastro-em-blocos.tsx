@@ -179,8 +179,9 @@ export function Bloco({
 }
 
 /**
- * Corpo do cadastro dentro do `<form>`: blocos à esquerda, coluna de resumo à direita e barra de ações
- * fixa no rodapé. `acoes` são os botões (Cancelar e a ação primária por último).
+ * Corpo do cadastro dentro do `<form>`: blocos à esquerda e, à direita, a coluna de resumo com as ações no
+ * fim do card de preenchimento (fixa ao rolar). Abaixo de 1024 px, as ações vão para a barra de ações.
+ * `acoes` são os botões (Cancelar e a ação primária por último).
  */
 export function CadastroEmBlocos({
   resumo,
@@ -250,9 +251,11 @@ export function CadastroEmBlocos({
             titulo: b.titulo,
             situacao: situacaoDoBloco(b),
           }))}
+          acoes={acoes}
         />
       </div>
       <BarraDeAcoes
+        soAbaixoDoComputador
         situacao={
           total === 0
             ? undefined

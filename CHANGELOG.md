@@ -71,6 +71,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
+- Ações do cadastro saem da faixa solta no rodapé: no computador ficam no fim do card de preenchimento (fixo ao rolar); no tablet e no celular, num card preso ao pé da tela. No modelo de inspeção, o primeiro item passa a ser obrigatório ("inclua ao menos um item").
+
 - **Seções recolhíveis** (`Recolhido`): sem o triângulo do navegador; cabeçalho com ícone da ação, título de 15 px e chevron em quadrado (para cima quando aberto). Conteúdo da função e "Como funciona o ISC" ficam sempre abertos; formulários de cadastro abrem sozinhos quando a lista está vazia; resumos em texto ganham o chevron do Lucide.
 
 - **Cabeçalho de página padrão com régua** (`CabecalhoDaPagina`): faixa branca de ponta a ponta no topo de todas as telas, com identificação, título, voltar, ações, descrição e a régua de indicadores rotulados (Em aberto · Graves · Vencidas; Responsável · Prazo). Listagens de Qualidade, Auditorias, Ambiental, SST e SGI mostram os resumos na régua; avisos e bloqueios saem da faixa.
