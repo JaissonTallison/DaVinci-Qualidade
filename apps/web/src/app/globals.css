@@ -63,8 +63,6 @@ main :is(input, select, textarea) {
 @custom-variant tela-media (@media (max-height: 60rem));
 @custom-variant tela-baixa (@media (max-height: 50rem));
 @custom-variant tela-curta (@media (max-height: 43rem));
-/* Computador com altura para dois cards fixos na coluna de resumo (cadastro): o resumo em cima e as ações embaixo. */
-@custom-variant tela-alta (@media (min-width: 1024px) and (min-height: 56rem));
 
 /*
  * Animações permitidas (interface.md, decisão Q13): uma vez, curtas, só na entrada e no passar do mouse.
