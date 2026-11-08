@@ -1,34 +1,30 @@
 "use client";
 
-import { Plus, X } from "@/components/icones";
+import { Plus, Trash2 } from "@/components/icones";
 import { useState } from "react";
-import { campoCompacto, erroDoCampo } from "@/lib/estilos";
-import { Botao } from "@/components/botao";
+import { areaDeTexto, campo, erroDoCampo } from "@/lib/estilos";
+import { Botao, BotaoIcone } from "@/components/botao";
 
 const COLUNAS = [
-  { nome: "setor", rotulo: "Setor", classe: "min-w-36 flex-[2]", max: 150 },
+  { nome: "setor", rotulo: "Setor", max: 150 },
   {
     nome: "comentarios",
     rotulo: "Comentários",
-    classe: "min-w-40 flex-[3]",
     max: 2000,
   },
   {
     nome: "pontosPositivos",
     rotulo: "Pontos positivos",
-    classe: "min-w-40 flex-[3]",
     max: 2000,
   },
   {
     nome: "observacoes",
     rotulo: "Observações",
-    classe: "min-w-40 flex-[3]",
     max: 2000,
   },
   {
     nome: "naoConformidade",
     rotulo: "Não conformidade",
-    classe: "min-w-40 flex-[3]",
     max: 2000,
   },
 ] as const;
@@ -37,8 +33,10 @@ const COLUNAS = [
 const MAXIMO = 50;
 
 /**
- * Registro rápido por setor: anotações (texto livre) por setor auditado. As linhas vão como
- * `linha_<campo>` repetidos; linha toda vazia é ignorada. Erros chegam como `registroPorSetor.<i>.<campo>`.
+ * Registro rápido por setor: anotações (texto livre) por setor auditado. Cada setor é um quadro com o nome
+ * em cima e as quatro anotações em grade 2 × 2, sem estourar a largura do card. As linhas vão como
+ * `linha_<campo>` repetidos, na ordem dos quadros; linha toda vazia é ignorada. Erros chegam como
+ * `registroPorSetor.<i>.<campo>`.
  */
 export function TabelaPorSetor({
   valores,
@@ -47,62 +45,88 @@ export function TabelaPorSetor({
   valores?: Record<string, string | null | undefined>[];
   erros: Record<string, string>;
 }) {
-  const [linhas, setLinhas] = useState(Math.max(valores?.length ?? 0, 1));
+  // Cada quadro tem uma chave própria: remover o do meio tira aquele, não o último.
+  const [quadros, setQuadros] = useState(() =>
+    Array.from({ length: Math.max(valores?.length ?? 0, 1) }, (_, i) => ({
+      chave: i,
+      iniciais: valores?.[i] ?? {},
+    })),
+  );
+  const [proxima, setProxima] = useState(quadros.length);
+  const [setor, ...anotacoes] = COLUNAS;
   return (
     <div className="flex flex-col gap-3">
-      <div className="hidden gap-2 text-xs text-texto-2 lg:flex">
-        <span className="w-6" />
-        {COLUNAS.map((c) => (
-          <span key={c.nome} className={c.classe}>
-            {c.rotulo}
-          </span>
-        ))}
-        <span className="w-8" />
-      </div>
-      {Array.from({ length: linhas }, (_, i) => (
-        <fieldset
-          key={i}
-          className="flex flex-wrap items-start gap-2 lg:flex-nowrap"
-        >
-          <legend className="sr-only">Setor {i + 1}</legend>
-          <span className="w-6 pt-2 text-right text-sm text-texto-3 max-lg:hidden">
-            {i + 1}.
-          </span>
-          {COLUNAS.map((c) => {
-            const erro = erros[`registroPorSetor.${i}.${c.nome}`];
-            return (
-              <div key={c.nome} className={`flex flex-col gap-1 ${c.classe}`}>
-                <label
-                  className="text-xs text-texto-2 lg:hidden"
-                  htmlFor={`setor-${i}-${c.nome}`}
-                >
-                  {c.rotulo}
-                </label>
-                <input
-                  id={`setor-${i}-${c.nome}`}
+      {quadros.map((q, i) => {
+        const controle = (c: (typeof COLUNAS)[number], area: boolean) => {
+          const erro = erros[`registroPorSetor.${i}.${c.nome}`];
+          const id = `setor-${q.chave}-${c.nome}`;
+          return (
+            <div key={c.nome} className="flex min-w-0 flex-col gap-1.5">
+              <label htmlFor={id} className="text-sm font-medium text-texto">
+                {c.rotulo}
+              </label>
+              {area ? (
+                <textarea
+                  id={id}
                   name={`linha_${c.nome}`}
-                  defaultValue={valores?.[i]?.[c.nome] ?? ""}
+                  rows={2}
+                  defaultValue={q.iniciais[c.nome] ?? ""}
                   maxLength={c.max}
-                  className={`${campoCompacto} w-full`}
+                  className={`${areaDeTexto} min-h-16`}
                   aria-invalid={Boolean(erro)}
                 />
-                {erro && <span className={erroDoCampo}>{erro}</span>}
-              </div>
-            );
-          })}
-          <button
-            type="button"
-            onClick={() => setLinhas((n) => Math.max(n - 1, 1))}
-            aria-label={`Remover o setor ${i + 1}`}
-            className="pt-1.5 text-texto-3 hover:text-nao-conforme"
+              ) : (
+                <input
+                  id={id}
+                  name={`linha_${c.nome}`}
+                  defaultValue={q.iniciais[c.nome] ?? ""}
+                  maxLength={c.max}
+                  list="setores"
+                  className={campo}
+                  aria-invalid={Boolean(erro)}
+                />
+              )}
+              {erro && <span className={erroDoCampo}>{erro}</span>}
+            </div>
+          );
+        };
+        return (
+          <fieldset
+            key={q.chave}
+            className="rounded-md border border-borda bg-superficie-2 p-4"
           >
-            <X aria-hidden size={18} strokeWidth={1.75} />
-          </button>
-        </fieldset>
-      ))}
-      {linhas < MAXIMO && (
+            <legend className="sr-only">Setor {i + 1}</legend>
+            <div className="flex items-end gap-3">
+              <span className="mb-2.5 grid size-6 shrink-0 place-items-center rounded-xs bg-superficie text-xs font-semibold text-texto-2 tabular-nums ring-1 ring-borda">
+                {i + 1}
+              </span>
+              <div className="min-w-0 flex-1">{controle(setor, false)}</div>
+              {quadros.length > 1 && (
+                <BotaoIcone
+                  rotulo={`Remover o setor ${i + 1}`}
+                  icone={Trash2}
+                  className="mb-0.5"
+                  onClick={() =>
+                    setQuadros((qs) => qs.filter((x) => x.chave !== q.chave))
+                  }
+                />
+              )}
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {anotacoes.map((c) => controle(c, true))}
+            </div>
+          </fieldset>
+        );
+      })}
+      {quadros.length < MAXIMO && (
         <div>
-          <Botao onClick={() => setLinhas((n) => n + 1)} icone={Plus}>
+          <Botao
+            onClick={() => {
+              setQuadros((qs) => [...qs, { chave: proxima, iniciais: {} }]);
+              setProxima((n) => n + 1);
+            }}
+            icone={Plus}
+          >
             Incluir setor
           </Botao>
         </div>

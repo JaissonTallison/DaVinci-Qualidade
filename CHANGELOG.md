@@ -71,6 +71,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
+- Cadastro: as ações ganham card próprio no pé da coluna de resumo, alinhado à base do último bloco no fim da rolagem (resumo preso ao topo e ações ao pé só em tela alta). Registro por setor da auditoria em quadros (setor em cima, quatro anotações em grade 2 × 2), sem estourar o card; remover tira o setor certo.
+
 - **Início redesenhado:** régua do dia no cabeçalho; cards de Saúde do sistema de gestão (anel e barra por componente) e Prioridade agora; pendências, gráficos e panorama das auditorias com cabeçalho de card. Corrige o resumo do dia que saía sem o fundo do card (uma variável escondia a classe `painel`).
 
 - Ações do cadastro saem da faixa solta no rodapé: no computador ficam no fim do card de preenchimento (fixo ao rolar); no tablet e no celular, num card preso ao pé da tela. No modelo de inspeção, o primeiro item passa a ser obrigatório ("inclua ao menos um item").
