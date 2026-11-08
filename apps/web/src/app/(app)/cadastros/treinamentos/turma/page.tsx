@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
 import Link from "next/link";
 import type { FuncionarioResumo, Pagina, Treinamento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -28,13 +29,14 @@ export default async function Turma({
       : null;
   return (
     <>
-      <Link href={voltar} className="dv-voltar">
-        {funcionario ? "Profissional" : "Treinamentos"}
-      </Link>
-      <h1 className={`${tituloDaPagina} mt-1`}>Registrar turma</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Marque quem participou. A validade de cada um sai do catálogo.
-      </p>
+      <CabecalhoDeCadastro
+        voltar={{
+          href: voltar,
+          rotulo: funcionario ? "Profissional" : "Treinamentos",
+        }}
+        titulo="Registrar turma"
+        descricao="Registre a turma e quem participou. O treinamento entra na ficha de cada participante."
+      />
       {erro ? (
         <div className="mt-6">
           <AvisoDeErro erro={erro} />
