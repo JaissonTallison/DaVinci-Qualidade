@@ -13,9 +13,10 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { IconeOds, Materialidade } from "@/components/marcadores-esg";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { ImportarCatalogo } from "./importar";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Temas ESG" };
 
@@ -40,26 +41,22 @@ export default async function Temas({ searchParams }: PageProps<"/esg/temas">) {
     : 0;
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Temas ESG</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Os temas ambientais, sociais e de governança da empresa. Dupla
-            materialidade = impacto × relevância (1 a 5 cada); a partir de 15 o
-            tema é material e ganha meta, responsável e prazo.
-          </p>
-        </div>
-        {permissoes.includes("esg.editar") && (
-          <Botao
-            href="/esg/temas/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar tema
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Temas ESG"
+        descricao="Os temas ambientais, sociais e de governança da empresa. Dupla materialidade = impacto × relevância (1 a 5 cada); a partir de 15 o tema é material e ganha meta, responsável e prazo."
+        acoes={
+          permissoes.includes("esg.editar") && (
+            <Botao
+              href="/esg/temas/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar tema
+            </Botao>
+          )
+        }
+      />
       <Aviso
         avisos={{
           importado:

@@ -26,14 +26,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDoAcidente, TipoDoAcidente } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Acidentes" };
 
@@ -99,25 +94,22 @@ export default async function ListaDeAcidentes({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Acidentes</h1>
-          <p className={subtituloDaPagina}>
-            Acidentes e incidentes registrados, com a investigação e a CAT de
-            cada um.
-          </p>
-        </div>
-        {podeRegistrar && (
-          <Botao
-            href={`${BASE}/novo`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Registrar acidente
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Acidentes"
+        descricao="Acidentes e incidentes registrados, com a investigação e a CAT de cada um."
+        acoes={
+          podeRegistrar && (
+            <Botao
+              href={`${BASE}/novo`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Registrar acidente
+            </Botao>
+          )
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form
           className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3"

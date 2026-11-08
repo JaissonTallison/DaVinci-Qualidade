@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import {
-  cabecalhoDoPainel,
-  painel,
-  tituloDaPagina,
-  tituloDoPainel,
-} from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Manual de auditorias" };
 
@@ -213,12 +209,10 @@ const FAQ: [string, ReactNode][] = [
 export default function Manual() {
   return (
     <article>
-      <h1 className={tituloDaPagina}>Manual de auditorias</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Cada etapa alimenta a seguinte: as perguntas do roteiro viram respostas,
-        as respostas viram achados, os achados viram NCs, as NCs viram planos e
-        tudo entra no relatório.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Manual de auditorias"
+        descricao="Cada etapa alimenta a seguinte: as perguntas do roteiro viram respostas, as respostas viram achados, os achados viram NCs, as NCs viram planos e tudo entra no relatório."
+      />
 
       <section className={`${painel} mt-6`}>
         <header className={cabecalhoDoPainel}>

@@ -24,14 +24,15 @@ import {
 } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { AcaoDaEtapa, CancelarNc } from "./acoes";
 import { Anexos } from "@/components/anexos";
 import { linkDaOrigem } from "@/lib/origem-nc";
 
-import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 import { Botao } from "@/components/botao";
+import { Selo } from "@/components/selo";
 export const metadata: Metadata = { title: "Não conformidade" };
 
 const AVISOS: Record<string, string> = {
@@ -247,42 +248,44 @@ export default async function DetalheDaNc({
 
   return (
     <article>
-      <CabecalhoComVoltar
+      <CabecalhoDaPagina
         voltar={{
           href: "/qualidade/nao-conformidades",
           rotulo: "Não conformidades",
         }}
-      >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <span className="font-mono text-base text-texto-2">{nc.numero}</span>
-          <StatusDaNc
-            status={nc.status}
-            vencida={nc.vencida}
-            prazo={nc.prazo}
-          />
-          {nc.ciclos >= 2 && (
-            <span className="text-sm text-atencao">
-              Reincidente: {nc.ciclos}º ciclo de tratamento
+        identificacao={
+          <>
+            <span className="font-mono text-base text-texto-2">
+              {nc.numero}
             </span>
-          )}
-        </header>
-        <h1 className={`${tituloDaPagina} mt-1`}>{nc.titulo}</h1>
-        {/* Resumo rápido da situação */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
-          <GravidadeDaNc gravidade={nc.gravidade} />
-          <span>
-            Responsável:{" "}
-            <span className="font-medium text-texto">{nc.responsavel}</span>
-          </span>
-          <span>
-            Prazo:{" "}
-            <span className="font-medium text-texto">
-              {formatarData(nc.prazo)}
-            </span>
-            {!terminada && !nc.vencida && ` · ${prazoRelativo(nc.prazo)}`}
-          </span>
-        </div>
-      </CabecalhoComVoltar>
+            <StatusDaNc
+              status={nc.status}
+              vencida={nc.vencida}
+              prazo={nc.prazo}
+            />
+            {nc.ciclos >= 2 && (
+              <Selo tom="atencao">Reincidente: {nc.ciclos}º ciclo</Selo>
+            )}
+          </>
+        }
+        titulo={nc.titulo}
+        regua={[
+          {
+            rotulo: "Gravidade",
+            valor: <GravidadeDaNc gravidade={nc.gravidade} />,
+          },
+          { rotulo: "Origem", valor: ORIGENS_NC[nc.origem] },
+          { rotulo: "Responsável", valor: nc.responsavel },
+          {
+            rotulo: "Prazo",
+            valor: formatarData(nc.prazo),
+            tom: nc.vencida ? "perigo" : undefined,
+            detalhe:
+              !terminada && !nc.vencida ? prazoRelativo(nc.prazo) : undefined,
+          },
+          { rotulo: "Aberta em", valor: formatarData(nc.dataAbertura) },
+        ]}
+      />
 
       {aviso && AVISOS[aviso] && (
         <CaixaDeAlerta tom="sucesso" className="mt-4">

@@ -51,7 +51,7 @@ export default async function DetalheDoEquipamento({
           rotulo: "Equipamentos de emergência",
         }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="font-mono text-base text-texto-2">
             {e.identificacao}
           </span>
@@ -76,15 +76,15 @@ export default async function DetalheDoEquipamento({
         <h1 className={`${tituloDaPagina} mt-1`}>
           {NOMES_DAS_CATEGORIAS[e.categoria]} · {e.local}
         </h1>
-        <Aviso
-          avisos={{
-            criado: "Equipamento cadastrado.",
-            salvo: "Equipamento salvo.",
-            inspecionado: "Inspeção registrada.",
-          }}
-          chave={aviso}
-        />
       </CabecalhoComVoltar>
+      <Aviso
+        avisos={{
+          criado: "Equipamento cadastrado.",
+          salvo: "Equipamento salvo.",
+          inspecionado: "Inspeção registrada.",
+        }}
+        chave={aviso}
+      />
       <section
         className={`${painel} mt-6 grid gap-x-8 gap-y-4 p-5 sm:grid-cols-4`}
       >

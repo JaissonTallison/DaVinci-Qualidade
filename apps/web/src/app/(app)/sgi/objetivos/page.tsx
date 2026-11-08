@@ -9,8 +9,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { linkDiscreto, painel, tituloDaPagina } from "@/lib/estilos";
+import { linkDiscreto, painel } from "@/lib/estilos";
 import { LancarMedicao, NovoObjetivo, SituacaoDoObjetivo } from "./acoes";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Objetivos da qualidade" };
 
@@ -37,10 +38,10 @@ export default async function Objetivos({
   const mes = hojeEmBrasilia().slice(0, 7);
   return (
     <>
-      <h1 className={tituloDaPagina}>Objetivos da qualidade</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Cada objetivo com indicador e meta, medido mês a mês (ISO 9001, 6.2).
-      </p>
+      <CabecalhoDaPagina
+        titulo="Objetivos da qualidade"
+        descricao="Cada objetivo com indicador e meta, medido mês a mês (ISO 9001, 6.2)."
+      />
       <Aviso avisos={AVISOS} chave={aviso} />
       {podeEditar && (
         <Recolhido titulo="Cadastrar objetivo">

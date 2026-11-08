@@ -52,7 +52,7 @@ export default async function DetalheDoProduto({
           rotulo: "Produtos químicos",
         }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="text-texto-2">{p.fabricante}</span>
           {p.cas && (
             <span className="font-mono text-sm text-texto-2">CAS {p.cas}</span>
@@ -60,8 +60,8 @@ export default async function DetalheDoProduto({
           {!p.ativo && <span className="text-texto-2">Inativo</span>}
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{p.nome}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           <Dado rotulo="Perigos" largo>

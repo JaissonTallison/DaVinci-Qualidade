@@ -12,8 +12,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Registros de segurança" };
 
@@ -39,26 +40,22 @@ export default async function Registros({
   const r = resumo.ok ? resumo.dados : null;
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Registros de segurança</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            DDS (Diálogo Diário de Segurança), APR (Análise Preliminar de
-            Risco), reuniões da CIPA (Comissão Interna de Prevenção de Acidentes
-            e de Assédio) e simulados de emergência.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/seguranca/registros/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Criar registro
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Registros de segurança"
+        descricao="DDS (Diálogo Diário de Segurança), APR (Análise Preliminar de Risco), reuniões da CIPA (Comissão Interna de Prevenção de Acidentes e de Assédio) e simulados de emergência."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/seguranca/registros/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Criar registro
+            </Botao>
+          )
+        }
+      />
       {r && (
         <section className={`${painel} mt-6 grid gap-4 p-5 sm:grid-cols-3`}>
           <div>

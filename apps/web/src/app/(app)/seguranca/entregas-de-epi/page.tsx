@@ -19,13 +19,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { TabelaDeEntregas } from "@/components/tabela-de-entregas";
 import { chamarApi } from "@/lib/api";
-import {
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Entregas de EPI" };
 
@@ -86,25 +82,22 @@ export default async function EntregasDeEpi({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Entregas de EPI</h1>
-          <p className={subtituloDaPagina}>
-            Entregas de EPI por profissional, com o CA e o termo de
-            responsabilidade de cada uma.
-          </p>
-        </div>
-        {podeEditar && (
-          <Botao
-            href={`/seguranca/entregas-de-epi/nova${params.funcionarioId ? `?funcionario=${params.funcionarioId}` : ""}`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Registrar entrega
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Entregas de EPI"
+        descricao="Entregas de EPI por profissional, com o CA e o termo de responsabilidade de cada uma."
+        acoes={
+          podeEditar && (
+            <Botao
+              href={`/seguranca/entregas-de-epi/nova${params.funcionarioId ? `?funcionario=${params.funcionarioId}` : ""}`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Registrar entrega
+            </Botao>
+          )
+        }
+      />
       <Aviso avisos={AVISOS} chave={params.aviso} />
 
       <section className={`${painel} mt-6`}>

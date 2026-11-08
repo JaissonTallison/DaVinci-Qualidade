@@ -27,14 +27,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaInspecao } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Inspeções" };
 
@@ -102,51 +97,51 @@ export default async function ListaDeInspecoes({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Inspeções</h1>
-          {resumo.ok ? (
-            <>
-              <p className={subtituloDaPagina}>
-                <Link
-                  href={`${BASE}?status=em_andamento`}
-                  className="hover:underline"
-                >
-                  {resumo.dados.emAndamento} em andamento
-                </Link>
-                {resumo.dados.taxaDeAprovacao30Dias !== null &&
-                  ` · aprovação em 30 dias: ${resumo.dados.taxaDeAprovacao30Dias}%`}
-              </p>
-              {resumo.dados.reprovadas30Dias > 0 && (
-                <p className="mt-0.5 text-sm font-semibold text-nao-conforme">
-                  <Link
-                    href={`${BASE}?status=reprovada`}
-                    className="hover:underline"
-                  >
-                    {resumo.dados.reprovadas30Dias === 1
-                      ? "1 reprovada em 30 dias"
-                      : `${resumo.dados.reprovadas30Dias} reprovadas em 30 dias`}
-                  </Link>
-                </p>
-              )}
-            </>
-          ) : (
-            <p className={subtituloDaPagina}>
-              Inspeções de produto e processo, com o resultado de cada uma.
-            </p>
-          )}
-        </div>
-        {podeCriar && (
-          <Botao
-            href={`${BASE}/nova`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Registrar inspeção
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Inspeções"
+        descricao="Inspeções de produto e processo, com o resultado de cada uma."
+        acoes={
+          podeCriar && (
+            <Botao
+              href={`${BASE}/nova`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Registrar inspeção
+            </Botao>
+          )
+        }
+        regua={
+          resumo.ok
+            ? [
+                {
+                  rotulo: "Em andamento",
+                  valor: resumo.dados.emAndamento,
+                  href: `${BASE}?status=em_andamento`,
+                },
+                {
+                  rotulo: "Aprovação",
+                  valor:
+                    resumo.dados.taxaDeAprovacao30Dias === null
+                      ? "—"
+                      : `${resumo.dados.taxaDeAprovacao30Dias}%`,
+                  detalhe: "últimos 30 dias",
+                },
+                {
+                  rotulo: "Reprovadas",
+                  valor: resumo.dados.reprovadas30Dias,
+                  detalhe: "últimos 30 dias",
+                  tom: resumo.dados.reprovadas30Dias > 0 ? "perigo" : undefined,
+                  href:
+                    resumo.dados.reprovadas30Dias > 0
+                      ? `${BASE}?status=reprovada`
+                      : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
 
       <section className={`${painel} mt-6`}>
         <form

@@ -194,7 +194,15 @@ As classes prontas ficam em `lib/estilos.ts`: `campo`, `campoCompacto`, `areaDeT
 
 Menus suspensos: largura fixa, 6 px abaixo do botão, itens de 36 px com canto de 8 px, fecham com `Esc` e clique fora. Botões só com ícone têm `aria-label` e `title`.
 
-**Cabeçalho da página (16/10/2026):** só o título e as ações à direita. O módulo já aparece no caminho da barra superior e não se repete. Abaixo do título, uma linha em vermelho (`Pendencias`) só quando algo pede ação ("1 vencido · 2 reprovados"); com tudo em dia, nada. Nada de faixa de números grandes: isso é painel, não tela de trabalho.
+**Cabeçalho da página (`CabecalhoDaPagina`, 08/11/2026):** toda tela começa com a mesma faixa branca, de ponta a ponta logo abaixo da barra superior, com linha embaixo. De cima para baixo:
+
+1. **Identificação** (registro): número em mono, selo do status e selos de contexto (reincidente).
+2. **Título** de 24 px, com o **voltar** quadrado à esquerda nas telas internas e as **ações** à direita (botões grandes, primário por último).
+3. **Descrição**: uma frase do que a tela faz, em `texto-2`.
+4. **Régua**: os números e dados que resumem a tela, lado a lado, com divisória vertical; rótulo em caixa alta de 12 px e o valor embaixo (número em 18 px, texto em 14 px). Valor que pede ação vai em vermelho e vira link para a lista filtrada. Listagem: contagens (Em aberto · Graves · Vencidas). Detalhe: dados do registro (Gravidade · Origem · Responsável · Prazo · Aberta em).
+5. **Abas**, quando há, encostadas na linha de baixo.
+
+Aviso de confirmação e alerta de bloqueio ficam logo abaixo da faixa, não dentro. Telas antigas com cabeçalho próprio usam `CabecalhoComVoltar` (mesma faixa, com `regua` opcional).
 
 ```text
 ┌────────────┬──────────────────────────────────────────────────────────────┐

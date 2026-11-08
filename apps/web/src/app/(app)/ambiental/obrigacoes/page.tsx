@@ -10,12 +10,13 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import {
   CumprirObrigacao,
   ExcluirObrigacao,
   NovaObrigacao,
 } from "./formularios";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Obrigações legais" };
 
@@ -40,15 +41,10 @@ export default async function Obrigacoes({
   const hoje = hojeEmBrasilia();
   return (
     <>
-      <h1 className={tituloDaPagina}>Obrigações legais</h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        RAPP (relatório anual de atividades potencialmente poluidoras), TCFA
-        (taxa de controle e fiscalização ambiental), certificado do CTF
-        (cadastro técnico federal), inventário de resíduos,
-        automonitoramento, outorga: cada obrigação com o órgão, a periodicidade
-        e o responsável. Registrar a entrega guarda o comprovante e agenda o
-        próximo vencimento, que entra no painel.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Obrigações legais"
+        descricao="RAPP (relatório anual de atividades potencialmente poluidoras), TCFA (taxa de controle e fiscalização ambiental), certificado do CTF (cadastro técnico federal), inventário de resíduos, automonitoramento, outorga: cada obrigação com o órgão, a periodicidade e o responsável. Registrar a entrega guarda o comprovante e agenda o próximo vencimento, que entra no painel."
+      />
       <Aviso
         avisos={{
           criada: "Obrigação incluída no calendário.",

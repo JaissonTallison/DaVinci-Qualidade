@@ -5,8 +5,9 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarMomento } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { NovoUsuario } from "./novo-usuario";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Usuários" };
 
@@ -17,11 +18,10 @@ export default async function Usuarios() {
   ]);
   return (
     <>
-      <h1 className={tituloDaPagina}>Usuários</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Quem acessa o sistema nesta empresa e com qual perfil. Tirar o acesso
-        não apaga nada do que a pessoa registrou.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Usuários"
+        descricao="Quem acessa o sistema nesta empresa e com qual perfil. Tirar o acesso não apaga nada do que a pessoa registrou."
+      />
       {perfis.ok && (
         <Recolhido titulo="Cadastrar usuário">
           <NovoUsuario perfis={perfis.dados} />

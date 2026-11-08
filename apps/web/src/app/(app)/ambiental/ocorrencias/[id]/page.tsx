@@ -55,7 +55,7 @@ export default async function DetalheDaOcorrencia({
           rotulo: "Ocorrências ambientais",
         }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="font-mono text-base text-texto-2">{o.numero}</span>
           <span>{aberta ? "Aberta" : "Encerrada"}</span>
           {o.comunicacaoAtrasada && (
@@ -67,8 +67,8 @@ export default async function DetalheDaOcorrencia({
         <h1 className={`${tituloDaPagina} mt-1`}>
           {TIPOS_DE_OCORRENCIA[o.tipo]}: {o.substancia}
         </h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section
         className={`${painel} mt-6 grid gap-x-8 gap-y-4 p-5 sm:grid-cols-4`}
       >

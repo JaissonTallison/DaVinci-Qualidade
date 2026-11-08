@@ -12,8 +12,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { AtendimentoDoRequisito } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Requisitos legais" };
 
@@ -31,31 +32,34 @@ export default async function Requisitos({
   const vencidas = r.ok ? r.dados.filter((x) => x.avaliacaoVencida).length : 0;
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Requisitos legais</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Legislação aplicável e a avaliação de atendimento, refeita ao menos
-            uma vez por ano.
-            {r.ok && vencidas > 0 && (
-              <span className="text-nao-conforme">
-                {" "}
-                {vencidas} com avaliação vencida.
-              </span>
-            )}
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/ambiental/requisitos/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar requisito
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Requisitos legais"
+        descricao="Legislação aplicável e a avaliação de atendimento, refeita ao menos uma vez por ano."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/ambiental/requisitos/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar requisito
+            </Botao>
+          )
+        }
+        regua={
+          r.ok
+            ? [
+                { rotulo: "Requisitos", valor: r.dados.length },
+                {
+                  rotulo: "Avaliação vencida",
+                  valor: vencidas,
+                  tom: vencidas > 0 ? "perigo" : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3">
           <SelecaoDeFiltro

@@ -71,6 +71,8 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
+- **Cabeçalho de página padrão com régua** (`CabecalhoDaPagina`): faixa branca de ponta a ponta no topo de todas as telas, com identificação, título, voltar, ações, descrição e a régua de indicadores rotulados (Em aberto · Graves · Vencidas; Responsável · Prazo). Listagens de Qualidade, Auditorias, Ambiental, SST e SGI mostram os resumos na régua; avisos e bloqueios saem da faixa.
+
 - **Botão padrão** (`Botao`, `BotaoIcone`): variantes primário, secundário, fantasma, perigo e link em três tamanhos (40 px no cabeçalho e na barra do cadastro, 36 px no corpo, 30 px na tabela), com carregando e motivo de desabilitado. Os botões de todas as telas passam a usá-lo; os de criar trocam o ícone da tela do menu por `Plus`, cada ação tem ícone fixo e os verbos seguem Abrir / Registrar / Cadastrar. O ESLint recusa classe de botão solta e o ícone do menu fora da navegação.
 
 - Barra superior no padrão do design system: 56 px com linha de baixo, trilha na mesma caixa em todos os níveis, busca de 300 px, Novo como botão secundário, painel de notificações de 400 px, menu do usuário com avatar redondo, empresa ativa com CNPJ e check, e Sair em vermelho.

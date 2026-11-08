@@ -12,15 +12,11 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Bloco } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import {
-  cabecalhoDoPainel,
-  painel,
-  tituloDaPagina,
-  tituloDoPainel,
-} from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import { FormularioDeConsumo } from "./formulario";
 import { GraficoDeConsumo } from "./grafico";
 import { BotaoIcone } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Consumo de água e energia" };
 const MESES = [
@@ -72,34 +68,33 @@ export default async function Consumo({
   const custoTotal = dados.reduce((t, c) => t + (c.custo ?? 0), 0);
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Consumo de água e energia</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Leitura mensal de água, energia e combustíveis, uma por fonte e mês.
-            Os combustíveis e a energia alimentam o inventário de GEE.
-          </p>
-        </div>
-        <nav aria-label="Ano" className="flex items-center gap-2">
-          <BotaoIcone
-            href={`/ambiental/consumo?ano=${ano - 1}`}
-            rotulo={`Ano ${ano - 1}`}
-            variante="secundario"
-            icone={ChevronLeft}
-          />
-          <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
-            {ano}
-          </span>
-          {ano < anoAtual && (
-            <BotaoIcone
-              href={`/ambiental/consumo?ano=${ano + 1}`}
-              rotulo={`Ano ${ano + 1}`}
-              variante="secundario"
-              icone={ChevronRight}
-            />
-          )}
-        </nav>
-      </header>
+      <CabecalhoDaPagina
+        titulo="Consumo de água e energia"
+        descricao="Leitura mensal de água, energia e combustíveis, uma por fonte e mês. Os combustíveis e a energia alimentam o inventário de GEE."
+        acoes={
+          <>
+            <nav aria-label="Ano" className="flex items-center gap-2">
+              <BotaoIcone
+                href={`/ambiental/consumo?ano=${ano - 1}`}
+                rotulo={`Ano ${ano - 1}`}
+                variante="secundario"
+                icone={ChevronLeft}
+              />
+              <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
+                {ano}
+              </span>
+              {ano < anoAtual && (
+                <BotaoIcone
+                  href={`/ambiental/consumo?ano=${ano + 1}`}
+                  rotulo={`Ano ${ano + 1}`}
+                  variante="secundario"
+                  icone={ChevronRight}
+                />
+              )}
+            </nav>
+          </>
+        }
+      />
       <Aviso avisos={{ registrado: "Leitura registrada." }} chave={aviso} />
       {podeEditar && (
         <Bloco

@@ -57,15 +57,15 @@ export default async function DetalheDaLicenca({
       <CabecalhoComVoltar
         voltar={{ href: "/ambiental/licencas", rotulo: "Licenças" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="text-texto-2">{l.orgao}</span>
           <SituacaoDaLicenca situacao={l.situacao} />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>
           {TIPOS_LICENCA[l.tipo]} nº {l.numero}
         </h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           {l.descricao && (

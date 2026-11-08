@@ -4,9 +4,10 @@ import type { AnaliseCritica, DadosDoUsuario, ResumoSgi } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { Plus } from "@/components/icones";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Análises críticas" };
 
@@ -19,30 +20,40 @@ export default async function Analises() {
   const podeCriar = eu.ok && eu.dados.permissoes.includes("sgi.editar");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Análises críticas pela direção</h1>
-          {resumo.ok && (
-            <p
-              className={`mt-1 text-base ${resumo.dados.analiseCriticaAtrasada ? "text-nao-conforme" : "text-texto-2"}`}
+      <CabecalhoDaPagina
+        titulo="Análises críticas pela direção"
+        descricao="Análises críticas do sistema de gestão: o que foi analisado e o que foi decidido (ISO 9001, 9.3)."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/sgi/analises-criticas/nova"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
             >
-              {resumo.dados.proximaAnaliseCritica
-                ? `Próxima prevista para ${formatarData(resumo.dados.proximaAnaliseCritica)}${resumo.dados.analiseCriticaAtrasada ? " · atrasada" : ""}`
-                : "Nenhuma análise crítica registrada."}
-            </p>
-          )}
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/sgi/analises-criticas/nova"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Registrar análise
-          </Botao>
-        )}
-      </header>
+              Registrar análise
+            </Botao>
+          )
+        }
+        regua={
+          resumo.ok
+            ? [
+                {
+                  rotulo: "Próxima prevista",
+                  valor: resumo.dados.proximaAnaliseCritica
+                    ? formatarData(resumo.dados.proximaAnaliseCritica)
+                    : "Não registrada",
+                  tom: resumo.dados.analiseCriticaAtrasada
+                    ? "perigo"
+                    : undefined,
+                  detalhe: resumo.dados.analiseCriticaAtrasada
+                    ? "atrasada"
+                    : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
       <section className={`${painel} mt-6`}>
         {!lista.ok ? (
           <div className="p-4">

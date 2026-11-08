@@ -28,14 +28,9 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaAuditoria } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  subtituloDaPagina,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Auditorias" };
 
@@ -112,52 +107,40 @@ export default async function ListaDeAuditorias({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Auditorias</h1>
-          {resumo.ok ? (
-            <>
-              <p className={subtituloDaPagina}>
-                {plural(resumo.dados.planejadas, "planejada", "planejadas")}
-                {" · "}
-                {resumo.dados.emAndamento} em andamento
-              </p>
-              {(atrasadasNaPagina > 0 || aFormalizarNaPagina > 0) && (
-                <p className="mt-0.5 text-sm font-semibold">
-                  {atrasadasNaPagina > 0 && (
-                    <span className="text-nao-conforme">
-                      {plural(atrasadasNaPagina, "atrasada", "atrasadas")}
-                    </span>
-                  )}
-                  {atrasadasNaPagina > 0 && aFormalizarNaPagina > 0 && (
-                    <span className="text-texto-3"> · </span>
-                  )}
-                  {aFormalizarNaPagina > 0 && (
-                    <span className="text-atencao">
-                      {aFormalizarNaPagina} NC a formalizar
-                    </span>
-                  )}
-                </p>
-              )}
-            </>
-          ) : (
-            <p className={subtituloDaPagina}>
-              Programação e resultado das auditorias internas e externas do
-              sistema de gestão.
-            </p>
-          )}
-        </div>
-        {podeCriar && (
-          <Botao
-            href={`${BASE}/nova`}
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Planejar auditoria
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Auditorias"
+        descricao="Programação e resultado das auditorias internas e externas do sistema de gestão."
+        acoes={
+          podeCriar && (
+            <Botao
+              href={`${BASE}/nova`}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Planejar auditoria
+            </Botao>
+          )
+        }
+        regua={
+          resumo.ok
+            ? [
+                { rotulo: "Planejadas", valor: resumo.dados.planejadas },
+                { rotulo: "Em andamento", valor: resumo.dados.emAndamento },
+                {
+                  rotulo: "Atrasadas",
+                  valor: atrasadasNaPagina,
+                  tom: atrasadasNaPagina > 0 ? "perigo" : undefined,
+                },
+                {
+                  rotulo: "NC a formalizar",
+                  valor: aFormalizarNaPagina,
+                  tom: aFormalizarNaPagina > 0 ? "atencao" : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form
           className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3"

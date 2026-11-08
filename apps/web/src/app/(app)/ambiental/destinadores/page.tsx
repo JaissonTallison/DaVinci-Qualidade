@@ -37,16 +37,16 @@ export default async function Destinadores({
           licença vencida na data. A licença que vence em até 60 dias aparece em
           destaque e no painel.
         </p>
-        <Aviso
-          avisos={{ criado: "Cadastrado.", salvo: "Salvo." }}
-          chave={aviso}
-        />
         {podeEditar && (
           <Recolhido titulo="Cadastrar transportador ou destinador">
             <NovoDestinador />
           </Recolhido>
         )}
       </CabecalhoComVoltar>
+      <Aviso
+        avisos={{ criado: "Cadastrado.", salvo: "Salvo." }}
+        chave={aviso}
+      />
       <section className={`${painel} mt-6`}>
         {!r.ok ? (
           <div className="p-4">

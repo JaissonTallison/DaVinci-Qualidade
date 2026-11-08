@@ -3,9 +3,10 @@ import Link from "next/link";
 import type { Perfil } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { Plus } from "@/components/icones";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Perfis de acesso" };
 
@@ -13,23 +14,22 @@ export default async function Perfis() {
   const lista = await chamarApi<Perfil[]>("/perfis");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Perfis de acesso</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Cada usuário tem um perfil, e o perfil diz o que ele pode ver e
-            fazer.
-          </p>
-        </div>
-        <Botao
-          href="/administracao/perfis/novo"
-          variante="primario"
-          tamanho="grande"
-          icone={Plus}
-        >
-          Criar perfil
-        </Botao>
-      </header>
+      <CabecalhoDaPagina
+        titulo="Perfis de acesso"
+        descricao="Cada usuário tem um perfil, e o perfil diz o que ele pode ver e fazer."
+        acoes={
+          <>
+            <Botao
+              href="/administracao/perfis/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Criar perfil
+            </Botao>
+          </>
+        }
+      />
       <section className={`${painel} mt-6`}>
         {!lista.ok ? (
           <div className="p-4">

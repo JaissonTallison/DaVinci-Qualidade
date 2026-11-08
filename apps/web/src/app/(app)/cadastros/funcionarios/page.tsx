@@ -10,13 +10,9 @@ import type {
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  campoCompacto,
-  linkDiscreto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, linkDiscreto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Profissionais" };
 
@@ -50,25 +46,22 @@ export default async function ListaDeFuncionarios({
 
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Profissionais</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            O cadastro que a segurança do trabalho usa: entregas de EPI,
-            treinamentos e exames saem daqui.
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/cadastros/funcionarios/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar profissional
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Profissionais"
+        descricao="O cadastro que a segurança do trabalho usa: entregas de EPI, treinamentos e exames saem daqui."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/cadastros/funcionarios/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar profissional
+            </Botao>
+          )
+        }
+      />
 
       <section className={`${painel} mt-6`}>
         <form

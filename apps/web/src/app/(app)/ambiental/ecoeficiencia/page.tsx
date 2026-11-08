@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import type { DadosDoUsuario, Ecoeficiencia as Eco } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { RegistrarProducao } from "./formulario";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
+import { ChevronLeft, ChevronRight } from "@/components/icones";
 
 export const metadata: Metadata = { title: "Ecoeficiência" };
 
@@ -46,23 +47,26 @@ export default async function Ecoeficiencia({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   return (
     <>
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h1 className={tituloDaPagina}>Ecoeficiência {ano}</h1>
-        <nav aria-label="Ano" className="flex gap-3 text-sm">
-          <Link href={`?ano=${ano - 1}`} className="text-info hover:underline">
-            {ano - 1}
-          </Link>
-          <Link href={`?ano=${ano + 1}`} className="text-info hover:underline">
-            {ano + 1}
-          </Link>
-        </nav>
-      </div>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        O consumo de água e energia vem de Consumo, os resíduos das saídas (em
-        kg) e as emissões dos fatores do inventário de GEE. Divididos pela
-        produção do mês, mostram se a operação está ficando mais eficiente, não
-        só se produziu menos.
-      </p>
+      <CabecalhoDaPagina
+        titulo={`Ecoeficiência ${ano}`}
+        descricao="O consumo de água e energia vem de Consumo, os resíduos das saídas (em kg) e as emissões dos fatores do inventário de GEE. Divididos pela produção do mês, mostram se a operação está ficando mais eficiente, não só se produziu menos."
+        acoes={
+          <nav aria-label="Ano" className="flex items-center gap-2">
+            <BotaoIcone
+              href={`?ano=${ano - 1}`}
+              rotulo={`Ano ${ano - 1}`}
+              variante="secundario"
+              icone={ChevronLeft}
+            />
+            <BotaoIcone
+              href={`?ano=${ano + 1}`}
+              rotulo={`Ano ${ano + 1}`}
+              variante="secundario"
+              icone={ChevronRight}
+            />
+          </nav>
+        }
+      />
       <Aviso avisos={{ producao: "Produção registrada." }} chave={f.aviso} />
       {podeEditar && (
         <Recolhido titulo="Registrar produção do mês">

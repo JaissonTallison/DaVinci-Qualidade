@@ -11,13 +11,14 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
-import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { campoCompacto, painel } from "@/lib/estilos";
 import { Suspense } from "react";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { CAPITULOS, PACKS, filtrosDaBiblioteca } from "./filtros";
 import { ListaDeEvidencias } from "./lista";
 import { NovaEvidenciaPropria } from "./nova";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Biblioteca de evidências" };
 
@@ -35,16 +36,10 @@ export default async function Biblioteca({
   const anexoA = f.norma === "iso27001" || f.clausula === "A";
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Biblioteca de evidências</h1>
-          <p className="mt-1 max-w-3xl text-base text-texto-2">
-            O que apresentar em cada cláusula das normas: tipo de evidência,
-            risco se ela não existir, o que pedir e um exemplo aceitável. Na ISO
-            27001, filtre pelo tema e pelo controle do Anexo A.
-          </p>
-        </div>
-      </header>
+      <CabecalhoDaPagina
+        titulo="Biblioteca de evidências"
+        descricao="O que apresentar em cada cláusula das normas: tipo de evidência, risco se ela não existir, o que pedir e um exemplo aceitável. Na ISO 27001, filtre pelo tema e pelo controle do Anexo A."
+      />
       <Aviso
         avisos={{ evidencia: "Evidência salva na biblioteca." }}
         chave={f.aviso}

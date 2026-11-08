@@ -51,13 +51,13 @@ export default async function DetalheDaInovacao({
       <CabecalhoComVoltar
         voltar={{ href: "/sgi/inovacao", rotulo: "Gestão de inovação" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="font-mono text-base text-texto-2">{m.numero}</span>
           <StatusDaMudanca status={m.status} />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{m.titulo}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6`}>
         <header className={cabecalhoDoPainel}>
           <h2 className={tituloDoPainel}>Linha do tempo</h2>

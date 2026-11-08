@@ -9,10 +9,11 @@ import {
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { textoDoLimite } from "./limites";
 import { Plus } from "@/components/icones";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Monitoramentos" };
 
@@ -27,31 +28,34 @@ export default async function Monitoramentos() {
     : 0;
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Monitoramentos</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Efluentes, emissões, ruído e outros parâmetros com limite e
-            periodicidade de coleta. Cada resultado é comparado com o limite.
-            {fora > 0 && (
-              <span className="text-nao-conforme">
-                {" "}
-                {fora === 1 ? "1 fora do limite." : `${fora} fora do limite.`}
-              </span>
-            )}
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/ambiental/monitoramentos/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar monitoramento
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Monitoramentos"
+        descricao="Efluentes, emissões, ruído e outros parâmetros com limite e periodicidade de coleta. Cada resultado é comparado com o limite."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/ambiental/monitoramentos/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar monitoramento
+            </Botao>
+          )
+        }
+        regua={
+          r.ok
+            ? [
+                { rotulo: "Pontos monitorados", valor: r.dados.length },
+                {
+                  rotulo: "Fora do limite",
+                  valor: fora,
+                  tom: fora > 0 ? "perigo" : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
       <section className={`${painel} mt-6`}>
         {!r.ok ? (
           <div className="p-4">

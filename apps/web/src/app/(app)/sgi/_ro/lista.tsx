@@ -10,9 +10,10 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { ClasseDoRo } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import type { ConfigRo } from "./config";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export async function ListaDeRo({
   cfg,
@@ -36,19 +37,24 @@ export async function ListaDeRo({
   const temFiltro = Boolean(params.classe || params.situacao);
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>{cfg.titulo}</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            {cfg.subtitulo}
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao href={`${cfg.base}/novo`} variante="primario" icone={Plus}>
-            {cfg.registrar}
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo={cfg.titulo}
+        descricao={cfg.subtitulo}
+        acoes={
+          <>
+            {podeCriar && (
+              <Botao
+                tamanho="grande"
+                href={`${cfg.base}/novo`}
+                variante="primario"
+                icone={Plus}
+              >
+                {cfg.registrar}
+              </Botao>
+            )}
+          </>
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3">
           <SelecaoDeFiltro

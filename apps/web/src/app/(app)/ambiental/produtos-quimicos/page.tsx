@@ -10,8 +10,9 @@ import {
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { campoCompacto, painel } from "@/lib/estilos";
 import { Botao } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Produtos químicos" };
 
@@ -33,33 +34,34 @@ export default async function Produtos({
   const vencidas = r.ok ? r.dados.filter((p) => p.fdsVencida).length : 0;
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>Produtos químicos</h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Inventário com os perigos da FDS (GHS) e onde cada produto fica. A
-            FDS é conferida com o fornecedor a cada 5 anos.
-            {vencidas > 0 && (
-              <span className="text-nao-conforme">
-                {" "}
-                {vencidas === 1
-                  ? "1 FDS para revisar."
-                  : `${vencidas} FDS para revisar.`}
-              </span>
-            )}
-          </p>
-        </div>
-        {podeCriar && (
-          <Botao
-            href="/ambiental/produtos-quimicos/novo"
-            variante="primario"
-            tamanho="grande"
-            icone={Plus}
-          >
-            Cadastrar produto
-          </Botao>
-        )}
-      </header>
+      <CabecalhoDaPagina
+        titulo="Produtos químicos"
+        descricao="Inventário com os perigos da FDS (GHS) e onde cada produto fica. A FDS é conferida com o fornecedor a cada 5 anos."
+        acoes={
+          podeCriar && (
+            <Botao
+              href="/ambiental/produtos-quimicos/novo"
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
+            >
+              Cadastrar produto
+            </Botao>
+          )
+        }
+        regua={
+          r.ok
+            ? [
+                { rotulo: "Produtos", valor: r.dados.length },
+                {
+                  rotulo: "FDS para revisar",
+                  valor: vencidas,
+                  tom: vencidas > 0 ? "perigo" : undefined,
+                },
+              ]
+            : undefined
+        }
+      />
       <section className={`${painel} mt-6`}>
         <form className="flex flex-wrap items-end gap-3 border-b border-borda px-4 py-3">
           <select

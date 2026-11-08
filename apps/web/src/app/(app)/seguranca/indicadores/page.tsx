@@ -5,14 +5,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { FaixaDeIndicadores } from "@/components/faixa-de-indicadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import {
-  cabecalhoDoPainel,
-  painel,
-  tituloDaPagina,
-  tituloDoPainel,
-} from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import { LancarHoras } from "./lancar-horas";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Indicadores de SST" };
 
@@ -60,34 +56,30 @@ export default async function Indicadores({
 
   return (
     <>
-      <header className="flex flex-wrap items-baseline justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>
-            Indicadores de SST (segurança e saúde no trabalho) · {ano}
-          </h1>
-          <p className="mt-1 text-base text-texto-2">
-            Taxas por milhão de horas-homem trabalhadas (NBR 14280). Mês sem
-            horas lançadas fica sem taxa, mas seus acidentes e dias continuam no
-            total do ano.
-          </p>
-        </div>
-        <nav aria-label="Ano" className="flex gap-4 text-base">
-          <Link
-            href={`/seguranca/indicadores?ano=${ano - 1}`}
-            className="text-texto-2 hover:underline"
-          >
-            {ano - 1}
-          </Link>
-          {ano < anoAtual && (
-            <Link
-              href={`/seguranca/indicadores?ano=${ano + 1}`}
-              className="text-texto-2 hover:underline"
-            >
-              {ano + 1}
-            </Link>
-          )}
-        </nav>
-      </header>
+      <CabecalhoDaPagina
+        titulo={<>Indicadores de SST (segurança e saúde no trabalho) · {ano}</>}
+        descricao="Taxas por milhão de horas-homem trabalhadas (NBR 14280). Mês sem horas lançadas fica sem taxa, mas seus acidentes e dias continuam no total do ano."
+        acoes={
+          <>
+            <nav aria-label="Ano" className="flex gap-4 text-base">
+              <Link
+                href={`/seguranca/indicadores?ano=${ano - 1}`}
+                className="text-texto-2 hover:underline"
+              >
+                {ano - 1}
+              </Link>
+              {ano < anoAtual && (
+                <Link
+                  href={`/seguranca/indicadores?ano=${ano + 1}`}
+                  className="text-texto-2 hover:underline"
+                >
+                  {ano + 1}
+                </Link>
+              )}
+            </nav>
+          </>
+        }
+      />
       {aviso === "horas" && (
         <CaixaDeAlerta tom="sucesso" className="mt-4">
           Horas lançadas.

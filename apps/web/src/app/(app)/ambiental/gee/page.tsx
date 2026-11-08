@@ -11,10 +11,11 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { FormularioDeFator } from "./formulario";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 import { BotaoIcone } from "@/components/botao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Inventário de GEE" };
 const t = (n: number) =>
@@ -42,37 +43,33 @@ export default async function Gee({
   const podeEditar = eu.ok && eu.dados.permissoes.includes("ambiental.editar");
   return (
     <>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className={tituloDaPagina}>
-            Inventário de GEE (gases de efeito estufa)
-          </h1>
-          <p className="mt-1 max-w-2xl text-base text-texto-2">
-            Emissões de gases de efeito estufa calculadas a partir do consumo:
-            escopo 1 (combustíveis queimados na empresa) e escopo 2 (energia
-            elétrica comprada). Emissão = consumo × fator de emissão do ano.
-          </p>
-        </div>
-        <nav aria-label="Ano" className="flex items-center gap-2">
-          <BotaoIcone
-            href={`/ambiental/gee?ano=${ano - 1}`}
-            rotulo={`Ano ${ano - 1}`}
-            variante="secundario"
-            icone={ChevronLeft}
-          />
-          <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
-            {ano}
-          </span>
-          {ano < anoAtual && (
-            <BotaoIcone
-              href={`/ambiental/gee?ano=${ano + 1}`}
-              rotulo={`Ano ${ano + 1}`}
-              variante="secundario"
-              icone={ChevronRight}
-            />
-          )}
-        </nav>
-      </header>
+      <CabecalhoDaPagina
+        titulo="Inventário de GEE (gases de efeito estufa)"
+        descricao="Emissões de gases de efeito estufa calculadas a partir do consumo: escopo 1 (combustíveis queimados na empresa) e escopo 2 (energia elétrica comprada). Emissão = consumo × fator de emissão do ano."
+        acoes={
+          <>
+            <nav aria-label="Ano" className="flex items-center gap-2">
+              <BotaoIcone
+                href={`/ambiental/gee?ano=${ano - 1}`}
+                rotulo={`Ano ${ano - 1}`}
+                variante="secundario"
+                icone={ChevronLeft}
+              />
+              <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
+                {ano}
+              </span>
+              {ano < anoAtual && (
+                <BotaoIcone
+                  href={`/ambiental/gee?ano=${ano + 1}`}
+                  rotulo={`Ano ${ano + 1}`}
+                  variante="secundario"
+                  icone={ChevronRight}
+                />
+              )}
+            </nav>
+          </>
+        }
+      />
       <Aviso
         avisos={{ fator: "Fator salvo. O inventário foi recalculado." }}
         chave={aviso}

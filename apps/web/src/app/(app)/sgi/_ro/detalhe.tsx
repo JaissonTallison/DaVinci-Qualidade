@@ -41,7 +41,7 @@ export async function DetalheDoRo({
   return (
     <article>
       <CabecalhoComVoltar voltar={{ href: cfg.base, rotulo: cfg.titulo }}>
-        <header className="flex flex-wrap items-baseline gap-x-4">
+        <header className="flex flex-wrap items-center gap-x-3">
           <span className="text-texto-2">{cfg.classe}:</span>
           <ClasseDoRo classe={x.classe} />
           <span className="text-texto-2">
@@ -50,8 +50,8 @@ export async function DetalheDoRo({
           </span>
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{x.descricao}</h1>
-        <Aviso avisos={AVISOS} chave={aviso} />
       </CabecalhoComVoltar>
+      <Aviso avisos={AVISOS} chave={aviso} />
       <section className={`${painel} mt-6 p-5`}>
         <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-3">
           {x.contexto && (

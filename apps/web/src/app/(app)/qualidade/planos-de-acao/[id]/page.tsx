@@ -10,7 +10,7 @@ import {
   type PlanoDeAcao,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Progresso, StatusDoPlano } from "@/components/marcadores";
+import { StatusDoPlano } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
 import {
@@ -66,35 +66,30 @@ export default async function DetalheDoPlano({
     <article>
       <CabecalhoComVoltar
         voltar={{ href: "/qualidade/planos-de-acao", rotulo: "Planos de ação" }}
+        regua={[
+          { rotulo: "Responsável", valor: p.responsavel },
+          {
+            rotulo: "Prazo",
+            valor: formatarData(p.prazo),
+            tom: p.atrasado ? "perigo" : undefined,
+            detalhe: terminado ? undefined : prazoRelativo(p.prazo),
+          },
+          {
+            rotulo: "Tarefas concluídas",
+            valor: `${p.tarefas.filter((t) => t.situacao === "concluida").length} de ${p.tarefas.filter((t) => t.situacao !== "cancelada").length}`,
+          },
+          { rotulo: "Progresso", valor: `${p.progresso}%` },
+        ]}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">{p.numero}</span>
           <StatusDoPlano
             status={p.status}
             atrasado={p.atrasado}
             prazo={p.prazo}
           />
-          <Progresso
-            valor={p.progresso}
-            feitos={p.tarefas.filter((t) => t.situacao === "concluida").length}
-            total={p.tarefas.filter((t) => t.situacao !== "cancelada").length}
-          />
         </header>
         <h1 className={`${tituloDaPagina} mt-1`}>{p.titulo}</h1>
-        {/* Resumo rápido: responsável e prazo do plano logo abaixo do título. */}
-        <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-1 text-base text-texto-2">
-          <span>
-            Responsável:{" "}
-            <span className="font-medium text-texto">{p.responsavel}</span>
-          </span>
-          <span>
-            Prazo:{" "}
-            <span className="font-medium text-texto">
-              {formatarData(p.prazo)}
-            </span>
-            {!terminado && ` · ${prazoRelativo(p.prazo)}`}
-          </span>
-        </div>
       </CabecalhoComVoltar>
 
       <section className={`${painel} mt-6`}>

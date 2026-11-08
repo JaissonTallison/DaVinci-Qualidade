@@ -89,7 +89,7 @@ export default async function DetalheDoAcidente({
       <CabecalhoComVoltar
         voltar={{ href: "/seguranca/acidentes", rotulo: "Acidentes" }}
       >
-        <header className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <header className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <span className="font-mono text-base text-texto-2">{a.numero}</span>
           <StatusDoAcidente status={a.status} />
           <TipoDoAcidente tipo={a.tipo} />

@@ -47,15 +47,15 @@ export default async function DetalheDoPrograma({
         }}
       >
         <h1 className={tituloDaPagina}>{p.nome}</h1>
-        <Aviso
-          avisos={{
-            criado: "Programa criado.",
-            salvo: "Programa salvo.",
-            medido: "Medição registrada.",
-          }}
-          chave={aviso}
-        />
       </CabecalhoComVoltar>
+      <Aviso
+        avisos={{
+          criado: "Programa criado.",
+          salvo: "Programa salvo.",
+          medido: "Medição registrada.",
+        }}
+        chave={aviso}
+      />
       <section
         className={`${painel} mt-6 grid gap-x-8 gap-y-4 p-5 sm:grid-cols-4`}
       >

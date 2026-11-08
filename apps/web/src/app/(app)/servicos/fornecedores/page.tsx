@@ -14,13 +14,9 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  cabecalhoDoPainel,
-  painel,
-  tituloDaPagina,
-  tituloDoPainel,
-} from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import { FormularioDeAvaliacao } from "./formulario";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Avaliação de fornecedores" };
 const COR = {
@@ -70,12 +66,10 @@ export default async function Fornecedores({
   const historico = r.ok ? r.dados.filter((a) => !a.vigente) : [];
   return (
     <>
-      <h1 className={tituloDaPagina}>Avaliação de fornecedores</h1>
-      <p className="mt-1 max-w-2xl text-base text-texto-2">
-        Média dos quatro critérios: 4 ou mais, aprovado (reavaliar em 12 meses);
-        de 3 a 4, aprovado com restrição (6 meses); abaixo de 3, reprovado (3
-        meses). Vale a avaliação mais recente.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Avaliação de fornecedores"
+        descricao="Média dos quatro critérios: 4 ou mais, aprovado (reavaliar em 12 meses); de 3 a 4, aprovado com restrição (6 meses); abaixo de 3, reprovado (3 meses). Vale a avaliação mais recente."
+      />
       <Aviso avisos={{ avaliado: "Avaliação registrada." }} chave={aviso} />
       {podeEditar && fornecedores.ok && (
         <Recolhido titulo="Avaliar fornecedor">

@@ -11,9 +11,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { painel, tituloDaPagina } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { NovoContrato } from "./formularios";
 import { COR_DA_SITUACAO } from "./situacao";
+import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 
 export const metadata: Metadata = { title: "Contratos e SLA" };
 
@@ -27,14 +28,10 @@ export default async function Contratos() {
   const podeEditar = eu.ok && eu.dados.permissoes.includes("servicos.editar");
   return (
     <>
-      <h1 className={tituloDaPagina}>
-        Contratos e SLA (acordo de nível de serviço)
-      </h1>
-      <p className="mt-1 max-w-3xl text-base text-texto-2">
-        Cada contrato define o prazo de atendimento (SLA) das OS abertas nele e
-        a meta de OS concluídas no prazo. O cumprimento é medido nos últimos 12
-        meses; o fim da vigência entra no painel de vencimentos 60 dias antes.
-      </p>
+      <CabecalhoDaPagina
+        titulo="Contratos e SLA (acordo de nível de serviço)"
+        descricao="Cada contrato define o prazo de atendimento (SLA) das OS abertas nele e a meta de OS concluídas no prazo. O cumprimento é medido nos últimos 12 meses; o fim da vigência entra no painel de vencimentos 60 dias antes."
+      />
       {podeEditar && clientes.ok && (
         <Recolhido titulo="Novo contrato">
           <NovoContrato clientes={clientes.dados.itens} />
