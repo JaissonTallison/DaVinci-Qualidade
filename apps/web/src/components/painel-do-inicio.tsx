@@ -43,10 +43,10 @@ export function PainelDoInicio({
 
   return (
     <div
-      className="dv-entrar rounded-md bg-superficie p-5 shadow-cartao"
+      className="dv-entrar rounded-md bg-superficie shadow-cartao"
       style={{ "--atraso": "150ms" } as CSSProperties}
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex min-h-14 flex-wrap items-center justify-between gap-3 border-b border-borda px-5 py-3">
         <div>
           <h2 className="text-md font-semibold text-texto">
             {mensalAtivo === "insp"
@@ -80,7 +80,7 @@ export function PainelDoInicio({
           </div>
         )}
       </div>
-      <div className="mt-3">
+      <div className="p-5">
         {mensalAtivo === "insp" && inspecoesPorMes ? (
           <>
             <ColunasAgrupadas

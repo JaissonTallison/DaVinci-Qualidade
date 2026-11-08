@@ -2,6 +2,9 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import type { Prazo } from "@davinci/types";
 import { ChevronRight } from "@/components/icones";
+import { Botao } from "@/components/botao";
+import { Selo } from "@/components/selo";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 
 /** Rótulo do tipo para o chip (o resto já vem pronto de `Prazo.tipo`). */
 const ROTULO_TIPO: Record<string, string> = { NC: "Não conformidade" };
@@ -42,64 +45,56 @@ export function PendenciasCriticas({
 
   return (
     <div className="dv-entrar" style={{ "--atraso": "150ms" } as CSSProperties}>
-      <section
-        className="rounded-md bg-superficie p-5 shadow-cartao"
-        aria-label="Precisa da sua atenção"
-      >
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="text-md font-semibold text-texto">
+      <section className={painel} aria-labelledby="pendencias-titulo">
+        <header className={`${cabecalhoDoPainel} flex-wrap justify-between`}>
+          <div className="min-w-0">
+            <h2 id="pendencias-titulo" className={tituloDoPainel}>
               Precisa da sua atenção
             </h2>
             <p className="text-sm text-texto-2">
-              Pendências críticas do sistema
+              Os prazos vencidos há mais tempo, de todos os módulos.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <span aria-hidden className="h-9 w-px bg-borda" />
-            <span className="text-3xl font-semibold text-nao-conforme tabular-nums">
-              {String(vencidos.length).padStart(2, "0")}
-            </span>
-            <span className="text-sm leading-tight text-texto-2">
-              itens
-              <br />
-              em atraso
-            </span>
-          </div>
-        </div>
+          <Selo tom="perigo">
+            {vencidos.length} {vencidos.length === 1 ? "item" : "itens"} em
+            atraso
+          </Selo>
+        </header>
 
-        <ul className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <ul className="grid gap-3 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {itens.map((it, i) => (
             <li key={`${it.href}-${i}`}>
               <Link
                 href={it.href}
-                className="flex h-full flex-col rounded-md border border-nao-conforme-borda bg-nao-conforme-suave p-3 transition-colors hover:bg-nao-conforme-suave"
+                className="group flex h-full flex-col rounded-md border border-borda bg-superficie p-4 shadow-xs transition-colors hover:border-borda-forte hover:bg-superficie-2"
               >
-                <span className="text-xs font-semibold text-texto-2">
-                  {it.codigo ?? " "}
+                <span className="flex items-center justify-between gap-2">
+                  <span className="truncate font-mono text-xs text-texto-2">
+                    {it.codigo ?? it.tipo}
+                  </span>
+                  <Selo tom="perigo">
+                    {it.dias} {it.dias === 1 ? "dia" : "dias"}
+                  </Selo>
                 </span>
-                <span className="mt-1.5 text-2xl leading-none font-semibold text-nao-conforme tabular-nums">
-                  {it.dias} {it.dias === 1 ? "dia" : "dias"}
-                </span>
-                <span className="text-xs text-texto-2">em atraso</span>
-                <span className="mt-2 flex-1 text-sm leading-snug text-texto">
+                <span className="mt-3 line-clamp-3 flex-1 text-base leading-snug font-medium text-texto group-hover:underline">
                   {it.descricao}
                 </span>
-                <span className="mt-2.5 inline-flex w-fit items-center rounded-sm border border-borda bg-superficie px-2 py-1 text-xs text-texto-2">
-                  {it.tipo}
-                </span>
+                <span className="mt-3 text-xs text-texto-2">{it.tipo}</span>
               </Link>
             </li>
           ))}
         </ul>
 
-        <Link
-          href="/paineis/vencimentos"
-          className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-acao hover:underline"
-        >
-          Ver todos os registros
-          <ChevronRight aria-hidden size={14} strokeWidth={1.75} />
-        </Link>
+        <div className="border-t border-borda px-5 py-3">
+          <Botao
+            href="/paineis/vencimentos"
+            variante="link"
+            tamanho="pequeno"
+            iconeDireita={ChevronRight}
+          >
+            Ver todos os vencimentos
+          </Botao>
+        </div>
       </section>
     </div>
   );
