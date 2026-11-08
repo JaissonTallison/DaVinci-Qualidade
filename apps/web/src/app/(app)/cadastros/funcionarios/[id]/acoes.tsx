@@ -2,7 +2,8 @@
 
 import type { Funcionario } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import {
   desligarFuncionario,
   readmitirFuncionario,

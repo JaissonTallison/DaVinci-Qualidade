@@ -2,7 +2,8 @@
 
 import type { Acidente } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Bloco, Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import {
   cancelarAcidente,
   concluirInvestigacao,

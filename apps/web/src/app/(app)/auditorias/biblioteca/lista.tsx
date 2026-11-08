@@ -21,7 +21,7 @@ export function ListaDeEvidencias({
       {evidencias.map((e) => (
         <li key={e.codigo} className="break-inside-avoid px-4 py-2.5">
           <details open={impressao} className="group">
-            <summary className="flex cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1">
+            <summary className="flex dv-abrir cursor-pointer list-none flex-wrap items-center gap-x-3 gap-y-1">
               <span className="w-28 shrink-0 text-sm font-semibold text-texto-2">
                 {NORMAS[e.norma]}
               </span>

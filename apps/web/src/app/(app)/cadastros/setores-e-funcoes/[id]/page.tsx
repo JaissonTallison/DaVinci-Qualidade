@@ -16,7 +16,7 @@ import {
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { SituacaoDoRequisitoMarcador } from "@/components/situacao-do-requisito";
 import { chamarApi } from "@/lib/api";
 import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
@@ -139,7 +139,7 @@ export default async function CompetenciasDaFuncao({
       {matrizE && !matrizE.ok && <AvisoDeErro erro={matrizE.erro} />}
 
       {editaTreinos && (
-        <Recolhido titulo="Descrição do cargo (ISO 9001 7.2)">
+        <Recolhido fixo titulo="Descrição do cargo (ISO 9001 7.2)">
           <DescricaoDoCargoDaFuncao
             funcaoId={id}
             descricao={{
@@ -242,7 +242,7 @@ export default async function CompetenciasDaFuncao({
       </section>
 
       {treinos?.ok && (
-        <Recolhido titulo="Treinamentos exigidos">
+        <Recolhido fixo titulo="Treinamentos exigidos">
           <TreinamentosDaFuncao
             funcaoId={id}
             catalogo={treinos.dados}
@@ -252,6 +252,7 @@ export default async function CompetenciasDaFuncao({
       )}
       {editaEpis && riscos?.ok && riscosDaFuncao?.ok && (
         <Recolhido
+          fixo
           titulo={`Riscos do PGR da função (${riscosDaFuncao.dados.length})`}
         >
           <RiscosDaFuncao
@@ -268,6 +269,7 @@ export default async function CompetenciasDaFuncao({
       )}
       {editaEpis && ordem?.ok && (
         <Recolhido
+          fixo
           titulo={
             ordem.dados
               ? "Ordem de serviço de segurança (NR-1)"
@@ -278,7 +280,7 @@ export default async function CompetenciasDaFuncao({
         </Recolhido>
       )}
       {epis?.ok && riscos?.ok && (
-        <Recolhido titulo="EPIs exigidos (ligados ao PGR)">
+        <Recolhido fixo titulo="EPIs exigidos (ligados ao PGR)">
           <EpisDaFuncao
             funcaoId={id}
             catalogo={epis.dados}

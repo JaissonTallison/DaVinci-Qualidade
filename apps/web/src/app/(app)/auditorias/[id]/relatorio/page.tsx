@@ -144,7 +144,7 @@ export default async function Relatorio({
           ))}
         </ul>
         <details className="mt-2 text-sm">
-          <summary className="cursor-pointer text-info">
+          <summary className="dv-abrir cursor-pointer text-info">
             Ver todas as {revisao.length} verificações
           </summary>
           <ul className="mt-2 grid gap-1 sm:grid-cols-2">

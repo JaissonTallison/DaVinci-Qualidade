@@ -1,4 +1,4 @@
-import { Check, ChevronDown, Plus } from "@/components/icones";
+import { Check, ChevronDown, ChevronUp, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -486,16 +486,25 @@ function Etapa({
   // Concluída: recolhida por padrão, acessível para consulta.
   if (estado === "concluida" && children) {
     return (
-      <details className={`${painel} mt-4`}>
-        <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4">
+      <details className={`${painel} group mt-4`}>
+        <summary className="flex cursor-pointer list-none items-center gap-3 rounded-md px-5 py-4 transition-colors hover:bg-superficie-2 group-open:rounded-b-none [&::-webkit-details-marker]:hidden">
           {marca}
           {cabecalho}
-          <ChevronDown
+          <span
             aria-hidden
-            size={18}
-            strokeWidth={1.75}
-            className="text-texto-3"
-          />
+            className="grid size-7 shrink-0 place-items-center rounded-campo border border-borda-campo bg-superficie text-texto-2 shadow-xs"
+          >
+            <ChevronDown
+              size={16}
+              strokeWidth={1.75}
+              className="group-open:hidden"
+            />
+            <ChevronUp
+              size={16}
+              strokeWidth={1.75}
+              className="hidden group-open:block"
+            />
+          </span>
         </summary>
         <div className="border-t border-borda px-5 py-4">{children}</div>
       </details>

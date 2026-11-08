@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { DadosDoUsuario, Epi } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { ValidadeDoCa } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { campoCompacto, painel } from "@/lib/estilos";
@@ -39,7 +39,10 @@ export default async function CatalogoDeEpis({
       />
       <Aviso avisos={{ criado: "EPI cadastrado no catálogo." }} chave={aviso} />
       {podeEditar && (
-        <Recolhido titulo="Cadastrar EPI">
+        <Recolhido
+          titulo="Cadastrar EPI"
+          aberto={lista.ok && lista.dados.length === 0}
+        >
           <FormularioDeEpi />
         </Recolhido>
       )}

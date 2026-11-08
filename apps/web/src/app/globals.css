@@ -442,6 +442,30 @@ main :is(input, select, textarea) {
     background: var(--color-superficie-2);
   }
 
+  /* Detalhes sem o triângulo do navegador: quem abre mostra o chevron do Lucide (Recolhido ou .dv-abrir). */
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  /* Resumo em texto ("Ver histórico", "Registrar entrega"): chevron para baixo fechado, para cima aberto. */
+  summary.dv-abrir::after {
+    content: "";
+    display: inline-block;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    margin-left: 0.375rem;
+    vertical-align: -2px;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m6%209%206%206%206-6'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
+  details[open] > summary.dv-abrir::after {
+    mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.75'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m18%2015-6-6-6%206'/%3E%3C/svg%3E");
+  }
+
   /* Caixa de marcar e rádio nativos: 16 px, marcados no azul da marca. */
   input:is([type="checkbox"], [type="radio"]) {
     width: 1rem;

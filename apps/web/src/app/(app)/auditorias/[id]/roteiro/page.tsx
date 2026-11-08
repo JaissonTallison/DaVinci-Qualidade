@@ -13,7 +13,7 @@ import {
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { StatusDaAuditoria } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import {

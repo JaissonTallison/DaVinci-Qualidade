@@ -8,7 +8,8 @@ import {
   type Auditoria,
 } from "@davinci/types";
 import { Campo } from "@/components/campo";
-import { Bloco, Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Bloco, Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { Selecao } from "@/components/selecao";
 import {
   cancelarAuditoria,

@@ -1,7 +1,8 @@
 "use client";
 
 import type { Epi } from "@davinci/types";
-import { Formulario, Recolhido } from "@/components/formulario-de-acao";
+import { Formulario } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { mudarSituacaoDoEpi } from "@/lib/acoes-epis";
 
 export function SituacaoDoEpi({ epi }: { epi: Epi }) {

@@ -8,7 +8,7 @@ import {
   type ParceiroResumo,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import { painel } from "@/lib/estilos";
@@ -33,7 +33,7 @@ export default async function Contratos() {
         descricao="Cada contrato define o prazo de atendimento (SLA) das OS abertas nele e a meta de OS concluídas no prazo. O cumprimento é medido nos últimos 12 meses; o fim da vigência entra no painel de vencimentos 60 dias antes."
       />
       {podeEditar && clientes.ok && (
-        <Recolhido titulo="Novo contrato">
+        <Recolhido titulo="Novo contrato" aberto={r.ok && r.dados.length === 0}>
           <NovoContrato clientes={clientes.dados.itens} />
         </Recolhido>
       )}

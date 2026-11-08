@@ -9,7 +9,7 @@ import {
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { SignificanciaDoAspecto } from "@/components/marcadores-ambientais";
 import { atualizarAspecto } from "@/lib/acoes-ambiental";
 import { chamarApi } from "@/lib/api";

@@ -7,7 +7,7 @@ import {
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import { painel } from "@/lib/estilos";
@@ -53,7 +53,10 @@ export default async function Obrigacoes({
         chave={aviso}
       />
       {podeEditar && (
-        <Recolhido titulo="Nova obrigação">
+        <Recolhido
+          titulo="Nova obrigação"
+          aberto={r.ok && r.dados.length === 0}
+        >
           <NovaObrigacao />
         </Recolhido>
       )}

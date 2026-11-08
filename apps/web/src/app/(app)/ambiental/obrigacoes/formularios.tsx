@@ -143,7 +143,9 @@ export function CumprirObrigacao({
 }) {
   return (
     <details className="text-sm">
-      <summary className="cursor-pointer text-info">Registrar entrega</summary>
+      <summary className="dv-abrir cursor-pointer text-info">
+        Registrar entrega
+      </summary>
       <div className="mt-2">
         <Formulario
           acao={cumprirObrigacao.bind(null, o.id)}

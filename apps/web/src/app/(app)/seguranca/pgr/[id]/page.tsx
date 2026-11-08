@@ -11,7 +11,7 @@ import {
 } from "@davinci/types";
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { NivelDoRisco } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";

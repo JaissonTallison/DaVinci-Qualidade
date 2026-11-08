@@ -289,6 +289,8 @@ O "ID do erro" é o `digest` do Next, o mesmo que fica no log do servidor.
 | **Estado vazio**                      | Ícone de 28 px em `texto-3`, título do que falta, uma frase e o botão que resolve                                                                                           |
 | **Botões** (`Botao`)                  | Ver §8.1. Verbo + objeto: "Abrir NC", "Liberar permissão". Um primário por área, em azul da marca                                                                           |
 
+| **Seção recolhível** (`Recolhido`) | Card com cabeçalho clicável: ícone pelo verbo do título (`plus` cria, `pencil` edita, `ban` cancela ou inativa, `rotate-ccw` reativa, `book-open` leitura), título de 15 px e o chevron num quadrado à direita (para baixo fechado, para cima aberto). Sem o triângulo do navegador. `aberto` abre ao carregar (ex.: formulário de cadastro quando a lista está vazia); `fixo` não recolhe, para conteúdo que a pessoa sempre precisa ver (descrição do cargo, treinamentos e EPIs da função, como funciona o ISC). Resumo em texto ("Ver histórico") usa `dv-abrir`, que põe o chevron depois do texto |
+
 ### 8.1 Botões
 
 Todo botão é o componente `Botao` (`components/botao.tsx`); só com ícone, `BotaoIcone`. O ESLint recusa classe de botão solta em `className`.

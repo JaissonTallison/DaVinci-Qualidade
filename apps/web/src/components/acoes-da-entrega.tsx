@@ -104,7 +104,7 @@ function Janela({
     (estado.erro.detalhes?.[0]?.mensagem ?? estado.erro.mensagem);
   return (
     <details className="relative inline-block text-left" open={Boolean(erro)}>
-      <summary className="cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
+      <summary className="dv-abrir cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
         {rotulo}
       </summary>
       <div className="absolute right-0 z-10 mt-1 w-72 rounded-md bg-superficie p-3 shadow-sm">

@@ -10,7 +10,7 @@ import {
   type RoteiroDaAuditoria,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { Recolhido } from "@/components/formulario-de-acao";
+import { Recolhido } from "@/components/recolhido";
 import { TipoDaConstatacao } from "@/components/marcadores";
 import { RespostaMarcador } from "@/components/marcadores-auditoria";
 import { chamarApi } from "@/lib/api";

@@ -65,7 +65,7 @@ export function BancoDePerguntas({
                 {p.origem === "propria" && " · minha pergunta"}
               </p>
               <details className="mt-1 text-sm">
-                <summary className="cursor-pointer text-info">
+                <summary className="dv-abrir cursor-pointer text-info">
                   Resposta esperada e sinal de alerta
                 </summary>
                 <p className="mt-1">
