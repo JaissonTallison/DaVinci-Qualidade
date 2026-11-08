@@ -9,6 +9,7 @@ import { painel } from "@/lib/estilos";
 import { RegistrarProducao } from "./formulario";
 import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
 import { ChevronLeft, ChevronRight } from "@/components/icones";
+import { BotaoIcone } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Ecoeficiência" };
 
