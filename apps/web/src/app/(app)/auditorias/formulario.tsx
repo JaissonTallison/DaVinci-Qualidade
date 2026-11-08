@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, type ReactNode } from "react";
 import {
   NORMAS,
@@ -10,11 +11,13 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import { salvarAuditoria, type EstadoDaAcao } from "@/lib/acoes-auditorias";
 import {
   areaDeTexto,
   botaoPrimario,
+  botaoSecundario,
   campo,
   painel,
 } from "@/lib/estilos";
@@ -22,12 +25,21 @@ import { errosPorCampo } from "@/lib/formularios";
 import { TabelaPorSetor } from "./tabela-por-setor";
 
 /** Agrupa campos relacionados sob um subtítulo sóbrio, para o planejamento ler como etapas. */
+/** id do bloco a partir do título, para o atalho da coluna de resumo. */
+const idDoBloco = (titulo: string) =>
+  titulo
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+/** Um bloco do cadastro (interface.md §7.2): os campos empilhados dentro do painel da seção. */
 function Secao({ titulo, children }: { titulo: string; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-5">
-      <h2 className="text-sm font-semibold text-texto-2">{titulo}</h2>
-      {children}
-    </section>
+    <Bloco id={idDoBloco(titulo)} titulo={titulo}>
+      <div className="flex flex-col gap-5">{children}</div>
+    </Bloco>
   );
 }
 
@@ -64,11 +76,42 @@ export function FormularioDeAuditoria({
   const erroGeral =
     estado.erro && !estado.erro.detalhes?.length ? estado.erro : undefined;
   return (
-    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
+    <form action={acao} noValidate className={embutido ? "" : "mt-6"}>
       {auditoria && (
         <input type="hidden" name="versao" value={auditoria.versao} />
       )}
-      <div className={`flex flex-col gap-8 ${embutido ? "" : "p-5"}`}>
+      <CadastroEmBlocos
+        embutido={embutido}
+        acoesEmbutido={
+          <button type="submit" className={botaoPrimario} disabled={salvando}>
+            {salvando
+              ? "Salvando…"
+              : auditoria
+                ? "Salvar planejamento"
+                : "Planejar auditoria"}
+          </button>
+        }
+        resumo={[
+          { rotulo: "Tipo", campo: "tipo" },
+          { rotulo: "Início", campo: "dataInicio" },
+          { rotulo: "Fim", campo: "dataFim" },
+          { rotulo: "Auditor líder", campo: "auditorLider" },
+        ]}
+        acoes={
+          <>
+            <Link href="/auditorias" className={botaoSecundario}>
+              Cancelar
+            </Link>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : auditoria
+                  ? "Salvar planejamento"
+                  : "Planejar auditoria"}
+            </button>
+          </>
+        }
+      >
         {erroGeral && <AvisoDeErro erro={erroGeral} />}
 
         <Secao titulo="A auditoria">
@@ -76,6 +119,7 @@ export function FormularioDeAuditoria({
             <Campo id="tipo" rotulo="Tipo *" erro={erros.tipo}>
               <Selecao
                 id="tipo"
+                required
                 name="tipo"
                 defaultValue={v.tipo ?? ""}
                 className={campo}
@@ -94,6 +138,7 @@ export function FormularioDeAuditoria({
             <Campo id="dataInicio" rotulo="Início *" erro={erros.dataInicio}>
               <input
                 id="dataInicio"
+                required
                 name="dataInicio"
                 type="date"
                 defaultValue={v.dataInicio ?? hoje}
@@ -104,6 +149,7 @@ export function FormularioDeAuditoria({
             <Campo id="dataFim" rotulo="Fim *" erro={erros.dataFim}>
               <input
                 id="dataFim"
+                required
                 name="dataFim"
                 type="date"
                 defaultValue={v.dataFim ?? hoje}
@@ -123,6 +169,7 @@ export function FormularioDeAuditoria({
           >
             <textarea
               id="escopo"
+              required
               name="escopo"
               rows={2}
               defaultValue={v.escopo}
@@ -172,6 +219,7 @@ export function FormularioDeAuditoria({
             >
               <input
                 id="auditorLider"
+                required
                 name="auditorLider"
                 list="pessoas"
                 defaultValue={v.auditorLider}
@@ -254,22 +302,7 @@ export function FormularioDeAuditoria({
           </p>
           <TabelaPorSetor valores={linhasPorSetor} erros={erros} />
         </Secao>
-
-        <p className="text-sm text-texto-3">
-          Os campos com <span aria-hidden>*</span> são obrigatórios.
-        </p>
-      </div>
-      <div
-        className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
-      >
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando
-            ? "Salvando…"
-            : auditoria
-              ? "Salvar planejamento"
-              : "Planejar auditoria"}
-        </button>
-      </div>
+      </CadastroEmBlocos>
     </form>
   );
 }

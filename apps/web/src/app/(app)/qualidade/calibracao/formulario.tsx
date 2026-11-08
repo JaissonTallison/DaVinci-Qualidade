@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles } from "@/components/icones";
+import Link from "next/link";
 import { useActionState, useState, type ReactNode } from "react";
 import {
   GRANDEZAS_DE_MEDICAO,
@@ -11,8 +11,9 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
+import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { salvarInstrumento, type EstadoDaAcao } from "@/lib/acoes-calibracao";
-import { botaoPrimario, campo, painel } from "@/lib/estilos";
+import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { CATALOGO_DE_CALIBRACAO } from "./catalogo";
 
@@ -58,7 +59,8 @@ const CAMPOS = [
     grupo: "medicao",
     max: 200,
     colunas: "sm:col-span-2",
-    ajuda: "É com ele que o certificado é aprovado ou reprovado. Ex.: ± 0,02 mm.",
+    ajuda:
+      "É com ele que o certificado é aprovado ou reprovado. Ex.: ± 0,02 mm.",
   },
   {
     nome: "erroMaximoAdmissivel",
@@ -105,7 +107,16 @@ const CAMPOS = [
   },
 ] as const;
 
-/** Agrupa campos relacionados sob um subtítulo sóbrio, com uma orientação curta. */
+/** id do bloco a partir do título, para o atalho da coluna de resumo. */
+const idDoBloco = (titulo: string) =>
+  titulo
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+/** Um bloco do cadastro (interface.md §7.2) com os campos em grade de três colunas. */
 function Secao({
   titulo,
   descricao,
@@ -116,31 +127,12 @@ function Secao({
   children: ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-sm font-semibold text-texto-2">{titulo}</h2>
-        <p className="mt-0.5 text-sm text-texto-3">{descricao}</p>
-      </div>
+    <Bloco id={idDoBloco(titulo)} titulo={titulo} descricao={descricao}>
       <div className="grid gap-5 sm:grid-cols-3">{children}</div>
-    </section>
+    </Bloco>
   );
 }
 
-/** Preenche os campos do formulário a partir de um item do catálogo. */
-function doModelo(item: ItemDoCatalogoDeCalibracao): Record<string, string> {
-  return {
-    tag: item.tagSugerida ? `${item.tagSugerida}-` : "",
-    descricao: item.instrumento,
-    grandeza: item.grandeza,
-    unidade: item.unidade,
-    faixa: item.faixa,
-    criterioAceitacao: item.criterioAceitacao,
-    normaReferencia: item.normaReferencia,
-    frequenciaMeses: String(item.frequenciaMeses),
-  };
-}
-
-/** Cadastrar (sem `instrumento`) ou editar um instrumento. */
 export function FormularioDeInstrumento({
   instrumento,
   embutido = false,
@@ -194,6 +186,7 @@ export function FormularioDeInstrumento({
       >
         <input
           id={c.nome}
+          required={c.rotulo.includes("*")}
           name={c.nome}
           list={"lista" in c ? c.lista : undefined}
           defaultValue={valor(c.nome)}
@@ -205,72 +198,94 @@ export function FormularioDeInstrumento({
     ));
 
   return (
-    <form action={acao} noValidate className={embutido ? "" : `${painel} mt-6`}>
+    <form action={acao} noValidate className={embutido ? "" : "mt-6"}>
       {instrumento && (
         <input type="hidden" name="versao" value={instrumento.versao} />
       )}
 
-      {!instrumento && (
-        <div
-          className={`border-b border-borda ${embutido ? "mb-5 pb-5" : "px-5 pt-5 pb-5"}`}
-        >
-          <p className="flex items-center gap-2 text-sm font-semibold text-texto">
-            <Sparkles aria-hidden size={16} strokeWidth={2} className="text-acao" />
-            Começar de um modelo do seu ramo (opcional)
-          </p>
-          <p className="mt-1 text-sm text-texto-2">
-            Escolha o ramo e o instrumento: os campos abaixo são preenchidos com
-            valores típicos (grandeza, faixa, critério, frequência, norma). Você
-            ajusta tudo ao seu equipamento.
-          </p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            <select
-              aria-label="Ramo"
-              value={ramo}
-              onChange={(e) => {
-                setRamo(e.target.value as RamoDeCalibracao | "");
-                setModelo(null);
-              }}
-              className={campo}
-            >
-              <option value="">Ramo…</option>
-              {Object.entries(RAMOS_DE_CALIBRACAO).map(([k, nome]) => (
-                <option key={k} value={k}>
-                  {nome}
-                </option>
-              ))}
-            </select>
-            <select
-              aria-label="Instrumento do catálogo"
-              value=""
-              disabled={!ramo}
-              onChange={(e) => {
-                const i = itensDoRamo[Number(e.target.value)];
-                if (i) {
-                  setModelo(doModelo(i));
-                  setMontagem((m) => m + 1);
-                  setEnvioDoModelo(estado);
-                }
-              }}
-              className={`${campo} disabled:opacity-60`}
-            >
-              <option value="">
-                {ramo ? "Escolha o instrumento…" : "Escolha o ramo primeiro"}
-              </option>
-              {itensDoRamo.map((i, idx) => (
-                <option key={idx} value={idx}>
-                  {i.instrumento} · {GRANDEZAS_DE_MEDICAO[i.grandeza]}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      )}
-
-      <div
+      <CadastroEmBlocos
         key={montagem}
-        className={`flex flex-col gap-8 ${embutido ? "" : "p-5"}`}
+        embutido={embutido}
+        acoesEmbutido={
+          <button type="submit" className={botaoPrimario} disabled={salvando}>
+            {salvando
+              ? "Salvando…"
+              : instrumento
+                ? "Salvar instrumento"
+                : "Cadastrar instrumento"}
+          </button>
+        }
+        resumo={[
+          { rotulo: "TAG", campo: "tag" },
+          { rotulo: "Descrição", campo: "descricao" },
+          { rotulo: "Grandeza", campo: "grandeza" },
+          { rotulo: "Frequência (meses)", campo: "frequenciaMeses" },
+        ]}
+        acoes={
+          <>
+            <Link href="/qualidade/calibracao" className={botaoSecundario}>
+              Cancelar
+            </Link>
+            <button type="submit" className={botaoPrimario} disabled={salvando}>
+              {salvando
+                ? "Salvando…"
+                : instrumento
+                  ? "Salvar instrumento"
+                  : "Cadastrar instrumento"}
+            </button>
+          </>
+        }
       >
+        {!instrumento && (
+          <Bloco
+            id="modelo-do-ramo"
+            titulo="Começar de um modelo do seu ramo"
+            descricao="Escolha o ramo e o instrumento: os campos abaixo são preenchidos com valores típicos (grandeza, faixa, critério, frequência, norma). Você ajusta tudo ao seu equipamento."
+          >
+            <div className="grid gap-3 sm:grid-cols-2">
+              <select
+                aria-label="Ramo"
+                value={ramo}
+                onChange={(e) => {
+                  setRamo(e.target.value as RamoDeCalibracao | "");
+                  setModelo(null);
+                }}
+                className={campo}
+              >
+                <option value="">Ramo…</option>
+                {Object.entries(RAMOS_DE_CALIBRACAO).map(([k, nome]) => (
+                  <option key={k} value={k}>
+                    {nome}
+                  </option>
+                ))}
+              </select>
+              <select
+                aria-label="Instrumento do catálogo"
+                value=""
+                disabled={!ramo}
+                onChange={(e) => {
+                  const i = itensDoRamo[Number(e.target.value)];
+                  if (i) {
+                    setModelo(doModelo(i));
+                    setMontagem((m) => m + 1);
+                    setEnvioDoModelo(estado);
+                  }
+                }}
+                className={`${campo} disabled:opacity-60`}
+              >
+                <option value="">
+                  {ramo ? "Escolha o instrumento…" : "Escolha o ramo primeiro"}
+                </option>
+                {itensDoRamo.map((i, idx) => (
+                  <option key={idx} value={idx}>
+                    {i.instrumento} · {GRANDEZAS_DE_MEDICAO[i.grandeza]}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </Bloco>
+        )}
+
         {erroGeral && <AvisoDeErro erro={erroGeral} />}
 
         <Secao
@@ -285,6 +300,7 @@ export function FormularioDeInstrumento({
           >
             <input
               id="tag"
+              required
               name="tag"
               defaultValue={valor("tag")}
               maxLength={30}
@@ -336,6 +352,7 @@ export function FormularioDeInstrumento({
           >
             <input
               id="frequenciaMeses"
+              required
               name="frequenciaMeses"
               inputMode="numeric"
               defaultValue={valor("frequenciaMeses") || "12"}
@@ -344,22 +361,7 @@ export function FormularioDeInstrumento({
             />
           </Campo>
         </Secao>
-
-        <p className="text-sm text-texto-3">
-          Os campos com <span aria-hidden>*</span> são obrigatórios.
-        </p>
-      </div>
-      <div
-        className={`flex justify-end gap-3 ${embutido ? "mt-5" : "border-t border-borda px-5 py-3"}`}
-      >
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando
-            ? "Salvando…"
-            : instrumento
-              ? "Salvar instrumento"
-              : "Cadastrar instrumento"}
-        </button>
-      </div>
+      </CadastroEmBlocos>
     </form>
   );
 }
