@@ -5,13 +5,13 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Campo } from "@/components/campo";
 import { registrarHoras, type EstadoDaAcao } from "@/lib/acoes-acidentes";
 import {
-  botaoPrimario,
   cabecalhoDoPainel,
   campo,
   painel,
   tituloDoPainel,
 } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Horas-homem de um mês. Lançar de novo o mesmo mês corrige o valor. */
 export function LancarHoras({
@@ -78,9 +78,14 @@ export function LancarHoras({
               aria-invalid={Boolean(erros.horas)}
             />
           </Campo>
-          <button type="submit" className={botaoPrimario} disabled={salvando}>
-            {salvando ? "Salvando…" : "Lançar horas"}
-          </button>
+          <Botao
+            type="submit"
+            carregando={salvando}
+            textoCarregando="Salvando…"
+            variante="primario"
+          >
+            Lançar horas
+          </Botao>
         </form>
       </div>
     </section>

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { TIPOS_INSPECAO, type ModeloDeInspecao } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -9,8 +8,9 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { LinhasDeItem } from "@/components/linhas-de-item";
 import { Selecao } from "@/components/selecao";
 import { salvarModelo, type EstadoDaAcao } from "@/lib/acoes-inspecoes";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Criar (sem `modelo`) ou editar um modelo de inspeção. */
 export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
@@ -46,19 +46,21 @@ export function FormularioDeModelo({ modelo }: { modelo?: ModeloDeInspecao }) {
         ]}
         acoes={
           <>
-            <Link
-              href="/qualidade/modelos-de-inspecao"
-              className={botaoSecundario}
-            >
+            <Botao href="/qualidade/modelos-de-inspecao" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : modelo
                   ? "Salvar modelo"
                   : "Criar modelo"}
-            </button>
+            </Botao>
           </>
         }
       >

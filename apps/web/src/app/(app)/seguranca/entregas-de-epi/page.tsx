@@ -1,11 +1,10 @@
-import { ListFilter, ShieldCheck } from "@/components/icones";
+import { ListFilter, Plus, ShieldCheck } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BotaoExportar } from "@/components/botao-exportar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { Paginacao } from "@/components/paginacao";
 import {
   SITUACOES_ENTREGA,
@@ -21,13 +20,12 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { TabelaDeEntregas } from "@/components/tabela-de-entregas";
 import { chamarApi } from "@/lib/api";
 import {
-  botaoPrimario,
-  botaoSecundario,
   linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Entregas de EPI" };
 
@@ -97,13 +95,14 @@ export default async function EntregasDeEpi({
           </p>
         </div>
         {podeEditar && (
-          <Link
+          <Botao
             href={`/seguranca/entregas-de-epi/nova${params.funcionarioId ? `?funcionario=${params.funcionarioId}` : ""}`}
-            className={botaoPrimario}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
           >
-            <IconeDaTela href="/seguranca/entregas-de-epi" />
             Registrar entrega
-          </Link>
+          </Botao>
         )}
       </header>
       <Aviso avisos={AVISOS} chave={params.aviso} />
@@ -141,10 +140,9 @@ export default async function EntregasDeEpi({
             opcoes={SITUACOES_ENTREGA}
             valor={params.situacao}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="entregas-de-epi" consulta={consulta} />
           {filtrando && (
             <Link
@@ -178,14 +176,11 @@ export default async function EntregasDeEpi({
             }
             acao={
               filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
+                <Botao href={BASE}>Limpar filtros</Botao>
               ) : podeEditar ? (
-                <Link href={`${BASE}/nova`} className={botaoPrimario}>
-                  <IconeDaTela href="/seguranca/entregas-de-epi" />
+                <Botao href={`${BASE}/nova`} variante="primario" icone={Plus}>
                   Registrar a primeira entrega
-                </Link>
+                </Botao>
               ) : undefined
             }
           />

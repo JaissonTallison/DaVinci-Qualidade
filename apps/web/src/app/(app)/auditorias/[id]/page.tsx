@@ -19,7 +19,6 @@ import { TipoDaConstatacao } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
 import {
-  botaoPrimario,
   cabecalhoDoPainel,
   painel,
   tituloDaSecao,
@@ -36,6 +35,7 @@ import {
 import { Anexos } from "@/components/anexos";
 import { CabecalhoDaAuditoria } from "./cabecalho";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Auditoria" };
 
@@ -143,12 +143,13 @@ export default async function DetalheDaAuditoria({
           <p className="text-base text-texto-2">{passo.descricao}</p>
         </div>
         {a.status !== "cancelada" && (
-          <Link
+          <Botao
             href={destinoDoPasso}
-            className={`${botaoPrimario} justify-self-start lg:justify-self-end`}
+            variante="primario"
+            className="justify-self-start lg:justify-self-end"
           >
             {passo.titulo}
-          </Link>
+          </Botao>
         )}
       </section>
 

@@ -6,11 +6,12 @@ import {
   type Licenca,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { SituacaoDaLicenca } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { botaoPrimario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Licenças" };
 
@@ -32,10 +33,14 @@ export default async function Licencas() {
           </p>
         </div>
         {podeCriar && (
-          <Link href="/ambiental/licencas/nova" className={botaoPrimario}>
-            <IconeDaTela href="/ambiental/licencas/nova" />
-            Nova licença
-          </Link>
+          <Botao
+            href="/ambiental/licencas/nova"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
+            Cadastrar licença
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>

@@ -19,12 +19,7 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { SituacaoDoRequisitoMarcador } from "@/components/situacao-do-requisito";
 import { chamarApi } from "@/lib/api";
-import {
-  botaoSecundario,
-  painel,
-  tituloDaPagina,
-  tituloDaSecao,
-} from "@/lib/estilos";
+import { painel, tituloDaPagina, tituloDaSecao } from "@/lib/estilos";
 import {
   DescricaoDoCargoDaFuncao,
   EpisDaFuncao,
@@ -33,6 +28,7 @@ import {
   TreinamentosDaFuncao,
 } from "./formularios";
 import { Printer } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Competências da função" };
 
@@ -126,13 +122,12 @@ export default async function CompetenciasDaFuncao({
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <h1 className={`${tituloDaPagina} mt-1`}>{funcao.nome}</h1>
-          <Link
+          <Botao
             href={`/cadastros/setores-e-funcoes/${id}/descricao`}
-            className={botaoSecundario}
+            icone={Printer}
           >
-            <Printer aria-hidden size={16} strokeWidth={1.75} />
             Descrição de cargo
-          </Link>
+          </Botao>
         </div>
         <p className="mt-1 max-w-3xl text-base text-texto-2">
           O que esta função exige de quem a ocupa e quem está em dia. O ASO vale

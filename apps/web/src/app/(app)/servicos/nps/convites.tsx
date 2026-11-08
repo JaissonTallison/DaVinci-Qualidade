@@ -6,8 +6,8 @@ import { Campo } from "@/components/campo";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarConvite } from "@/lib/acoes-servicos";
-import { botaoPrimario } from "@/lib/estilos";
 import { EscolhaDeParceiro } from "../escolha-de-parceiro";
+import { Botao } from "@/components/botao";
 
 /** Gera o link da pesquisa para um cliente (sem OS). */
 export function NovoConvite({ clientes }: { clientes: ParceiroResumo[] }) {
@@ -26,9 +26,14 @@ export function NovoConvite({ clientes }: { clientes: ParceiroResumo[] }) {
           invalido={false}
         />
       </Campo>
-      <button type="submit" className={botaoPrimario} disabled={enviando}>
-        {enviando ? "Gerando…" : "Gerar link"}
-      </button>
+      <Botao
+        type="submit"
+        carregando={enviando}
+        textoCarregando="Gerando…"
+        variante="primario"
+      >
+        Gerar link
+      </Botao>
     </form>
   );
 }

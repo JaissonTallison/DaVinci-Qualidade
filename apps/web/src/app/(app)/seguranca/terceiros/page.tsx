@@ -1,4 +1,4 @@
-import { Building2, ListFilter } from "@/components/icones";
+import { Building2, ListFilter, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
@@ -6,7 +6,6 @@ import { BotaoExportar } from "@/components/botao-exportar";
 import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   formatarDocumento,
   SITUACOES_TERCEIRO,
@@ -17,8 +16,6 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { chamarApi } from "@/lib/api";
 import {
-  botaoPrimario,
-  botaoSecundario,
   campoCompacto,
   linkDiscreto,
   painel,
@@ -26,6 +23,7 @@ import {
   tituloDaPagina,
 } from "@/lib/estilos";
 import { SituacaoDoTerceiro } from "./situacao";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Terceiros" };
 
@@ -109,10 +107,14 @@ export default async function Terceiros({
           </p>
         </div>
         {podeCriar && (
-          <Link href={`${BASE}/novo`} className={botaoPrimario}>
-            <IconeDaTela href={`${BASE}/novo`} />
+          <Botao
+            href={`${BASE}/novo`}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Cadastrar terceiro
-          </Link>
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -139,10 +141,9 @@ export default async function Terceiros({
             opcoes={ORDENACOES}
             valor={params.ordenar}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="terceiros" consulta={consulta} />
           {(filtrando || ordenar) && (
             <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
@@ -173,14 +174,11 @@ export default async function Terceiros({
             }
             acao={
               filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
+                <Botao href={BASE}>Limpar filtros</Botao>
               ) : podeCriar ? (
-                <Link href={`${BASE}/novo`} className={botaoPrimario}>
-                  <IconeDaTela href={`${BASE}/novo`} />
+                <Botao href={`${BASE}/novo`} variante="primario" icone={Plus}>
                   Cadastrar o primeiro terceiro
-                </Link>
+                </Botao>
               ) : undefined
             }
           />

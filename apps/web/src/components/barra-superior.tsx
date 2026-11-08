@@ -2,10 +2,10 @@
 
 import {
   Bell,
-  Building2,
   Check,
   ChevronDown,
   ChevronRight,
+  ChevronsUpDown,
   KeyRound,
   LogOut,
   Star,
@@ -22,6 +22,7 @@ import {
 import { sair, trocarEmpresa } from "@/lib/acoes-sessao";
 import { alternarFavorito, useFavoritos } from "@/lib/favoritos";
 import { prazoRelativo } from "@/lib/datas";
+import { botaoSecundario, sobretitulo } from "@/lib/estilos";
 import { BotaoAbrirGaveta, BotaoRecolherMenu } from "./estado-do-menu";
 import { IconeDaTela } from "./icones-do-menu";
 import { LinhaDePrazo, telaDoIcone, textoDoSelo } from "./linha-de-prazo";
@@ -35,16 +36,20 @@ import { Suspenso } from "./suspenso";
  */
 const SUBTELAS: { href: string; rotulo: string }[] = [];
 
-/** Botão na barra: fundo só no passar do mouse. */
-const naBarra =
-  "flex h-9 items-center gap-1.5 rounded-sm px-2 text-sm text-texto hover:bg-superficie-2 focus-visible:outline-2 focus-visible:outline-foco aria-expanded:bg-superficie-2";
+/** Botão só com ícone na barra (36 × 36, fantasma): fundo só no passar do mouse ou aberto. */
+const iconeNaBarra =
+  "relative inline-flex size-9 items-center justify-center rounded-campo text-texto-2 transition-colors hover:bg-superficie-2 hover:text-texto aria-expanded:bg-superficie-2 aria-expanded:text-texto";
+
+/** Item de menu suspenso do design system: 36 px, canto de 8 px, ícone de 16 px em texto-2. */
+const itemDoMenu =
+  "flex min-h-9 w-full items-center gap-2.5 rounded-md px-2.5 py-1.5 text-left text-base text-texto transition-colors hover:bg-superficie-2 disabled:cursor-default";
 
 /**
- * Barra superior (branco gelo, 64 px, mesmo padrão da Finance): recolher o menu, caminho com a estrela de favorito,
- * busca, "+ Novo", vencidos e o menu da conta (com a troca de empresa).
+ * Barra superior do design system (56 px, superficie, linha de baixo), igual em todas as telas autenticadas:
+ * recolher o menu, trilha (com a estrela de favorito), busca de 300 px com Ctrl K, "Novo", sino dos prazos
+ * vencidos e o menu do usuário com a empresa ativa sempre à vista (interface.md §7.1).
  * Abaixo de 1024 px: símbolo da marca no lugar do recolher; no tablet, botão da gaveta; no celular o "Novo" vai
  * para o "+" da barra inferior.
- * O ouro continua só no menu lateral e na logo (interface.md §7).
  */
 export function BarraSuperior({
   eu,
@@ -59,9 +64,13 @@ export function BarraSuperior({
   vencidos: Prazo[];
 }) {
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center gap-2 bg-superficie px-3 text-texto shadow-cartao sm:px-5 print:hidden">
+    <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-borda bg-superficie pr-3 pl-3 text-texto shadow-xs sm:pr-5 print:hidden">
       <BotaoRecolherMenu />
       <BotaoAbrirGaveta />
+      <span
+        aria-hidden
+        className="hidden h-6 w-px shrink-0 bg-borda md:block"
+      />
       <Link href="/" aria-label="Início" className="shrink-0 lg:hidden">
         <Image
           src="/brand/simbolo.svg"
@@ -79,7 +88,7 @@ export function BarraSuperior({
           <Suspenso
             rotulo="Criar novo registro"
             largura="w-64"
-            classeDoBotao="flex h-9 items-center gap-1.5 rounded-sm border border-borda-forte px-3 text-sm font-semibold text-texto hover:bg-superficie-2 aria-expanded:bg-superficie-2"
+            classeDoBotao={`${botaoSecundario} aria-expanded:bg-superficie-2`}
             botao={
               <>
                 Novo
@@ -87,20 +96,19 @@ export function BarraSuperior({
                   aria-hidden
                   size={16}
                   strokeWidth={1.75}
-                  className="text-texto-2"
+                  className="-mr-1 text-texto-2"
                 />
               </>
             }
           >
             {(fechar) => (
-              <ul className="max-h-[70vh] overflow-y-auto py-1">
+              <ul className="max-h-[70vh] overflow-y-auto p-1.5">
+                <li className={`${sobretitulo} px-2.5 pt-1.5 pb-1`}>
+                  Criar registro
+                </li>
                 {atalhos.map((a) => (
                   <li key={a.href}>
-                    <Link
-                      href={a.href}
-                      onClick={fechar}
-                      className="flex items-center gap-2.5 px-3 py-2 text-base text-texto hover:bg-superficie-2"
-                    >
+                    <Link href={a.href} onClick={fechar} className={itemDoMenu}>
                       <span className="text-texto-2">
                         <IconeDaTela
                           href={a.href.replace(/\/(nova|novo)$/, "")}
@@ -122,7 +130,8 @@ export function BarraSuperior({
 }
 
 /**
- * Caminho da página atual (padrão da Finance): MÓDULO › Tela › Detalhe. O módulo leva à primeira tela dele.
+ * Trilha do design system: Módulo › Tela › Detalhe, na mesma caixa em todos os níveis (13 px); o item atual em
+ * texto 500, os anteriores são links. O módulo leva à primeira tela dele.
  * A tela principal pode virar favorito (estrela); registros (detalhe, novo) não.
  */
 function Trilha({
@@ -136,7 +145,10 @@ function Trilha({
   const favoritos = useFavoritos(usuarioId);
   if (atual === "/")
     return (
-      <span className="ml-1 hidden truncate text-xs font-semibold tracking-[0.04em] text-texto-2 uppercase sm:inline">
+      <span
+        aria-current="page"
+        className="hidden truncate text-sm font-medium text-texto sm:inline"
+      >
         Início
       </span>
     );
@@ -185,11 +197,11 @@ function Trilha({
   return (
     <nav
       aria-label="Você está em"
-      className="ml-1 hidden min-w-0 items-center gap-1.5 text-sm text-texto-2 sm:flex"
+      className="hidden min-w-0 items-center gap-1.5 text-sm whitespace-nowrap text-texto-2 sm:flex"
     >
       <Link
         href={achada.g.itens[0]!.href}
-        className="truncate text-xs font-semibold tracking-[0.04em] uppercase hover:text-texto"
+        className="truncate hover:text-texto hover:underline"
       >
         {achada.g.titulo}
       </Link>
@@ -224,7 +236,7 @@ function Trilha({
             favorito ? "Tirar dos favoritos" : "Fixar nos favoritos do menu"
           }
           onClick={() => alternarFavorito(usuarioId, achada.i.href)}
-          className={`ml-1 inline-flex size-7 shrink-0 items-center justify-center rounded-sm hover:bg-superficie-2 ${favorito ? "text-ouro" : "text-texto-3 hover:text-texto"}`}
+          className={`ml-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-campo transition-colors hover:bg-superficie-2 ${favorito ? "text-ouro" : "text-texto-3 hover:text-texto"}`}
         >
           <Star
             aria-hidden
@@ -240,20 +252,19 @@ function Trilha({
 
 function Sino({ vencidos }: { vencidos: Prazo[] }) {
   const n = vencidos.length;
+  const resumo = n
+    ? `${n} ${n === 1 ? "prazo vencido" : "prazos vencidos"}`
+    : "Nenhum prazo vencido";
   return (
     <Suspenso
-      rotulo={
-        n
-          ? `${n} ${n === 1 ? "prazo vencido" : "prazos vencidos"}`
-          : "Nenhum prazo vencido"
-      }
-      largura="w-80 sm:w-96"
-      classeDoBotao={`${naBarra} relative`}
+      rotulo={resumo}
+      largura="w-100"
+      classeDoBotao={iconeNaBarra}
       botao={
         <>
           <Bell aria-hidden size={18} strokeWidth={1.75} />
           {n > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] rounded-sm bg-nao-conforme px-1 text-center text-xs font-semibold text-primaria-texto tabular-nums">
+            <span className="absolute top-0.5 -right-0.5 h-4 min-w-4 rounded-full bg-nao-conforme px-1 text-center text-xs leading-4 font-semibold text-primaria-texto tabular-nums ring-2 ring-superficie">
               {n > 99 ? "99+" : n}
             </span>
           )}
@@ -262,13 +273,12 @@ function Sino({ vencidos }: { vencidos: Prazo[] }) {
     >
       {(fechar) => (
         <div>
-          <p className="border-b border-borda px-4 py-2.5 text-sm font-semibold text-texto">
-            {n
-              ? `${n} ${n === 1 ? "prazo vencido" : "prazos vencidos"}`
-              : "Nenhum prazo vencido"}
-          </p>
-          {n > 0 && (
-            <ul className="max-h-80 divide-y divide-borda overflow-y-auto">
+          <div className="flex items-center justify-between gap-3 border-b border-borda px-4 py-3">
+            <h2 className="text-md font-semibold text-texto">Notificações</h2>
+            <span className="text-sm text-texto-2">{resumo}</span>
+          </div>
+          {n > 0 ? (
+            <ul className="max-h-90 overflow-y-auto p-1.5">
               {vencidos.slice(0, 8).map((p, i) => (
                 <li key={`${p.href}-${p.tipo}-${i}`}>
                   <LinhaDePrazo
@@ -284,14 +294,20 @@ function Sino({ vencidos }: { vencidos: Prazo[] }) {
                 </li>
               ))}
             </ul>
+          ) : (
+            <p className="px-4 py-8 text-center text-sm text-texto-2">
+              Nada vencido nos módulos que você acompanha.
+            </p>
           )}
-          <Link
-            href="/paineis/vencimentos"
-            onClick={fechar}
-            className="block border-t border-borda px-4 py-2.5 text-sm font-semibold text-info hover:bg-superficie-2"
-          >
-            Abrir o painel de vencimentos
-          </Link>
+          <div className="border-t border-borda px-4 py-2.5 text-center">
+            <Link
+              href="/paineis/vencimentos"
+              onClick={fechar}
+              className="text-sm font-medium text-info hover:underline"
+            >
+              Ver todos os vencimentos
+            </Link>
+          </div>
         </div>
       )}
     </Suspenso>
@@ -306,54 +322,53 @@ function iniciais(nome: string): string {
   ).toUpperCase();
 }
 
-const itemDoMenu =
-  "flex w-full items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-sm text-texto hover:bg-superficie-2 disabled:cursor-default disabled:hover:bg-transparent";
+/** Avatar do design system: círculo de 32 px (40 no cabeçalho do menu) em azul suave, com as iniciais. */
+function Avatar({ nome, grande = false }: { nome: string; grande?: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className={`grid shrink-0 place-items-center rounded-full bg-info-suave font-semibold text-info ${grande ? "size-10 text-sm" : "size-8 text-xs"}`}
+    >
+      {iniciais(nome)}
+    </span>
+  );
+}
 
-/** Menu da conta (padrão da Finance): quem está logado, troca de empresa, senha e sair. */
+/** Menu do usuário: quem está logado, empresa ativa (troca com CNPJ e check na atual), senha e sair. */
 function MenuDoUsuario({ eu }: { eu: DadosDoUsuario }) {
   const [ocupado, iniciar] = useTransition();
   const [erro, setErro] = useState<string>();
   return (
     <Suspenso
-      rotulo="Conta e empresa"
-      largura="w-80"
-      classeDoBotao="flex h-11 items-center gap-2.5 rounded-sm pr-2 pl-1 text-left text-texto hover:bg-superficie-2 aria-expanded:bg-superficie-2"
+      rotulo={`Conta de ${eu.usuario.nome}, empresa ${eu.empresa.nome}`}
+      largura="w-75"
+      classeDoBotao="flex h-11 items-center gap-2.5 rounded-md pr-2 pl-1 text-left text-texto transition-colors hover:bg-superficie-2 aria-expanded:bg-superficie-2"
       botao={
         <>
-          <span
-            aria-hidden
-            className="flex size-8 shrink-0 items-center justify-center rounded-sm bg-info-suave text-sm font-semibold text-info"
-          >
-            {iniciais(eu.usuario.nome)}
-          </span>
-          <span className="hidden min-w-0 leading-tight md:block">
-            <span className="block max-w-48 truncate text-sm font-semibold">
+          <Avatar nome={eu.usuario.nome} />
+          <span className="hidden min-w-0 md:block">
+            <span className="block max-w-45 truncate text-sm leading-[18px] font-semibold">
               {eu.usuario.nome}
             </span>
-            <span className="block max-w-48 truncate text-xs text-texto-2">
+            <span className="block max-w-45 truncate text-xs text-texto-2">
               {eu.empresa.nome}
             </span>
           </span>
-          <ChevronDown
+          <ChevronsUpDown
             aria-hidden
-            size={16}
+            size={14}
             strokeWidth={1.75}
-            className="hidden text-texto-2 md:block"
+            className="hidden text-texto-3 md:block"
           />
         </>
       }
     >
       {(fechar) => (
         <div className="p-1.5">
-          <div className="flex items-center gap-3 px-2.5 pt-1.5 pb-2.5">
-            <span
-              aria-hidden
-              className="flex size-10 shrink-0 items-center justify-center rounded-sm bg-info-suave text-sm font-semibold text-info"
-            >
-              {iniciais(eu.usuario.nome)}
-            </span>
+          <div className="flex items-center gap-2.5 px-2.5 pt-2 pb-2.5">
+            <Avatar nome={eu.usuario.nome} grande />
             <span className="min-w-0">
-              <span className="block truncate text-sm font-semibold text-texto">
+              <span className="block truncate text-base font-semibold text-texto">
                 {eu.usuario.nome}
               </span>
               <span className="block truncate text-xs text-texto-2">
@@ -361,19 +376,19 @@ function MenuDoUsuario({ eu }: { eu: DadosDoUsuario }) {
               </span>
             </span>
           </div>
-          <p className="px-2.5 pt-1 pb-1 text-xs font-semibold tracking-[0.04em] text-texto-3 uppercase">
-            Empresa
-          </p>
-          <ul className="flex flex-col gap-px">
+          <hr className="-mx-1.5 my-1.5 border-borda" />
+          <p className={`${sobretitulo} px-2.5 pt-2 pb-1`}>Empresa ativa</p>
+          <ul role="group" aria-label="Empresa ativa">
             {eu.empresas.map((e) => {
               const atual = e.id === eu.empresa.id;
               return (
                 <li key={e.id}>
                   <button
                     type="button"
-                    className={itemDoMenu}
+                    role="menuitemradio"
+                    aria-checked={atual}
+                    className={`${itemDoMenu} ${atual ? "font-semibold" : ""}`}
                     disabled={atual || ocupado}
-                    aria-current={atual ? "true" : undefined}
                     onClick={() =>
                       iniciar(async () => {
                         setErro(undefined);
@@ -382,38 +397,34 @@ function MenuDoUsuario({ eu }: { eu: DadosDoUsuario }) {
                       })
                     }
                   >
-                    {atual ? (
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate">{e.nome}</span>
+                      <span className="block font-mono text-xs font-normal text-texto-2">
+                        {e.cnpj}
+                      </span>
+                    </span>
+                    {atual && (
                       <Check
                         aria-hidden
                         size={16}
                         strokeWidth={1.75}
-                        className="shrink-0 text-acao"
-                      />
-                    ) : (
-                      <Building2
-                        aria-hidden
-                        size={16}
-                        strokeWidth={1.75}
-                        className="shrink-0 text-texto-2"
+                        className="shrink-0 text-info"
                       />
                     )}
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate">{e.nome}</span>
-                      <span className="block font-mono text-xs text-texto-3">
-                        {e.cnpj}
-                      </span>
-                    </span>
                   </button>
                 </li>
               );
             })}
           </ul>
           {erro && (
-            <p role="alert" className="px-2.5 py-1 text-sm text-nao-conforme">
+            <p
+              role="alert"
+              className="px-2.5 py-1 text-sm text-nao-conforme-texto"
+            >
               {erro}
             </p>
           )}
-          <hr className="my-1.5 border-borda" />
+          <hr className="-mx-1.5 my-1.5 border-borda" />
           <Link
             href="/trocar-senha?origem=conta"
             onClick={fechar}
@@ -427,15 +438,13 @@ function MenuDoUsuario({ eu }: { eu: DadosDoUsuario }) {
             />
             Alterar senha
           </Link>
-          <hr className="my-1.5 border-borda" />
+          <hr className="-mx-1.5 my-1.5 border-borda" />
           <form action={sair}>
-            <button type="submit" className={itemDoMenu}>
-              <LogOut
-                aria-hidden
-                size={16}
-                strokeWidth={1.75}
-                className="text-texto-2"
-              />
+            <button
+              type="submit"
+              className={`${itemDoMenu} text-nao-conforme-texto hover:bg-nao-conforme-suave`}
+            >
+              <LogOut aria-hidden size={16} strokeWidth={1.75} />
               Sair
             </button>
           </form>

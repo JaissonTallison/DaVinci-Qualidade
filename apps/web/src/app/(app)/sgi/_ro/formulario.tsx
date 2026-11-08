@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState, type ReactNode } from "react";
 import {
   CLASSES_RO,
@@ -22,15 +21,11 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarRo } from "@/lib/acoes-sgi";
 import { formatarData } from "@/lib/datas";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import type { ConfigRo } from "./config";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";
 
 const MARCADOR: Record<ClasseRo, string> = {
   baixa: "bg-nivel-baixo",
@@ -267,9 +262,9 @@ export function FormularioDeRo({
           {campoPrazo}
         </div>
         <div className="mt-5 flex justify-end gap-3">
-          <button type="submit" className={botaoPrimario} disabled={salvando}>
+          <Botao type="submit" disabled={salvando} variante="primario">
             {textoDoBotao}
-          </button>
+          </Botao>
         </div>
       </form>
     );
@@ -445,12 +440,17 @@ export function FormularioDeRo({
             : "Campos obrigatórios preenchidos"
         }
       >
-        <Link href={cfg.base} className={botaoSecundario}>
+        <Botao href={cfg.base} tamanho="grande">
           Cancelar
-        </Link>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
+        </Botao>
+        <Botao
+          type="submit"
+          disabled={salvando}
+          variante="primario"
+          tamanho="grande"
+        >
           {textoDoBotao}
-        </button>
+        </Botao>
       </BarraDeAcoes>
     </form>
   );

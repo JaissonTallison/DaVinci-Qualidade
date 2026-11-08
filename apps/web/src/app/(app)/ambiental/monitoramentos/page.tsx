@@ -7,11 +7,12 @@ import {
   type Monitoramento,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { botaoPrimario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
 import { textoDoLimite } from "./limites";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Monitoramentos" };
 
@@ -41,10 +42,14 @@ export default async function Monitoramentos() {
           </p>
         </div>
         {podeCriar && (
-          <Link href="/ambiental/monitoramentos/novo" className={botaoPrimario}>
-            <IconeDaTela href="/ambiental/monitoramentos" />
-            Novo monitoramento
-          </Link>
+          <Botao
+            href="/ambiental/monitoramentos/novo"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
+            Cadastrar monitoramento
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>

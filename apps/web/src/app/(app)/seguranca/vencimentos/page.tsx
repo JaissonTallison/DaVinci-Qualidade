@@ -14,12 +14,12 @@ import { Validade } from "@/components/situacao-do-vencimento";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import {
-  botaoSecundario,
   linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = {
   title: "Vencimentos de ASO e treinamentos",
@@ -114,10 +114,9 @@ export default async function Vencimentos({
             opcoes={TIPOS}
             valor={params.tipo}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="vencimentos" consulta={consulta} />
           {filtrando && (
             <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
@@ -147,11 +146,7 @@ export default async function Vencimentos({
                 : "Registre os ASOs e treinamentos na página de cada profissional."
             }
             acao={
-              filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
-              ) : undefined
+              filtrando ? <Botao href={BASE}>Limpar filtros</Botao> : undefined
             }
           />
         ) : (

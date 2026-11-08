@@ -1,23 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import {
   SITUACOES_OPERACIONAIS,
   type AspectoAmbiental,
   type DadosDoUsuario,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { SignificanciaDoAspecto } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  campoCompacto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Aspectos e impactos" };
 
@@ -51,10 +45,14 @@ export default async function Aspectos({
           </p>
         </div>
         {podeCriar && (
-          <Link href="/ambiental/aspectos/novo" className={botaoPrimario}>
-            <IconeDaTela href="/ambiental/aspectos/novo" />
-            Novo aspecto
-          </Link>
+          <Botao
+            href="/ambiental/aspectos/novo"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
+            Cadastrar aspecto
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -79,10 +77,9 @@ export default async function Aspectos({
             <option value="inativos">Inativos</option>
             <option value="todos">Todos</option>
           </select>
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           {r.ok && (
             <p className="ml-auto text-sm text-texto-2">
               {r.dados.length === 1

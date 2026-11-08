@@ -5,7 +5,8 @@ import { RECURSOS, TODOS_OS_RECURSOS, type Recurso } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarModulos } from "@/lib/acoes-administracao";
-import { botaoPrimario, painel } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeModulos({ ligados }: { ligados: Recurso[] }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
@@ -46,9 +47,14 @@ export function FormularioDeModulos({ ligados }: { ligados: Recurso[] }) {
         })}
       </ul>
       <div className="mt-5">
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Salvar módulos"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Salvar módulos
+        </Botao>
       </div>
     </form>
   );

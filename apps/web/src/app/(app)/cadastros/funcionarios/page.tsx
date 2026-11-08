@@ -1,7 +1,6 @@
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import type {
   DadosDoUsuario,
   FuncionarioResumo,
@@ -12,13 +11,12 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   campoCompacto,
   linkDiscreto,
   painel,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Profissionais" };
 
@@ -61,10 +59,14 @@ export default async function ListaDeFuncionarios({
           </p>
         </div>
         {podeCriar && (
-          <Link href="/cadastros/funcionarios/novo" className={botaoPrimario}>
-            <IconeDaTela href={"/cadastros/funcionarios/novo"} />
+          <Botao
+            href="/cadastros/funcionarios/novo"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Cadastrar profissional
-          </Link>
+          </Botao>
         )}
       </header>
 
@@ -107,10 +109,9 @@ export default async function ListaDeFuncionarios({
               </option>
             ))}
           </select>
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           {filtrando && (
             <Link
               href="/cadastros/funcionarios"

@@ -1,7 +1,6 @@
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   STATUS_MUDANCA,
   TIPOS_INOVACAO,
@@ -13,12 +12,8 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { StatusDaMudanca } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Gestão de inovação" };
 
@@ -44,10 +39,14 @@ export default async function Inovacoes({
           </p>
         </div>
         {podeCriar && (
-          <Link href="/sgi/inovacao/nova" className={botaoPrimario}>
-            <IconeDaTela href={"/sgi/inovacao"} />
+          <Botao
+            href="/sgi/inovacao/nova"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Propor inovação
-          </Link>
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -58,10 +57,9 @@ export default async function Inovacoes({
             opcoes={STATUS_MUDANCA}
             valor={status}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!lista.ok ? (
           <div className="p-4">

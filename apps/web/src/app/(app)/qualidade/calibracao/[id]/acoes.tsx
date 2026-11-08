@@ -12,13 +12,9 @@ import {
   type EstadoDaAcao,
 } from "@/lib/acoes-calibracao";
 import { hojeEmBrasilia } from "@/lib/datas";
-import {
-  areaDeTexto,
-  botaoPerigo,
-  botaoSecundario,
-  campo,
-  campoCompacto,
-} from "@/lib/estilos";
+import { areaDeTexto, campo, campoCompacto } from "@/lib/estilos";
+import { Trash2 } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export function RegistrarCalibracao({
   instrumento,
@@ -187,13 +183,14 @@ export function AnularCalibracao({
 
   if (!confirmando)
     return (
-      <button
-        type="button"
+      <Botao
         onClick={() => setConfirmando(true)}
-        className="cursor-pointer text-sm text-texto-2 hover:text-texto hover:underline"
+        variante="fantasma"
+        tamanho="pequeno"
+        icone={Trash2}
       >
         Anular
-      </button>
+      </Botao>
     );
 
   // Confirmação inline (não é pop-over absoluto: cresce dentro da célula sem ser cortado pela tabela).
@@ -219,17 +216,17 @@ export function AnularCalibracao({
       />
       {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
       <div className="flex gap-2">
-        <button type="submit" className={botaoPerigo} disabled={enviando}>
-          Anular registro
-        </button>
-        <button
-          type="button"
-          className={botaoSecundario}
-          onClick={() => setConfirmando(false)}
+        <Botao
+          type="submit"
           disabled={enviando}
+          variante="perigo"
+          icone={Trash2}
         >
+          Anular registro
+        </Botao>
+        <Botao onClick={() => setConfirmando(false)} disabled={enviando}>
           Cancelar
-        </button>
+        </Botao>
       </div>
     </form>
   );
@@ -259,13 +256,13 @@ export function UsoDoInstrumento({
             ? "Use quando o instrumento for descartado, emprestado ou sair de operação. Fora de uso, ele sai dos alertas e das contagens de vencimento; o histórico de calibrações continua guardado e a ação é reversível. Não é preciso informar justificativa. A situação passa a “Fora de uso”, no topo."
             : "De volta ao uso, a situação volta a seguir a última calibração e o instrumento retorna aos alertas de vencimento. A nova situação aparece no topo."}
         </p>
-        <button
+        <Botao
           type="submit"
-          className={instrumento.emUso ? botaoPerigo : botaoSecundario}
-          disabled={enviando}
+          variante={instrumento.emUso ? "perigo" : "secundario"}
+          carregando={enviando}
         >
           {instrumento.emUso ? "Tirar de uso" : "Voltar para uso"}
-        </button>
+        </Botao>
       </form>
     </Recolhido>
   );

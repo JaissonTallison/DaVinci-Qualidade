@@ -12,8 +12,9 @@ import {
   registrarMedicao,
   situacaoDoObjetivo,
 } from "@/lib/acoes-sgi";
-import { botaoPrimario, campo, campoCompacto } from "@/lib/estilos";
+import { campo, campoCompacto } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function NovoObjetivo() {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
@@ -123,9 +124,14 @@ export function NovoObjetivo() {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Cadastrar objetivo"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Cadastrar objetivo
+        </Botao>
       </div>
     </form>
   );
@@ -172,9 +178,9 @@ export function LancarMedicao({
           aria-label="Análise"
           className={`${campoCompacto} min-w-0 flex-1`}
         />
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
+        <Botao type="submit" disabled={salvando} variante="primario">
           Lançar
-        </button>
+        </Botao>
       </div>
       {erro && <p className="text-sm text-nao-conforme">{erro}</p>}
     </form>

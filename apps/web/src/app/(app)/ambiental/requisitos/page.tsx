@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import {
   ATENDIMENTOS,
   ESFERAS,
@@ -9,16 +9,11 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { AtendimentoDoRequisito } from "@/components/marcadores-ambientais";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Requisitos legais" };
 
@@ -51,10 +46,14 @@ export default async function Requisitos({
           </p>
         </div>
         {podeCriar && (
-          <Link href="/ambiental/requisitos/novo" className={botaoPrimario}>
-            <IconeDaTela href="/ambiental/requisitos/novo" />
-            Novo requisito
-          </Link>
+          <Botao
+            href="/ambiental/requisitos/novo"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
+            Cadastrar requisito
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -65,10 +64,9 @@ export default async function Requisitos({
             opcoes={ATENDIMENTOS}
             valor={atendimento}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!r.ok ? (
           <div className="p-4">

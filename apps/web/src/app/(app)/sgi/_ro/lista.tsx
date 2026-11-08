@@ -1,4 +1,4 @@
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import Link from "next/link";
 import {
   CLASSES_RO,
@@ -7,17 +7,12 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { ClasseDoRo } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
 import type { ConfigRo } from "./config";
+import { Botao } from "@/components/botao";
 
 export async function ListaDeRo({
   cfg,
@@ -49,10 +44,9 @@ export async function ListaDeRo({
           </p>
         </div>
         {podeCriar && (
-          <Link href={`${cfg.base}/novo`} className={botaoPrimario}>
-            <IconeDaTela href={cfg.base} />
+          <Botao href={`${cfg.base}/novo`} variante="primario" icone={Plus}>
             {cfg.registrar}
-          </Link>
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>
@@ -69,10 +63,9 @@ export async function ListaDeRo({
             opcoes={{ encerrados: "Encerrados", todos: "Todos" }}
             valor={params.situacao}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!lista.ok ? (
           <div className="p-4">

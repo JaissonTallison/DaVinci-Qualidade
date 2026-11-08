@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ListFilter } from "@/components/icones";
+import { ListFilter, Plus } from "@/components/icones";
 import {
   CATALOGO_ESG,
   PILARES,
@@ -10,17 +10,12 @@ import {
 import { Aviso } from "@/components/aviso";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { SelecaoDeFiltro } from "@/components/filtros";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { IconeOds, Materialidade } from "@/components/marcadores-esg";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import {
-  botaoPrimario,
-  botaoSecundario,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
 import { ImportarCatalogo } from "./importar";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Temas ESG" };
 
@@ -55,10 +50,14 @@ export default async function Temas({ searchParams }: PageProps<"/esg/temas">) {
           </p>
         </div>
         {permissoes.includes("esg.editar") && (
-          <Link href="/esg/temas/novo" className={botaoPrimario}>
-            <IconeDaTela href="/esg/temas" />
-            Novo tema
-          </Link>
+          <Botao
+            href="/esg/temas/novo"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
+            Cadastrar tema
+          </Botao>
         )}
       </header>
       <Aviso
@@ -102,10 +101,9 @@ export default async function Temas({ searchParams }: PageProps<"/esg/temas">) {
             opcoes={PILARES}
             valor={pilar}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!r.ok ? (
           <div className="p-4">

@@ -6,8 +6,9 @@ import {
   type PerguntaDaAuditoria,
 } from "@davinci/types";
 import { responderPergunta, type EstadoDaAcao } from "@/lib/acoes-auditorias";
-import { areaDeTexto, botaoSecundario, campoCompacto } from "@/lib/estilos";
+import { areaDeTexto, campoCompacto } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Resposta da pergunta: status e a evidência objetiva verificada (documento, número, data). */
 export function RespostaDaPergunta({
@@ -42,9 +43,13 @@ export function RespostaDaPergunta({
           ))}
         </select>
         {podeEditar && (
-          <button type="submit" className={botaoSecundario} disabled={enviando}>
-            {enviando ? "Salvando…" : "Salvar resposta"}
-          </button>
+          <Botao
+            type="submit"
+            carregando={enviando}
+            textoCarregando="Salvando…"
+          >
+            Salvar resposta
+          </Botao>
         )}
         {estado.erro && !estado.erro.detalhes?.length && (
           <span className="text-sm text-nao-conforme">

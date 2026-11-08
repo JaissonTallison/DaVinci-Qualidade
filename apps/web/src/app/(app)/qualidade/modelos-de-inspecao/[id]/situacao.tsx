@@ -8,7 +8,7 @@ import {
   mudarSituacaoDoModelo,
   type EstadoDaAcao,
 } from "@/lib/acoes-inspecoes";
-import { botaoPerigo, botaoSecundario } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /** Modelo não se apaga: inativar tira da escolha ao criar inspeção; as inspeções feitas com ele continuam. */
 export function SituacaoDoModelo({ modelo }: { modelo: ModeloDeInspecao }) {
@@ -28,15 +28,15 @@ export function SituacaoDoModelo({ modelo }: { modelo: ModeloDeInspecao }) {
             ? "Inativo, o modelo some da escolha ao criar uma inspeção. As inspeções já feitas com ele não mudam."
             : "Reativado, o modelo volta a aparecer na escolha."}
         </p>
-        <button
+        <Botao
           type="submit"
           name="acao"
           value={modelo.ativo ? "inativar" : "reativar"}
-          className={modelo.ativo ? botaoPerigo : botaoSecundario}
-          disabled={enviando}
+          variante={modelo.ativo ? "perigo" : "secundario"}
+          carregando={enviando}
         >
           {modelo.ativo ? "Inativar modelo" : "Reativar modelo"}
-        </button>
+        </Botao>
       </form>
     </Recolhido>
   );

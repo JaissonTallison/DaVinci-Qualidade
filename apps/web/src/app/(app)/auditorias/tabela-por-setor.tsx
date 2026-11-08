@@ -1,8 +1,9 @@
 "use client";
 
-import { X } from "@/components/icones";
+import { Plus, X } from "@/components/icones";
 import { useState } from "react";
-import { botaoSecundario, campoCompacto, erroDoCampo } from "@/lib/estilos";
+import { campoCompacto, erroDoCampo } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 const COLUNAS = [
   { nome: "setor", rotulo: "Setor", classe: "min-w-36 flex-[2]", max: 150 },
@@ -101,13 +102,9 @@ export function TabelaPorSetor({
       ))}
       {linhas < MAXIMO && (
         <div>
-          <button
-            type="button"
-            onClick={() => setLinhas((n) => n + 1)}
-            className={botaoSecundario}
-          >
+          <Botao onClick={() => setLinhas((n) => n + 1)} icone={Plus}>
             Incluir setor
-          </button>
+          </Botao>
         </div>
       )}
     </div>

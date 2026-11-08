@@ -17,12 +17,8 @@ import {
   definirTreinamentosDaFuncao,
 } from "@/lib/acoes-competencias";
 import type { EstadoDaAcao } from "@/lib/acao";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  campo,
-  campoCompacto,
-} from "@/lib/estilos";
+import { areaDeTexto, campo, campoCompacto } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export function TreinamentosDaFuncao({
   funcaoId,
@@ -65,9 +61,14 @@ export function TreinamentosDaFuncao({
         ))}
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={enviando}>
-          {enviando ? "Salvando…" : "Salvar treinamentos exigidos"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Salvar treinamentos exigidos
+        </Botao>
       </div>
     </form>
   );
@@ -133,9 +134,14 @@ export function EpisDaFuncao({
         ))}
       </ul>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={enviando}>
-          {enviando ? "Salvando…" : "Salvar EPIs exigidos"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Salvar EPIs exigidos
+        </Botao>
       </div>
     </form>
   );
@@ -178,11 +184,7 @@ export function DescricaoDoCargoDaFuncao({
               className={campo}
             />
           </Campo>
-          <Campo
-            id="experiencia"
-            rotulo="Experiência"
-            erro={erros.experiencia}
-          >
+          <Campo id="experiencia" rotulo="Experiência" erro={erros.experiencia}>
             <input
               id="experiencia"
               name="experiencia"
@@ -217,9 +219,7 @@ export function DescricaoDoCargoDaFuncao({
               id="competencias"
               name="competencias"
               rows={5}
-              defaultValue={
-                v.competencias ?? descricao.competencias.join("\n")
-              }
+              defaultValue={v.competencias ?? descricao.competencias.join("\n")}
               className={areaDeTexto}
             />
           </Campo>
@@ -304,9 +304,14 @@ export function RiscosDaFuncao({
         ))}
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={enviando}>
-          {enviando ? "Salvando…" : "Salvar riscos da função"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Salvar riscos da função
+        </Botao>
       </div>
     </form>
   );

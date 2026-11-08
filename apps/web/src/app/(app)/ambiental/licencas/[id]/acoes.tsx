@@ -12,8 +12,10 @@ import {
   solicitarRenovacao,
 } from "@/lib/acoes-ambiental";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoSecundario, campo, campoCompacto } from "@/lib/estilos";
+import { campo, campoCompacto } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Check, Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export function SolicitarRenovacao({ licenca }: { licenca: Licenca }) {
   return (
@@ -106,9 +108,14 @@ export function CumprirCondicionante({
           <p className="text-sm text-nao-conforme">{erros.evidencia}</p>
         )}
       </div>
-      <button type="submit" className={botaoSecundario} disabled={salvando}>
-        {salvando ? "Salvando…" : "Marcar cumprida"}
-      </button>
+      <Botao
+        type="submit"
+        carregando={salvando}
+        textoCarregando="Salvando…"
+        icone={Check}
+      >
+        Marcar cumprida
+      </Botao>
     </form>
   );
 }
@@ -168,9 +175,14 @@ export function NovaCondicionante({ licencaId }: { licencaId: string }) {
           </Campo>
         </div>
         <div>
-          <button type="submit" className={botaoSecundario} disabled={salvando}>
-            {salvando ? "Salvando…" : "Adicionar"}
-          </button>
+          <Botao
+            type="submit"
+            carregando={salvando}
+            textoCarregando="Salvando…"
+            icone={Plus}
+          >
+            Adicionar
+          </Botao>
         </div>
       </form>
     </Recolhido>

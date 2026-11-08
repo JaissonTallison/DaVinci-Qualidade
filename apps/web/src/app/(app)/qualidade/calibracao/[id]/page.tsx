@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -13,7 +12,6 @@ import { SituacaoDoInstrumento } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
 import {
-  botaoPrimario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -30,6 +28,8 @@ import { Anexos } from "@/components/anexos";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 export const metadata: Metadata = { title: "Instrumento" };
 
 const AVISOS: Record<string, string> = {
@@ -168,12 +168,13 @@ export default async function DetalheDoInstrumento({
             Medições feitas com este instrumento desde a última calibração
             aprovada podem estar erradas. Registre a avaliação numa NC.
           </p>
-          <Link
+          <Botao
             href={`/qualidade/nao-conformidades/nova?instrumento=${i.id}`}
-            className={botaoPrimario}
+            variante="primario"
+            icone={Plus}
           >
             Abrir NC
-          </Link>
+          </Botao>
         </section>
       )}
 

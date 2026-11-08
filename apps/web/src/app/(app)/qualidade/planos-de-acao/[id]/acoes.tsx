@@ -18,9 +18,8 @@ import {
   type EstadoDaAcao,
 } from "@/lib/acoes-planos";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { areaDeTexto, botaoPequeno, campoCompacto } from "@/lib/estilos";
-
-const botaoDaLinha = botaoPequeno;
+import { areaDeTexto, campoCompacto } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /** Concluir, reabrir ou cancelar a tarefa, na própria linha. O erro (ex.: plano alterado por outra pessoa) aparece embaixo. */
 export function AcoesDaTarefa({
@@ -46,15 +45,15 @@ export function AcoesDaTarefa({
       <input type="hidden" name="tarefaId" value={tarefa.id} />
       {tarefa.situacao === "pendente" ? (
         <span className="inline-flex items-center gap-2">
-          <button
+          <Botao
             type="submit"
             name="acao"
             value="concluir"
-            className={botaoDaLinha}
-            disabled={enviando}
+            tamanho="pequeno"
+            carregando={enviando}
           >
             Concluir
-          </button>
+          </Botao>
           <details className="relative">
             <summary className="cursor-pointer list-none text-sm text-texto-2 hover:text-texto hover:underline">
               Cancelar
@@ -72,28 +71,28 @@ export function AcoesDaTarefa({
                 maxLength={300}
                 className={`${campoCompacto} w-full`}
               />
-              <button
+              <Botao
                 type="submit"
                 name="acao"
                 value="cancelar"
-                className={botaoDaLinha}
-                disabled={enviando}
+                tamanho="pequeno"
+                carregando={enviando}
               >
                 Cancelar tarefa
-              </button>
+              </Botao>
             </div>
           </details>
         </span>
       ) : (
-        <button
+        <Botao
           type="submit"
           name="acao"
           value="reabrir"
-          className={botaoDaLinha}
-          disabled={enviando}
+          tamanho="pequeno"
+          carregando={enviando}
         >
           Reabrir
-        </button>
+        </Botao>
       )}
       {erro && (
         <span className="max-w-72 text-right text-sm whitespace-normal text-nao-conforme">

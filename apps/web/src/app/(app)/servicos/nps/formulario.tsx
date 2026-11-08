@@ -8,9 +8,10 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { registrarNps } from "@/lib/acoes-servicos";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoPrimario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
 import { EscolhaDeParceiro } from "../escolha-de-parceiro";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeNps({ clientes }: { clientes: ParceiroResumo[] }) {
   const [estado, acao, salvando] = useActionState<EstadoDaAcao, FormData>(
@@ -80,9 +81,14 @@ export function FormularioDeNps({ clientes }: { clientes: ParceiroResumo[] }) {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Registrar resposta"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Registrar resposta
+        </Botao>
       </div>
     </form>
   );

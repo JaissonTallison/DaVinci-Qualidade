@@ -16,21 +16,64 @@ export const areaDeTexto = `min-h-24 w-full py-2 ${controle}`;
 export const erroDoCampo = "text-sm text-nao-conforme";
 export const ajudaDoCampo = "text-sm text-texto-3";
 
-const botao =
-  "inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-campo border px-4 text-base font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50";
-/** Um por tela: a ação que resolve. Azul da marca. */
-export const botaoPrimario = `${botao} border-transparent bg-acao text-primaria-texto shadow-xs hover:bg-acao-escuro`;
-export const botaoSecundario = `${botao} border-borda-campo bg-superficie text-texto shadow-xs hover:border-borda-forte hover:bg-superficie-2`;
-/** Ação sem moldura (Cancelar ao lado do primário em barra estreita, ações de linha). */
-export const botaoFantasma = `${botao} border-transparent bg-transparent text-texto-2 hover:bg-superficie-2 hover:text-texto`;
-/** Excluir, anular, cancelar registro: vermelho cheio, sempre com confirmação. */
-export const botaoPerigo = `${botao} border-transparent bg-nao-conforme text-primaria-texto shadow-xs hover:bg-nao-conforme-texto`;
-/** Botão de 30 px para ações na linha da tabela ou dentro de um card. */
-export const botaoPequeno = `${botao} h-7.5 border-borda-campo bg-superficie px-3 text-sm text-texto shadow-xs hover:border-borda-forte hover:bg-superficie-2`;
-/** Botão só com ícone (36 × 36), com `aria-label`. */
-export const botaoIcone = `${botao} w-9 border-borda-campo bg-superficie px-0 text-texto-2 shadow-xs hover:border-borda-forte hover:bg-superficie-2 hover:text-texto`;
-export const botaoLink =
-  "text-base font-medium text-info underline-offset-2 hover:underline";
+/**
+ * Botões (interface.md §8). Use o componente `Botao`; as classes abaixo ficam para os poucos casos em que o
+ * elemento não pode ser o componente (gatilho do `Suspenso`, `<label>` de arquivo, `<summary>`).
+ */
+export type VarianteDoBotao =
+  | "primario"
+  | "secundario"
+  | "fantasma"
+  | "perigo"
+  | "link";
+/** Pequeno 30 px (card e tabela), médio 36 px (corpo, modal, filtro), grande 40 px (cabeçalho e barra do cadastro). */
+export type TamanhoDoBotao = "pequeno" | "medio" | "grande";
+
+const BASE_DO_BOTAO =
+  "inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-campo border font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50";
+const TAMANHOS_DO_BOTAO: Record<TamanhoDoBotao, string> = {
+  pequeno: "h-7.5 gap-1.5 px-3 text-sm",
+  medio: "h-9 gap-2 px-4 text-base",
+  grande: "h-10 gap-2 px-5 text-base",
+};
+const SO_ICONE: Record<TamanhoDoBotao, string> = {
+  pequeno: "size-7.5",
+  medio: "size-9",
+  grande: "size-10",
+};
+const VARIANTES_DO_BOTAO: Record<Exclude<VarianteDoBotao, "link">, string> = {
+  /** Um por área: a ação que conclui a tarefa. Azul da marca. */
+  primario:
+    "border-transparent bg-acao text-primaria-texto shadow-xs hover:bg-acao-escuro",
+  /** Ações de apoio: Exportar, Imprimir, Editar, Cancelar no cadastro. */
+  secundario:
+    "border-borda-campo bg-superficie text-texto shadow-xs hover:border-borda-forte hover:bg-superficie-2",
+  /** Sem moldura: descartar, ações de linha, botão só com ícone na barra. */
+  fantasma:
+    "border-transparent bg-transparent text-texto-2 hover:bg-superficie-2 hover:text-texto",
+  /** Excluir, anular, cancelar registro: vermelho cheio, sempre com confirmação. */
+  perigo:
+    "border-transparent bg-nao-conforme text-primaria-texto shadow-xs hover:bg-nao-conforme-texto",
+};
+
+/** Classe do botão por variante e tamanho; `soIcone` deixa quadrado (36 × 36 no médio). */
+export function estiloDoBotao(
+  variante: VarianteDoBotao = "secundario",
+  tamanho: TamanhoDoBotao = "medio",
+  soIcone = false,
+): string {
+  if (variante === "link")
+    return `inline-flex items-center gap-1.5 font-medium text-info underline-offset-2 hover:underline ${tamanho === "pequeno" ? "text-sm" : "text-base"}`;
+  return `${BASE_DO_BOTAO} ${soIcone ? `${SO_ICONE[tamanho]} px-0` : TAMANHOS_DO_BOTAO[tamanho]} ${VARIANTES_DO_BOTAO[variante]}`;
+}
+
+export const botaoPrimario = estiloDoBotao("primario");
+export const botaoSecundario = estiloDoBotao("secundario");
+export const botaoFantasma = estiloDoBotao("fantasma");
+export const botaoPerigo = estiloDoBotao("perigo");
+export const botaoPequeno = estiloDoBotao("secundario", "pequeno");
+export const botaoIcone = estiloDoBotao("secundario", "medio", true);
+export const botaoLink = estiloDoBotao("link");
 
 /** Link de texto neutro para ações secundárias da tela ("Limpar filtros", "Inativar"). */
 export const linkDiscreto =

@@ -14,13 +14,10 @@ import {
   selecionarPerguntas,
   type EstadoDaAcao,
 } from "@/lib/acoes-auditorias";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 /** Banco filtrado com caixas para incluir no roteiro; as já incluídas aparecem marcadas e travadas. */
 export function BancoDePerguntas({
@@ -86,9 +83,15 @@ export function BancoDePerguntas({
       </ul>
       {podeEditar && perguntas.length > 0 && (
         <div className="sticky bottom-0 border-t border-borda bg-superficie px-4 py-3">
-          <button type="submit" className={botaoPrimario} disabled={enviando}>
-            {enviando ? "Incluindo…" : "Incluir as marcadas no roteiro"}
-          </button>
+          <Botao
+            type="submit"
+            carregando={enviando}
+            textoCarregando="Incluindo…"
+            variante="primario"
+            icone={Plus}
+          >
+            Incluir as marcadas no roteiro
+          </Botao>
         </div>
       )}
     </form>
@@ -109,13 +112,14 @@ export function RetirarPergunta({
   return (
     <form action={enviar} className="flex flex-col items-end gap-1">
       <input type="hidden" name="retirar" value={codigo} />
-      <button
+      <Botao
         type="submit"
-        className="text-sm text-texto-2 hover:text-nao-conforme hover:underline"
         disabled={enviando}
+        variante="fantasma"
+        tamanho="pequeno"
       >
         Retirar
-      </button>
+      </Botao>
       {estado.erro && (
         <span className="max-w-48 text-right text-xs text-nao-conforme">
           {estado.erro.mensagem}
@@ -228,9 +232,9 @@ export function NovaPerguntaPropria({ auditoriaId }: { auditoriaId: string }) {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoSecundario} disabled={enviando}>
-          {enviando ? "Salvando…" : "Salvar em minhas perguntas"}
-        </button>
+        <Botao type="submit" carregando={enviando} textoCarregando="Salvando…">
+          Salvar em minhas perguntas
+        </Botao>
       </div>
     </form>
   );

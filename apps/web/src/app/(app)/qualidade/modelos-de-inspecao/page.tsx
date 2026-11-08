@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import {
   TIPOS_INSPECAO,
   type DadosDoUsuario,
@@ -11,12 +10,13 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import {
   aba as estiloDaAba,
-  botaoPrimario,
   painel,
   tituloDaPagina,
   trilho,
 } from "@/lib/estilos";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Modelos de inspeção" };
 
@@ -73,13 +73,14 @@ export default async function ListaDeModelos({
             </p>
           </div>
           {podeEditar && (
-            <Link
+            <Botao
               href="/qualidade/modelos-de-inspecao/novo"
-              className={botaoPrimario}
+              variante="primario"
+              tamanho="grande"
+              icone={Plus}
             >
-              <IconeDaTela href={"/qualidade/modelos-de-inspecao/novo"} />
               Criar modelo
-            </Link>
+            </Botao>
           )}
         </header>
       </CabecalhoComVoltar>

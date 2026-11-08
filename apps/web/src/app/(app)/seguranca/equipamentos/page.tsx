@@ -10,8 +10,10 @@ import { SelecaoDeFiltro } from "@/components/filtros";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
-import { botaoSecundario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
 import { NovoEquipamento } from "./formularios";
+import { ListFilter } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Equipamentos de emergência" };
 
@@ -61,9 +63,9 @@ export default async function Equipamentos({
             opcoes={NOMES_DAS_CATEGORIAS}
             valor={categoria}
           />
-          <button type="submit" className={botaoSecundario}>
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         {!r.ok ? (
           <div className="p-4">

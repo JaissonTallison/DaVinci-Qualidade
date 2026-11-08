@@ -5,7 +5,7 @@ import { Send } from "@/components/icones";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarConvite } from "@/lib/acoes-servicos";
-import { botaoSecundario } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /** Gera o link da pesquisa para esta OS; a página volta mostrando o link para copiar. */
 export function EnviarPesquisa({
@@ -26,10 +26,14 @@ export function EnviarPesquisa({
       <input type="hidden" name="clienteId" value={clienteId} />
       {osId && <input type="hidden" name="osId" value={osId} />}
       {estado.erro && <AvisoDeErro erro={estado.erro} />}
-      <button type="submit" className={botaoSecundario} disabled={enviando}>
-        <Send aria-hidden size={16} strokeWidth={1.75} />
-        {enviando ? "Gerando…" : "Gerar link da pesquisa"}
-      </button>
+      <Botao
+        type="submit"
+        carregando={enviando}
+        textoCarregando="Gerando…"
+        icone={Send}
+      >
+        Gerar link da pesquisa
+      </Botao>
     </form>
   );
 }

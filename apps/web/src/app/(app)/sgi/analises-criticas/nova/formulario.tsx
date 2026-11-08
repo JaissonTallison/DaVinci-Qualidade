@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { ENTRADAS_ANALISE_CRITICA } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -9,13 +8,9 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarAnaliseCritica } from "@/lib/acoes-sgi";
 import { hojeEmBrasilia } from "@/lib/datas";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** As entradas da 9.3.2 já vêm como roteiro: é só escrever embaixo de cada uma. */
 const ROTEIRO = ENTRADAS_ANALISE_CRITICA.map((e) => `${e}:\n`).join("\n");
@@ -36,12 +31,18 @@ export function FormularioDeAnalise() {
         ]}
         acoes={
           <>
-            <Link href="/sgi/analises-criticas" className={botaoSecundario}>
+            <Botao href="/sgi/analises-criticas" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Salvando…" : "Registrar análise crítica"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Salvando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Registrar análise crítica
+            </Botao>
           </>
         }
       >

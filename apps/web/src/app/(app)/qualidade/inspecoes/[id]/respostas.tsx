@@ -9,15 +9,9 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { salvarRespostas, type EstadoDaAcao } from "@/lib/acoes-inspecoes";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campoCompacto,
-  erroDoCampo,
-  painel,
-} from "@/lib/estilos";
+import { areaDeTexto, campoCompacto, erroDoCampo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Cor de cada resposta quando marcada: a mesma dos status (interface.md §5.3). */
 const MARCADA: Record<RespostaItem, string> = {
@@ -220,18 +214,18 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
             Concluída, a inspeção vira registro e não muda mais.
           </p>
         )}
-        <button type="submit" className={botaoSecundario} disabled={salvando}>
+        <Botao type="submit" disabled={salvando}>
           Salvar respostas
-        </button>
-        <button
+        </Botao>
+        <Botao
           type="submit"
           name="concluir"
           value="sim"
-          className={botaoPrimario}
           disabled={salvando || pendentes > 0}
+          variante="primario"
         >
           {salvando ? "Salvando…" : "Salvar e concluir"}
-        </button>
+        </Botao>
       </div>
     </form>
   );

@@ -2,7 +2,8 @@
 
 import { useState, type ReactNode } from "react";
 import { Plus, X } from "@/components/icones";
-import { botaoLink, campoCompacto, erroDoCampo } from "@/lib/estilos";
+import { campoCompacto, erroDoCampo } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export interface ColunaDoEditor {
   nome: string;
@@ -174,17 +175,18 @@ export function EditorDeLinhas({
           </tbody>
         </table>
       </div>
-      <button
-        type="button"
-        className={`${botaoLink} mt-2 inline-flex items-center gap-1 text-sm`}
+      <Botao
         onClick={() => {
           setLinhas((ls) => [...ls, { chave: proxima, valores: {} }]);
           setProxima((n) => n + 1);
         }}
+        variante="link"
+        tamanho="pequeno"
+        icone={Plus}
+        className="mt-2"
       >
-        <Plus aria-hidden size={14} />
         Incluir {rotuloDaLinha.toLowerCase()}
-      </button>
+      </Botao>
     </div>
   );
 }

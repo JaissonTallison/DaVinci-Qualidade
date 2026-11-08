@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Check, Copy } from "@/components/icones";
-import { botaoSecundario } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 /** Copia o texto para a área de transferência e confirma por 2 segundos. */
 export function BotaoCopiar({
@@ -14,9 +14,9 @@ export function BotaoCopiar({
 }) {
   const [copiado, setCopiado] = useState(false);
   return (
-    <button
-      type="button"
-      className={`${botaoSecundario} h-8 text-sm`}
+    <Botao
+      tamanho="pequeno"
+      icone={copiado ? Check : Copy}
       onClick={async () => {
         try {
           await navigator.clipboard.writeText(texto);
@@ -27,12 +27,7 @@ export function BotaoCopiar({
         }
       }}
     >
-      {copiado ? (
-        <Check aria-hidden size={14} strokeWidth={1.75} />
-      ) : (
-        <Copy aria-hidden size={14} strokeWidth={1.75} />
-      )}
       <span aria-live="polite">{copiado ? "Copiado" : rotulo}</span>
-    </button>
+    </Botao>
   );
 }

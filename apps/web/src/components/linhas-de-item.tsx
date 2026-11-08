@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { MAXIMO_DE_ITENS } from "@davinci/types";
-import { botaoSecundario, campoCompacto, erroDoCampo } from "@/lib/estilos";
+import { campoCompacto, erroDoCampo } from "@/lib/estilos";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 /**
  * Itens a verificar: "o que verificar" e "critério de aceitação", em linhas. Vão como `item_verificar` e
@@ -59,13 +61,9 @@ export function LinhasDeItem({
       ))}
       {linhas < MAXIMO_DE_ITENS && (
         <div className="pl-10">
-          <button
-            type="button"
-            onClick={() => setLinhas((n) => n + 1)}
-            className={botaoSecundario}
-          >
+          <Botao onClick={() => setLinhas((n) => n + 1)} icone={Plus}>
             Incluir item
-          </button>
+          </Botao>
         </div>
       )}
     </div>

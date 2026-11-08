@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { TIPOS_MONITORAMENTO, type Monitoramento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -8,8 +7,9 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 const num = (n: number | null | undefined) =>
   n === null || n === undefined
@@ -83,13 +83,13 @@ export function FormularioDeMonitoramento({
         embutido={Boolean(m)}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : m
                   ? "Salvar alterações"
                   : "Cadastrar monitoramento"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -99,16 +99,21 @@ export function FormularioDeMonitoramento({
         ]}
         acoes={
           <>
-            <Link href="/ambiental/monitoramentos" className={botaoSecundario}>
+            <Botao href="/ambiental/monitoramentos" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : m
                   ? "Salvar alterações"
                   : "Cadastrar monitoramento"}
-            </button>
+            </Botao>
           </>
         }
       >

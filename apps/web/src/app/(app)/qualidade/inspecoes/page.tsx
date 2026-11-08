@@ -1,4 +1,4 @@
-import { ClipboardCheck, ListFilter } from "@/components/icones";
+import { ClipboardCheck, ListFilter, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
@@ -7,7 +7,6 @@ import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
 import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { Paginacao } from "@/components/paginacao";
 import {
   BarraDeSelecao,
@@ -29,14 +28,13 @@ import { StatusDaInspecao } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   campoCompacto,
   linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Inspeções" };
 
@@ -139,10 +137,14 @@ export default async function ListaDeInspecoes({
           )}
         </div>
         {podeCriar && (
-          <Link href={`${BASE}/nova`} className={botaoPrimario}>
-            <IconeDaTela href={`${BASE}/nova`} />
-            Nova inspeção
-          </Link>
+          <Botao
+            href={`${BASE}/nova`}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
+            Registrar inspeção
+          </Botao>
         )}
       </header>
 
@@ -170,10 +172,9 @@ export default async function ListaDeInspecoes({
             opcoes={TIPOS_INSPECAO}
             valor={params.tipo}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="inspecoes" consulta={consulta} />
           {filtrando && (
             <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
@@ -204,14 +205,11 @@ export default async function ListaDeInspecoes({
             }
             acao={
               filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
+                <Botao href={BASE}>Limpar filtros</Botao>
               ) : podeCriar ? (
-                <Link href={`${BASE}/nova`} className={botaoPrimario}>
-                  <IconeDaTela href={`${BASE}/nova`} />
+                <Botao href={`${BASE}/nova`} variante="primario" icone={Plus}>
                   Registrar a primeira inspeção
-                </Link>
+                </Botao>
               ) : undefined
             }
           />

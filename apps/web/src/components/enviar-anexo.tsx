@@ -1,13 +1,14 @@
 "use client";
 
-import { Paperclip } from "@/components/icones";
+import { Paperclip, Trash2 } from "@/components/icones";
 import { useActionState, useState } from "react";
 import { TIPOS_DE_ANEXO, type RegistroComAnexo } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { anexarArquivo, removerAnexo } from "@/lib/acoes-anexos";
-import { botaoSecundario, campoCompacto } from "@/lib/estilos";
+import { campoCompacto } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function EnviarAnexo({
   registro,
@@ -45,10 +46,14 @@ export function EnviarAnexo({
           defaultValue={estado.valores?.descricao}
           className={`${campoCompacto} min-w-0 flex-1`}
         />
-        <button type="submit" className={botaoSecundario} disabled={enviando}>
-          <Paperclip aria-hidden size={16} strokeWidth={1.75} />
-          {enviando ? "Enviando…" : "Anexar"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Enviando…"
+          icone={Paperclip}
+        >
+          Anexar
+        </Botao>
       </div>
       <p
         className={
@@ -75,30 +80,33 @@ export function RemoverAnexo({ id, voltar }: { id: string; voltar: string }) {
       {confirmando ? (
         <>
           <span className="text-sm text-texto-2">Remover a evidência?</span>
-          <button
+          <Botao
             type="submit"
-            className="text-sm font-medium text-nao-conforme hover:underline"
-            disabled={enviando}
+            carregando={enviando}
+            textoCarregando="Removendo…"
+            variante="perigo"
+            tamanho="pequeno"
           >
-            {enviando ? "Removendo…" : "Sim, remover"}
-          </button>
-          <button
-            type="button"
+            Sim, remover
+          </Botao>
+          <Botao
             onClick={() => setConfirmando(false)}
-            className="text-sm text-texto-2 hover:text-texto hover:underline"
             disabled={enviando}
+            variante="fantasma"
+            tamanho="pequeno"
           >
             Não
-          </button>
+          </Botao>
         </>
       ) : (
-        <button
-          type="button"
+        <Botao
           onClick={() => setConfirmando(true)}
-          className="text-sm text-texto-2 hover:text-texto hover:underline"
+          variante="fantasma"
+          tamanho="pequeno"
+          icone={Trash2}
         >
           Remover
-        </button>
+        </Botao>
       )}
       {estado.erro && (
         <span className="ml-2 text-sm text-nao-conforme">

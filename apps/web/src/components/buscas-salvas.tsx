@@ -4,7 +4,8 @@ import { useMemo, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { X } from "@/components/icones";
-import { botaoLink, campoCompacto } from "@/lib/estilos";
+import { campoCompacto } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 type Busca = { nome: string; consulta: string };
 
@@ -106,9 +107,9 @@ export function BuscasSalvas() {
             aria-label="Nome do filtro"
             className={`${campoCompacto} h-8 w-44`}
           />
-          <button type="submit" className={`${botaoLink} text-sm`}>
+          <Botao type="submit" variante="link" tamanho="pequeno">
             Salvar filtro
-          </button>
+          </Botao>
         </form>
       )}
     </div>

@@ -11,9 +11,10 @@ import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoSecundario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
 import { FormularioDeFator } from "./formulario";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { BotaoIcone } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Inventário de GEE" };
 const t = (n: number) =>
@@ -53,24 +54,22 @@ export default async function Gee({
           </p>
         </div>
         <nav aria-label="Ano" className="flex items-center gap-2">
-          <Link
+          <BotaoIcone
             href={`/ambiental/gee?ano=${ano - 1}`}
-            className={botaoSecundario}
-            aria-label={`Ano ${ano - 1}`}
-          >
-            <ChevronLeft aria-hidden size={16} strokeWidth={1.75} />
-          </Link>
+            rotulo={`Ano ${ano - 1}`}
+            variante="secundario"
+            icone={ChevronLeft}
+          />
           <span className="min-w-14 text-center text-lg font-semibold tabular-nums">
             {ano}
           </span>
           {ano < anoAtual && (
-            <Link
+            <BotaoIcone
               href={`/ambiental/gee?ano=${ano + 1}`}
-              className={botaoSecundario}
-              aria-label={`Ano ${ano + 1}`}
-            >
-              <ChevronRight aria-hidden size={16} strokeWidth={1.75} />
-            </Link>
+              rotulo={`Ano ${ano + 1}`}
+              variante="secundario"
+              icone={ChevronRight}
+            />
           )}
         </nav>
       </header>

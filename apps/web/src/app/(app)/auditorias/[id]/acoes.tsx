@@ -19,13 +19,8 @@ import {
   type EstadoDaAcao,
 } from "@/lib/acoes-auditorias";
 import { hojeEmBrasilia } from "@/lib/datas";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-  campoCompacto,
-} from "@/lib/estilos";
+import { areaDeTexto, campo, campoCompacto } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export function IniciarAuditoria({ auditoria }: { auditoria: Auditoria }) {
   return (
@@ -181,13 +176,9 @@ export function FormalizarNc({
 
   if (!aberto && !erro)
     return (
-      <button
-        type="button"
-        onClick={() => setAberto(true)}
-        className={`${botaoSecundario} h-8 text-sm`}
-      >
+      <Botao onClick={() => setAberto(true)} tamanho="pequeno">
         Formalizar NC
-      </button>
+      </Botao>
     );
 
   // Confirmação inline (não é pop-over absoluto: não abre fora da tela em larguras pequenas).
@@ -225,17 +216,17 @@ export function FormalizarNc({
       </label>
       {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
       <div className="flex gap-2">
-        <button type="submit" className={botaoPrimario} disabled={enviando}>
-          {enviando ? "Abrindo NC…" : "Abrir NC na Qualidade"}
-        </button>
-        <button
-          type="button"
-          className={botaoSecundario}
-          onClick={() => setAberto(false)}
-          disabled={enviando}
+        <Botao
+          type="submit"
+          carregando={enviando}
+          textoCarregando="Abrindo NC…"
+          variante="primario"
         >
+          Abrir NC na Qualidade
+        </Botao>
+        <Botao onClick={() => setAberto(false)} disabled={enviando}>
           Cancelar
-        </button>
+        </Botao>
       </div>
     </form>
   );

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import {
   FREQUENCIAS_DE_AUDITORIA,
@@ -17,15 +16,9 @@ import {
   salvarItemProgramacao,
   type EstadoDaAcao,
 } from "@/lib/acoes-programacao";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-  erroDoCampo,
-  rotulo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo, erroDoCampo, rotulo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Criar (sem `item`) ou editar um item da programação anual de auditorias. */
 export function FormularioDaProgramacao({
@@ -66,12 +59,17 @@ export function FormularioDaProgramacao({
         ]}
         acoes={
           <>
-            <Link href="/auditorias/programacao" className={botaoSecundario}>
+            <Botao href="/auditorias/programacao" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando ? "Salvando…" : item ? "Salvar item" : "Adicionar item"}
-            </button>
+            </Botao>
           </>
         }
       >

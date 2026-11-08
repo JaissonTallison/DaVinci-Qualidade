@@ -52,13 +52,14 @@ export function Pesquisa({ grupos }: { grupos: GrupoDoMenu[] }) {
       <button
         type="button"
         onClick={() => setAberta(true)}
-        className="flex h-9 min-w-0 items-center gap-2 rounded-campo border border-borda-campo bg-campo px-3 text-sm text-texto-2 hover:bg-superficie hover:text-texto sm:w-64 lg:w-80"
+        aria-label="Pesquisar registros e telas (Ctrl K)"
+        className="flex h-9 min-w-0 items-center gap-2 rounded-campo border border-borda-campo bg-superficie-2 px-3 text-base text-texto-3 transition-colors hover:border-borda-forte hover:text-texto-2 max-sm:w-9 max-sm:justify-center max-sm:px-0 sm:h-8.5 sm:w-60 lg:w-75"
       >
         <Search aria-hidden size={16} strokeWidth={1.75} className="shrink-0" />
         <span className="hidden flex-1 truncate text-left sm:inline">
           Pesquisar registros e telas…
         </span>
-        <kbd className="hidden rounded-xs border border-borda px-1.5 text-texto-3 font-mono text-xs sm:inline">
+        <kbd className="hidden h-5 items-center rounded-xs border border-borda bg-superficie px-1.5 font-mono text-xs text-texto-2 sm:inline-flex">
           Ctrl K
         </kbd>
       </button>
@@ -148,7 +149,7 @@ function Janela({
   let secaoAnterior = "";
   return (
     <div
-      className="fixed inset-0 z-40 flex items-start justify-center bg-primaria/40 px-4 pt-[12vh]"
+      className="fixed inset-0 z-40 flex items-start justify-center bg-texto/50 px-4 pt-[12vh]"
       onMouseDown={(e) => e.target === e.currentTarget && fechar()}
     >
       <div

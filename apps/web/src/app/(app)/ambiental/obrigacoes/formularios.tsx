@@ -14,6 +14,8 @@ import {
   excluirObrigacao,
 } from "@/lib/acoes-ambiental-gestao";
 import { areaDeTexto, campo } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
+import { Trash2 } from "@/components/icones";
 
 /** Nova obrigação: começar de um modelo preenche nome, órgão e periodicidade. */
 export function NovaObrigacao() {
@@ -200,14 +202,15 @@ export function ExcluirObrigacao({ id }: { id: string }) {
   return (
     <span className="inline-flex items-center gap-2 text-sm">
       {erro && <span className="text-nao-conforme">{erro}</span>}
-      <button
-        type="button"
+      <Botao
         disabled={pendente}
-        className="text-texto-2 hover:text-nao-conforme hover:underline"
         onClick={() => iniciar(async () => setErro(await excluirObrigacao(id)))}
+        variante="fantasma"
+        tamanho="pequeno"
+        icone={Trash2}
       >
         Excluir
-      </button>
+      </Botao>
     </span>
   );
 }

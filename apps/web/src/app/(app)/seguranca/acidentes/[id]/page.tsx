@@ -20,7 +20,6 @@ import {
 import { chamarApi } from "@/lib/api";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -40,6 +39,8 @@ import { LinhaDoTempoDoAcidente } from "./linha-do-tempo";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 export const metadata: Metadata = { title: "Acidente" };
 
 const AVISOS: Record<string, string> = {
@@ -299,18 +300,18 @@ export default async function DetalheDoAcidente({
             ciclo da NC no Qualidade.
           </p>
           <div className="flex flex-wrap gap-2">
-            <Link
+            <Botao
               href={`/qualidade/nao-conformidades/nova?acidente=${a.id}`}
-              className={botaoSecundario}
+              icone={Plus}
             >
               Abrir NC
-            </Link>
-            <Link
+            </Botao>
+            <Botao
               href={`/qualidade/planos-de-acao/novo?acidente=${a.id}`}
-              className={botaoSecundario}
+              icone={Plus}
             >
               Criar plano de ação
-            </Link>
+            </Botao>
           </div>
         </section>
       )}

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import { TIPOS_REGISTRO_SST, type TipoRegistroSst } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -10,13 +9,9 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { criarRegistroSst } from "@/lib/acoes-pgr-pt";
 import { hojeEmBrasilia } from "@/lib/datas";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeRegistro({
   tipoInicial,
@@ -44,12 +39,18 @@ export function FormularioDeRegistro({
         ]}
         acoes={
           <>
-            <Link href="/seguranca/registros" className={botaoSecundario}>
+            <Botao href="/seguranca/registros" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
-              {salvando ? "Salvando…" : "Salvar registro"}
-            </button>
+            </Botao>
+            <Botao
+              type="submit"
+              carregando={salvando}
+              textoCarregando="Salvando…"
+              variante="primario"
+              tamanho="grande"
+            >
+              Salvar registro
+            </Botao>
           </>
         }
       >

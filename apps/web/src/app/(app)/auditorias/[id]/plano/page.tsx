@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Printer } from "@/components/icones";
 import {
@@ -10,11 +9,12 @@ import {
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoSecundario, painel } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { CabecalhoDaAuditoria } from "../cabecalho";
 import { AbasDoPlanejar } from "../planejar-abas";
 import { FormularioDoPlano } from "./formulario";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Plano de auditoria" };
 
@@ -44,13 +44,9 @@ export default async function Plano({
           Envie ao auditado com antecedência: o que será auditado, quando, com
           quem e o que preparar.
         </p>
-        <Link
-          href={`/auditorias/${id}/plano/imprimir`}
-          className={botaoSecundario}
-        >
-          <Printer aria-hidden size={16} strokeWidth={1.75} />
+        <Botao href={`/auditorias/${id}/plano/imprimir`} icone={Printer}>
           Plano para imprimir
-        </Link>
+        </Botao>
       </div>
       {aviso === "salvo" && (
         <CaixaDeAlerta tom="sucesso" className="mt-4">

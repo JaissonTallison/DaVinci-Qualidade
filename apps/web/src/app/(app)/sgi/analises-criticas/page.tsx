@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import type { AnaliseCritica, DadosDoUsuario, ResumoSgi } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { botaoPrimario, painel, tituloDaPagina } from "@/lib/estilos";
+import { painel, tituloDaPagina } from "@/lib/estilos";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Análises críticas" };
 
@@ -32,10 +33,14 @@ export default async function Analises() {
           )}
         </div>
         {podeCriar && (
-          <Link href="/sgi/analises-criticas/nova" className={botaoPrimario}>
-            <IconeDaTela href={"/sgi/analises-criticas/nova"} />
+          <Botao
+            href="/sgi/analises-criticas/nova"
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Registrar análise
-          </Link>
+          </Botao>
         )}
       </header>
       <section className={`${painel} mt-6`}>

@@ -16,12 +16,12 @@ import { chamarApi } from "@/lib/api";
 import { linkCsv } from "@/lib/csv";
 import { formatarData, hojeEmBrasilia } from "@/lib/datas";
 import {
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
   tituloDoPainel,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Inventário de resíduos" };
 
@@ -120,23 +120,21 @@ export default async function Inventario({
         </div>
       </CabecalhoComVoltar>
       <div className="mt-4 flex flex-wrap gap-2 print:hidden">
-        <a
+        <Botao
           href={csvInventario}
           download={`inventario-residuos-${ano}.csv`}
-          className={botaoSecundario}
+          icone={Download}
         >
-          <Download aria-hidden size={16} strokeWidth={1.75} />
           Inventário em planilha
-        </a>
+        </Botao>
         {csvMtr && (
-          <a
+          <Botao
             href={csvMtr}
             download={`saidas-mtr-${ano}.csv`}
-            className={botaoSecundario}
+            icone={Download}
           >
-            <Download aria-hidden size={16} strokeWidth={1.75} />
             Saídas com MTR (para o SINIR)
-          </a>
+          </Botao>
         )}
         <BotaoImprimir />
       </div>

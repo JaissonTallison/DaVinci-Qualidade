@@ -13,8 +13,6 @@ import { StatusDaAuditoria } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   cabecalhoDoPainel,
   campo,
   campoCompacto,
@@ -23,6 +21,7 @@ import {
   tituloDaPagina,
   tituloDoPainel,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Log do Auditor" };
 
@@ -59,10 +58,9 @@ export default async function LogDoAuditorPage({
             className={`${campoCompacto} w-72`}
           />
         </label>
-        <button type="submit" className={botaoSecundario}>
-          <Search aria-hidden size={16} strokeWidth={1.75} />
+        <Botao type="submit" icone={Search}>
           Consultar
-        </button>
+        </Botao>
       </form>
       {r && !r.ok && <AvisoDeErro erro={r.erro} />}
       {r?.ok && (
@@ -129,10 +127,9 @@ export default async function LogDoAuditorPage({
                   />
                   Anonimizar as organizações (Organização A, B, C…)
                 </label>
-                <button type="submit" className={botaoPrimario}>
-                  <FileText aria-hidden size={16} strokeWidth={1.75} />
+                <Botao type="submit" variante="primario" icone={FileText}>
                   Gerar declaração
-                </button>
+                </Botao>
               </form>
             </div>
           </section>

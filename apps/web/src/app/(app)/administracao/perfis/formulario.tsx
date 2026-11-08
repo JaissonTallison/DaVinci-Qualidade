@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import { GRUPOS_DE_PERMISSOES, PERMISSOES, type Perfil } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -8,8 +7,9 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarPerfil } from "@/lib/acoes-administracao";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Nome, descrição e as permissões agrupadas por módulo. */
 export function FormularioDePerfil({ perfil }: { perfil?: Perfil }) {
@@ -36,16 +36,21 @@ export function FormularioDePerfil({ perfil }: { perfil?: Perfil }) {
         resumo={[{ rotulo: "Perfil", campo: "nome" }]}
         acoes={
           <>
-            <Link href="/administracao/perfis" className={botaoSecundario}>
+            <Botao href="/administracao/perfis" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : perfil
                   ? "Salvar perfil"
                   : "Criar perfil"}
-            </button>
+            </Botao>
           </>
         }
       >

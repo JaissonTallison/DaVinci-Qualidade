@@ -55,6 +55,41 @@ const eslintConfig = defineConfig([
           message:
             "Tipografia é IBM Plex Sans e IBM Plex Mono (design system de 08/11/2026). Inter, Geist, Manrope, Sora e Poppins são a cara dos sistemas gerados por IA.",
         },
+        {
+          selector:
+            "JSXAttribute[name.name='className'] Identifier[name=/^botao(Primario|Secundario|Perigo|Fantasma|Pequeno|Icone|Link)$/]",
+          message:
+            "Use o componente Botao (components/botao.tsx) com variante e tamanho; a classe solta fica só para o gatilho do Suspenso.",
+        },
+      ],
+    },
+  },
+  {
+    // Ícone da tela é navegação: só no menu, na barra superior, na busca e nos atalhos de tela. Em botão, o ícone diz a ação (interface.md §8).
+    files: ["src/**/*.tsx"],
+    ignores: [
+      "src/components/icones-do-menu.tsx",
+      "src/components/menu-lateral.tsx",
+      "src/components/barra-superior.tsx",
+      "src/components/barra-inferior.tsx",
+      "src/components/pesquisa.tsx",
+      "src/components/linha-de-prazo.tsx",
+      "src/app/(app)/qualidade/configuracoes/page.tsx",
+      "src/app/(app)/auditorias/biblioteca-do-auditor/page.tsx",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/components/icones-do-menu",
+              importNames: ["IconeDaTela"],
+              message:
+                "Ícone da tela é do menu. Em botão use o ícone da ação (Plus cria, Pencil edita, Trash2 exclui) no prop icone do Botao.",
+            },
+          ],
+        },
       ],
     },
   },

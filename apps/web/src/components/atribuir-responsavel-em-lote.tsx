@@ -2,9 +2,10 @@
 
 import { UserPlus } from "@/components/icones";
 import { useState, useTransition } from "react";
-import { botaoPrimario, botaoSecundario, campoCompacto } from "@/lib/estilos";
+import { botaoSecundario, campoCompacto } from "@/lib/estilos";
 import { useSelecao } from "./selecao-de-linhas";
 import { Suspenso } from "./suspenso";
+import { Botao } from "@/components/botao";
 
 /**
  * Ação em massa: troca o responsável de todas as linhas marcadas de uma vez.
@@ -67,13 +68,14 @@ export function AtribuirResponsavelEmLote({
             autoFocus
           />
           {erro && <p className="text-xs text-nao-conforme">{erro}</p>}
-          <button
+          <Botao
             type="submit"
             disabled={pendente || !nome.trim()}
-            className={`${botaoPrimario} w-full disabled:opacity-60`}
+            variante="primario"
+            className="w-full"
           >
             {pendente ? "Atribuindo…" : "Atribuir"}
-          </button>
+          </Botao>
         </form>
       )}
     </Suspenso>

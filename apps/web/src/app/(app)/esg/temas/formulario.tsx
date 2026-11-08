@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   NOTA_MATERIAL,
@@ -16,13 +15,9 @@ import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { IconeOds, Materialidade } from "@/components/marcadores-esg";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 const IMPACTOS = {
   1: "1 · Muito baixo",
@@ -92,13 +87,13 @@ export function FormularioDeTema({
         embutido={Boolean(tema)}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : tema
                   ? "Salvar alterações"
                   : "Cadastrar tema"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -108,16 +103,21 @@ export function FormularioDeTema({
         ]}
         acoes={
           <>
-            <Link href="/esg/temas" className={botaoSecundario}>
+            <Botao href="/esg/temas" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : tema
                   ? "Salvar alterações"
                   : "Cadastrar tema"}
-            </button>
+            </Botao>
           </>
         }
       >

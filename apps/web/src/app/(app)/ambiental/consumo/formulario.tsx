@@ -11,8 +11,9 @@ import { Campo } from "@/components/campo";
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { registrarConsumo } from "@/lib/acoes-ambiental";
-import { botaoPrimario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Leitura do mês. Registrar de novo o mesmo mês e fonte corrige o valor. */
 export function FormularioDeConsumo({ mesAtual }: { mesAtual: string }) {
@@ -81,9 +82,14 @@ export function FormularioDeConsumo({ mesAtual }: { mesAtual: string }) {
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
-          {salvando ? "Salvando…" : "Registrar"}
-        </button>
+        <Botao
+          type="submit"
+          carregando={salvando}
+          textoCarregando="Salvando…"
+          variante="primario"
+        >
+          Registrar
+        </Botao>
       </div>
     </form>
   );

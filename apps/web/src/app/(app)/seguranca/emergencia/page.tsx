@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Printer } from "@/components/icones";
 import {
   PAPEIS_NA_BRIGADA,
@@ -15,7 +14,6 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, hojeEmBrasilia } from "@/lib/datas";
 import {
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -26,6 +24,7 @@ import {
   PlanoDeEmergenciaForm,
   RetirarBrigadista,
 } from "./formularios";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Brigada e plano de emergência" };
 
@@ -51,13 +50,9 @@ export default async function Emergencia({
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h1 className={tituloDaPagina}>Brigada e plano de emergência</h1>
         {p && (
-          <Link
-            href="/seguranca/emergencia/imprimir"
-            className={botaoSecundario}
-          >
-            <Printer aria-hidden size={16} strokeWidth={1.75} />
+          <Botao href="/seguranca/emergencia/imprimir" icone={Printer}>
             Plano para imprimir
-          </Link>
+          </Botao>
         )}
       </div>
       <p className="mt-1 max-w-3xl text-base text-texto-2">

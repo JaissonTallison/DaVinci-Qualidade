@@ -71,6 +71,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). Toda mudan
 
 ### Alterado
 
+- **Botão padrão** (`Botao`, `BotaoIcone`): variantes primário, secundário, fantasma, perigo e link em três tamanhos (40 px no cabeçalho e na barra do cadastro, 36 px no corpo, 30 px na tabela), com carregando e motivo de desabilitado. Os botões de todas as telas passam a usá-lo; os de criar trocam o ícone da tela do menu por `Plus`, cada ação tem ícone fixo e os verbos seguem Abrir / Registrar / Cadastrar. O ESLint recusa classe de botão solta e o ícone do menu fora da navegação.
+
+- Barra superior no padrão do design system: 56 px com linha de baixo, trilha na mesma caixa em todos os níveis, busca de 300 px, Novo como botão secundário, painel de notificações de 400 px, menu do usuário com avatar redondo, empresa ativa com CNPJ e check, e Sair em vermelho.
+
 - **Design system aplicado em todas as telas** (08/11/2026): tokens do design system aprovado (fundo, neutros, status com fundo e borda suaves, foco), azul da marca #172477 no botão primário, IBM Plex Sans e Plex Mono no lugar da família Source, cantos 4/6/8 px, elevação em camadas, campos de 40 px, botões primário/secundário/fantasma/perigo/pequeno/ícone.
 - Todo status vira selo (`Selo`, sem ponto); avisos e bloqueios viram `CaixaDeAlerta` com o ícone padrão do Lucide; tabelas com cabeçalho em caixa alta e linhas de 44 px; paginação com números; estado vazio, chips de filtro e seletor segmentado no padrão.
 - Início sem foto com degradê, fitas e cards de cor cheia: cabeçalho simples, resumo em card, atalhos em card branco.

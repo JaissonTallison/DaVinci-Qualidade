@@ -10,8 +10,9 @@ import {
   mudarSituacaoDoTreinamento,
   salvarTreinamento,
 } from "@/lib/acoes-exames-e-treinamentos";
-import { botaoPrimario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export function FormularioDeTreinamento({
   treinamento,
@@ -102,13 +103,13 @@ export function FormularioDeTreinamento({
         </Campo>
       </div>
       <div>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
+        <Botao type="submit" disabled={salvando} variante="primario">
           {salvando
             ? "Salvando…"
             : treinamento
               ? "Salvar treinamento"
               : "Cadastrar treinamento"}
-        </button>
+        </Botao>
       </div>
     </form>
   );

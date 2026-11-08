@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ListFilter, Printer } from "@/components/icones";
 import {
@@ -18,7 +17,6 @@ import { Recolhido } from "@/components/formulario-de-acao";
 import { StatusDaAuditoria } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import {
-  botaoSecundario,
   campoCompacto,
   painel,
   tituloDaPagina,
@@ -36,6 +34,7 @@ import {
 } from "./formularios";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
+import { Botao } from "@/components/botao";
 export const metadata: Metadata = { title: "Roteiro de entrevista" };
 
 /** Etapa Planejar: escolher as perguntas que serão feitas em campo (8 a 15 por processo é um roteiro realista). */
@@ -110,13 +109,12 @@ export default async function RoteiroDaAuditoriaPage({
           <div className="flex flex-wrap items-baseline justify-between gap-2 px-5 pt-5">
             <h2 className={tituloDaSecao}>Roteiro desta auditoria</h2>
             {r.perguntas.length > 0 && (
-              <Link
+              <Botao
                 href={`/auditorias/${id}/roteiro/imprimir`}
-                className={botaoSecundario}
+                icone={Printer}
               >
-                <Printer aria-hidden size={16} strokeWidth={1.75} />
                 Roteiro de campo
-              </Link>
+              </Botao>
             )}
           </div>
           {r.perguntas.length === 0 ? (
@@ -193,10 +191,9 @@ export default async function RoteiroDaAuditoriaPage({
               aria-label="Palavra-chave"
               className={`${campoCompacto} w-40`}
             />
-            <button type="submit" className={botaoSecundario}>
-              <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+            <Botao type="submit" icone={ListFilter}>
               Filtrar
-            </button>
+            </Botao>
           </form>
           <Suspense>
             <BuscasSalvas />

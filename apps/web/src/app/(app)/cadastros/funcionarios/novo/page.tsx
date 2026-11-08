@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { CabecalhoDeCadastro } from "@/components/pagina-de-cadastro";
-import Link from "next/link";
 import type { Funcao, SetorDaEmpresa } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
 import { chamarApi } from "@/lib/api";
-import { botaoLink } from "@/lib/estilos";
 import { FormularioDeFuncionario } from "../formulario";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Cadastrar profissional" };
 
@@ -35,9 +34,9 @@ export default async function NovoFuncionario() {
       ) : semEstrutura ? (
         <p className="mt-4 max-w-2xl text-base text-texto-2">
           Todo profissional tem setor e função. Cadastre-os antes em{" "}
-          <Link href="/cadastros/setores-e-funcoes" className={botaoLink}>
+          <Botao href="/cadastros/setores-e-funcoes" variante="link">
             Setores e funções
-          </Link>
+          </Botao>
           .
         </p>
       ) : (

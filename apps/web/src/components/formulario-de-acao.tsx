@@ -3,14 +3,9 @@
 import { useActionState, type ReactNode } from "react";
 import type { ErroPadrao } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
-import {
-  botaoPerigo,
-  botaoPrimario,
-  cabecalhoDoPainel,
-  painel,
-  tituloDoPainel,
-} from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 export type EstadoDeFormulario = {
   erro?: ErroPadrao;
@@ -62,13 +57,14 @@ function FormularioDaVersao({
       <input type="hidden" name="versao" value={versao} />
       {children(erros, estado.valores ?? {}, estado)}
       <div>
-        <button
+        <Botao
           type="submit"
-          className={perigo ? botaoPerigo : botaoPrimario}
-          disabled={enviando}
+          variante={perigo ? "perigo" : "primario"}
+          carregando={enviando}
+          textoCarregando="Salvando…"
         >
-          {enviando ? "Salvando…" : rotuloDoBotao}
-        </button>
+          {rotuloDoBotao}
+        </Botao>
       </div>
     </form>
   );

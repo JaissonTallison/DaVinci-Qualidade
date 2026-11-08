@@ -16,8 +16,6 @@ import { StatusDaInspecao, StatusDaNc } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   cabecalhoDoPainel,
   painel,
   tituloDaPagina,
@@ -31,6 +29,8 @@ import { Anexos } from "@/components/anexos";
 
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 export const metadata: Metadata = { title: "Inspeção" };
 
 const AVISOS: Record<string, string> = {
@@ -341,12 +341,12 @@ export default async function DetalheDaInspecao({
                 </ul>
                 {permissoes.includes("qualidade.editar") && (
                   <div className="mt-4">
-                    <Link
+                    <Botao
                       href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
-                      className={botaoSecundario}
+                      icone={Plus}
                     >
                       Abrir outra NC
-                    </Link>
+                    </Botao>
                   </div>
                 )}
               </>
@@ -362,12 +362,13 @@ export default async function DetalheDaInspecao({
                   .
                 </p>
                 {permissoes.includes("qualidade.editar") && (
-                  <Link
+                  <Botao
                     href={`/qualidade/nao-conformidades/nova?inspecao=${i.id}`}
-                    className={botaoPrimario}
+                    variante="primario"
+                    icone={Plus}
                   >
                     Abrir NC
-                  </Link>
+                  </Botao>
                 )}
               </div>
             )}

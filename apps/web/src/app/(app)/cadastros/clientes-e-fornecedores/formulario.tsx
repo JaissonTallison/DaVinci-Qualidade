@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useState } from "react";
 import { formatarDocumento, type Parceiro } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -14,13 +13,9 @@ import {
 import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarParceiro } from "@/lib/acoes-parceiros";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 const PAPEIS_DO_FORMULARIO = [
   ["cliente", "Cliente"],
@@ -226,9 +221,9 @@ export function FormularioDeParceiro({
           <div className="sm:col-span-3">{campoObservacoes}</div>
         </div>
         <div className="mt-5 flex justify-end gap-3">
-          <button type="submit" className={botaoPrimario} disabled={salvando}>
+          <Botao type="submit" disabled={salvando} variante="primario">
             {textoDoBotao}
-          </button>
+          </Botao>
         </div>
       </form>
     );
@@ -321,15 +316,17 @@ export function FormularioDeParceiro({
             : "Campos obrigatórios preenchidos"
         }
       >
-        <Link
-          href="/cadastros/clientes-e-fornecedores"
-          className={botaoSecundario}
-        >
+        <Botao href="/cadastros/clientes-e-fornecedores" tamanho="grande">
           Cancelar
-        </Link>
-        <button type="submit" className={botaoPrimario} disabled={salvando}>
+        </Botao>
+        <Botao
+          type="submit"
+          disabled={salvando}
+          variante="primario"
+          tamanho="grande"
+        >
           {textoDoBotao}
-        </button>
+        </Botao>
       </BarraDeAcoes>
     </form>
   );

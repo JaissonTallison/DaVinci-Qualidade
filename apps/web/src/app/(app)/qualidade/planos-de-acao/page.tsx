@@ -1,4 +1,4 @@
-import { ListChecks, ListFilter } from "@/components/icones";
+import { ListChecks, ListFilter, Plus } from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AcoesDaLinha, itemDeAcao } from "@/components/acoes-da-linha";
@@ -8,7 +8,6 @@ import { BuscasSalvas } from "@/components/buscas-salvas";
 import { ThOrdenavel, type Ordem } from "@/components/cabecalho-ordenavel";
 import { ChipsDeFiltro, type ChipDeFiltro } from "@/components/chips-de-filtro";
 import { EstadoVazio } from "@/components/estado-vazio";
-import { IconeDaTela } from "@/components/icones-do-menu";
 import { Paginacao } from "@/components/paginacao";
 import {
   BarraDeSelecao,
@@ -32,14 +31,13 @@ import { Progresso, StatusDoPlano } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, prazoRelativo } from "@/lib/datas";
 import {
-  botaoPrimario,
-  botaoSecundario,
   campoCompacto,
   linkDiscreto,
   painel,
   subtituloDaPagina,
   tituloDaPagina,
 } from "@/lib/estilos";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Planos de ação" };
 
@@ -142,10 +140,14 @@ export default async function ListaDePlanos({
           )}
         </div>
         {podeCriar && (
-          <Link href={`${BASE}/novo`} className={botaoPrimario}>
-            <IconeDaTela href={`${BASE}/novo`} />
+          <Botao
+            href={`${BASE}/novo`}
+            variante="primario"
+            tamanho="grande"
+            icone={Plus}
+          >
             Criar plano
-          </Link>
+          </Botao>
         )}
       </header>
 
@@ -183,10 +185,9 @@ export default async function ListaDePlanos({
             />
             Só atrasados
           </label>
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
           <BotaoExportar recurso="planos-de-acao" consulta={consulta} />
           {filtrando && (
             <Link href={BASE} className={`h-9 content-center ${linkDiscreto}`}>
@@ -217,14 +218,11 @@ export default async function ListaDePlanos({
             }
             acao={
               filtrando ? (
-                <Link href={BASE} className={botaoSecundario}>
-                  Limpar filtros
-                </Link>
+                <Botao href={BASE}>Limpar filtros</Botao>
               ) : podeCriar ? (
-                <Link href={`${BASE}/novo`} className={botaoPrimario}>
-                  <IconeDaTela href={`${BASE}/novo`} />
+                <Botao href={`${BASE}/novo`} variante="primario" icone={Plus}>
                   Criar o primeiro plano
-                </Link>
+                </Botao>
               ) : undefined
             }
           />

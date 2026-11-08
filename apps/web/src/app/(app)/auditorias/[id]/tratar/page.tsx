@@ -20,8 +20,10 @@ import {
 import { RespostaMarcador } from "@/components/marcadores-auditoria";
 import { chamarApi } from "@/lib/api";
 import { formatarData } from "@/lib/datas";
-import { botaoSecundario, painel } from "@/lib/estilos";
+import { painel } from "@/lib/estilos";
 import { CabecalhoDaAuditoria } from "../cabecalho";
+import { Plus } from "@/components/icones";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Tratar NCs" };
 
@@ -195,12 +197,13 @@ export default async function Tratar({
                         ))}
                       </ul>
                     ) : nc ? (
-                      <Link
+                      <Botao
                         href={`/qualidade/planos-de-acao/novo?nc=${nc.id}`}
-                        className={`${botaoSecundario} h-8 text-sm`}
+                        tamanho="pequeno"
+                        icone={Plus}
                       >
                         Criar plano de ação
-                      </Link>
+                      </Botao>
                     ) : (
                       <span className="text-texto-2">Depois da NC</span>
                     )}

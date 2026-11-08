@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState } from "react";
 import {
   formatarDocumento,
@@ -15,8 +14,9 @@ import { Selecao } from "@/components/selecao";
 import type { EstadoDaAcao } from "@/lib/acao";
 import { salvarFuncionario } from "@/lib/acoes-cadastros";
 import { hojeEmBrasilia } from "@/lib/datas";
-import { botaoPrimario, botaoSecundario, campo } from "@/lib/estilos";
+import { campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Cadastrar (sem `funcionario`) ou editar. Setor e função vêm só dos ativos (mais o atual, se inativado). */
 export function FormularioDeFuncionario({
@@ -63,13 +63,13 @@ export function FormularioDeFuncionario({
         embutido={embutido}
         acoesEmbutido={
           <>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            <Botao type="submit" disabled={salvando} variante="primario">
               {salvando
                 ? "Salvando…"
                 : funcionario
                   ? "Salvar profissional"
                   : "Cadastrar profissional"}
-            </button>
+            </Botao>
           </>
         }
         resumo={[
@@ -80,16 +80,21 @@ export function FormularioDeFuncionario({
         ]}
         acoes={
           <>
-            <Link href="/cadastros/funcionarios" className={botaoSecundario}>
+            <Botao href="/cadastros/funcionarios" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : funcionario
                   ? "Salvar profissional"
                   : "Cadastrar profissional"}
-            </button>
+            </Botao>
           </>
         }
       >

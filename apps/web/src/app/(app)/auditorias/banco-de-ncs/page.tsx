@@ -8,14 +8,10 @@ import { BuscasSalvas } from "@/components/buscas-salvas";
 import { SelecaoDeFiltro } from "@/components/filtros";
 import { Recolhido } from "@/components/formulario-de-acao";
 import { chamarApi } from "@/lib/api";
-import {
-  botaoSecundario,
-  campoCompacto,
-  painel,
-  tituloDaPagina,
-} from "@/lib/estilos";
+import { campoCompacto, painel, tituloDaPagina } from "@/lib/estilos";
 import { CAPITULOS, PACKS } from "../biblioteca/filtros";
 import { AssistenteDeNc } from "./assistente";
+import { Botao } from "@/components/botao";
 
 export const metadata: Metadata = { title: "Banco de NCs" };
 
@@ -81,10 +77,9 @@ export default async function BancoDeNcs({
             aria-label="Palavra-chave"
             className={`${campoCompacto} w-44`}
           />
-          <button type="submit" className={botaoSecundario}>
-            <ListFilter aria-hidden size={16} strokeWidth={1.75} />
+          <Botao type="submit" icone={ListFilter}>
             Filtrar
-          </button>
+          </Botao>
         </form>
         <Suspense>
           <BuscasSalvas />

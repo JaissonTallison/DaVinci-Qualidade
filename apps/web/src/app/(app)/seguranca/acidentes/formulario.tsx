@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
 import {
   TIPOS_ACIDENTE,
@@ -12,13 +11,9 @@ import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
 import { salvarAcidente, type EstadoDaAcao } from "@/lib/acoes-acidentes";
-import {
-  areaDeTexto,
-  botaoPrimario,
-  botaoSecundario,
-  campo,
-} from "@/lib/estilos";
+import { areaDeTexto, campo } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
 
 /** Registrar (sem `acidente`) ou corrigir um registro. Os campos de lesão e afastamento seguem o tipo escolhido. */
 export function FormularioDeAcidente({
@@ -113,13 +108,13 @@ export function FormularioDeAcidente({
       <CadastroEmBlocos
         embutido={embutido}
         acoesEmbutido={
-          <button type="submit" className={botaoPrimario} disabled={salvando}>
+          <Botao type="submit" disabled={salvando} variante="primario">
             {salvando
               ? "Salvando…"
               : acidente
                 ? "Salvar registro"
                 : "Registrar"}
-          </button>
+          </Botao>
         }
         resumo={[
           { rotulo: "Tipo", campo: "tipo" },
@@ -129,16 +124,21 @@ export function FormularioDeAcidente({
         ]}
         acoes={
           <>
-            <Link href="/seguranca/acidentes" className={botaoSecundario}>
+            <Botao href="/seguranca/acidentes" tamanho="grande">
               Cancelar
-            </Link>
-            <button type="submit" className={botaoPrimario} disabled={salvando}>
+            </Botao>
+            <Botao
+              type="submit"
+              disabled={salvando}
+              variante="primario"
+              tamanho="grande"
+            >
               {salvando
                 ? "Salvando…"
                 : acidente
                   ? "Salvar registro"
                   : "Registrar"}
-            </button>
+            </Botao>
           </>
         }
       >

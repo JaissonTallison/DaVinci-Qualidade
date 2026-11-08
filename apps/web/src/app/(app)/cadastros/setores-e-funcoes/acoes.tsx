@@ -7,13 +7,10 @@ import {
   mudarSituacaoDaEstrutura,
   salvarEstrutura,
 } from "@/lib/acoes-cadastros";
-import {
-  botaoPerigo,
-  botaoPrimario,
-  botaoSecundario,
-  campoCompacto,
-} from "@/lib/estilos";
+import { campoCompacto } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
+import { Botao } from "@/components/botao";
+import { Plus } from "@/components/icones";
 
 type Tipo = "setor" | "funcao";
 type Item = SetorDaEmpresa | Funcao;
@@ -67,13 +64,14 @@ export function FormularioDeEstrutura({
             aria-invalid={Boolean(erros.cbo)}
           />
         )}
-        <button
+        <Botao
           type="submit"
-          className={item ? botaoSecundario : botaoPrimario}
-          disabled={enviando}
+          variante={item ? "secundario" : "primario"}
+          icone={item ? undefined : Plus}
+          carregando={enviando}
         >
           {item ? "Salvar" : "Cadastrar"}
-        </button>
+        </Botao>
       </div>
       {erro && <p className="text-sm text-nao-conforme">{erro}</p>}
     </form>
@@ -95,13 +93,14 @@ export function SituacaoDaEstrutura({
     <form action={enviar} className="inline-flex flex-col items-end gap-1">
       <input type="hidden" name="versao" value={item.versao} />
       <input type="hidden" name="ativo" value={item.ativo ? "nao" : "sim"} />
-      <button
+      <Botao
         type="submit"
-        className={`${item.ativo ? botaoPerigo : botaoSecundario} h-8 px-3 text-sm`}
-        disabled={enviando}
+        variante={item.ativo ? "perigo" : "secundario"}
+        tamanho="pequeno"
+        carregando={enviando}
       >
         {item.ativo ? "Inativar" : "Reativar"}
-      </button>
+      </Botao>
       {estado.erro && (
         <p className="max-w-xs text-right text-sm text-nao-conforme">
           {estado.erro.mensagem}
