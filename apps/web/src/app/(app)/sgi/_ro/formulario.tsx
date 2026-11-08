@@ -279,7 +279,7 @@ export function FormularioDeRo({
     Number(!preenchido(processo, 2)) + Number(!preenchido(descricao, 5));
   const faltamAvaliacao = Number(!a) + Number(!b);
   const faltamTratamento = acaoObrigatoria
-    ? Number(!preenchido(textoDoAcao)) +
+    ? Number(!preenchido(textoDaAcao)) +
       Number(!preenchido(responsavel)) +
       Number(!prazo)
     : 0;
