@@ -16,9 +16,11 @@ import {
   salvarPreferenciaSchema,
   salvarTemaSchema,
   CHAVES_DE_PREFERENCIA,
+  responderConviteSchema,
   trocarEmpresaSchema,
   trocarSenhaSchema,
   uuidv7,
+  type ConvitePendente,
   type Contexto,
   type Desafio2fa,
   type EmpresaResumo,
@@ -65,6 +67,7 @@ export const MINUTOS_DE_BLOQUEIO = 15;
 /** Mensagem única para e-mail inexistente ou senha errada: não revela quais e-mails existem. */
 const CREDENCIAIS_INVALIDAS = 'E-mail ou senha incorretos.';
 const SESSAO_INVALIDA = 'Sua sessão expirou. Entre novamente.';
+const CONVITE_INVALIDO = 'Este convite não existe mais.';
 
 type Usuario = typeof usuarios.$inferSelect;
 type Db = Database<typeof schema>;
@@ -537,7 +540,86 @@ export class IdentidadeService {
       empresas: disponiveis.map(resumo),
       permissoes: empresa.permissoes,
       recursos: empresa.recursos,
+      // Convites são um extra do cabeçalho: uma falha aqui (ex.: migração ainda não aplicada) não pode
+      // derrubar o "eu", que toda página chama. Falhou → sem convites, com um aviso no log.
+      convites: await this.convitesPendentes(usuario.id).catch((e: unknown) => {
+        this.logger.warn(`Convites não carregados: ${(e as Error).message}`);
+        return [];
+      }),
     };
+  }
+
+  /** Convites de acesso a outras empresas aguardando a pessoa aceitar (ERR-04). */
+  async convitesPendentes(usuarioId: string): Promise<ConvitePendente[]> {
+    const linhas = await this.db
+      .select({
+        id: vinculos.id,
+        razaoSocial: empresas.razaoSocial,
+        nomeFantasia: empresas.nomeFantasia,
+        perfil: perfis.nome,
+        convidadoEm: vinculos.convidadoEm,
+      })
+      .from(vinculos)
+      .innerJoin(empresas, eq(empresas.id, vinculos.empresaId))
+      .innerJoin(perfis, eq(perfis.id, vinculos.perfilId))
+      .where(
+        and(
+          eq(vinculos.usuarioId, usuarioId),
+          eq(vinculos.ativo, false),
+          isNull(vinculos.inativadoEm),
+          sql`${vinculos.convidadoEm} is not null`,
+          eq(empresas.ativa, true),
+          eq(perfis.ativo, true),
+        ),
+      )
+      .orderBy(asc(empresas.razaoSocial));
+    return linhas.map((l) => ({
+      id: l.id,
+      empresa: l.nomeFantasia ?? l.razaoSocial,
+      perfil: l.perfil,
+      convidadoEm: (l.convidadoEm ?? new Date()).toISOString(),
+    }));
+  }
+
+  /** A pessoa aceita o convite: o vínculo pendente vira acesso ativo. */
+  async aceitarConvite(ctx: Contexto, dados: unknown): Promise<{ aceito: true }> {
+    const { id } = validar(responderConviteSchema, dados);
+    const [linha] = await this.db
+      .update(vinculos)
+      .set({
+        ativo: true,
+        convidadoEm: null,
+        atualizadoPor: ctx.usuarioId,
+      })
+      .where(this.condicaoDoConvite(id, ctx.usuarioId))
+      .returning({ id: vinculos.id });
+    if (!linha) throw new ErroDeNegocio('NAO_ENCONTRADO', CONVITE_INVALIDO);
+    return { aceito: true };
+  }
+
+  /** A pessoa recusa o convite: o vínculo pendente é apagado (pode ser convidada de novo depois). */
+  async recusarConvite(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<{ recusado: true }> {
+    const { id } = validar(responderConviteSchema, dados);
+    const [linha] = await this.db
+      .delete(vinculos)
+      .where(this.condicaoDoConvite(id, ctx.usuarioId))
+      .returning({ id: vinculos.id });
+    if (!linha) throw new ErroDeNegocio('NAO_ENCONTRADO', CONVITE_INVALIDO);
+    return { recusado: true };
+  }
+
+  /** Um convite pendente desta pessoa: por id, só dela, ainda pendente. */
+  private condicaoDoConvite(id: string, usuarioId: string | null) {
+    return and(
+      eq(vinculos.id, id),
+      usuarioId ? eq(vinculos.usuarioId, usuarioId) : sql`false`,
+      eq(vinculos.ativo, false),
+      isNull(vinculos.inativadoEm),
+      sql`${vinculos.convidadoEm} is not null`,
+    );
   }
 
   /** Tema da interface (claro | escuro), salvo no perfil: vale em qualquer computador. */

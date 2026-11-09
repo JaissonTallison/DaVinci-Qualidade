@@ -26,7 +26,8 @@ const PERFIS = "/administracao/perfis";
 export type EstadoComSenha = EstadoDaAcao & {
   senha?: string;
   usuarioId?: string;
-  pessoaJaExistia?: boolean;
+  /** E-mail já era de outra empresa: foi convidado (aceita no próximo acesso), não vinculado. */
+  convidado?: boolean;
 };
 
 export async function criarUsuario(
@@ -42,10 +43,10 @@ export async function criarUsuario(
     valores,
   );
   if ("erro" in r) return r;
+  if (r.dados.convidado || !r.dados.usuario) return { convidado: true };
   return {
     senha: r.dados.senhaProvisoria ?? undefined,
     usuarioId: r.dados.usuario.id,
-    pessoaJaExistia: r.dados.pessoaJaExistia,
   };
 }
 

@@ -63,4 +63,14 @@ export class IdentidadeController {
   autenticar2fa(@Dados() dados: unknown) {
     return this.identidade.autenticar2fa(dados);
   }
+
+  @MessagePattern(PATTERNS.identidade.aceitarConvite)
+  aceitarConvite(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.identidade.aceitarConvite(ctx, dados);
+  }
+
+  @MessagePattern(PATTERNS.identidade.recusarConvite)
+  recusarConvite(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.identidade.recusarConvite(ctx, dados);
+  }
 }

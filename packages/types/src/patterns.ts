@@ -36,6 +36,8 @@ export const PATTERNS = {
     recuperarSenha: 'identidade.recuperar-senha',
     redefinirSenha: 'identidade.redefinir-senha',
     revogacoesRecentes: 'identidade.revogacoes-recentes',
+    aceitarConvite: 'identidade.aceitar-convite',
+    recusarConvite: 'identidade.recusar-convite',
   },
   /** Identidade: usuários da empresa (administração de acesso). */
   usuarios: {

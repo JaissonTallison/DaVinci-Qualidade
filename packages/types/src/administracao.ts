@@ -72,11 +72,12 @@ export interface UsuarioDaEmpresa {
 }
 
 export interface UsuarioCriado {
-  usuario: UsuarioDaEmpresa;
+  /** Pessoa nova criada nesta empresa. Nulo quando o e-mail já era de outra empresa (aí vai um convite). */
+  usuario: UsuarioDaEmpresa | null;
   /** Senha provisória (só para pessoa nova). Mostrada UMA vez; não fica guardada em lugar nenhum. */
   senhaProvisoria: string | null;
-  /** O e-mail já era de alguém (de outra empresa): só ganhou acesso a esta. */
-  pessoaJaExistia: boolean;
+  /** O e-mail já era de alguém de outra empresa: foi CONVIDADO (aceita no próximo acesso), não vinculado. */
+  convidado: boolean;
 }
 
 export interface SenhaRedefinida {

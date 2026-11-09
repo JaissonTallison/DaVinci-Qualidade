@@ -157,6 +157,13 @@ export const vinculos = pgTable(
     usuarioId: uuid().notNull(),
     perfilId: uuid().notNull(),
     ativo: boolean().notNull().default(true),
+    /**
+     * Convite pendente: o e-mail já tinha conta em outra empresa, foi convidado para esta e ainda não
+     * aceitou. Pendente = ativo=false E convidadoEm preenchido E inativadoEm nulo. Ao aceitar vira ativo;
+     * ao recusar vira inativado. (ERR-04)
+     */
+    convidadoEm: momento(),
+    convidadoPor: uuid(),
     /** Histórico de "remover acesso" (nunca apagamos o vínculo). */
     inativadoEm: momento(),
     inativadoPor: uuid(),

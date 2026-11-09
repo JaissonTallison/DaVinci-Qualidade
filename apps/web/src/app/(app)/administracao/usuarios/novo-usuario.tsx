@@ -18,6 +18,14 @@ export function NovoUsuario({ perfis }: { perfis: Perfil[] }) {
   );
   const erros = errosPorCampo(estado.erro?.detalhes);
   const v = estado.valores ?? {};
+  if (estado.convidado)
+    return (
+      <p role="status" className="mt-2 text-base text-texto">
+        Convite enviado. Esse e-mail já tem conta em outra empresa: a pessoa
+        passa a ver o convite ao entrar e decide se aceita o acesso a esta
+        empresa.
+      </p>
+    );
   if (estado.usuarioId)
     return (
       <div>
@@ -25,9 +33,7 @@ export function NovoUsuario({ perfis }: { perfis: Perfil[] }) {
           <SenhaProvisoria senha={estado.senha} />
         ) : (
           <p role="status" className="mt-2 text-base text-texto">
-            {estado.pessoaJaExistia
-              ? "Este e-mail já tinha acesso a outra empresa: a pessoa entra com a senha que já usa."
-              : "Usuário cadastrado."}
+            Usuário cadastrado.
           </p>
         )}
         <p className="mt-3 text-base">

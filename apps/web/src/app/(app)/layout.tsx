@@ -17,6 +17,7 @@ import {
   COOKIE_MENU_COMPACTO,
 } from "@/components/preferencias-do-menu";
 import { atalhosVisiveis, gruposVisiveis } from "@/components/navegacao";
+import { AvisoDeConvites } from "@/components/aviso-de-convites";
 import { ListaDePessoas } from "@/components/lista-de-pessoas";
 import { ListaDeSetores } from "@/components/lista-de-setores";
 import { RotulosDasTabelas } from "@/components/rotulos-das-tabelas";
@@ -83,7 +84,10 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
             id="conteudo"
             className="min-w-0 flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 md:pb-6 lg:min-h-0 lg:overflow-y-auto xl:px-8"
           >
-            <div className="w-full">{children}</div>
+            <div className="w-full">
+              {eu && <AvisoDeConvites convites={eu.convites} />}
+              {children}
+            </div>
             <ListaDePessoas
               podeVer={Boolean(eu?.permissoes.includes("funcionarios.ver"))}
             />

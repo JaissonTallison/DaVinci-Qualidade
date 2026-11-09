@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import {
   PATTERNS,
   SERVICES,
@@ -18,7 +18,7 @@ import {
 import { ContextoHttp, OrigemHttp, RastreioHttp } from '../contexto.js';
 import { MensageriaService } from '../mensageria.service.js';
 import { validarEntrada } from '../validacao.js';
-import { LiberadaComPendencia, Publica } from './decoradores.js';
+import { LiberadaComPendencia, Publica, SoLogin } from './decoradores.js';
 import { LIMITE_LOGIN, LIMITE_SENHA, Limite } from './limite-de-tentativas.js';
 
 /**
@@ -181,6 +181,31 @@ export class AuthController {
       SERVICES.IDENTIDADE,
       PATTERNS.identidade.eu,
       {},
+      ctx,
+    );
+  }
+
+  /** Convite para outra empresa: a própria pessoa aceita (basta estar logada). */
+  @Post('convites/:id/aceitar')
+  @SoLogin()
+  @HttpCode(200)
+  aceitarConvite(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar<{ aceito: true }>(
+      SERVICES.IDENTIDADE,
+      PATTERNS.identidade.aceitarConvite,
+      { id },
+      ctx,
+    );
+  }
+
+  @Post('convites/:id/recusar')
+  @SoLogin()
+  @HttpCode(200)
+  recusarConvite(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar<{ recusado: true }>(
+      SERVICES.IDENTIDADE,
+      PATTERNS.identidade.recusarConvite,
+      { id },
       ctx,
     );
   }

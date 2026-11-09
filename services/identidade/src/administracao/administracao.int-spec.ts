@@ -133,7 +133,7 @@ describe('cadastrar usuário', () => {
       email: 'Bruno@Alfa.com.br',
       perfilId: perfil[`${ids.alfa}:Gestor do SGI`],
     });
-    expect(r.pessoaJaExistia).toBe(false);
+    expect(r.convidado).toBe(false);
     expect(r.senhaProvisoria).toMatch(/^[a-zA-Z2-9]{4}(-[a-zA-Z2-9]{4}){3}$/);
     expect(r.usuario).toMatchObject({
       nome: 'Bruno Lima',
@@ -150,17 +150,41 @@ describe('cadastrar usuário', () => {
     expect(s.usuario.deveTrocarSenha).toBe(true);
   });
 
-  it('e-mail de outra empresa: só ganha acesso (sem senha nova; a dele continua valendo)', async () => {
+  it('e-mail de outra empresa: vira convite (sem vazar quem é), aceito no próximo acesso', async () => {
     const r = await usuariosSvc.criar(ctxAlfa(), {
       nome: 'Outro Nome',
       email: 'carlos@contabil.com.br',
       perfilId: perfil[`${ids.alfa}:Consulta`],
     });
-    expect(r).toMatchObject({
-      pessoaJaExistia: true,
-      senhaProvisoria: null,
-      usuario: { nome: 'Carlos Contador', acessaOutrasEmpresas: true },
-    });
+    // Não vincula nem revela nome/dados de quem é de outra empresa (ERR-04)
+    expect(r).toEqual({ usuario: null, senhaProvisoria: null, convidado: true });
+    // Convite pendente não aparece na lista de usuários da empresa
+    expect(
+      (await usuariosSvc.listar(ctxAlfa())).some(
+        (u) => u.email === 'carlos@contabil.com.br',
+      ),
+    ).toBe(false);
+    // Sem aceitar, ainda não entra em Alfa
+    expect(
+      (
+        await recusa(
+          identidade.autenticar({
+            email: 'carlos@contabil.com.br',
+            senha: SENHA,
+            empresaId: ids.alfa,
+          }),
+        )
+      ).codigo,
+    ).toBe('SEM_PERMISSAO');
+    // A pessoa vê o convite e aceita
+    const ctxCarlos: Contexto = {
+      empresaId: ids.beta,
+      usuarioId: ids.contador,
+      rastreioId: uuidv7(),
+    };
+    const [convite] = await identidade.convitesPendentes(ids.contador);
+    expect(convite).toMatchObject({ empresa: 'Alfa Ltda.', perfil: 'Consulta' });
+    await identidade.aceitarConvite(ctxCarlos, { id: convite!.id });
     const s = await entrar({
       email: 'carlos@contabil.com.br',
       senha: SENHA,
@@ -182,7 +206,7 @@ describe('cadastrar usuário', () => {
     );
     expect(e).toMatchObject({
       codigo: 'CONFLITO',
-      mensagem: 'Bruno Lima já tem acesso a esta empresa.',
+      mensagem: 'Esse e-mail já tem acesso a esta empresa.',
     });
   });
 
@@ -208,6 +232,35 @@ describe('cadastrar usuário', () => {
     expect(
       (await recusa(usuariosSvc.obter(ctxBeta(), { id: ids.admin }))).codigo,
     ).toBe('NAO_ENCONTRADO');
+  });
+
+  it('convite recusado é descartado (pode convidar de novo) e nunca deu acesso (ERR-04)', async () => {
+    const diego = await usuariosSvc.criar(ctxBeta(), {
+      nome: 'Diego Dias',
+      email: 'diego@beta.com.br',
+      perfilId: perfil[`${ids.beta}:Consulta`],
+    });
+    const diegoId = diego.usuario!.id;
+    await usuariosSvc.criar(ctxAlfa(), {
+      nome: 'Ignorado',
+      email: 'diego@beta.com.br',
+      perfilId: perfil[`${ids.alfa}:Consulta`],
+    });
+    const ctxDiego: Contexto = {
+      empresaId: ids.beta,
+      usuarioId: diegoId,
+      rastreioId: uuidv7(),
+    };
+    const [convite] = await identidade.convitesPendentes(diegoId);
+    await identidade.recusarConvite(ctxDiego, { id: convite!.id });
+    expect(await identidade.convitesPendentes(diegoId)).toEqual([]);
+    // Recusado some: convidar de novo não cai em conflito
+    const denovo = await usuariosSvc.criar(ctxAlfa(), {
+      nome: 'Ignorado',
+      email: 'diego@beta.com.br',
+      perfilId: perfil[`${ids.alfa}:Consulta`],
+    });
+    expect(denovo.convidado).toBe(true);
   });
 });
 
@@ -605,7 +658,7 @@ describe('ERR-03: quem administra acessos não escala privilégio', () => {
     });
     ctxRh = {
       empresaId: ids.alfa,
-      usuarioId: rita.usuario.id,
+      usuarioId: rita.usuario!.id,
       rastreioId: uuidv7(),
     };
   });
@@ -640,7 +693,7 @@ describe('ERR-03: quem administra acessos não escala privilégio', () => {
       email: 'novofunc@alfa.com.br',
       perfilId: perfilSoFuncionarios,
     });
-    expect(r.usuario.perfil.nome).toBe('Só funcionários');
+    expect(r.usuario!.perfil.nome).toBe('Só funcionários');
   });
 
   it('RH não cria perfil com permissão que não tem', async () => {
