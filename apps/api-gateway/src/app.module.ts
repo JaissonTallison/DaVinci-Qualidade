@@ -14,6 +14,7 @@ import { AuthController } from './auth/auth.controller.js';
 import { ContaController } from './auth/conta.controller.js';
 import { EmpresaController } from './empresa/empresa.controller.js';
 import { GuardaDeAcesso } from './auth/guarda.js';
+import { GuardaDeLimite } from './auth/limite-de-tentativas.js';
 import { RevogacoesService } from './auth/revogacoes.service.js';
 import { ContextoMiddleware } from './contexto.js';
 import { FiltroDeErrosHttp } from './filtro-erros-http.js';
@@ -222,6 +223,8 @@ export const observeEnabled = Boolean(
     RevogacoesService,
     // Todo erro HTTP sai como { erro: { codigo, mensagem, rastreioId } }
     { provide: APP_FILTER, useClass: FiltroDeErrosHttp },
+    // Limite por IP nas rotas marcadas com @Limite (antes da guarda de acesso)
+    { provide: APP_GUARD, useClass: GuardaDeLimite },
     // Toda rota exige login (exceto @Publica); empresa e usuário vêm do token
     { provide: APP_GUARD, useClass: GuardaDeAcesso },
   ],

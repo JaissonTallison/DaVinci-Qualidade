@@ -39,6 +39,7 @@ describe('contratos de mensagem', () => {
       NAO_ENCONTRADO: 404,
       CONFLITO: 409,
       REGRA_DE_NEGOCIO: 422,
+      EXCESSO_DE_TENTATIVAS: 429,
       INTERNO: 500,
       SERVICO_INDISPONIVEL: 503,
     });
