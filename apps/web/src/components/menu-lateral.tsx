@@ -231,7 +231,7 @@ export function MenuLateral({
           <Link
             href="/"
             aria-current={ativo("/") ? "page" : undefined}
-            className={`flex items-center gap-2.5 border-l-[3px] py-1.5 pr-3 pl-[calc(1rem-3px)] text-sm uppercase ${FOCO} ${ativo("/") ? MARCADO : NORMAL}`}
+            className={`flex items-center gap-2.5 border-l-[3px] py-1.5 pr-3 pl-[calc(1rem-3px)] text-sm font-semibold uppercase ${FOCO} ${ativo("/") ? MARCADO : NORMAL}`}
           >
             <IconeDoGrupo titulo="Início" />
             Início

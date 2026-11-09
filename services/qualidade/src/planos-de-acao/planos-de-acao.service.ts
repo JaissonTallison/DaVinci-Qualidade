@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { ClientProxy } from '@nestjs/microservices';
 import {
   and,
   asc,
@@ -28,6 +29,8 @@ import {
   reabrirTarefaSchema,
   STATUS_FINAIS_PLANO,
   verificarEficaciaPlanoSchema,
+  PATTERNS,
+  SERVICES,
   type Contexto,
   type Pagina,
   type PlanoDeAcao,
@@ -65,7 +68,11 @@ const ALTERADO_POR_OUTRA_PESSOA =
 
 @Injectable()
 export class PlanosDeAcaoService {
-  constructor(@Inject(DATABASE) private readonly db: Db) {}
+  constructor(
+    @Inject(DATABASE) private readonly db: Db,
+    @Inject(SERVICES.PLATAFORMA)
+    private readonly plataforma: Pick<ClientProxy, 'emit'>,
+  ) {}
 
   async listar(ctx: Contexto, dados: unknown): Promise<Pagina<PlanoResumo>> {
     const f = validar(filtroPlanosSchema, dados ?? {});
@@ -330,7 +337,10 @@ export class PlanosDeAcaoService {
       verificarEficaciaPlanoSchema,
       dados?.alteracoes,
     );
-    return this.alterar(
+    let dono: string | null = null;
+    let numero = '';
+    let planoId = '';
+    const resultado = await this.alterar(
       ctx,
       dados?.id,
       versao,
@@ -340,6 +350,9 @@ export class PlanosDeAcaoService {
             'REGRA_DE_NEGOCIO',
             'A eficácia é verificada depois que todas as tarefas estão concluídas.',
           );
+        dono = plano.criadoPor;
+        numero = plano.numero;
+        planoId = plano.id;
         await tx
           .update(planosAcao)
           .set({
@@ -354,6 +367,22 @@ export class PlanosDeAcaoService {
       },
       { recalcular: false },
     );
+    // Plano encerrado: avisa quem o abriu (se não for quem acabou de verificar).
+    if (eficaz && dono && dono !== ctx.usuarioId) {
+      this.plataforma.emit(PATTERNS.notificacoes.criar, {
+        contexto: { rastreioId: ctx.rastreioId },
+        dados: {
+          empresaId: ctx.empresaId,
+          usuarioId: dono,
+          tipo: 'evento',
+          titulo: `Plano de ação ${numero} concluído`,
+          descricao: 'A verificação de eficácia foi concluída.',
+          modulo: 'qualidade',
+          href: `/qualidade/planos-de-acao/${planoId}`,
+        },
+      });
+    }
+    return resultado;
   }
 
   async cancelar(ctx: Contexto, dados: ComId): Promise<PlanoDeAcao> {
