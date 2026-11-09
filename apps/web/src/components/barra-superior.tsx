@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { Fragment, useState, useTransition } from "react";
 import {
   MODULOS_DO_PAINEL,
+  RECURSOS,
   type DadosDoUsuario,
   type Prazo,
 } from "@davinci/types";
@@ -104,17 +105,24 @@ export function BarraSuperior({
             {(fechar) => (
               <ul className="max-h-[70vh] overflow-y-auto p-1.5">
                 <li className={`${sobretitulo} px-2.5 pt-1.5 pb-1`}>
-                  Criar registro
+                  Criar novo
                 </li>
                 {atalhos.map((a) => (
                   <li key={a.href}>
                     <Link href={a.href} onClick={fechar} className={itemDoMenu}>
-                      <span className="text-texto-2">
+                      <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-afundado text-texto-2 shadow-xs">
                         <IconeDaTela
                           href={a.href.replace(/\/(nova|novo)$/, "")}
                         />
                       </span>
-                      {a.rotulo}
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate leading-tight">
+                          {a.rotulo}
+                        </span>
+                        <span className="block truncate text-xs text-texto-2">
+                          {a.recurso ? RECURSOS[a.recurso].nome : "Cadastros"}
+                        </span>
+                      </span>
                     </Link>
                   </li>
                 ))}

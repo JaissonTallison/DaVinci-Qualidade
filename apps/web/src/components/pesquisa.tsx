@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "@/components/icones";
+import { Search, Sparkles, X } from "@/components/icones";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MODULOS_DA_BUSCA, type ResultadoDaBusca } from "@davinci/types";
@@ -202,9 +202,16 @@ function Janela({
         </div>
         <div className="max-h-[60vh] overflow-y-auto">
           {t.length < 2 ? (
-            <p className="px-4 py-6 text-sm text-texto-3">
-              Digite ao menos 2 letras: número, nome, TAG, CNPJ, local…
-            </p>
+            <div className="px-4 py-6">
+              <p className="text-sm text-texto-3">
+                Digite ao menos 2 letras: número, nome, TAG, CNPJ, local…
+              </p>
+              <p className="mt-2 flex items-center gap-1.5 text-sm text-texto-3">
+                <Sparkles aria-hidden size={14} strokeWidth={1.75} />
+                Em breve: pergunte em linguagem natural — ex.: “terceiros com ASO
+                vencido”.
+              </p>
+            </div>
           ) : itens.length === 0 ? (
             <p className="px-4 py-6 text-sm text-texto-3">
               {buscando ? "Pesquisando…" : "Nada encontrado."}

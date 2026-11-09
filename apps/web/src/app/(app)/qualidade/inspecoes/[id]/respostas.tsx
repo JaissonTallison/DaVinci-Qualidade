@@ -8,6 +8,7 @@ import {
   type RespostaItem,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { salvarRespostas, type EstadoDaAcao } from "@/lib/acoes-inspecoes";
 import { areaDeTexto, campoCompacto, erroDoCampo, painel } from "@/lib/estilos";
 import { errosPorCampo } from "@/lib/formularios";
@@ -74,6 +75,12 @@ export function RespostasDaInspecao({ inspecao }: { inspecao: Inspecao }) {
             </span>
           )}
         </p>
+      </div>
+      <div className="px-5 pt-4">
+        <FaixaDeIA rotulo="Preencher por voz">
+          descreva a inspeção por voz e a IA marca os itens e escreve as
+          observações para você conferir.
+        </FaixaDeIA>
       </div>
       {erroGeral && (
         <div className="px-5 pt-4">

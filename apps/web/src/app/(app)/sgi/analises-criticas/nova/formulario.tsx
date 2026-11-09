@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { ENTRADAS_ANALISE_CRITICA } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import type { EstadoDaAcao } from "@/lib/acao";
@@ -89,6 +90,13 @@ export function FormularioDeAnalise() {
           descricao="O que foi analisado e o que foi decidido (ISO 9001, 9.3)."
         >
           <div className="grid gap-5 sm:grid-cols-3">
+            <div className="sm:col-span-3">
+              <FaixaDeIA rotulo="Gerar rascunho com IA">
+                a IA resume os indicadores do período (NCs, auditorias, prazos,
+                objetivos) e escreve um rascunho das entradas (9.3.2) para você
+                revisar.
+              </FaixaDeIA>
+            </div>
             <Campo
               id="entradas"
               rotulo="Entradas analisadas (ISO 9001, 9.3.2)"

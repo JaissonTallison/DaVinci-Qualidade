@@ -10,6 +10,7 @@ import {
   type TemaEsg,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { IconeOds, Materialidade } from "@/components/marcadores-esg";
@@ -123,6 +124,11 @@ export function FormularioDeTema({
       >
         <Bloco id="tema" titulo="Tema" descricao="Nome, pilar e descrição.">
           <div className="grid gap-5 sm:grid-cols-3">
+            <div className="sm:col-span-3">
+              <FaixaDeIA rotulo="Redigir com IA">
+                a IA redige um rascunho da descrição do tema para você ajustar.
+              </FaixaDeIA>
+            </div>
             {estado.erro && !estado.erro.detalhes?.length && (
               <div className="sm:col-span-3">
                 <AvisoDeErro erro={estado.erro} />

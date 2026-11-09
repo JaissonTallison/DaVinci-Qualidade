@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { DIAS_PARA_RENOVAR, TIPOS_LICENCA } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { Campo } from "@/components/campo";
 import { Bloco, CadastroEmBlocos } from "@/components/cadastro-em-blocos";
 import { Selecao } from "@/components/selecao";
@@ -50,6 +51,12 @@ export function FormularioDeLicenca() {
           descricao="Tipo, número, órgão emissor e o que a licença autoriza."
         >
           <div className="grid gap-5 sm:grid-cols-3">
+            <div className="sm:col-span-3">
+              <FaixaDeIA rotulo="Preencher com IA">
+                a IA lê a licença (PDF) e preenche tipo, número, órgão e validade
+                para você conferir.
+              </FaixaDeIA>
+            </div>
             {estado.erro && !estado.erro.detalhes?.length && (
               <div className="sm:col-span-3">
                 <AvisoDeErro erro={estado.erro} />
