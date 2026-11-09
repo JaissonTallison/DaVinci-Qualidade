@@ -361,5 +361,9 @@ describe('Pesquisa por link', () => {
     expect(
       (await recusa(pesquisas.obterPublica({ token: 'x'.repeat(43) }))).codigo,
     ).toBe('NAO_ENCONTRADO');
+    // ERR-11: link torto é "link inválido", não "verifique os campos destacados"
+    const tortinho = await recusa(pesquisas.obterPublica({ token: 'xxx' }));
+    expect(tortinho.codigo).toBe('NAO_ENCONTRADO');
+    expect(tortinho.mensagem).toContain('Link inválido ou expirado');
   });
 });

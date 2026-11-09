@@ -28,6 +28,9 @@ import { ServicosService } from './servicos.service.js';
 type Db = Database<typeof schema>;
 type Linha = typeof cv.$inferSelect;
 
+const LINK_INVALIDO =
+  'Link inválido ou expirado. Peça um novo a quem enviou a pesquisa.';
+
 /**
  * Pesquisa por link: o convite gera um token aleatório (32 bytes); quem tem o link responde uma vez, sem login,
  * em até 30 dias. A resposta entra no NPS e, com OS concluída ainda não avaliada, vira a nota da OS.
@@ -87,8 +90,8 @@ export class PesquisasService {
 
   /** Rota pública: só o que a pessoa precisa ver para responder. */
   async obterPublica(dados: unknown): Promise<PesquisaPublica> {
-    const { token } = validar(tokenDaPesquisaSchema, dados);
-    const l = await this.porToken(token);
+    // O token é a única entrada: um link torto é link inválido, não "campo destacado" (ERR-11)
+    const l = await this.porToken(this.lerToken(dados));
     return {
       clienteNome: l.clienteNome,
       osNumero: l.osNumero,
@@ -145,13 +148,18 @@ export class PesquisasService {
     };
   }
 
+  /** Lê o token da entrada; um formato inválido é link inválido, com a mesma mensagem do não encontrado. */
+  private lerToken(dados: unknown): string {
+    try {
+      return validar(tokenDaPesquisaSchema, dados).token;
+    } catch {
+      throw new ErroDeNegocio('NAO_ENCONTRADO', LINK_INVALIDO);
+    }
+  }
+
   private async porToken(token: string): Promise<Linha> {
     const [l] = await this.db.select().from(cv).where(eq(cv.token, token));
-    if (!l)
-      throw new ErroDeNegocio(
-        'NAO_ENCONTRADO',
-        'Pesquisa não encontrada. Confira o link.',
-      );
+    if (!l) throw new ErroDeNegocio('NAO_ENCONTRADO', LINK_INVALIDO);
     return l;
   }
 }

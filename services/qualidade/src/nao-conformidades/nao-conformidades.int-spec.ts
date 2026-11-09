@@ -9,7 +9,7 @@ import {
 } from '@davinci/types';
 import { criarBancoDeTeste } from '@davinci/database/teste';
 import * as schema from '../db/schema.js';
-import { naoConformidades } from '../db/schema.js';
+import { naoConformidades, planosAcao } from '../db/schema.js';
 import { hojeEmBrasilia } from './regras.js';
 import { NaoConformidadesService } from './nao-conformidades.service.js';
 
@@ -207,6 +207,57 @@ describe('ciclo de vida', () => {
       }),
     );
     expect(fim.mensagem).toBe('Não é possível cancelar uma NC encerrada.');
+  });
+
+  it('não encerra a NC com plano de ação ainda em execução (ERR-08)', async () => {
+    let nc = await servico.criar(empresaA, paquimetro);
+    nc = await servico.registrarTratamento(empresaA, tratamento(nc));
+    nc = await servico.enviarParaVerificacao(empresaA, {
+      id: nc.id,
+      alteracoes: { versao: nc.versao, dataImplantacao: hoje },
+    });
+    const [plano] = await banco.db
+      .insert(planosAcao)
+      .values({
+        empresaId: empresaA.empresaId,
+        numero: `PA-${ano}-900`,
+        titulo: 'Calibrar e cadastrar instrumentos',
+        objetivo: 'Eliminar a causa raiz da NC',
+        tipo: 'corretivo',
+        origem: 'nao_conformidade',
+        ncId: nc.id,
+        responsavel: 'Marina Duarte',
+        status: 'em_execucao',
+      })
+      .returning();
+
+    const barrado = await recusa(
+      servico.verificarEficacia(empresaA, {
+        id: nc.id,
+        alteracoes: {
+          versao: nc.versao,
+          eficaz: true,
+          parecer: 'Tentando encerrar com o plano ainda aberto.',
+        },
+      }),
+    );
+    expect(barrado.codigo).toBe('REGRA_DE_NEGOCIO');
+    expect(barrado.mensagem).toContain('plano de ação');
+
+    // Com o plano encerrado, a NC encerra normalmente
+    await banco.db
+      .update(planosAcao)
+      .set({ status: 'encerrado' })
+      .where(eq(planosAcao.id, plano!.id));
+    nc = await servico.verificarEficacia(empresaA, {
+      id: nc.id,
+      alteracoes: {
+        versao: nc.versao,
+        eficaz: true,
+        parecer: 'Plano concluído e NC eficaz.',
+      },
+    });
+    expect(nc.status).toBe('encerrada');
   });
 
   it('implantação no futuro ou antes da abertura é recusada', async () => {

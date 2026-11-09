@@ -21,11 +21,14 @@ export function FormularioEntrar({
   volta,
   recusa,
   lembrar: lembrarAntes,
+  provedores,
 }: {
   volta?: string;
   /** Recusa do login com conta Google. */
   recusa?: string;
   lembrar: boolean;
+  /** Provedores externos configurados no servidor (ID + segredo). Só estes mostram botão. */
+  provedores: ProvedorExterno[];
 }) {
   const [estado, acao, entrando] = useActionState<EstadoDoFormulario, FormData>(
     entrarComRetentativa,
@@ -173,13 +176,17 @@ export function FormularioEntrar({
         </button>
       </form>
 
-      <p className="mt-4 flex items-center gap-4 text-sm text-texto-2 tela-curta:mt-3 before:h-px before:flex-1 before:bg-borda after:h-px after:flex-1 after:bg-borda">
-        ou continue com
-      </p>
-      <a href={ida("google")} className="dv-acesso-provedor mt-3 w-full">
-        <MarcaGoogle />
-        Continuar com Google
-      </a>
+      {provedores.includes("google") && (
+        <>
+          <p className="mt-4 flex items-center gap-4 text-sm text-texto-2 tela-curta:mt-3 before:h-px before:flex-1 before:bg-borda after:h-px after:flex-1 after:bg-borda">
+            ou continue com
+          </p>
+          <a href={ida("google")} className="dv-acesso-provedor mt-3 w-full">
+            <MarcaGoogle />
+            Continuar com Google
+          </a>
+        </>
+      )}
     </>
   );
 }

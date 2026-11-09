@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ChartColumn, Leaf, Settings } from "@/components/icones";
 import { lerCookie } from "@/lib/cookie";
 import { COOKIE_LEMBRAR, COOKIE_RECUSA } from "@/lib/sessao";
+import { provedoresAtivos } from "@/lib/provedores-externos";
 import { FormularioEntrar } from "./formulario-entrar";
 import { CaixaDeAlerta } from "@/components/caixa-de-alerta";
 
@@ -40,6 +41,7 @@ export default async function Entrar({ searchParams }: PageProps<"/entrar">) {
         volta={volta}
         recusa={recusa}
         lembrar={Boolean(await lerCookie(COOKIE_LEMBRAR))}
+        provedores={provedoresAtivos()}
       />
       <p className="mt-5 text-center text-sm text-texto-2 tela-curta:mt-3">
         Ainda não tem uma conta?
