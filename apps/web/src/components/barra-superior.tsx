@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Bell,
   Check,
   ChevronDown,
   ChevronRight,
@@ -15,18 +14,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment, useState, useTransition } from "react";
 import {
-  MODULOS_DO_PAINEL,
   RECURSOS,
   type DadosDoUsuario,
   type Prazo,
 } from "@davinci/types";
 import { sair, trocarEmpresa } from "@/lib/acoes-sessao";
 import { alternarFavorito, useFavoritos } from "@/lib/favoritos";
-import { prazoRelativo } from "@/lib/datas";
 import { botaoSecundario, sobretitulo } from "@/lib/estilos";
 import { BotaoAbrirGaveta, BotaoRecolherMenu } from "./estado-do-menu";
+import { CentralDeNotificacoes } from "./central-de-notificacoes";
 import { IconeDaTela } from "./icones-do-menu";
-import { LinhaDePrazo, telaDoIcone, textoDoSelo } from "./linha-de-prazo";
 import { Pesquisa } from "./pesquisa";
 import type { AtalhoDeCriacao, GrupoDoMenu } from "./navegacao";
 import { Suspenso } from "./suspenso";
@@ -37,9 +34,6 @@ import { Suspenso } from "./suspenso";
  */
 const SUBTELAS: { href: string; rotulo: string }[] = [];
 
-/** Botão só com ícone na barra (36 × 36, fantasma): fundo só no passar do mouse ou aberto. */
-const iconeNaBarra =
-  "relative inline-flex size-9 items-center justify-center rounded-campo text-texto-2 transition-colors hover:bg-superficie-2 hover:text-texto aria-expanded:bg-superficie-2 aria-expanded:text-texto";
 
 /** Item de menu suspenso do design system: 36 px, canto de 8 px, ícone de 16 px em texto-2. */
 const itemDoMenu =
@@ -57,12 +51,15 @@ export function BarraSuperior({
   grupos,
   atalhos,
   vencidos,
+  naoLidas,
 }: {
   eu?: DadosDoUsuario;
   grupos: GrupoDoMenu[];
   atalhos: AtalhoDeCriacao[];
-  /** Prazos vencidos dos módulos que a pessoa vê. */
+  /** Prazos vencidos dos módulos que a pessoa vê (fonte transitória da central). */
   vencidos: Prazo[];
+  /** Notificações não lidas do usuário (contador do sino). */
+  naoLidas: number;
 }) {
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-borda bg-superficie pr-3 pl-3 text-texto shadow-xs sm:pr-5 print:hidden">
@@ -131,7 +128,9 @@ export function BarraSuperior({
           </Suspenso>
         </div>
       )}
-      {eu?.permissoes.includes("paineis.ver") && <Sino vencidos={vencidos} />}
+      {eu && (
+        <CentralDeNotificacoes prazos={vencidos} naoLidasInicial={naoLidas} />
+      )}
       {eu && <MenuDoUsuario eu={eu} />}
     </header>
   );
@@ -255,70 +254,6 @@ function Trilha({
         </button>
       )}
     </nav>
-  );
-}
-
-function Sino({ vencidos }: { vencidos: Prazo[] }) {
-  const n = vencidos.length;
-  const resumo = n
-    ? `${n} ${n === 1 ? "prazo vencido" : "prazos vencidos"}`
-    : "Nenhum prazo vencido";
-  return (
-    <Suspenso
-      rotulo={resumo}
-      largura="w-100"
-      classeDoBotao={iconeNaBarra}
-      botao={
-        <>
-          <Bell aria-hidden size={18} strokeWidth={1.75} />
-          {n > 0 && (
-            <span className="absolute top-0.5 -right-0.5 h-4 min-w-4 rounded-full bg-nao-conforme px-1 text-center text-xs leading-4 font-semibold text-primaria-texto tabular-nums ring-2 ring-superficie">
-              {n > 99 ? "99+" : n}
-            </span>
-          )}
-        </>
-      }
-    >
-      {(fechar) => (
-        <div>
-          <div className="flex items-center justify-between gap-3 border-b border-borda px-4 py-3">
-            <h2 className="text-md font-semibold text-texto">Notificações</h2>
-            <span className="text-sm text-texto-2">{resumo}</span>
-          </div>
-          {n > 0 ? (
-            <ul className="max-h-90 overflow-y-auto p-1.5">
-              {vencidos.slice(0, 8).map((p, i) => (
-                <li key={`${p.href}-${p.tipo}-${i}`}>
-                  <LinhaDePrazo
-                    compacta
-                    aoClicar={fechar}
-                    href={p.href}
-                    icone={telaDoIcone(p.tipo, p.href)}
-                    titulo={`${p.tipo}: ${p.descricao}`}
-                    detalhe={MODULOS_DO_PAINEL[p.modulo]}
-                    selo={textoDoSelo(prazoRelativo(p.data))}
-                    tom="vencido"
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="px-4 py-8 text-center text-sm text-texto-2">
-              Nada vencido nos módulos que você acompanha.
-            </p>
-          )}
-          <div className="border-t border-borda px-4 py-2.5 text-center">
-            <Link
-              href="/paineis/vencimentos"
-              onClick={fechar}
-              className="text-sm font-medium text-info hover:underline"
-            >
-              Ver todos os vencimentos
-            </Link>
-          </div>
-        </div>
-      )}
-    </Suspenso>
   );
 }
 

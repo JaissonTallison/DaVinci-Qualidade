@@ -73,7 +73,9 @@ const tratamento = (nc: NaoConformidade) => ({
 
 beforeAll(async () => {
   banco = await criarBancoDeTeste(schema);
-  servico = new NaoConformidadesService(banco.db);
+  servico = new NaoConformidadesService(banco.db, {
+    emit: () => undefined as never,
+  });
 });
 afterAll(() => banco.encerrar());
 

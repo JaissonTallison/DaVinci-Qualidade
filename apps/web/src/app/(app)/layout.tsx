@@ -51,6 +51,16 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
       }
   }
 
+  // Notificações não lidas para o contador do sino. Dado opcional, com prazo curto.
+  let naoLidas = 0;
+  if (eu) {
+    const contagem = await chamarApi<{ naoLidas: number }>(
+      "/notificacoes/contagem",
+      { prazoMs: 3_000 },
+    );
+    if (contagem.ok) naoLidas = contagem.dados.naoLidas;
+  }
+
   return (
     <ProvedorDoMenu compactoInicial={compacto}>
       <div className="flex min-h-screen flex-1 lg:h-screen lg:min-h-0 lg:overflow-hidden">
@@ -67,6 +77,7 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
             grupos={grupos}
             atalhos={eu ? atalhosVisiveis(eu.permissoes, eu.recursos) : []}
             vencidos={listaDeVencidos}
+            naoLidas={naoLidas}
           />
           <main
             id="conteudo"
