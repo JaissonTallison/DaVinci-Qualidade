@@ -76,6 +76,9 @@ beforeAll(async () => {
   servico = new NaoConformidadesService(banco.db, {
     emit: () => undefined as never,
   });
+  // Os testes de ciclo de vida tratam e verificam com o mesmo usuário: ligamos a auto-verificação
+  // nesta empresa. A segregação (padrão) é exercida no bloco ERR-09, em outra empresa.
+  await servico.salvarConfig(empresaA, { autoVerificacaoEficacia: true });
 });
 afterAll(() => banco.encerrar());
 
@@ -404,5 +407,65 @@ describe('NCs por mês', () => {
       true,
     );
     expect(meses[2]!.mes).toBe(hojeEmBrasilia().slice(0, 7));
+  });
+});
+
+describe('ERR-09: quem tratou não verifica a própria eficácia', () => {
+  // empresaB não ligou a auto-verificação (padrão): segregação ativa.
+  const outroUsuario: Contexto = {
+    empresaId: empresaB.empresaId,
+    usuarioId: uuidv7(),
+    rastreioId: uuidv7(),
+  };
+
+  const ateVerificacao = async (ctx: Contexto) => {
+    let nc = await servico.criar(ctx, paquimetro);
+    nc = await servico.registrarTratamento(ctx, tratamento(nc));
+    return servico.enviarParaVerificacao(ctx, {
+      id: nc.id,
+      alteracoes: { versao: nc.versao, dataImplantacao: hoje },
+    });
+  };
+
+  it('o mesmo usuário é recusado; outra pessoa verifica', async () => {
+    const nc = await ateVerificacao(empresaB);
+    const e = await recusa(
+      servico.verificarEficacia(empresaB, {
+        id: nc.id,
+        alteracoes: {
+          versao: nc.versao,
+          eficaz: true,
+          parecer: 'Eu mesmo verifico.',
+        },
+      }),
+    );
+    expect(e.codigo).toBe('SEM_PERMISSAO');
+    const ok = await servico.verificarEficacia(outroUsuario, {
+      id: nc.id,
+      alteracoes: {
+        versao: nc.versao,
+        eficaz: true,
+        parecer: 'Verificado por outra pessoa.',
+      },
+    });
+    expect(ok).toMatchObject({
+      status: 'encerrada',
+      verificadoPor: outroUsuario.usuarioId,
+    });
+  });
+
+  it('com a auto-verificação ligada, o mesmo usuário verifica', async () => {
+    await servico.salvarConfig(empresaB, { autoVerificacaoEficacia: true });
+    const nc = await ateVerificacao(empresaB);
+    const ok = await servico.verificarEficacia(empresaB, {
+      id: nc.id,
+      alteracoes: {
+        versao: nc.versao,
+        eficaz: true,
+        parecer: 'Equipe pequena: eu verifico.',
+      },
+    });
+    expect(ok.status).toBe('encerrada');
+    await servico.salvarConfig(empresaB, { autoVerificacaoEficacia: false });
   });
 });

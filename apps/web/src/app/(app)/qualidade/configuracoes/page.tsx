@@ -24,6 +24,13 @@ const ITENS: {
       "Listas de itens que se repetem, copiadas para cada inspeção criada a partir do modelo.",
     permissao: "qualidade.ver",
   },
+  {
+    rotulo: "Verificação de eficácia",
+    href: "/qualidade/configuracoes/eficacia",
+    descricao:
+      "Se quem tratou a não conformidade pode verificar a própria eficácia (padrão: não).",
+    permissao: "qualidade.editar",
+  },
 ];
 
 /** Área de configurações do módulo Qualidade: reúne as telas de apoio fora do fluxo do dia a dia. */

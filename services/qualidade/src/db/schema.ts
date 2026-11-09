@@ -67,6 +67,8 @@ export const naoConformidades = pgTable(
     acaoCorretiva: text(),
     dataImplantacao: date({ mode: 'string' }),
     ciclos: smallint().notNull().default(0),
+    /** Quem registrou o tratamento (análise + ação corretiva): não pode verificar a própria eficácia. */
+    tratadoPor: uuid(),
     // Verificação de eficácia (a última)
     eficaz: boolean(),
     parecerEficacia: text(),
@@ -96,6 +98,20 @@ export const naoConformidades = pgTable(
       sql`${t.gravidade} IN ('baixa', 'media', 'alta', 'critica')`,
     ),
   ],
+);
+
+/** Configurações do módulo Qualidade por empresa (uma linha por empresa). */
+export const configuracoesQualidade = pgTable(
+  'configuracoes_qualidade',
+  {
+    ...colunasPadrao(),
+    /**
+     * Permite que quem registrou o tratamento verifique a própria eficácia. Padrão: não (segregação de
+     * função). Equipes pequenas podem ligar. (ERR-09)
+     */
+    autoVerificacaoEficacia: boolean().notNull().default(false),
+  },
+  (t) => [unique('configuracoes_qualidade_empresa').on(t.empresaId)],
 );
 
 /** Planos de ação (docs/05-modulos/planos-de-acao.md). O status acompanha as tarefas; nada é apagado. */

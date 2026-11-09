@@ -17,6 +17,16 @@ export class NaoConformidadesController {
     return this.ncs.listar(ctx, dados);
   }
 
+  @MessagePattern(P.obterConfig)
+  obterConfig(@Contexto() ctx: Ctx) {
+    return this.ncs.obterConfig(ctx);
+  }
+
+  @MessagePattern(P.salvarConfig)
+  salvarConfig(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.ncs.salvarConfig(ctx, dados);
+  }
+
   @MessagePattern(P.atribuirResponsavelEmLote)
   atribuirResponsavelEmLote(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
     return this.ncs.atribuirResponsavelEmLote(ctx, dados);

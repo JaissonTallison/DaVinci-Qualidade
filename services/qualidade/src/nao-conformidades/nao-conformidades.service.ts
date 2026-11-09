@@ -20,6 +20,8 @@ import {
   atribuirResponsavelNcEmLoteSchema,
   atualizarNcSchema,
   cancelarNcSchema,
+  salvarConfigQualidadeSchema,
+  type ConfiguracaoDaQualidade,
   enviarParaVerificacaoSchema,
   filtroNcsSchema,
   registrarTratamentoSchema,
@@ -39,7 +41,12 @@ import {
   type StatusNc,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
-import { naoConformidades, planosAcao, sequencias } from '../db/schema.js';
+import {
+  configuracoesQualidade,
+  naoConformidades,
+  planosAcao,
+  sequencias,
+} from '../db/schema.js';
 import {
   estaVencida,
   formatarNumeroNc,
@@ -275,6 +282,8 @@ export class NaoConformidadesService {
       await this.gravar(ctx, atual.id, versao, {
         ...analise,
         status: 'em_tratamento',
+        // Quem trata não pode verificar a própria eficácia (ERR-09)
+        tratadoPor: ctx.usuarioId,
         ...(iniciando ? { ciclos: 1 } : {}),
       }),
     );
@@ -319,6 +328,16 @@ export class NaoConformidadesService {
     );
     const atual = await this.buscar(ctx, dados?.id);
     exigirTransicao('verificarEficacia', atual.status as StatusNc);
+    // Quem registrou o tratamento não verifica a própria eficácia, salvo se a empresa liberar (ERR-09)
+    if (
+      atual.tratadoPor &&
+      atual.tratadoPor === ctx.usuarioId &&
+      !(await this.autoVerificacaoLiberada(ctx))
+    )
+      throw new ErroDeNegocio(
+        'SEM_PERMISSAO',
+        'Quem registrou o tratamento não pode verificar a própria eficácia. Peça a verificação a outra pessoa.',
+      );
     // Não encerra a NC enquanto o plano de ação que a trata ainda está em execução (ERR-08)
     if (eficaz) await this.recusarSePlanoEmExecucao(ctx, atual.id);
     const agora = new Date();
@@ -366,6 +385,45 @@ export class NaoConformidadesService {
         canceladaPorNome: ctx.usuarioNome ?? null,
       }),
     );
+  }
+
+  /** Configuração do módulo Qualidade da empresa; valores padrão quando ainda não foi salva. (ERR-09) */
+  async obterConfig(ctx: Contexto): Promise<ConfiguracaoDaQualidade> {
+    const [c] = await this.db
+      .select({
+        autoVerificacaoEficacia:
+          configuracoesQualidade.autoVerificacaoEficacia,
+      })
+      .from(configuracoesQualidade)
+      .where(eq(configuracoesQualidade.empresaId, ctx.empresaId));
+    return { autoVerificacaoEficacia: c?.autoVerificacaoEficacia ?? false };
+  }
+
+  async salvarConfig(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<ConfiguracaoDaQualidade> {
+    const { autoVerificacaoEficacia } = validar(
+      salvarConfigQualidadeSchema,
+      dados,
+    );
+    await this.db
+      .insert(configuracoesQualidade)
+      .values({
+        empresaId: ctx.empresaId,
+        autoVerificacaoEficacia,
+        criadoPor: ctx.usuarioId,
+        atualizadoPor: ctx.usuarioId,
+      })
+      .onConflictDoUpdate({
+        target: configuracoesQualidade.empresaId,
+        set: { autoVerificacaoEficacia, atualizadoPor: ctx.usuarioId },
+      });
+    return { autoVerificacaoEficacia };
+  }
+
+  private async autoVerificacaoLiberada(ctx: Contexto): Promise<boolean> {
+    return (await this.obterConfig(ctx)).autoVerificacaoEficacia;
   }
 
   /** Recusa encerrar a NC com um plano de ação ainda em execução (ERR-08). */
