@@ -17,8 +17,10 @@ import {
   novaNcSchema,
   PATTERNS,
   registrarTratamentoSchema,
+  salvarConfigQualidadeSchema,
   SERVICES,
   verificarEficaciaSchema,
+  type ConfiguracaoDaQualidade,
   type Contexto,
   type NaoConformidade,
   type NaoConformidadeResumo,
@@ -54,6 +56,31 @@ export class NaoConformidadesController {
       SERVICES.QUALIDADE,
       P.listar,
       filtro,
+      ctx,
+    );
+  }
+
+  // Rotas literais antes de ':id' para não serem capturadas como um id.
+  @Get('configuracao')
+  @Permissao('qualidade.ver')
+  obterConfig(@ContextoHttp() ctx: Contexto) {
+    return this.mensageria.enviar<ConfiguracaoDaQualidade>(
+      SERVICES.QUALIDADE,
+      P.obterConfig,
+      {},
+      ctx,
+    );
+  }
+
+  @Put('configuracao')
+  @Permissao('qualidade.editar')
+  @HttpCode(200)
+  salvarConfig(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(salvarConfigQualidadeSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<ConfiguracaoDaQualidade>(
+      SERVICES.QUALIDADE,
+      P.salvarConfig,
+      dados,
       ctx,
     );
   }

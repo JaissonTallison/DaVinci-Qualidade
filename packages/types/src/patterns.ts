@@ -167,6 +167,8 @@ export const PATTERNS = {
     cancelar: 'nao-conformidades.cancelar',
     atribuirResponsavelEmLote:
       'nao-conformidades.atribuir-responsavel-em-lote',
+    obterConfig: 'nao-conformidades.obter-config',
+    salvarConfig: 'nao-conformidades.salvar-config',
   },
   /** Qualidade: planos de ação (docs/05-modulos/planos-de-acao.md). */
   planosDeAcao: {

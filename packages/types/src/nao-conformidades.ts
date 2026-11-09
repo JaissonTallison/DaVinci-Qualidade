@@ -270,3 +270,14 @@ export interface NcsDoMes {
   abertas: number;
   encerradas: number;
 }
+
+/** Configurações do módulo Qualidade por empresa (ERR-09). */
+export interface ConfiguracaoDaQualidade {
+  /** Permite que quem registrou o tratamento verifique a própria eficácia da NC. Padrão: não. */
+  autoVerificacaoEficacia: boolean;
+}
+
+export const salvarConfigQualidadeSchema = z.object({
+  autoVerificacaoEficacia: z.boolean(),
+});
+export type SalvarConfigQualidade = z.input<typeof salvarConfigQualidadeSchema>;
