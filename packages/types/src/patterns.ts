@@ -121,6 +121,7 @@ export const PATTERNS = {
   /** Cada serviço responde os próprios prazos (vencidos e próximos) para o painel. */
   prazos: {
     qualidade: 'qualidade.prazos',
+    auditorias: 'auditorias.prazos',
     seguranca: 'seguranca.prazos',
     codex: 'codex.prazos',
     sgi: 'sgi.prazos',

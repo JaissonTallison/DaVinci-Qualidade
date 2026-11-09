@@ -9,6 +9,8 @@ import {
   gte,
   ilike,
   inArray,
+  lte,
+  notInArray,
   or,
   sql,
   type SQL,
@@ -29,11 +31,13 @@ import {
   DIAS_DE_PRAZO_DA_NC_DE_AUDITORIA,
   ehConstatacaoDeNc,
   filtroAuditoriasSchema,
+  horizonteSchema,
   iniciarAuditoriaSchema,
   isUuid,
   NORMAS,
   novaAuditoriaSchema,
   PATTERNS,
+  prazo,
   registrarConstatacaoSchema,
   SERVICES,
   TIPOS_CONSTATACAO,
@@ -41,6 +45,7 @@ import {
   type Auditoria,
   type AuditoriaResumo,
   type Contexto,
+  type Prazo,
   type NaoConformidade,
   type NovaNc,
   type Norma,
@@ -207,7 +212,8 @@ export class AuditoriasService {
       this.db
         .select({ auditor: auditorias.auditorLider, total: count() })
         .from(auditorias)
-        .where(emp)
+        // Conduzidas = as que aconteceram: fora planejadas (ainda não) e canceladas (DV-03)
+        .where(and(emp, notInArray(auditorias.status, ['planejada', 'cancelada'])))
         .groupBy(auditorias.auditorLider)
         .orderBy(desc(count()))
         .limit(6),
@@ -267,6 +273,43 @@ export class AuditoriasService {
         status: r.status as StatusAuditoria,
       })),
     };
+  }
+
+  /**
+   * Prazos de Auditorias para o painel de vencimentos: auditorias não concluídas nem canceladas cujo fim
+   * já passou (atrasadas) ou cai no horizonte pedido. Antes, Auditorias ficava fora do painel. (DV-02)
+   */
+  async prazos(ctx: Contexto, dados?: unknown): Promise<Prazo[]> {
+    const { dias } = validar(horizonteSchema, dados ?? {});
+    const hoje = hojeEmBrasilia();
+    const limite = somarDias(hoje, dias);
+    const linhas = await this.db
+      .select({
+        id: auditorias.id,
+        numero: auditorias.numero,
+        escopo: auditorias.escopo,
+        dataFim: auditorias.dataFim,
+      })
+      .from(auditorias)
+      .where(
+        and(
+          eq(auditorias.empresaId, ctx.empresaId),
+          notInArray(auditorias.status, ['concluida', 'cancelada']),
+          lte(auditorias.dataFim, limite),
+        ),
+      );
+    return linhas.map((a) =>
+      prazo(
+        {
+          modulo: 'auditorias',
+          tipo: 'Auditoria',
+          descricao: `${a.numero}: ${a.escopo}`.slice(0, 120),
+          data: a.dataFim,
+          href: `/auditorias/${a.id}`,
+        },
+        hoje,
+      ),
+    );
   }
 
   async obter(ctx: Contexto, dados: { id?: unknown }): Promise<Auditoria> {
