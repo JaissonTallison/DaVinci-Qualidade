@@ -113,8 +113,8 @@ export function LinhaDePrazo({
       onClick={aoClicar}
       className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-superficie-2"
     >
-      <span className="flex shrink-0 text-texto-2">
-        <IconeDaTela href={icone} />
+      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-md bg-afundado text-texto-2 shadow-xs">
+        <IconeDaTela href={icone} size={18} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-base font-medium text-texto">

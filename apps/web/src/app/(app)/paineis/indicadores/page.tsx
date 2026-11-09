@@ -1,8 +1,19 @@
-import { ArrowRight } from "@/components/icones";
+import {
+  Briefcase,
+  CalendarClock,
+  ChevronRight,
+  Globe,
+  HardHat,
+  Leaf,
+  ShieldCheck,
+  Target,
+  type LucideIcon,
+} from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
   META_ISC,
+  MODULOS_DO_PAINEL,
   type DadosDoUsuario,
   type IndicadoresSst,
   type PainelDeVencimentos,
@@ -20,6 +31,8 @@ import { chamarApi, type Resultado } from "@/lib/api";
 import { hojeEmBrasilia } from "@/lib/datas";
 import { painel, tituloDaPagina } from "@/lib/estilos";
 import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
+import { Botao } from "@/components/botao";
+import { GraficoDonut, type FatiaDonut } from "@/components/grafico-donut";
 
 export const metadata: Metadata = { title: "Indicadores gerais" };
 
@@ -32,6 +45,28 @@ type Item = {
   href?: string;
 };
 type Area = { titulo: string; href: string; itens: Item[] };
+
+/** Ícone Lucide de cada área, para o tile do cabeçalho da seção. */
+const ICONE_DA_AREA: Record<string, LucideIcon> = {
+  "Prazos (próximos 30 dias)": CalendarClock,
+  Qualidade: ShieldCheck,
+  "Segurança do Trabalho": HardHat,
+  "Gestão do SGI": Target,
+  Serviços: Briefcase,
+  "Meio Ambiente": Leaf,
+  "Agenda ESG": Globe,
+};
+
+/** Cores dos segmentos do donut, na ordem das séries do tema. */
+const CORES_SERIE = [
+  "var(--color-serie-1)",
+  "var(--color-serie-2)",
+  "var(--color-serie-3)",
+  "var(--color-serie-6)",
+  "var(--color-serie-7)",
+  "var(--color-serie-4)",
+  "var(--color-serie-5)",
+];
 
 /** Um indicador: rótulo, número (vermelho quando pede atenção) e a célula inteira clicável. */
 function Tile({ rotulo, valor, alerta, href }: Item) {
@@ -125,6 +160,23 @@ export default async function IndicadoresGerais() {
     painelV?.prazos.filter((p) => p.situacao === "vence_em_breve").length ??
     null;
   const pos = (n: number | null | undefined) => (n ?? 0) > 0;
+
+  // Distribuição dos prazos vencidos por módulo (donut do topo).
+  const porModulo = new Map<string, number>();
+  for (const p of painelV?.prazos ?? []) {
+    if (p.situacao !== "vencido") continue;
+    porModulo.set(
+      MODULOS_DO_PAINEL[p.modulo],
+      (porModulo.get(MODULOS_DO_PAINEL[p.modulo]) ?? 0) + 1,
+    );
+  }
+  const fatiasVencidos: FatiaDonut[] = [...porModulo.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([rotulo, valor], i) => ({
+      rotulo,
+      valor,
+      cor: CORES_SERIE[i % CORES_SERIE.length]!,
+    }));
 
   const areas: (Area | null)[] = [
     pode("paineis.ver")
@@ -325,32 +377,55 @@ export default async function IndicadoresGerais() {
         titulo="Indicadores gerais"
         descricao="Visão consolidada dos indicadores de cada módulo que você acompanha. Clique em um número para abrir a tela de origem."
       />
-      {visiveis.map((area) => (
-        <section key={area.titulo} className={`${painel} mt-6 overflow-hidden`}>
-          <div className="flex items-center justify-between px-5 pt-4 pb-2">
-            <h2 className="text-sm font-semibold tracking-[0.04em] text-texto-2 uppercase">
-              {area.titulo}
-            </h2>
-            <Link
-              href={area.href}
-              className="group inline-flex items-center gap-1 text-sm text-info hover:underline"
-            >
-              Abrir
-              <ArrowRight
-                aria-hidden
-                size={14}
-                strokeWidth={1.75}
-                className="transition-transform group-hover:translate-x-0.5"
-              />
-            </Link>
-          </div>
-          <div className="-mr-px -mb-px grid grid-cols-2 border-t border-borda sm:grid-cols-3 lg:grid-cols-4">
-            {area.itens.map((it) => (
-              <Tile key={it.rotulo} {...it} />
-            ))}
+      {fatiasVencidos.length > 0 && (
+        <section className={`${painel} mt-6 p-5`}>
+          <h2 className="text-md font-semibold text-texto">
+            Prazos vencidos por módulo
+          </h2>
+          <p className="text-sm text-texto-2">
+            Onde estão os {fatiasVencidos.reduce((t, f) => t + f.valor, 0)}{" "}
+            prazos vencidos.
+          </p>
+          <div className="mt-4 max-w-md">
+            <GraficoDonut fatias={fatiasVencidos} rotuloCentro="vencidos" />
           </div>
         </section>
-      ))}
+      )}
+      {visiveis.map((area) => {
+        const Icone = ICONE_DA_AREA[area.titulo];
+        return (
+          <section
+            key={area.titulo}
+            className={`${painel} mt-6 overflow-hidden`}
+          >
+            <div className="flex items-center justify-between gap-3 px-5 pt-4 pb-3">
+              <div className="flex min-w-0 items-center gap-2.5">
+                {Icone && (
+                  <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-afundado text-texto-2 shadow-xs">
+                    <Icone aria-hidden size={16} strokeWidth={1.75} />
+                  </span>
+                )}
+                <h2 className="min-w-0 truncate text-sm font-semibold tracking-[0.04em] text-texto-2 uppercase">
+                  {area.titulo}
+                </h2>
+              </div>
+              <Botao
+                href={area.href}
+                variante="secundario"
+                tamanho="pequeno"
+                iconeDireita={ChevronRight}
+              >
+                Abrir
+              </Botao>
+            </div>
+            <div className="-mr-px -mb-px grid grid-cols-2 border-t border-borda sm:grid-cols-3 lg:grid-cols-4">
+              {area.itens.map((it) => (
+                <Tile key={it.rotulo} {...it} />
+              ))}
+            </div>
+          </section>
+        );
+      })}
     </>
   );
 }
