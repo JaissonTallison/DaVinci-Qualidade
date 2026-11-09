@@ -76,7 +76,9 @@ const acao = (p: PlanoDeAcao, alteracoes: Record<string, unknown>) => ({
 
 beforeAll(async () => {
   banco = await criarBancoDeTeste(schema);
-  planos = new PlanosDeAcaoService(banco.db);
+  planos = new PlanosDeAcaoService(banco.db, {
+    emit: () => undefined as never,
+  });
   ncs = new NaoConformidadesService(banco.db, {
     emit: () => undefined as never,
   });
