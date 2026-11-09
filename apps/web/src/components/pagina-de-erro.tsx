@@ -29,7 +29,7 @@ export function PaginaDeErro({
 }) {
   const paraCopiar = detalhes.map((d) => `${d.rotulo}: ${d.valor}`).join("\n");
   return (
-    <div className="w-full max-w-2xl py-10">
+    <div className="mx-auto w-full max-w-2xl py-10">
       <p className="font-mono text-sm text-texto-2">{codigo}</p>
       <h1 className={`${tituloDaPagina} mt-1`}>{titulo}</h1>
       <p className="mt-2 max-w-xl text-md text-texto-2">{texto}</p>
@@ -107,7 +107,9 @@ export function MolduraIndependente({ children }: { children: ReactNode }) {
           />
         </Link>
       </header>
-      <main className="flex flex-1 justify-center px-6">{children}</main>
+      <main className="flex flex-1 items-center justify-center px-6">
+        {children}
+      </main>
       <footer className="border-t border-borda bg-superficie px-6 py-3 text-xs text-texto-3">
         DaVinci Qualidade
       </footer>

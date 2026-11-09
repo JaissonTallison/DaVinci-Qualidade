@@ -276,12 +276,12 @@ export default async function ListaDeNcs({
                       ordem={ordem}
                       base={BASE}
                       consulta={consulta}
-                      className="sm:hidden lg:table-cell"
+                      className="sm:hidden xl:table-cell"
                     >
                       Origem
                     </ThOrdenavel>
                     <th className="px-4 py-2.5 font-semibold">Gravidade</th>
-                    <th className="px-4 py-2.5 font-semibold sm:hidden lg:table-cell">
+                    <th className="px-4 py-2.5 font-semibold sm:hidden xl:table-cell">
                       Responsável
                     </th>
                     <ThOrdenavel
@@ -338,13 +338,13 @@ export default async function ListaDeNcs({
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden xl:table-cell">
                           {ORIGENS_NC[nc.origem]}
                         </td>
                         <td className="px-4 py-3">
                           <GravidadeDaNc gravidade={nc.gravidade} />
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden lg:table-cell">
+                        <td className="px-4 py-3 whitespace-nowrap text-texto-2 sm:hidden xl:table-cell">
                           {nc.responsavel}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">

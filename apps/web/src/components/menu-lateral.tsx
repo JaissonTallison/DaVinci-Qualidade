@@ -17,11 +17,11 @@ function lembrar(nome: string, valor: string) {
 }
 
 /**
- * Menu lateral. Logo com 176 px (abaixo de 160 px a linha "Qualidade e Certificações" fica ilegível).
+ * Menu lateral. Logo com 144 px; a tagline "Qualidade e Certificações" fica no limite da leitura (menor que isso, usar uma versão só com o nome "daVINCI").
  * Fundo verde-petróleo (token `menu`): texto claro, item ativo com fundo um pouco mais claro e barra em ouro claro.
  */
 const NORMAL =
-  "border-transparent text-primaria-texto/75 hover:bg-primaria-texto/10 hover:text-primaria-texto";
+  "border-transparent text-primaria-texto/90 hover:bg-primaria-texto/10 hover:text-primaria-texto";
 const MARCADO =
   "border-ouro-claro bg-primaria-texto/10 font-semibold text-primaria-texto";
 /** Lida do package.json da raiz no next.config. */
@@ -112,7 +112,7 @@ export function MenuLateral({
         key={href}
         href={href}
         aria-current={marcado ? "page" : undefined}
-        className={`flex items-center border-l-[3px] py-1.5 pr-3 pl-3.5 text-base ${FOCO} ${marcado ? MARCADO : NORMAL}`}
+        className={`flex items-center border-l-[3px] py-1.5 pr-3 pl-3.5 text-[15px] ${FOCO} ${marcado ? MARCADO : NORMAL}`}
       >
         <span className="min-w-0 line-clamp-2 leading-tight">{rotulo}</span>
       </Link>
@@ -129,9 +129,9 @@ export function MenuLateral({
           <Image
             src="/brand/simbolo-fundo-escuro.svg"
             alt="DaVinci Qualidade"
-            width={24}
-            height={24}
-            className="h-6 w-6"
+            width={36}
+            height={36}
+            className="size-9"
           />
         </Link>
         <div className="flex w-full flex-1 flex-col items-center gap-1 overflow-y-auto">
@@ -196,7 +196,7 @@ export function MenuLateral({
                     role="menuitem"
                     aria-current={marcado ? "page" : undefined}
                     onClick={() => setPainel(null)}
-                    className={`flex items-center gap-2 rounded-sm border-l-[3px] py-1.5 pr-3 pl-2 text-base ${FOCO} ${marcado ? MARCADO : NORMAL}`}
+                    className={`flex items-center gap-2 rounded-sm border-l-[3px] py-1.5 pr-3 pl-2 text-[15px] ${FOCO} ${marcado ? MARCADO : NORMAL}`}
                   >
                     <IconeDaTela href={i.href} />
                     <span className="min-w-0 line-clamp-2 leading-tight">
@@ -216,9 +216,9 @@ export function MenuLateral({
       aria-label="Menu principal"
       className={`flex h-full flex-col border-r border-primaria-texto/10 bg-menu ${permiteCompactar ? "w-60" : ""}`}
     >
-      <div className="px-4 pt-5 pb-7">
+      <div className="px-4 pt-4 pb-5">
         <Image
-          className="h-auto w-[176px]"
+          className="h-auto w-36"
           src="/brand/logo-fundo-escuro.svg"
           alt="DaVinci Qualidade"
           width={573}
@@ -231,7 +231,7 @@ export function MenuLateral({
           <Link
             href="/"
             aria-current={ativo("/") ? "page" : undefined}
-            className={`flex items-center gap-2.5 border-l-[3px] py-1.5 pr-3 pl-[calc(1rem-3px)] text-base ${FOCO} ${ativo("/") ? MARCADO : NORMAL}`}
+            className={`flex items-center gap-2.5 border-l-[3px] py-1.5 pr-3 pl-[calc(1rem-3px)] text-sm uppercase ${FOCO} ${ativo("/") ? MARCADO : NORMAL}`}
           >
             <IconeDoGrupo titulo="Início" />
             Início
@@ -248,10 +248,10 @@ export function MenuLateral({
                     onClick={() => !temAtivo && alternarGrupo(g.titulo)}
                     aria-expanded={aberto}
                     aria-controls={id}
-                    className={`flex w-full items-center gap-2.5 py-1.5 pr-3 pl-4 text-left text-base font-semibold ${FOCO} ${temAtivo ? "text-primaria-texto" : "text-primaria-texto/75 hover:bg-primaria-texto/10 hover:text-primaria-texto"}`}
+                    className={`flex w-full items-center gap-2.5 py-1.5 pr-3 pl-4 text-left text-sm font-semibold ${FOCO} ${temAtivo ? "text-primaria-texto" : "text-primaria-texto/90 hover:bg-primaria-texto/10 hover:text-primaria-texto"}`}
                   >
                     <IconeDoGrupo titulo={g.titulo} />
-                    <span className="min-w-0 flex-1 line-clamp-2 leading-tight">
+                    <span className="min-w-0 flex-1 line-clamp-2 leading-tight uppercase">
                       {g.titulo}
                     </span>
                     {!temAtivo && (
