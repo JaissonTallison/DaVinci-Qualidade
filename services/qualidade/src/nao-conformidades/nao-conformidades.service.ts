@@ -39,7 +39,7 @@ import {
   type StatusNc,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
-import { naoConformidades, sequencias } from '../db/schema.js';
+import { naoConformidades, planosAcao, sequencias } from '../db/schema.js';
 import {
   estaVencida,
   formatarNumeroNc,
@@ -319,6 +319,8 @@ export class NaoConformidadesService {
     );
     const atual = await this.buscar(ctx, dados?.id);
     exigirTransicao('verificarEficacia', atual.status as StatusNc);
+    // Não encerra a NC enquanto o plano de ação que a trata ainda está em execução (ERR-08)
+    if (eficaz) await this.recusarSePlanoEmExecucao(ctx, atual.id);
     const agora = new Date();
     const linha = await this.gravar(ctx, atual.id, versao, {
       eficaz,
@@ -364,6 +366,28 @@ export class NaoConformidadesService {
         canceladaPorNome: ctx.usuarioNome ?? null,
       }),
     );
+  }
+
+  /** Recusa encerrar a NC com um plano de ação ainda em execução (ERR-08). */
+  private async recusarSePlanoEmExecucao(
+    ctx: Contexto,
+    ncId: string,
+  ): Promise<void> {
+    const [{ n }] = await this.db
+      .select({ n: count() })
+      .from(planosAcao)
+      .where(
+        and(
+          eq(planosAcao.empresaId, ctx.empresaId),
+          eq(planosAcao.ncId, ncId),
+          eq(planosAcao.status, 'em_execucao'),
+        ),
+      );
+    if (Number(n) > 0)
+      throw new ErroDeNegocio(
+        'REGRA_DE_NEGOCIO',
+        'Conclua ou cancele o plano de ação ainda em execução antes de encerrar a NC.',
+      );
   }
 
   private async buscar(ctx: Contexto, id: unknown): Promise<Linha> {

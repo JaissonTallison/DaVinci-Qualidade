@@ -50,16 +50,35 @@ export async function GET(req: NextRequest) {
   }
   consulta.set("porPagina", "100");
 
-  const r = await chamarApi<unknown>(`${recurso.api}?${consulta}`);
-  if (!r.ok)
-    return new Response(`Não foi possível exportar: ${r.erro.mensagem}`, {
-      status: 502,
-    });
-
-  const dados = r.dados;
-  let linhas = (
-    Array.isArray(dados) ? dados : ((dados as { itens?: unknown[] }).itens ?? [])
-  ) as Record<string, unknown>[];
+  // Traz TODAS as linhas do filtro, não só as 100 da primeira página (a lista é paginada): percorre
+  // página a página até juntar o `total`, com um teto de segurança para o arquivo não explodir (ERR-07).
+  const MAX_LINHAS = 20_000;
+  let linhas: Record<string, unknown>[] = [];
+  let truncado = false;
+  for (let pagina = 1; ; pagina++) {
+    consulta.set("pagina", String(pagina));
+    const r = await chamarApi<unknown>(`${recurso.api}?${consulta}`);
+    if (!r.ok)
+      return new Response(`Não foi possível exportar: ${r.erro.mensagem}`, {
+        status: 502,
+      });
+    const dados = r.dados;
+    if (Array.isArray(dados)) {
+      // Recurso sem paginação: já veio a lista inteira
+      linhas = dados as Record<string, unknown>[];
+      break;
+    }
+    const corpo = dados as { itens?: unknown[]; total?: number };
+    const itens = (corpo.itens ?? []) as Record<string, unknown>[];
+    linhas.push(...itens);
+    if (linhas.length >= MAX_LINHAS) {
+      linhas = linhas.slice(0, MAX_LINHAS);
+      truncado = true;
+      break;
+    }
+    const total = typeof corpo.total === "number" ? corpo.total : linhas.length;
+    if (itens.length === 0 || linhas.length >= total) break;
+  }
 
   // Só as selecionadas, quando a barra de seleção manda os ids
   const ids = params.get("ids");
@@ -80,6 +99,10 @@ export async function GET(req: NextRequest) {
       .map((linha) => colunas.map((c) => celula(linha[c])).join(";"))
       .join("\n");
     csv = `${cabecalho}\n${corpo}`;
+    if (truncado)
+      csv += `\n${celula(
+        `Exportação limitada a ${MAX_LINHAS} linhas. Refine os filtros para exportar o restante.`,
+      )}`;
   }
 
   const arquivo = `${recurso.nome}-${hojeEmBrasilia()}.csv`;
