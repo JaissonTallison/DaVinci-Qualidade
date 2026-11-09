@@ -58,6 +58,7 @@ import {
   RiscosController,
 } from './seguranca/pgr-e-pt.controller.js';
 import { AnexosController } from './anexos/anexos.controller.js';
+import { NotificacoesController } from './notificacoes/notificacoes.controller.js';
 import { PaineisController } from './paineis/paineis.controller.js';
 import {
   ServicosController,
@@ -174,6 +175,7 @@ export const observeEnabled = Boolean(
     RiscosController,
     PermissoesDeTrabalhoController,
     AnexosController,
+    NotificacoesController,
     PaineisController,
     ServicosController,
     AmbientalController,

@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import type { ClientProxy } from '@nestjs/microservices';
 import {
   and,
   asc,
@@ -26,6 +27,8 @@ import {
   novaNcSchema,
   STATUS_FINAIS_NC,
   verificarEficaciaSchema,
+  PATTERNS,
+  SERVICES,
   type Contexto,
   type NaoConformidade,
   type NaoConformidadeResumo,
@@ -54,7 +57,11 @@ const ALTERADA_POR_OUTRA_PESSOA =
 
 @Injectable()
 export class NaoConformidadesService {
-  constructor(@Inject(DATABASE) private readonly db: Db) {}
+  constructor(
+    @Inject(DATABASE) private readonly db: Db,
+    @Inject(SERVICES.PLATAFORMA)
+    private readonly plataforma: Pick<ClientProxy, 'emit'>,
+  ) {}
 
   async listar(
     ctx: Contexto,
@@ -313,18 +320,32 @@ export class NaoConformidadesService {
     const atual = await this.buscar(ctx, dados?.id);
     exigirTransicao('verificarEficacia', atual.status as StatusNc);
     const agora = new Date();
-    return montar(
-      await this.gravar(ctx, atual.id, versao, {
-        eficaz,
-        parecerEficacia: parecer,
-        verificadoPor: ctx.usuarioId,
-        verificadoEm: agora,
-        status: statusAposVerificacao(eficaz),
-        ...(eficaz
-          ? { encerradaEm: agora }
-          : { ciclos: atual.ciclos + 1, dataImplantacao: null }),
-      }),
-    );
+    const linha = await this.gravar(ctx, atual.id, versao, {
+      eficaz,
+      parecerEficacia: parecer,
+      verificadoPor: ctx.usuarioId,
+      verificadoEm: agora,
+      status: statusAposVerificacao(eficaz),
+      ...(eficaz
+        ? { encerradaEm: agora }
+        : { ciclos: atual.ciclos + 1, dataImplantacao: null }),
+    });
+    // NC encerrada: avisa quem a abriu (se não for quem acabou de verificar).
+    if (eficaz && linha.criadoPor && linha.criadoPor !== ctx.usuarioId) {
+      this.plataforma.emit(PATTERNS.notificacoes.criar, {
+        contexto: { rastreioId: ctx.rastreioId },
+        dados: {
+          empresaId: ctx.empresaId,
+          usuarioId: linha.criadoPor,
+          tipo: 'evento',
+          titulo: `Não conformidade ${linha.numero} encerrada`,
+          descricao: 'A verificação de eficácia foi concluída.',
+          modulo: 'qualidade',
+          href: `/qualidade/nao-conformidades/${linha.id}`,
+        },
+      });
+    }
+    return montar(linha);
   }
 
   async cancelar(

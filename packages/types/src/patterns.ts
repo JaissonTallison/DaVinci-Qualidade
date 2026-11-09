@@ -144,6 +144,12 @@ export const PATTERNS = {
   },
   notificacoes: {
     enviarEmail: 'notificacoes.enviar-email',
+    /** EVENTO (emit): um módulo cria uma notificação para um usuário. */
+    criar: 'notificacoes.criar',
+    listar: 'notificacoes.listar',
+    contar: 'notificacoes.contar',
+    marcarLida: 'notificacoes.marcar-lida',
+    marcarTodas: 'notificacoes.marcar-todas',
   },
   /** Qualidade: não conformidades (docs/05-modulos/nao-conformidades.md). */
   naoConformidades: {
