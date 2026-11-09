@@ -12,7 +12,7 @@ import { comRetentativa } from "@/lib/retentativa";
 
 const entrarComRetentativa = comRetentativa(entrar);
 const icone =
-  "pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-texto-3";
+  "pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-texto-2";
 
 // "A página já hidratou?" sem setState em efeito: false no servidor e no 1º render do cliente, true depois.
 const semInscricao = () => () => {};
@@ -70,13 +70,13 @@ export function FormularioEntrar({
             E-mail
           </label>
           <div className="relative">
-            <Mail aria-hidden size={16} strokeWidth={1.75} className={icone} />
+            <Mail aria-hidden size={18} strokeWidth={1.75} className={icone} />
             <input
               id="email"
               name="email"
               type="email"
               placeholder="E-mail"
-              className="dv-acesso-campo pr-3 pl-10"
+              className="dv-acesso-campo pr-4 pl-12"
               defaultValue={estado.email}
               autoComplete="username"
               autoFocus
@@ -102,13 +102,13 @@ export function FormularioEntrar({
             Senha
           </label>
           <div className="relative">
-            <Lock aria-hidden size={16} strokeWidth={1.75} className={icone} />
+            <Lock aria-hidden size={18} strokeWidth={1.75} className={icone} />
             <input
               id="senha"
               name="senha"
               type={verSenha ? "text" : "password"}
               placeholder="Senha"
-              className="dv-acesso-campo pr-12 pl-10"
+              className="dv-acesso-campo pr-12 pl-12"
               autoComplete="current-password"
               required
               aria-invalid={Boolean(erros.senha) || credenciais}
