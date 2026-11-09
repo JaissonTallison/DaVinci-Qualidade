@@ -64,7 +64,11 @@ export class UsuariosService {
         .where(eq(usuarios.email, email));
       if (existente) {
         const [vinculo] = await tx
-          .select({ ativo: vinculos.ativo })
+          .select({
+            ativo: vinculos.ativo,
+            convidadoEm: vinculos.convidadoEm,
+            inativadoEm: vinculos.inativadoEm,
+          })
           .from(vinculos)
           .where(
             and(
@@ -73,32 +77,28 @@ export class UsuariosService {
             ),
           );
         if (vinculo) {
+          // Mensagens genéricas: não revelam o nome de quem é de outra empresa (ERR-04)
           const situacao = vinculo.ativo
-            ? 'já tem acesso a esta empresa'
-            : 'já teve acesso a esta empresa (está removido): devolva o acesso na ficha dela';
-          throw new ErroDeNegocio(
-            'CONFLITO',
-            `${existente.nome} ${situacao}.`,
-            [
-              {
-                campo: 'email',
-                mensagem: 'E-mail já cadastrado nesta empresa.',
-              },
-            ],
-          );
+            ? 'Esse e-mail já tem acesso a esta empresa.'
+            : vinculo.convidadoEm && !vinculo.inativadoEm
+              ? 'Esse e-mail já foi convidado para esta empresa.'
+              : 'Esse e-mail já teve acesso a esta empresa (está removido): devolva o acesso na ficha dela.';
+          throw new ErroDeNegocio('CONFLITO', situacao, [
+            { campo: 'email', mensagem: 'E-mail já cadastrado nesta empresa.' },
+          ]);
         }
+        // Pessoa de outra empresa: NÃO vincula nem revela quem é — CONVIDA. Ela aceita no próximo acesso.
         await tx.insert(vinculos).values({
           empresaId: ctx.empresaId,
           usuarioId: existente.id,
           perfilId,
+          ativo: false,
+          convidadoEm: new Date(),
+          convidadoPor: ctx.usuarioId,
           criadoPor: ctx.usuarioId,
           atualizadoPor: ctx.usuarioId,
         });
-        return {
-          usuario: await this.buscar(ctx, tx, existente.id),
-          senhaProvisoria: null,
-          pessoaJaExistia: true,
-        };
+        return { usuario: null, senhaProvisoria: null, convidado: true };
       }
       const senhaProvisoria = gerarSenhaProvisoria();
       const [novo] = await tx
@@ -123,7 +123,7 @@ export class UsuariosService {
       return {
         usuario: await this.buscar(ctx, tx, novo!.id),
         senhaProvisoria,
-        pessoaJaExistia: false,
+        convidado: false,
       };
     });
   }
@@ -331,6 +331,8 @@ export class UsuariosService {
       .where(
         and(
           eq(vinculos.empresaId, ctx.empresaId),
+          // Convite pendente não é membro ainda: fica fora da lista (não revela quem é) — ERR-04
+          isNull(vinculos.convidadoEm),
           usuarioId ? eq(vinculos.usuarioId, usuarioId) : undefined,
         ),
       )

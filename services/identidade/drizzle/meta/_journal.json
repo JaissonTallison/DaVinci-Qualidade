@@ -71,6 +71,13 @@
       "when": 1792001989101,
       "tag": "0009_chaves_api",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794248630594,
+      "tag": "0010_futuristic_major_mapleleaf",
+      "breakpoints": true
     }
   ]
 }

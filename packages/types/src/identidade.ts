@@ -144,11 +144,25 @@ export type RespostaLogin = Sessao | Desafio2fa;
 export const ehDesafio2fa = (r: RespostaLogin): r is Desafio2fa =>
   'desafio2fa' in r;
 
-/** Resposta de GET /auth/eu: quem está logado, onde e com quais permissões. */
+/** Convite pendente a uma empresa (o e-mail já tinha conta; a pessoa aceita no próximo acesso). */
+export interface ConvitePendente {
+  /** Id do vínculo pendente; envie para aceitar ou recusar. */
+  id: string;
+  empresa: string;
+  perfil: string;
+  convidadoEm: string;
+}
+
+export const responderConviteSchema = z.object({
+  id: z.uuid('Convite inválido.'),
+});
+export type ResponderConvite = z.input<typeof responderConviteSchema>;
+
+/** Resposta de GET /auth/eu: quem está logado, onde, com quais permissões e convites pendentes. */
 export type DadosDoUsuario = Pick<
   Sessao,
   'usuario' | 'empresa' | 'empresas' | 'permissoes' | 'recursos'
->;
+> & { convites: ConvitePendente[] };
 
 /** Conteúdo do token de acesso (claims). */
 export interface ConteudoDoToken {
