@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { NextRequest } from "next/server";
 import { ehDesafio2fa, type RespostaLogin } from "@davinci/types";
 import { chamarApi } from "@/lib/api";
+import { origemPublica } from "@/lib/endereco-do-sistema";
 import {
   enderecoDeRetorno,
   lerIda,
@@ -53,7 +54,7 @@ export async function GET(
   const idToken = await trocarCodigo(
     ida,
     codigo,
-    enderecoDeRetorno(ida.provedor, req.nextUrl.origin),
+    enderecoDeRetorno(ida.provedor, origemPublica(req)),
   );
   if (!idToken)
     recusar("O provedor não confirmou o login. Tente de novo em instantes.");

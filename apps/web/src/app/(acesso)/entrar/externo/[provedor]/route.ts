@@ -7,6 +7,7 @@ import {
   provedoresAtivos,
 } from "@/lib/provedores-externos";
 import { PROVEDORES_EXTERNOS } from "@davinci/types";
+import { origemPublica, urlPublica } from "@/lib/endereco-do-sistema";
 import {
   COOKIE_EXTERNO,
   COOKIE_RECUSA,
@@ -21,7 +22,7 @@ export async function GET(
 ) {
   const { provedor } = await params;
   if (!ehProvedor(provedor))
-    return NextResponse.redirect(new URL("/entrar", req.url));
+    return NextResponse.redirect(urlPublica(req, "/entrar"));
   // O botão aparece sempre; sem o aplicativo registrado, volta com o aviso em vez de falhar no provedor
   if (!provedoresAtivos().includes(provedor)) {
     (await cookies()).set({
@@ -29,11 +30,11 @@ export async function GET(
       value: `Entrar com ${PROVEDORES_EXTERNOS[provedor]} ainda não está disponível. Use o e-mail e a senha.`,
       ...opcoes(new Date(Date.now() + 60_000).toISOString()),
     });
-    return NextResponse.redirect(new URL("/entrar", req.url));
+    return NextResponse.redirect(urlPublica(req, "/entrar"));
   }
   const { url, ida } = prepararIda(
     provedor,
-    enderecoDeRetorno(provedor, req.nextUrl.origin),
+    enderecoDeRetorno(provedor, origemPublica(req)),
     caminhoDeVolta(req.nextUrl.searchParams.get("volta")),
     req.nextUrl.searchParams.get("lembrar") === "1",
   );

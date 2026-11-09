@@ -5,6 +5,7 @@ import { ErroDeNegocio, validar } from '@davinci/shared';
 import {
   alterarPerfilDoUsuarioSchema,
   devolverAcessoSchema,
+  ehPermissao,
   isUuid,
   novoUsuarioSchema,
   removerAcessoSchema,
@@ -18,6 +19,7 @@ import { perfis, sessoes, usuarios, vinculos } from '../db/schema.js';
 import { ContaService } from '../conta/conta.service.js';
 import { anunciarRevogacao } from '../seguranca/revogacao.js';
 import { gerarSenhaProvisoria, protegerSenha } from '../seguranca/senhas.js';
+import { permissoesAlemDoAtor, poderesDoAtor } from './poderes-do-ator.js';
 
 const NAO_ENCONTRADO = 'Usuário não encontrado nesta empresa.';
 const ALTERADO_POR_OUTRA_PESSOA =
@@ -54,7 +56,8 @@ export class UsuariosService {
   async criar(ctx: Contexto, dados: unknown): Promise<UsuarioCriado> {
     const { nome, email, perfilId } = validar(novoUsuarioSchema, dados);
     return this.db.transaction(async (tx) => {
-      await this.perfilAtivo(ctx, tx, perfilId);
+      const perfil = await this.perfilAtivo(ctx, tx, perfilId);
+      await this.garantirPodeAtribuir(ctx, tx, perfil);
       const [existente] = await tx
         .select()
         .from(usuarios)
@@ -143,6 +146,7 @@ export class UsuariosService {
           'Devolva o acesso antes de alterar o perfil.',
         );
       const novo = await this.perfilAtivo(ctx, tx, perfilId);
+      await this.garantirPodeAtribuir(ctx, tx, novo);
       if (alvo.perfil.protegido && !novo.protegido)
         await this.garantirOutroAdministrador(ctx, tx, alvo.id);
       await this.gravar(ctx, tx, alvo.id, versao, { perfilId });
@@ -383,6 +387,31 @@ export class UsuariosService {
         [{ campo: 'perfilId', mensagem }],
       );
     return p;
+  }
+
+  /**
+   * Dar um perfil concede todas as permissões dele: quem administra acessos não pode usar isso para
+   * elevar alguém (nem a si) acima do próprio nível. Só o Administrador atribui o perfil Administrador;
+   * ninguém atribui um perfil com permissões que não tem. (ERR-03)
+   */
+  private async garantirPodeAtribuir(
+    ctx: Contexto,
+    tx: Tx,
+    perfil: { protegido: boolean; permissoes: string[] },
+  ) {
+    const poderes = await poderesDoAtor(tx, ctx.empresaId, ctx.usuarioId);
+    if (poderes.admin) return;
+    if (perfil.protegido)
+      throw new ErroDeNegocio(
+        'SEM_PERMISSAO',
+        'Só um administrador pode dar o perfil Administrador.',
+      );
+    const alvo = perfil.permissoes.filter(ehPermissao);
+    if (permissoesAlemDoAtor(poderes, alvo).length)
+      throw new ErroDeNegocio(
+        'SEM_PERMISSAO',
+        'Você não pode dar um perfil com permissões que você mesmo não tem.',
+      );
   }
 
   /**

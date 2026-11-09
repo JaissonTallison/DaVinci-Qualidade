@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { API_URL } from "@/lib/api-url";
+import { urlPublica } from "@/lib/endereco-do-sistema";
 import { COOKIE_ACESSO } from "@/lib/sessao";
 
 /**
@@ -12,7 +13,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const token = req.cookies.get(COOKIE_ACESSO)?.value;
-  if (!token) return NextResponse.redirect(new URL("/entrar", req.url));
+  if (!token) return NextResponse.redirect(urlPublica(req, "/entrar"));
   const res = await fetch(
     `${API_URL}/anexos/${encodeURIComponent(id)}/conteudo`,
     {
@@ -21,7 +22,7 @@ export async function GET(
     },
   );
   if (res.status === 401)
-    return NextResponse.redirect(new URL("/sessao-encerrada", req.url));
+    return NextResponse.redirect(urlPublica(req, "/sessao-encerrada"));
   if (!res.ok)
     return new NextResponse(
       res.status === 404

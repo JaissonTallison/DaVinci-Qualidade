@@ -579,3 +579,94 @@ describe('perfis', () => {
     ).toBe('NAO_ENCONTRADO');
   });
 });
+
+describe('ERR-03: quem administra acessos não escala privilégio', () => {
+  // Perfil "RH": pode gerenciar usuários e perfis, mas só tem funcionarios.ver além disso.
+  let ctxRh: Contexto;
+  let perfilSoFuncionarios: string;
+
+  beforeAll(async () => {
+    const rh = await perfisSvc.criar(ctxAlfa(), {
+      nome: 'RH',
+      descricao: '',
+      permissoes: ['usuarios.gerenciar', 'perfis.gerenciar', 'funcionarios.ver'],
+    });
+    perfilSoFuncionarios = (
+      await perfisSvc.criar(ctxAlfa(), {
+        nome: 'Só funcionários',
+        descricao: '',
+        permissoes: ['funcionarios.ver'],
+      })
+    ).id;
+    const rita = await usuariosSvc.criar(ctxAlfa(), {
+      nome: 'Rita RH',
+      email: 'rita@alfa.com.br',
+      perfilId: rh.id,
+    });
+    ctxRh = {
+      empresaId: ids.alfa,
+      usuarioId: rita.usuario.id,
+      rastreioId: uuidv7(),
+    };
+  });
+
+  it('RH com usuarios.gerenciar recebe SEM_PERMISSAO ao dar Administrador', async () => {
+    const e = await recusa(
+      usuariosSvc.criar(ctxRh, {
+        nome: 'Falso Admin',
+        email: 'falso@alfa.com.br',
+        perfilId: perfil[`${ids.alfa}:Administrador`],
+      }),
+    );
+    expect(e.codigo).toBe('SEM_PERMISSAO');
+    expect(e.mensagem).toContain('administrador');
+  });
+
+  it('RH não dá um perfil com permissões que ele mesmo não tem', async () => {
+    // "Gestor do SGI" tem permissões de SGI que o RH não possui
+    const e = await recusa(
+      usuariosSvc.criar(ctxRh, {
+        nome: 'Novato',
+        email: 'novato@alfa.com.br',
+        perfilId: perfil[`${ids.alfa}:Gestor do SGI`],
+      }),
+    );
+    expect(e.codigo).toBe('SEM_PERMISSAO');
+  });
+
+  it('RH pode dar um perfil contido nas suas permissões', async () => {
+    const r = await usuariosSvc.criar(ctxRh, {
+      nome: 'Novo Func',
+      email: 'novofunc@alfa.com.br',
+      perfilId: perfilSoFuncionarios,
+    });
+    expect(r.usuario.perfil.nome).toBe('Só funcionários');
+  });
+
+  it('RH não cria perfil com permissão que não tem', async () => {
+    const e = await recusa(
+      perfisSvc.criar(ctxRh, {
+        nome: 'Tudo para mim',
+        permissoes: ['funcionarios.ver', 'empresa.gerenciar'],
+      }),
+    );
+    expect(e.codigo).toBe('SEM_PERMISSAO');
+  });
+
+  it('RH não altera o próprio perfil', async () => {
+    const rhPerfil = (await perfisSvc.listar(ctxAlfa())).find(
+      (p) => p.nome === 'RH',
+    )!;
+    const e = await recusa(
+      perfisSvc.atualizar(ctxRh, {
+        id: rhPerfil.id,
+        nome: 'RH',
+        descricao: '',
+        permissoes: ['usuarios.gerenciar', 'perfis.gerenciar', 'funcionarios.ver'],
+        versao: rhPerfil.versao,
+      }),
+    );
+    expect(e.codigo).toBe('SEM_PERMISSAO');
+    expect(e.mensagem).toContain('próprio perfil');
+  });
+});

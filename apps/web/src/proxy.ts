@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import type { Sessao } from "@davinci/types";
 import { API_URL } from "@/lib/api-url";
+import { urlPublica } from "@/lib/endereco-do-sistema";
 import {
   COOKIE_ACESSO,
   COOKIE_LEMBRAR,
@@ -46,7 +47,7 @@ export async function proxy(req: NextRequest) {
       sessaoNova = r.sessao;
       conteudo = lerToken(r.sessao.tokenAcesso);
     } else if (!naTelaDeEntrar && !ehAcao) {
-      const destino = new URL(ENTRAR, req.url);
+      const destino = urlPublica(req, ENTRAR);
       if (caminho !== "/")
         destino.searchParams.set("volta", caminho + req.nextUrl.search);
       const res = NextResponse.redirect(destino);
@@ -70,10 +71,10 @@ export async function proxy(req: NextRequest) {
     res = NextResponse.next({ request: { headers } });
   } else if (naTelaDeEntrar) {
     res = NextResponse.redirect(
-      new URL(caminhoDeVolta(req.nextUrl.searchParams.get("volta")), req.url),
+      urlPublica(req, caminhoDeVolta(req.nextUrl.searchParams.get("volta"))),
     );
   } else if (conteudo?.dts && caminho !== TROCAR_SENHA) {
-    res = NextResponse.redirect(new URL(TROCAR_SENHA, req.url));
+    res = NextResponse.redirect(urlPublica(req, TROCAR_SENHA));
   } else if (sessaoNova) {
     // A página desta mesma requisição já precisa enxergar o token novo
     for (const c of cookiesDaSessao(sessaoNova, lembrar))

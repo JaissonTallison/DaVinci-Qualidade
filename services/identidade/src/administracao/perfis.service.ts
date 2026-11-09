@@ -12,9 +12,11 @@ import {
   situacaoDoPerfilSchema,
   type Contexto,
   type Perfil,
+  type Permissao,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
 import { perfis, vinculos } from '../db/schema.js';
+import { permissoesAlemDoAtor, poderesDoAtor } from './poderes-do-ator.js';
 
 const NAO_ENCONTRADO = 'Perfil não encontrado.';
 const ALTERADO_POR_OUTRA_PESSOA =
@@ -43,6 +45,7 @@ export class PerfisService {
 
   async criar(ctx: Contexto, dados: unknown): Promise<Perfil> {
     const { nome, descricao, permissoes } = validar(novoPerfilSchema, dados);
+    await this.garantirPodeConceder(ctx, permissoes);
     await this.recusarNomeRepetido(ctx, nome);
     const [p] = await this.db
       .insert(perfis)
@@ -70,6 +73,8 @@ export class PerfisService {
         'REGRA_DE_NEGOCIO',
         'Reative o perfil para alterá-lo.',
       );
+    await this.garantirNaoEhOProprio(ctx, atual.id);
+    await this.garantirPodeConceder(ctx, permissoes);
     await this.recusarNomeRepetido(ctx, nome, atual.id);
     // As permissões novas valem na próxima renovação da sessão de cada usuário (até 15 min)
     return this.gravar(ctx, atual.id, versao, { nome, descricao, permissoes });
@@ -177,6 +182,29 @@ export class PerfisService {
         [{ campo: 'nome', mensagem: `"${nome}" já existe nesta empresa.` }],
       );
     }
+  }
+
+  /**
+   * Ninguém cria ou altera um perfil incluindo permissões que não tem: senão `perfis.gerenciar`
+   * seria uma escada para conceder a si mesmo qualquer acesso. O Administrador concede tudo. (ERR-03)
+   */
+  private async garantirPodeConceder(ctx: Contexto, permissoes: Permissao[]) {
+    const poderes = await poderesDoAtor(this.db, ctx.empresaId, ctx.usuarioId);
+    if (permissoesAlemDoAtor(poderes, permissoes).length)
+      throw new ErroDeNegocio(
+        'SEM_PERMISSAO',
+        'Você não pode conceder permissões que você mesmo não tem.',
+      );
+  }
+
+  /** Alterar o próprio perfil mudaria as suas permissões: é sempre pela mão de outra pessoa. (ERR-03) */
+  private async garantirNaoEhOProprio(ctx: Contexto, perfilId: string) {
+    const poderes = await poderesDoAtor(this.db, ctx.empresaId, ctx.usuarioId);
+    if (poderes.perfilId === perfilId)
+      throw new ErroDeNegocio(
+        'SEM_PERMISSAO',
+        'Você não pode alterar o seu próprio perfil. Peça a outra pessoa com acesso.',
+      );
   }
 
   private async gravar(
