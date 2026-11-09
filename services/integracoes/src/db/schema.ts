@@ -33,3 +33,17 @@ export const consultasCache = pgTable(
   },
   (t) => [primaryKey({ columns: [t.tipo, t.chave] })],
 );
+
+/**
+ * Configuração de integrações por empresa (A134). `config` guarda o que não é segredo (URL do webhook,
+ * remetente de e-mail, flags…); `segredos` guarda as credenciais cifradas (AES-256-GCM, seguranca/cifra.ts).
+ * Uma linha por empresa; cada provedor novo acrescenta campos em `config`/`segredos`, sem tabela nova.
+ */
+export const integracoesEmpresa = pgTable('integracoes_empresa', {
+  empresaId: uuid().primaryKey(),
+  config: jsonb().notNull().default({}),
+  segredos: text(),
+  atualizadoEm: timestamp({ withTimezone: true, precision: 3 })
+    .notNull()
+    .defaultNow(),
+});

@@ -8,6 +8,13 @@
       "when": 1792032684958,
       "tag": "0000_base",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794225991642,
+      "tag": "0001_stale_the_santerians",
+      "breakpoints": true
     }
   ]
 }

@@ -10,9 +10,16 @@ import {
   Sparkles,
   type LucideIcon,
 } from "@/components/icones";
+import {
+  CONFIG_DE_INTEGRACOES_PADRAO,
+  PROVEDORES_DE_IA,
+  type ConfigDeIntegracoes,
+} from "@davinci/types";
 import { Botao } from "@/components/botao";
 import { CabecalhoDaPagina } from "@/components/cabecalho-da-pagina";
+import { chamarApi } from "@/lib/api";
 import { painel, sobretitulo } from "@/lib/estilos";
+import { FormularioDeProvedorIa } from "./provedor";
 
 export const metadata: Metadata = { title: "IA / Assistente" };
 
@@ -61,7 +68,9 @@ const COPILOTOS: Copiloto[] = [
   },
 ];
 
-export default function IA() {
+export default async function IA() {
+  const r = await chamarApi<ConfigDeIntegracoes>("/integracoes/config");
+  const ia = r.ok ? r.dados.ia : CONFIG_DE_INTEGRACOES_PADRAO.ia;
   return (
     <div className="w-full">
       <CabecalhoDaPagina
@@ -89,33 +98,26 @@ export default function IA() {
           O modelo que gera as sugestões. A chave fica cifrada e o acesso é só o
           que você liberar.
         </p>
-        <div
-          className={`${painel} mt-3 flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between`}
-        >
+        <div className={`${painel} mt-3 p-5`}>
           <div className="flex items-start gap-3">
             <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-afundado text-texto-2 shadow-xs">
               <Sparkles aria-hidden size={20} strokeWidth={1.75} />
             </span>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <h3 className="text-base font-semibold text-texto">
-                Nenhum provedor conectado
+                {ia.provedor
+                  ? `${PROVEDORES_DE_IA[ia.provedor]} conectado`
+                  : "Nenhum provedor conectado"}
               </h3>
               <p className="mt-1 text-sm text-texto-2">
-                Conecte um provedor de modelo (com termos de não-treino dos
-                dados) para habilitar os copilotos.
+                {ia.temChave
+                  ? "Chave guardada (cifrada). Os copilotos ligam quando a chamada ao modelo for ativada."
+                  : "Escolha um provedor e cole a chave (com termos de não-treino dos dados) para habilitar os copilotos."}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3 sm:shrink-0">
-            <span className="text-sm text-texto-3">Não conectado</span>
-            <Botao
-              variante="secundario"
-              tamanho="pequeno"
-              disabled
-              motivo="Em breve: a conexão com o provedor ainda não está ativa."
-            >
-              Configurar
-            </Botao>
+          <div className="mt-4 border-t border-borda pt-4">
+            <FormularioDeProvedorIa ia={ia} />
           </div>
         </div>
       </section>

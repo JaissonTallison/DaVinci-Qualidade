@@ -10,6 +10,7 @@ export * from './permissoes.js';
 export * from './identidade.js';
 export * from './administracao.js';
 export * from './consultas.js';
+export * from './integracoes.js';
 export * from './notificacoes.js';
 export * from './cep.js';
 export * from './recursos.js';
