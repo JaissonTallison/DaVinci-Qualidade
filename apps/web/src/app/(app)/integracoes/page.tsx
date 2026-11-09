@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {
   Blocks,
   ChartColumn,
+  ChevronRight,
   Info,
   KeyRound,
   Lock,
@@ -22,6 +23,8 @@ type Plataforma = {
   nome: string;
   descricao: string;
   icone: LucideIcon;
+  /** Provedor já funcional: o cartão vira um link para a tela de configuração. */
+  href?: string;
 };
 
 type Categoria = {
@@ -69,12 +72,14 @@ const CATALOGO: Categoria[] = [
         descricao:
           "Gere uma chave para outros sistemas lerem seus dados com segurança — só o que você liberar.",
         icone: KeyRound,
+        href: "/integracoes/api",
       },
       {
         nome: "Webhooks",
         descricao:
           "Dispare um aviso para um endereço externo sempre que algo acontecer: uma NC aberta, um prazo vencido.",
         icone: Send,
+        href: "/integracoes/webhook",
       },
     ],
   },
@@ -158,15 +163,28 @@ export default function Integracoes() {
                     </div>
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-3 border-t border-borda pt-3">
-                    <span className="text-sm text-texto-3">Não conectado</span>
-                    <Botao
-                      variante="secundario"
-                      tamanho="pequeno"
-                      disabled
-                      motivo="Em breve: as conexões ainda não estão ativas."
-                    >
-                      Configurar
-                    </Botao>
+                    <span className="text-sm text-texto-3">
+                      {p.href ? "Disponível" : "Não conectado"}
+                    </span>
+                    {p.href ? (
+                      <Botao
+                        href={p.href}
+                        variante="secundario"
+                        tamanho="pequeno"
+                        iconeDireita={ChevronRight}
+                      >
+                        Configurar
+                      </Botao>
+                    ) : (
+                      <Botao
+                        variante="secundario"
+                        tamanho="pequeno"
+                        disabled
+                        motivo="Em breve: as conexões ainda não estão ativas."
+                      >
+                        Configurar
+                      </Botao>
+                    )}
                   </div>
                 </li>
               ))}

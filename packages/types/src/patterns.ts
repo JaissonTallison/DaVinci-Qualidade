@@ -102,6 +102,12 @@ export const PATTERNS = {
     cnpj: 'consultas.cnpj',
     cep: 'consultas.cep',
   },
+  /** Integrações da empresa: configuração dos provedores (webhook, etc.) no serviço integracoes. */
+  integracoes: {
+    obter: 'integracoes.config-obter',
+    salvarWebhook: 'integracoes.webhook-salvar',
+    salvarIa: 'integracoes.ia-salvar',
+  },
   /** Plataforma: notificações (e-mail). `enviarEmail` é um EVENTO (fire-and-forget). */
   anexos: {
     listar: 'anexos.listar',

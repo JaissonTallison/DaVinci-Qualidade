@@ -26,6 +26,8 @@ import {
 } from './qualidade/inspecoes.controller.js';
 import { MensageriaService } from './mensageria.service.js';
 import { ConsultasController } from './parceiros/consultas.controller.js';
+import { ChavesDeApiController } from './integracoes/chaves-de-api.controller.js';
+import { IntegracoesController } from './integracoes/integracoes.controller.js';
 import { ParceirosController } from './parceiros/parceiros.controller.js';
 import { ReferenciasController } from './parceiros/referencias.controller.js';
 import { CalibracaoController } from './qualidade/calibracao.controller.js';
@@ -144,6 +146,8 @@ export const observeEnabled = Boolean(
     ParceirosController,
     ReferenciasController,
     ConsultasController,
+    ChavesDeApiController,
+    IntegracoesController,
     NaoConformidadesController,
     PlanosDeAcaoController,
     InspecoesController,
