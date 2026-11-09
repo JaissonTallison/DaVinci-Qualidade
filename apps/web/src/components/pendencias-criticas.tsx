@@ -66,20 +66,18 @@ export function PendenciasCriticas({
             <li key={`${it.href}-${i}`}>
               <Link
                 href={it.href}
-                className="group flex h-full flex-col rounded-md border border-borda bg-superficie p-4 shadow-xs transition-colors hover:border-borda-forte hover:bg-superficie-2"
+                className="group flex h-full flex-col rounded-md border border-borda bg-superficie p-4 shadow-sm transition hover:border-borda-forte hover:bg-superficie-2 hover:shadow-md"
               >
-                <span className="flex items-center justify-between gap-2">
-                  <span className="truncate font-mono text-xs text-texto-2">
-                    {it.codigo ?? it.tipo}
-                  </span>
-                  <Selo tom="perigo">
-                    {it.dias} {it.dias === 1 ? "dia" : "dias"}
-                  </Selo>
+                <span className="truncate font-mono text-xs text-texto-2">
+                  {it.codigo ?? it.tipo}
                 </span>
-                <span className="mt-3 line-clamp-3 flex-1 text-base leading-snug font-medium text-texto group-hover:underline">
+                <span className="mt-2 line-clamp-2 flex-1 text-base leading-snug font-medium text-texto group-hover:underline">
                   {it.descricao}
                 </span>
-                <span className="mt-3 text-xs text-texto-2">{it.tipo}</span>
+                <span className="mt-3 text-sm font-semibold text-nao-conforme">
+                  Vencido há {it.dias} {it.dias === 1 ? "dia" : "dias"}
+                </span>
+                <span className="mt-1 text-xs text-texto-2">{it.tipo}</span>
               </Link>
             </li>
           ))}

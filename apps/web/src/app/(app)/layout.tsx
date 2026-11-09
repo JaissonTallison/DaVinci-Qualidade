@@ -53,7 +53,7 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
 
   return (
     <ProvedorDoMenu compactoInicial={compacto}>
-      <div className="flex min-h-screen flex-1">
+      <div className="flex min-h-screen flex-1 lg:h-screen lg:min-h-0 lg:overflow-hidden">
         <ColunaDoMenu>
           <MenuLateral
             grupos={grupos}
@@ -61,7 +61,7 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
             usuarioId={eu?.usuario.id}
           />
         </ColunaDoMenu>
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col lg:min-h-0">
           <BarraSuperior
             eu={eu}
             grupos={grupos}
@@ -70,7 +70,7 @@ export default async function LayoutDoSistema({ children }: LayoutProps<"/">) {
           />
           <main
             id="conteudo"
-            className="min-w-0 flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 md:pb-6 xl:px-8"
+            className="min-w-0 flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:px-6 md:pb-6 lg:min-h-0 lg:overflow-y-auto xl:px-8"
           >
             <div className="w-full">{children}</div>
             <ListaDePessoas

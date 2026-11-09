@@ -10,5 +10,9 @@ export default function ErroNoSistema({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  return <ErroInesperado digest={error.digest} tentarDeNovo={reset} />;
+  return (
+    <div className="flex min-h-[70vh] items-center justify-center">
+      <ErroInesperado digest={error.digest} tentarDeNovo={reset} />
+    </div>
+  );
 }

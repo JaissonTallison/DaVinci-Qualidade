@@ -187,9 +187,9 @@ export function AuditoriasPanorama({ dados }: { dados: PanoramaAuditorias }) {
                   <span className="w-28 shrink-0 truncate text-sm text-texto">
                     {a.auditor}
                   </span>
-                  <span className="h-3 flex-1 overflow-hidden rounded-full bg-superficie-2">
+                  <span className="h-4 flex-1 overflow-hidden rounded-xs bg-superficie-2">
                     <span
-                      className="block h-full rounded-full bg-serie-1"
+                      className="block h-full rounded-xs bg-serie-1"
                       style={{ width: `${(a.total / maxAuditor) * 100}%` }}
                     />
                   </span>

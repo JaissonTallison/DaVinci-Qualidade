@@ -301,26 +301,17 @@ export default async function Inicio() {
                   <li key={c.nome}>
                     <Link
                       href={c.href}
-                      className="group grid grid-cols-[minmax(0,9rem)_minmax(0,1fr)_3rem] items-center gap-x-4 gap-y-1 py-2.5"
+                      className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-0.5 py-2.5"
                     >
                       <span className="truncate text-base font-medium text-texto group-hover:underline">
                         {c.nome}
                       </span>
                       <span
-                        aria-hidden
-                        className="h-2 overflow-hidden rounded-full bg-afundado"
-                      >
-                        <span
-                          className={`block h-full rounded-full ${FUNDO_DO_TOM[tomDaSaude(c.pct)]}`}
-                          style={{ width: `${c.pct}%` }}
-                        />
-                      </span>
-                      <span
-                        className={`text-right font-semibold tabular-nums ${COR_DO_TOM[tomDaSaude(c.pct)]}`}
+                        className={`text-right text-base font-semibold tabular-nums ${COR_DO_TOM[tomDaSaude(c.pct)]}`}
                       >
                         {c.pct}%
                       </span>
-                      <span className="col-span-3 text-sm text-texto-2 sm:col-span-2 sm:col-start-2">
+                      <span className="col-span-2 text-sm text-texto-2">
                         {c.detalhe}
                       </span>
                     </Link>
@@ -422,11 +413,6 @@ const COR_DO_TOM: Record<Tom, string> = {
   sucesso: "text-conforme-texto",
   atencao: "text-atencao-texto",
   perigo: "text-nao-conforme-texto",
-};
-const FUNDO_DO_TOM: Record<Tom, string> = {
-  sucesso: "bg-conforme",
-  atencao: "bg-atencao",
-  perigo: "bg-nao-conforme",
 };
 
 /** Saúde em anel: trilho cinza e o progresso na cor do estado, sem degradê nem relevo. */
