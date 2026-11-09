@@ -37,6 +37,7 @@ import {
   type ResumoReclamacoes,
 } from '@davinci/types';
 import { Permissao, Publica } from '../auth/decoradores.js';
+import { LIMITE_PESQUISA, Limite } from '../auth/limite-de-tentativas.js';
 import { ContextoHttp, RastreioHttp } from '../contexto.js';
 import { MensageriaService } from '../mensageria.service.js';
 import { validarEntrada } from '../validacao.js';
@@ -302,6 +303,7 @@ export class PesquisasController extends Base {
   /** Pública: o cliente abre o link sem login. O token (256 bits) é a credencial. */
   @Get('publica/:token')
   @Publica()
+  @Limite(LIMITE_PESQUISA)
   obterPublica(
     @RastreioHttp() rastreioId: string,
     @Param('token') token: string,
@@ -316,6 +318,7 @@ export class PesquisasController extends Base {
 
   @Post('publica/:token')
   @Publica()
+  @Limite(LIMITE_PESQUISA)
   @HttpCode(200)
   responderPublica(
     @RastreioHttp() rastreioId: string,

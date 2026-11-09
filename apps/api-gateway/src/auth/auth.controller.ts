@@ -19,6 +19,7 @@ import { ContextoHttp, OrigemHttp, RastreioHttp } from '../contexto.js';
 import { MensageriaService } from '../mensageria.service.js';
 import { validarEntrada } from '../validacao.js';
 import { LiberadaComPendencia, Publica } from './decoradores.js';
+import { LIMITE_LOGIN, LIMITE_SENHA, Limite } from './limite-de-tentativas.js';
 
 /**
  * Login e sessão (serviço Identidade). Login, renovar, sair e trocar de empresa
@@ -30,6 +31,7 @@ export class AuthController {
 
   @Post('login')
   @Publica()
+  @Limite(LIMITE_LOGIN)
   @HttpCode(200)
   login(
     @RastreioHttp() rastreioId: string,
@@ -48,6 +50,7 @@ export class AuthController {
   /** Segunda etapa (2FA): o desafio da 1ª etapa + o código. */
   @Post('login/2fa')
   @Publica()
+  @Limite(LIMITE_LOGIN)
   @HttpCode(200)
   login2fa(
     @RastreioHttp() rastreioId: string,
@@ -66,6 +69,7 @@ export class AuthController {
   /** "Entrar com Microsoft/Google": o web já trocou o código do provedor pelo id_token. */
   @Post('login/externo')
   @Publica()
+  @Limite(LIMITE_LOGIN)
   @HttpCode(200)
   loginExterno(
     @RastreioHttp() rastreioId: string,
@@ -97,6 +101,7 @@ export class AuthController {
   /** "Esqueci minha senha": responde sempre igual (não revela se o e-mail existe). */
   @Post('recuperar-senha')
   @Publica()
+  @Limite(LIMITE_SENHA)
   @HttpCode(200)
   recuperarSenha(
     @RastreioHttp() rastreioId: string,
@@ -114,6 +119,7 @@ export class AuthController {
 
   @Post('redefinir-senha')
   @Publica()
+  @Limite(LIMITE_SENHA)
   @HttpCode(200)
   redefinirSenha(
     @RastreioHttp() rastreioId: string,
