@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import type { Instrumento } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { Campo } from "@/components/campo";
 import { Bloco, Formulario } from "@/components/formulario-de-acao";
 import { Recolhido } from "@/components/recolhido";
@@ -34,6 +35,10 @@ export function RegistrarCalibracao({
       >
         {(erros, v) => (
           <>
+            <FaixaDeIA rotulo="Preencher com IA">
+              a IA lê o certificado e preenche data, laboratório, número do
+              certificado e resultado para você conferir.
+            </FaixaDeIA>
             <div className="grid gap-5 sm:grid-cols-3">
               <Campo id="data" rotulo="Data *" erro={erros.data}>
                 <input

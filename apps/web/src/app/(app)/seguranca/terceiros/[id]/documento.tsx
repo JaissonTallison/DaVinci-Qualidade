@@ -1,6 +1,7 @@
 "use client";
 
 import { TIPOS_DOC_TERCEIRO } from "@davinci/types";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { Campo } from "@/components/campo";
 import { Formulario } from "@/components/formulario-de-acao";
 import { Recolhido } from "@/components/recolhido";
@@ -27,7 +28,12 @@ export function RegistrarDocumento({
         rotuloDoBotao="Registrar documento"
       >
         {(erros, v) => (
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="flex flex-col gap-5">
+            <FaixaDeIA rotulo="Preencher com IA">
+              a IA lê o documento anexado e preenche tipo, validade e descrição
+              para você conferir.
+            </FaixaDeIA>
+            <div className="grid gap-5 sm:grid-cols-3">
             <Campo id="tipo" rotulo="Tipo" erro={erros.tipo}>
               <Selecao
                 id="tipo"
@@ -67,6 +73,7 @@ export function RegistrarDocumento({
                 className={campo}
               />
             </Campo>
+            </div>
           </div>
         )}
       </Formulario>

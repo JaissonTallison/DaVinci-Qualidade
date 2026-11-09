@@ -9,6 +9,7 @@ import {
   type ModeloDeNc,
   type PerguntaDaAuditoria,
 } from "@davinci/types";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { Campo } from "@/components/campo";
 import { Formulario } from "@/components/formulario-de-acao";
 import { ListaDeProcessosAuditados } from "@/components/lista-de-processos-auditados";
@@ -86,6 +87,11 @@ export function RegistrarAchado({
             </Campo>
           )}
           <div key={codigo} className="flex flex-col gap-5">
+            <FaixaDeIA rotulo="Redigir com IA">
+              a IA transforma suas anotações do achado em constatação (requisito,
+              evidência e desvio), com causa provável e ação sugerida, para você
+              revisar.
+            </FaixaDeIA>
             <div className="grid gap-5 sm:grid-cols-4">
               <Campo
                 id={`${k}-tipo`}

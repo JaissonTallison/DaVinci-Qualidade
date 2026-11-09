@@ -1,6 +1,7 @@
 import {
   Activity,
   BadgeCheck,
+  Biohazard,
   Blocks,
   BookMarked,
   BookOpen,
@@ -56,6 +57,7 @@ import {
   Shirt,
   Siren,
   Smile,
+  Sparkles,
   Sprout,
   Star,
   Target,
@@ -69,9 +71,11 @@ import {
 } from "@/components/icones";
 
 /*
- * Ícones do sistema: Lucide (um conjunto só, mesmo traço). Grupos: 18 px em branco (mais claro que os rótulos).
- * Telas: 16 px na cor do texto
- * (interface.md §4: ícone pequeno, alinhado ao rótulo, nunca dentro de círculo colorido).
+ * Ícones do sistema: Lucide (um conjunto só, mesmo traço).
+ * Grupos: 16 px em branco dentro de um chip quadrado (cantos 8 px) com preenchimento translúcido do
+ * próprio menu e um fio de luz no topo — tile discreto, sem degradê e sem cor própria. O interface.md §4
+ * veta ícone em círculo colorido; um chip neutro quadrado no tom do menu não é isso.
+ * Telas: 16 px na cor do texto, sem chip.
  */
 
 export const ICONE_DO_GRUPO: Record<string, LucideIcon> = {
@@ -130,7 +134,7 @@ export const ICONE_DA_TELA: Record<string, LucideIcon> = {
   "/seguranca/entregas-de-epi": Shirt,
   "/seguranca/epis": Package,
   "/ambiental/aspectos": Sprout,
-  "/ambiental/ocorrencias": TriangleAlert,
+  "/ambiental/ocorrencias": Biohazard,
   "/ambiental/obrigacoes": CalendarCheck,
   "/ambiental/destinadores": Truck,
   "/ambiental/ecoeficiencia": Gauge,
@@ -154,17 +158,16 @@ export const ICONE_DA_TELA: Record<string, LucideIcon> = {
   "/administracao/usuarios": UserCog,
   "/administracao/perfis": KeyRound,
   "/administracao/modulos": Blocks,
+  "/integracoes": Network,
+  "/ia": Sparkles,
 };
 
 export function IconeDoGrupo({ titulo }: { titulo: string }) {
   const I = ICONE_DO_GRUPO[titulo] ?? Building2;
   return (
-    <I
-      aria-hidden
-      size={18}
-      strokeWidth={1.75}
-      className="shrink-0 text-white"
-    />
+    <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-md bg-primaria-texto/15 shadow-[inset_0_1px_0_rgb(255_255_255/0.10)]">
+      <I aria-hidden size={16} strokeWidth={1.75} className="text-white" />
+    </span>
   );
 }
 

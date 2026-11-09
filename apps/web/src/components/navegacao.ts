@@ -355,6 +355,16 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/administracao/modulos",
         permissao: "empresa.gerenciar",
       },
+      {
+        rotulo: "Integrações",
+        href: "/integracoes",
+        permissao: "empresa.gerenciar",
+      },
+      {
+        rotulo: "IA / Assistente",
+        href: "/ia",
+        permissao: "empresa.gerenciar",
+      },
     ],
   },
 ];

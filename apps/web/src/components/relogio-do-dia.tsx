@@ -31,7 +31,7 @@ export function RelogioDoDia({ inicialISO }: { inicialISO: string }) {
     };
   }, []);
   return (
-    <div className="text-right">
+    <div className="text-left sm:text-right">
       <p
         suppressHydrationWarning
         className="text-2xl font-semibold text-texto tabular-nums"

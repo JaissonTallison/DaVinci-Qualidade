@@ -5,6 +5,7 @@ import {
   METODOS_ANALISE,
   type NaoConformidade,
 } from "@davinci/types";
+import { FaixaDeIA } from "@/components/faixa-de-ia";
 import { Campo } from "@/components/campo";
 import { Formulario } from "@/components/formulario-de-acao";
 import { Recolhido } from "@/components/recolhido";
@@ -209,6 +210,10 @@ function FormularioTratamento({
     >
       {(erros, v) => (
         <>
+          <FaixaDeIA rotulo="Sugerir com IA">
+            a IA propõe os 5 porquês, a causa raiz e a ação corretiva a partir da
+            descrição da NC, para você revisar.
+          </FaixaDeIA>
           <div className="grid gap-5 sm:grid-cols-2">
             <Campo
               id="metodoAnalise"
