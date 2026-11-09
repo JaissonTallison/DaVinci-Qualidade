@@ -9,6 +9,7 @@ export const DIAS_DO_PAINEL = 30;
 
 export const MODULOS_DO_PAINEL = {
   qualidade: 'Qualidade',
+  auditorias: 'Auditorias',
   seguranca: 'Segurança do Trabalho',
   funcionarios: 'ASO e treinamentos',
   sgi: 'Gestão do SGI',
@@ -83,6 +84,7 @@ const EXIGE: Record<
   { permissao: string; recurso: string | null }
 > = {
   qualidade: { permissao: 'qualidade.ver', recurso: 'qualidade' },
+  auditorias: { permissao: 'auditorias.ver', recurso: 'auditorias' },
   seguranca: { permissao: 'seguranca.ver', recurso: 'seguranca' },
   funcionarios: { permissao: 'funcionarios.ver', recurso: null },
   sgi: { permissao: 'sgi.ver', recurso: 'sgi' },

@@ -151,13 +151,16 @@ export default async function Inicio() {
       detalhe: `${plural(planos.atrasados, "plano com tarefa vencida", "planos com tarefa vencida")}`,
       href: "/qualidade/planos-de-acao?atrasados=true",
     });
-  if (cal?.emUso)
+  if (cal?.emUso) {
+    // "Em dia" exclui vencidos, reprovados E sem calibração: instrumento sem calibração não está em dia (DV-01)
+    const foraDeDia = cal.vencidos + cal.reprovados + cal.semCalibracao;
     componentes.push({
       nome: "Calibração",
-      pct: pct(cal.emUso - cal.vencidos - cal.reprovados, cal.emUso),
-      detalhe: `${plural(cal.vencidos + cal.reprovados, "instrumento vencido ou reprovado", "instrumentos vencidos ou reprovados")} de ${cal.emUso} em uso`,
+      pct: pct(cal.emUso - foraDeDia, cal.emUso),
+      detalhe: `${plural(foraDeDia, "instrumento vencido, reprovado ou sem calibração", "instrumentos vencidos, reprovados ou sem calibração")} de ${cal.emUso} em uso`,
       href: "/qualidade/calibracao?situacao=vencido",
     });
+  }
   if (venc?.total)
     componentes.push({
       nome: "ASO e treinamentos",

@@ -157,6 +157,7 @@ export class PaineisService
       };
       const { prazos } = await this.juntar(ctx, [
         'qualidade',
+        'auditorias',
         'seguranca',
         'funcionarios',
         'sgi',
@@ -235,6 +236,7 @@ export class PaineisService
   ): Promise<PainelDeVencimentos> {
     const fontes: Record<ModuloDoPainel, [Cliente, string, string]> = {
       qualidade: [this.qualidade, PATTERNS.prazos.qualidade, 'Qualidade'],
+      auditorias: [this.auditorias, PATTERNS.prazos.auditorias, 'Auditorias'],
       seguranca: [this.seguranca, PATTERNS.prazos.seguranca, 'Segurança'],
       funcionarios: [this.codex, PATTERNS.prazos.codex, 'Cadastros'],
       sgi: [this.sgi, PATTERNS.prazos.sgi, 'SGI'],

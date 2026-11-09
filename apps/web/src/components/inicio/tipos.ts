@@ -14,6 +14,7 @@ export const COR_DO_MODULO: Record<ModuloDoPainel, string> = {
   servicos: "var(--color-serie-5)",
   ambiental: "var(--color-serie-6)",
   esg: "var(--color-serie-7)",
+  auditorias: "var(--color-serie-8)",
 };
 
 export interface ComponenteDaSaude {

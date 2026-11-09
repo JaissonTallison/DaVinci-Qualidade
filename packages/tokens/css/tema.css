@@ -29,6 +29,7 @@
   --color-serie-5: var(--dv-serie-5);
   --color-serie-6: var(--dv-serie-6);
   --color-serie-7: var(--dv-serie-7);
+  --color-serie-8: var(--dv-serie-8);
   --color-ouro-texto: var(--dv-ouro-texto);
 
   /* Neutros */
@@ -144,6 +145,7 @@
   --dv-serie-5: #e87ba4;
   --dv-serie-6: #008300;
   --dv-serie-7: #6250d6;
+  --dv-serie-8: #0891b2;
   /* Cores oficiais dos 17 ODS da ONU: só no ícone de cada ODS (interface.md §5.6). */
   --dv-ods-1: #e5243b;
   --dv-ods-2: #dda63a;

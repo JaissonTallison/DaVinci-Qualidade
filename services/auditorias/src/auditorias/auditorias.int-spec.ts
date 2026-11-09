@@ -367,3 +367,57 @@ describe('normas e acesso', () => {
     );
   });
 });
+
+describe('painel e contagem (DV-02, DV-03)', () => {
+  const d = (delta: number) => {
+    const x = new Date(`${hoje}T12:00:00Z`);
+    x.setUTCDate(x.getUTCDate() + delta);
+    return x.toISOString().slice(0, 10);
+  };
+
+  it('prazos: atrasada e próxima entram; concluída e distante não (DV-02)', async () => {
+    const base = { ...interna, auditorLider: 'QA Prazo' };
+    await servico.criar(empresaB, { ...base, dataInicio: d(-10), dataFim: d(-2) });
+    await servico.criar(empresaB, { ...base, dataInicio: d(3), dataFim: d(5) });
+    await servico.criar(empresaB, { ...base, dataInicio: d(50), dataFim: d(60) });
+    let fim = await servico.criar(empresaB, {
+      ...base,
+      dataInicio: d(-5),
+      dataFim: d(-5),
+    });
+    fim = await servico.iniciar(empresaB, acao(fim, {}));
+    await servico.concluir(
+      empresaB,
+      acao(fim, { conclusao: 'Encerrada sem pendências.' }),
+    );
+
+    const prazos = await servico.prazos(empresaB, { dias: 30 });
+    expect(
+      prazos.every((p) => p.modulo === 'auditorias' && p.tipo === 'Auditoria'),
+    ).toBe(true);
+    const datas = prazos.map((p) => p.data);
+    expect(datas).toContain(d(-2));
+    expect(datas).toContain(d(5));
+    expect(datas).not.toContain(d(60));
+    expect(datas).not.toContain(d(-5));
+    expect(prazos.find((p) => p.data === d(-2))?.situacao).toBe('vencido');
+  });
+
+  it('panorama: "por auditor" conta só as conduzidas, fora planejada e cancelada (DV-03)', async () => {
+    const base = { ...interna, auditorLider: 'QA Líder' };
+    // planejada (não conta) e cancelada (não conta)
+    await servico.criar(empresaA, base);
+    const cancel = await servico.criar(empresaA, base);
+    await servico.cancelar(
+      empresaA,
+      acao(cancel, { motivo: 'Cancelada no teste de contagem.' }),
+    );
+    // uma conduzida (em andamento) conta
+    const viva = await servico.criar(empresaA, base);
+    await servico.iniciar(empresaA, acao(viva, {}));
+
+    const panorama = await servico.panorama(empresaA);
+    const linha = panorama.porAuditor.find((p) => p.auditor === 'QA Líder');
+    expect(linha?.total).toBe(1);
+  });
+});
