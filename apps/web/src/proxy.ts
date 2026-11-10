@@ -16,22 +16,61 @@ const ENTRAR = "/entrar";
 const TROCAR_SENHA = "/trocar-senha";
 
 /**
+ * Content-Security-Policy com nonce por requisição (DV-05). O `script-src` com nonce + `strict-dynamic`
+ * é a proteção forte contra XSS: só roda o script que o Next assina com o nonce desta resposta. `style-src`
+ * mantém `unsafe-inline` (estilos de atributo não aceitam nonce; baixo risco). `connect-src 'self'` basta
+ * porque o navegador fala com o gateway pela mesma origem (Server Actions / route handlers).
+ */
+function montarCsp(nonce: string): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self'",
+    "connect-src 'self'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "object-src 'none'",
+  ].join("; ");
+}
+
+/**
  * Antes de cada página: renova a sessão quando o token de acesso está para vencer,
  * manda quem não está logado para /entrar e quem tem senha inicial pendente para /trocar-senha.
  * (Perfil que exige 2FA ainda sem ativar: o gateway recusa as chamadas; a tela de segurança da conta vem depois.)
  * A permissão de verdade é sempre conferida pelo gateway; aqui é só navegação.
+ * Toda resposta leva a CSP com o nonce desta requisição (ver `montarCsp`).
  */
 export async function proxy(req: NextRequest) {
+  const nonce = crypto.randomUUID().replace(/-/g, "");
+  const csp = montarCsp(nonce);
+  // O Next lê o nonce pela CSP nos cabeçalhos da REQUISIÇÃO (e x-nonce para quem quiser ler no servidor),
+  // e assina os próprios scripts com ele. A mesma CSP vai no cabeçalho da RESPOSTA, para o navegador aplicar.
+  const cabecalhos = new Headers(req.headers);
+  cabecalhos.set("x-nonce", nonce);
+  cabecalhos.set("Content-Security-Policy", csp);
+  const res = await decidir(req, cabecalhos);
+  res.headers.set("Content-Security-Policy", csp);
+  return res;
+}
+
+async function decidir(
+  req: NextRequest,
+  cabecalhos: Headers,
+): Promise<NextResponse> {
+  const proximo = () => NextResponse.next({ request: { headers: cabecalhos } });
   const caminho = req.nextUrl.pathname;
   // /entrar e /entrar/codigo (2ª etapa do 2FA) não exigem sessão
   const naTelaDeEntrar = caminho === ENTRAR || caminho.startsWith(`${ENTRAR}/`);
   // Encerrar a sessão apaga os cookies: não pode depender de sessão válida
-  if (caminho === "/sessao-encerrada") return NextResponse.next();
+  if (caminho === "/sessao-encerrada") return proximo();
   // Pesquisa de satisfação: o cliente responde por link, sem login (o token é a credencial)
-  if (caminho.startsWith("/pesquisa/")) return NextResponse.next();
+  if (caminho.startsWith("/pesquisa/")) return proximo();
   // Esqueci a senha e o link do e-mail: abrem com ou sem sessão
   if (caminho === "/esqueci-a-senha" || caminho === "/redefinir-senha")
-    return NextResponse.next();
+    return proximo();
   // Server Actions (POST com o cabeçalho next-action) nunca recebem redirecionamento daqui: o Next espera a resposta
   // da ação e, com um 307, mostra "An unexpected response was received from the server" (ex.: tela de entrar aberta
   // enquanto a sessão foi renovada em outra aba ou o gateway voltou). A própria ação confere a sessão no gateway.
@@ -57,18 +96,17 @@ export async function proxy(req: NextRequest) {
           res.cookies.delete(nome);
       return res;
     } else {
-      return NextResponse.next();
+      return proximo();
     }
   }
 
   let res: NextResponse;
   if (ehAcao) {
-    if (!sessaoNova) return NextResponse.next();
+    if (!sessaoNova) return proximo();
     for (const c of cookiesDaSessao(sessaoNova, lembrar))
       req.cookies.set(c.name, c.value);
-    const headers = new Headers(req.headers);
-    headers.set("cookie", req.cookies.toString());
-    res = NextResponse.next({ request: { headers } });
+    cabecalhos.set("cookie", req.cookies.toString());
+    res = proximo();
   } else if (naTelaDeEntrar) {
     res = NextResponse.redirect(
       urlPublica(req, caminhoDeVolta(req.nextUrl.searchParams.get("volta"))),
@@ -79,11 +117,10 @@ export async function proxy(req: NextRequest) {
     // A página desta mesma requisição já precisa enxergar o token novo
     for (const c of cookiesDaSessao(sessaoNova, lembrar))
       req.cookies.set(c.name, c.value);
-    const headers = new Headers(req.headers);
-    headers.set("cookie", req.cookies.toString());
-    res = NextResponse.next({ request: { headers } });
+    cabecalhos.set("cookie", req.cookies.toString());
+    res = proximo();
   } else {
-    return NextResponse.next();
+    return proximo();
   }
   if (sessaoNova)
     for (const c of cookiesDaSessao(sessaoNova, lembrar)) res.cookies.set(c);
