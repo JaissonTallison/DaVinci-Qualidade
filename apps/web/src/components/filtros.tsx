@@ -17,7 +17,8 @@ export function SelecaoDeFiltro({
       name={nome}
       defaultValue={valor ?? ""}
       aria-label={rotulo}
-      className={campoCompacto}
+      // pr-8: espaço para a seta nativa do select não cair sobre o texto (filtro é auto-width)
+      className={`${campoCompacto} pr-8`}
     >
       <option value="">{rotulo}: todos</option>
       {Object.entries(opcoes).map(([chave, nome]) => (
