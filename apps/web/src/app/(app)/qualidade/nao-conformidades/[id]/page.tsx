@@ -1,4 +1,10 @@
-import { Check, ChevronDown, ChevronUp, Plus } from "@/components/icones";
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Plus,
+} from "@/components/icones";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,6 +19,7 @@ import {
   type NaoConformidade,
   type NaoConformidadeResumo,
   type Pagina,
+  type RelatorioDeEncerramentoResumo,
   type PlanoResumo,
 } from "@davinci/types";
 import { AvisoDeErro } from "@/components/aviso-de-erro";
@@ -24,7 +31,7 @@ import {
 } from "@/components/marcadores";
 import { chamarApi } from "@/lib/api";
 import { formatarData, formatarMomento, prazoRelativo } from "@/lib/datas";
-import { painel } from "@/lib/estilos";
+import { cabecalhoDoPainel, painel, tituloDoPainel } from "@/lib/estilos";
 import { AcaoDaEtapa, CancelarNc } from "./acoes";
 import { Anexos } from "@/components/anexos";
 import { linkDaOrigem } from "@/lib/origem-nc";
@@ -55,13 +62,16 @@ export default async function DetalheDaNc({
 }: PageProps<"/qualidade/nao-conformidades/[id]">) {
   const { id } = await params;
   const { aviso } = (await searchParams) as { aviso?: string };
-  const [r, eu, planos, causas] = await Promise.all([
+  const [r, eu, planos, causas, relatorios] = await Promise.all([
     chamarApi<NaoConformidade>(`/nao-conformidades/${id}`),
     chamarApi<DadosDoUsuario>("/auth/eu"),
     chamarApi<Pagina<PlanoResumo>>(
       `/planos-de-acao?ncId=${encodeURIComponent(id)}&porPagina=100`,
     ),
     chamarApi<ItemDeLista[]>("/listas/causa_nc"),
+    chamarApi<RelatorioDeEncerramentoResumo[]>(
+      `/nao-conformidades/${encodeURIComponent(id)}/relatorios`,
+    ),
   ]);
   if (!r.ok && r.erro.codigo === "NAO_ENCONTRADO") notFound();
   if (!r.ok) return <AvisoDeErro erro={r.erro} />;
@@ -386,6 +396,42 @@ export default async function DetalheDaNc({
           )}
         </Etapa>
       </nav>
+
+      {relatorios.ok && relatorios.dados.length > 0 && (
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Documentos</h2>
+          </header>
+          <ul className="divide-y divide-borda">
+            {relatorios.dados.map((d) => (
+              <li
+                key={d.id}
+                className="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3"
+              >
+                <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-md bg-afundado text-texto-2 shadow-xs">
+                  <FileText aria-hidden size={18} strokeWidth={1.75} />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-medium text-texto">
+                    Relatório de encerramento · versão {d.versao}
+                  </span>
+                  <span className="block text-sm text-texto-2">
+                    Emitido em {formatarMomento(d.emitidoEm)}
+                    {d.emitidoPorNome ? ` por ${d.emitidoPorNome}` : ""}
+                  </span>
+                </span>
+                <Botao
+                  href={`/qualidade/nao-conformidades/${nc.id}/relatorio/${d.id}`}
+                  variante="secundario"
+                  tamanho="pequeno"
+                >
+                  Visualizar · imprimir · PDF
+                </Botao>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <Anexos
         registro="nao_conformidade"

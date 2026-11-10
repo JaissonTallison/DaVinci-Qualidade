@@ -114,6 +114,31 @@ export const configuracoesQualidade = pgTable(
   (t) => [unique('configuracoes_qualidade_empresa').on(t.empresaId)],
 );
 
+/**
+ * Relatório de encerramento da NC: uma linha por versão emitida (imutável). Cada encerramento gera a
+ * próxima versão e preserva as anteriores (rastreabilidade). O `snapshot` é a cópia dos dados da NC no
+ * momento do encerramento (tipo SnapshotDaNc em @davinci/types).
+ */
+export const relatoriosNc = pgTable(
+  'relatorios_nc',
+  {
+    ...colunasPadrao(),
+    ncId: uuid()
+      .notNull()
+      .references(() => naoConformidades.id),
+    versao: integer().notNull(),
+    emitidoEm: timestamp({ withTimezone: true, precision: 3 })
+      .notNull()
+      .defaultNow(),
+    emitidoPorNome: varchar({ length: 120 }),
+    snapshot: jsonb().notNull(),
+  },
+  (t) => [
+    unique('relatorios_nc_versao').on(t.ncId, t.versao),
+    index('relatorios_nc_nc_idx').on(t.ncId),
+  ],
+);
+
 /** Planos de ação (docs/05-modulos/planos-de-acao.md). O status acompanha as tarefas; nada é apagado. */
 export const planosAcao = pgTable(
   'planos_acao',
