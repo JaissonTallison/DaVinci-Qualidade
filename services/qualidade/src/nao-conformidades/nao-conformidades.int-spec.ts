@@ -263,6 +263,48 @@ describe('ciclo de vida', () => {
     expect(nc.status).toBe('encerrada');
   });
 
+  it('encerrar a NC gera o Relatório de Encerramento (snapshot imutável, versionado)', async () => {
+    let nc = await servico.criar(empresaA, paquimetro);
+    nc = await servico.registrarTratamento(empresaA, tratamento(nc));
+    nc = await servico.enviarParaVerificacao(empresaA, {
+      id: nc.id,
+      alteracoes: { versao: nc.versao, dataImplantacao: hoje },
+    });
+    const ctx: Contexto = {
+      ...empresaA,
+      usuarioNome: 'Fulana Verificadora',
+      rastreioId: uuidv7(),
+    };
+    nc = await servico.verificarEficacia(ctx, {
+      id: nc.id,
+      alteracoes: {
+        versao: nc.versao,
+        eficaz: true,
+        parecer: 'Verificado: ação eficaz.',
+      },
+    });
+    expect(nc.status).toBe('encerrada');
+
+    const relatorios = await servico.listarRelatorios(empresaA, { id: nc.id });
+    expect(relatorios).toHaveLength(1);
+    expect(relatorios[0]).toMatchObject({
+      versao: 1,
+      emitidoPorNome: 'Fulana Verificadora',
+    });
+
+    const rel = await servico.obterRelatorio(empresaA, {
+      id: relatorios[0]!.id,
+    });
+    expect(rel.snapshot.nc.numero).toBe(nc.numero);
+    expect(rel.snapshot.nc.status).toBe('encerrada');
+    expect(rel.snapshot.verificadoPorNome).toBe('Fulana Verificadora');
+
+    // Gerar o relatório NÃO alterou a NC (continua encerrada, intacta).
+    const atual = await servico.obter(empresaA, { id: nc.id });
+    expect(atual.status).toBe('encerrada');
+    expect(atual.eficaz).toBe(true);
+  });
+
   it('implantação no futuro ou antes da abertura é recusada', async () => {
     let nc = await servico.criar(empresaA, paquimetro);
     nc = await servico.registrarTratamento(empresaA, tratamento(nc));

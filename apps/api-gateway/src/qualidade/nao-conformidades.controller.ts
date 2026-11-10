@@ -23,6 +23,8 @@ import {
   type ConfiguracaoDaQualidade,
   type Contexto,
   type NaoConformidade,
+  type RelatorioDeEncerramento,
+  type RelatorioDeEncerramentoResumo,
   type NaoConformidadeResumo,
   type Pagina,
   ncsPorMesSchema,
@@ -81,6 +83,29 @@ export class NaoConformidadesController {
       SERVICES.QUALIDADE,
       P.salvarConfig,
       dados,
+      ctx,
+    );
+  }
+
+  // Uma versão do Relatório de Encerramento (literal antes de ':id' para não ser capturada como id).
+  @Get('relatorios/:id')
+  @Permissao('qualidade.ver')
+  obterRelatorio(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar<RelatorioDeEncerramento>(
+      SERVICES.QUALIDADE,
+      P.obterRelatorio,
+      { id },
+      ctx,
+    );
+  }
+
+  @Get(':id/relatorios')
+  @Permissao('qualidade.ver')
+  listarRelatorios(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar<RelatorioDeEncerramentoResumo[]>(
+      SERVICES.QUALIDADE,
+      P.listarRelatorios,
+      { id },
       ctx,
     );
   }

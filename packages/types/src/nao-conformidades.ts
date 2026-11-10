@@ -281,3 +281,58 @@ export const salvarConfigQualidadeSchema = z.object({
   autoVerificacaoEficacia: z.boolean(),
 });
 export type SalvarConfigQualidade = z.input<typeof salvarConfigQualidadeSchema>;
+
+// ------------------------------------------------- Relatório de encerramento
+
+/** Uma tarefa do plano, congelada no snapshot do relatório. */
+export interface TarefaNoRelatorio {
+  ordem: number;
+  oQue: string;
+  responsavel: string;
+  prazo: string;
+  onde: string | null;
+  como: string | null;
+  /** 'pendente' | 'concluida' | 'cancelada' (rótulo em SITUACOES_TAREFA). */
+  situacao: string;
+}
+
+/** Um plano de ação ligado à NC, congelado no snapshot do relatório. */
+export interface PlanoNoRelatorio {
+  numero: string;
+  titulo: string;
+  objetivo: string;
+  /** Rótulo em TIPOS_PLANO. */
+  tipo: string;
+  /** Rótulo em STATUS_PLANO. */
+  status: string;
+  responsavel: string;
+  eficaz: boolean | null;
+  tarefas: TarefaNoRelatorio[];
+}
+
+/** Cópia imutável da NC (e do que a cerca) no momento do encerramento. */
+export interface SnapshotDaNc {
+  nc: NaoConformidade;
+  /** Nome de quem verificou a eficácia (do token, no encerramento). */
+  verificadoPorNome: string | null;
+  planos: PlanoNoRelatorio[];
+}
+
+/** Uma versão emitida do Relatório de Encerramento da NC (imutável). */
+export interface RelatorioDeEncerramento {
+  id: string;
+  ncId: string;
+  /** 1, 2, 3… — um por encerramento; reabertura/novo ciclo gera a próxima versão. */
+  versao: number;
+  emitidoEm: string;
+  emitidoPorNome: string | null;
+  snapshot: SnapshotDaNc;
+}
+
+/** Item leve para a lista "Documentos" na tela da NC. */
+export interface RelatorioDeEncerramentoResumo {
+  id: string;
+  versao: number;
+  emitidoEm: string;
+  emitidoPorNome: string | null;
+}

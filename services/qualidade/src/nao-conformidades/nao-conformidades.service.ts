@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import type { ClientProxy } from '@nestjs/microservices';
 import {
   and,
@@ -37,7 +37,11 @@ import {
   type Pagina,
   ncsPorMesSchema,
   type NcsDoMes,
+  type PlanoNoRelatorio,
+  type RelatorioDeEncerramento,
+  type RelatorioDeEncerramentoResumo,
   type ResumoNcs,
+  type SnapshotDaNc,
   type StatusNc,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
@@ -45,6 +49,8 @@ import {
   configuracoesQualidade,
   naoConformidades,
   planosAcao,
+  planosAcaoTarefas,
+  relatoriosNc,
   sequencias,
 } from '../db/schema.js';
 import {
@@ -62,8 +68,14 @@ type Linha = typeof naoConformidades.$inferSelect;
 const ALTERADA_POR_OUTRA_PESSOA =
   'Esta NC foi alterada por outra pessoa. Recarregue a página para ver a versão atual.';
 
+/** O `id` vem junto dos dados da mensagem (o gateway o tira da URL). */
+const idDe = (dados: unknown): unknown =>
+  (dados as { id?: unknown } | null)?.id;
+
 @Injectable()
 export class NaoConformidadesService {
+  private readonly logger = new Logger('NaoConformidades');
+
   constructor(
     @Inject(DATABASE) private readonly db: Db,
     @Inject(SERVICES.PLATAFORMA)
@@ -366,7 +378,155 @@ export class NaoConformidadesService {
         },
       });
     }
-    return montar(linha);
+    const nc = montar(linha);
+    // Encerrada: gera a versão do Relatório de Encerramento (imutável). Nunca derruba o encerramento.
+    if (eficaz) await this.gerarRelatorioDeEncerramento(ctx, nc);
+    return nc;
+  }
+
+  /**
+   * Gera e preserva uma versão do Relatório de Encerramento da NC (snapshot imutável). Cada encerramento
+   * cria a próxima versão; reabertura/novo ciclo que encerre de novo gera outra, preservando as anteriores.
+   * Best-effort: uma falha aqui é registrada mas NÃO desfaz o encerramento da NC (requisito do fluxo).
+   */
+  private async gerarRelatorioDeEncerramento(
+    ctx: Contexto,
+    nc: NaoConformidade,
+  ): Promise<void> {
+    try {
+      const planos = await this.planosDaNcParaRelatorio(ctx, nc.id);
+      const snapshot: SnapshotDaNc = {
+        nc,
+        verificadoPorNome: ctx.usuarioNome ?? null,
+        planos,
+      };
+      const [agregado] = await this.db
+        .select({ ultima: sql<number>`coalesce(max(${relatoriosNc.versao}), 0)` })
+        .from(relatoriosNc)
+        .where(
+          and(
+            eq(relatoriosNc.empresaId, ctx.empresaId),
+            eq(relatoriosNc.ncId, nc.id),
+          ),
+        );
+      await this.db.insert(relatoriosNc).values({
+        empresaId: ctx.empresaId,
+        ncId: nc.id,
+        versao: Number(agregado?.ultima ?? 0) + 1,
+        emitidoPorNome: ctx.usuarioNome ?? null,
+        snapshot,
+        criadoPor: ctx.usuarioId,
+        atualizadoPor: ctx.usuarioId,
+      });
+    } catch (e) {
+      this.logger.error(
+        `Falha ao gerar o relatório de encerramento da NC ${nc.numero}: ${(e as Error).message}`,
+      );
+    }
+  }
+
+  /** Planos ligados à NC, com as tarefas, congelados para o relatório. */
+  private async planosDaNcParaRelatorio(
+    ctx: Contexto,
+    ncId: string,
+  ): Promise<PlanoNoRelatorio[]> {
+    const planos = await this.db
+      .select()
+      .from(planosAcao)
+      .where(
+        and(eq(planosAcao.empresaId, ctx.empresaId), eq(planosAcao.ncId, ncId)),
+      )
+      .orderBy(asc(planosAcao.numero));
+    if (planos.length === 0) return [];
+    const tarefas = await this.db
+      .select()
+      .from(planosAcaoTarefas)
+      .where(
+        inArray(
+          planosAcaoTarefas.planoId,
+          planos.map((p) => p.id),
+        ),
+      )
+      .orderBy(asc(planosAcaoTarefas.ordem));
+    return planos.map((p) => ({
+      numero: p.numero,
+      titulo: p.titulo,
+      objetivo: p.objetivo,
+      tipo: p.tipo,
+      status: p.status,
+      responsavel: p.responsavel,
+      eficaz: p.eficaz,
+      tarefas: tarefas
+        .filter((t) => t.planoId === p.id)
+        .map((t) => ({
+          ordem: t.ordem,
+          oQue: t.oQue,
+          responsavel: t.responsavel,
+          prazo: t.prazo,
+          onde: t.onde,
+          como: t.como,
+          situacao: t.situacao,
+        })),
+    }));
+  }
+
+  /** Versões emitidas do Relatório de Encerramento de uma NC (para a seção Documentos). */
+  async listarRelatorios(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<RelatorioDeEncerramentoResumo[]> {
+    const ncId = idDe(dados);
+    if (!isUuid(ncId)) return [];
+    const linhas = await this.db
+      .select({
+        id: relatoriosNc.id,
+        versao: relatoriosNc.versao,
+        emitidoEm: relatoriosNc.emitidoEm,
+        emitidoPorNome: relatoriosNc.emitidoPorNome,
+      })
+      .from(relatoriosNc)
+      .where(
+        and(
+          eq(relatoriosNc.empresaId, ctx.empresaId),
+          eq(relatoriosNc.ncId, ncId),
+        ),
+      )
+      .orderBy(desc(relatoriosNc.versao));
+    return linhas.map((l) => ({
+      id: l.id,
+      versao: l.versao,
+      emitidoEm: l.emitidoEm.toISOString(),
+      emitidoPorNome: l.emitidoPorNome,
+    }));
+  }
+
+  /** Uma versão do relatório (com o snapshot), para visualizar/imprimir. */
+  async obterRelatorio(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<RelatorioDeEncerramento> {
+    const id = idDe(dados);
+    const [linha] = isUuid(id)
+      ? await this.db
+          .select()
+          .from(relatoriosNc)
+          .where(
+            and(
+              eq(relatoriosNc.id, id),
+              eq(relatoriosNc.empresaId, ctx.empresaId),
+            ),
+          )
+      : [];
+    if (!linha)
+      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Relatório não encontrado.');
+    return {
+      id: linha.id,
+      ncId: linha.ncId,
+      versao: linha.versao,
+      emitidoEm: linha.emitidoEm.toISOString(),
+      emitidoPorNome: linha.emitidoPorNome,
+      snapshot: linha.snapshot as SnapshotDaNc,
+    };
   }
 
   async cancelar(

@@ -27,6 +27,16 @@ export class NaoConformidadesController {
     return this.ncs.salvarConfig(ctx, dados);
   }
 
+  @MessagePattern(P.listarRelatorios)
+  listarRelatorios(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.ncs.listarRelatorios(ctx, dados);
+  }
+
+  @MessagePattern(P.obterRelatorio)
+  obterRelatorio(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
+    return this.ncs.obterRelatorio(ctx, dados);
+  }
+
   @MessagePattern(P.atribuirResponsavelEmLote)
   atribuirResponsavelEmLote(@Contexto() ctx: Ctx, @Dados() dados: unknown) {
     return this.ncs.atribuirResponsavelEmLote(ctx, dados);
