@@ -137,9 +137,10 @@ export default function Integracoes() {
           className="mt-0.5 shrink-0 text-info"
         />
         <p>
-          Esta é a prévia do catálogo. As conexões ainda não estão ativas —
-          estamos montando a experiência antes de ligar cada plataforma. Em
-          breve você vai configurar e conectar por aqui.
+          A chave de API e os webhooks já funcionam: o cartão marcado como
+          “Disponível” abre a configuração. As conexões com plataformas
+          externas (WhatsApp, Power BI, SSO, armazenamento…) ainda são uma
+          prévia — estamos montando a experiência antes de ligar cada uma.
         </p>
       </div>
 
