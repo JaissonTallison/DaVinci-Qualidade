@@ -93,7 +93,7 @@ export function ColunaDeResumo({
     ? Math.round((100 * obrigatorios.feitos) / obrigatorios.total)
     : 100;
   return (
-    <aside className="flex flex-col gap-4 lg:self-stretch">
+    <aside className="flex flex-col gap-4">
       <div className="flex flex-col gap-4 lg:sticky lg:top-4">
       <section className={painel} aria-labelledby="resumo-titulo">
         <h2
@@ -170,14 +170,14 @@ export function ColunaDeResumo({
           </ul>
         </div>
       </section>
-      </div>
       {acoes && (
         <div
-          className={`${painel} hidden flex-col-reverse gap-2 p-4 lg:mt-auto lg:flex lg:sticky lg:bottom-4 [&>*]:w-full`}
+          className={`${painel} hidden flex-col-reverse gap-2 p-4 lg:flex [&>*]:w-full`}
         >
           {acoes}
         </div>
       )}
+      </div>
     </aside>
   );
 }
