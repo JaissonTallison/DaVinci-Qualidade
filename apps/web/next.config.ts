@@ -8,21 +8,11 @@ const { version } = JSON.parse(
 ) as { version: string };
 
 /**
- * Cabeçalhos de segurança em toda resposta (ERR-05, DV-05). Clickjacking: `frame-ancestors 'none'` +
- * `X-Frame-Options`. HSTS: só no navegador, e o proxy já serve HTTPS. Além do enquadramento, a CSP fecha
- * agora vetores seguros de aplicar: `base-uri` (sem sequestro de <base>), `form-action` (POST só para o
- * próprio site) e `object-src 'none'` (sem plugins). O `script-src` com nonce (proteção forte contra XSS)
- * exige o middleware e validação no navegador, e fica como próximo passo.
+ * Cabeçalhos de segurança em toda resposta (ERR-05, DV-05). A Content-Security-Policy é montada por
+ * requisição no middleware (`proxy.ts`), com nonce no `script-src` — por isso não está aqui. Os demais
+ * cabeçalhos são iguais em toda resposta. HSTS: só no navegador, e o proxy já serve HTTPS.
  */
-const CSP = [
-  "frame-ancestors 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-  "object-src 'none'",
-].join("; ");
-
 const CABECALHOS_DE_SEGURANCA = [
-  { key: "Content-Security-Policy", value: CSP },
   { key: "X-Frame-Options", value: "DENY" },
   {
     key: "Strict-Transport-Security",
