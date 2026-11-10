@@ -265,7 +265,8 @@ export default async function IndicadoresGerais() {
               href: "/seguranca/vencimentos",
             },
             {
-              rotulo: "Dias sem acidente",
+              // Conta só acidentes COM afastamento (NBR 14280 / lost-time); o rótulo deixa isso claro (DV)
+              rotulo: "Dias sem acidente com afastamento",
               valor: sst?.diasSemAcidente ?? null,
               href: "/seguranca/indicadores",
             },

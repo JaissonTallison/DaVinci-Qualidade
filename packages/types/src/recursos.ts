@@ -19,7 +19,7 @@ export const RECURSOS = {
   qualidade: {
     nome: 'Qualidade',
     descricao:
-      'Inspeções, checklists, não conformidades, planos de ação, rastreabilidade e calibração (ISO 9001).',
+      'Inspeções, checklists, não conformidades, planos de ação e calibração (ISO 9001).',
     tipo: 'modulo',
     permissoes: ['qualidade.'],
   },
