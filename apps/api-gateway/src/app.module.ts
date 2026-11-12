@@ -53,6 +53,7 @@ import {
   ObjetivosController,
   AnalisesCriticasController,
   MudancasController,
+  DocumentosController,
 } from './sgi/sgi.controller.js';
 import {
   PermissoesDeTrabalhoController,
@@ -173,6 +174,7 @@ export const observeEnabled = Boolean(
     ObjetivosController,
     AnalisesCriticasController,
     MudancasController,
+    DocumentosController,
     RiscosController,
     PermissoesDeTrabalhoController,
     AnexosController,

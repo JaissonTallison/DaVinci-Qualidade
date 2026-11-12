@@ -23,6 +23,7 @@ export const REGISTROS_COM_ANEXO = {
   terceiro: { rotulo: 'Terceiro', modulo: 'seguranca' },
   analise_critica: { rotulo: 'Análise crítica', modulo: 'sgi' },
   mudanca: { rotulo: 'Mudança', modulo: 'sgi' },
+  documento: { rotulo: 'Documento controlado', modulo: 'sgi' },
   ordem_de_servico: { rotulo: 'Ordem de serviço', modulo: 'servicos' },
   reclamacao: { rotulo: 'Reclamação de cliente', modulo: 'servicos' },
   contrato: { rotulo: 'Contrato', modulo: 'servicos' },

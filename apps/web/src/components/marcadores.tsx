@@ -19,8 +19,10 @@ import {
   type StatusOs,
   CLASSES_RO,
   STATUS_MUDANCA,
+  STATUS_DOCUMENTO,
   type ClasseRo,
   type StatusMudanca,
+  type StatusDocumento,
   NIVEIS_DE_RISCO,
   STATUS_PT,
   type NivelDeRisco,
@@ -258,6 +260,33 @@ export function StatusDaMudanca({ status }: { status: StatusMudanca }) {
     rejeitada: "neutro",
   };
   return <Selo tom={tom[status]}>{STATUS_MUDANCA[status]}</Selo>;
+}
+
+/** Revisão vencida vira alerta (vigente com a próxima revisão no passado). */
+export function StatusDoDocumento({
+  status,
+  vencida = false,
+  proximaRevisao,
+}: {
+  status: StatusDocumento;
+  vencida?: boolean;
+  proximaRevisao?: string | null;
+}) {
+  const tom: Record<StatusDocumento, TomDoSelo> = {
+    rascunho: "neutro",
+    em_revisao: "atencao",
+    vigente: "sucesso",
+    obsoleto: "neutro",
+  };
+  if (vencida)
+    return (
+      <Alerta
+        texto="Revisão vencida"
+        desde={proximaRevisao}
+        detalhe={STATUS_DOCUMENTO[status]}
+      />
+    );
+  return <Selo tom={tom[status]}>{STATUS_DOCUMENTO[status]}</Selo>;
 }
 
 /** Atrasada vira alerta com há quanto tempo. */

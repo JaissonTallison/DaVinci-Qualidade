@@ -9,17 +9,24 @@ import {
   Query,
 } from '@nestjs/common';
 import {
+  aprovarDocumentoSchema,
+  atualizarDocumentoSchema,
   atualizarObjetivoSchema,
   atualizarRoSchema,
   decidirMudancaSchema,
   encerrarRoSchema,
+  enviarRevisaoDocumentoSchema,
+  filtroDocumentosSchema,
   filtroMudancasSchema,
   filtroRosSchema,
   implementarMudancaSchema,
   novaAnaliseCriticaSchema,
   novaMudancaSchema,
+  novaRevisaoDocumentoSchema,
+  novoDocumentoSchema,
   novoObjetivoSchema,
   novoRoSchema,
+  obsoletarDocumentoSchema,
   registrarMedicaoSchema,
   situacaoDoObjetivoSchema,
   PATTERNS,
@@ -259,6 +266,122 @@ export class MudancasController {
     return this.mensageria.enviar(
       SERVICES.SGI,
       P.implementarMudanca,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+}
+
+/**
+ * Gestão do SGI: documentos (normas e procedimentos, ISO 9001 7.5).
+ * Aprovar e tornar obsoleto: gestor (sgi.excluir). Elaborar e revisar: sgi.editar.
+ */
+@Controller('documentos')
+export class DocumentosController {
+  constructor(private readonly mensageria: MensageriaService) {}
+
+  @Get()
+  @Permissao('sgi.ver')
+  listarDocumentos(
+    @ContextoHttp() ctx: Contexto,
+    @Query() filtro: Record<string, unknown>,
+  ) {
+    validarEntrada(filtroDocumentosSchema, filtro, ctx.rastreioId);
+    return this.mensageria.enviar(SERVICES.SGI, P.listarDocumentos, filtro, ctx);
+  }
+
+  @Get(':id')
+  @Permissao('sgi.ver')
+  obterDocumento(@ContextoHttp() ctx: Contexto, @Param('id') id: string) {
+    return this.mensageria.enviar(SERVICES.SGI, P.obterDocumento, { id }, ctx);
+  }
+
+  @Post()
+  @Permissao('sgi.editar')
+  criarDocumento(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(novoDocumentoSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar(SERVICES.SGI, P.criarDocumento, dados, ctx);
+  }
+
+  @Put(':id')
+  @Permissao('sgi.editar')
+  atualizarDocumento(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(atualizarDocumentoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      SERVICES.SGI,
+      P.atualizarDocumento,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Post(':id/enviar-revisao')
+  @Permissao('sgi.editar')
+  @HttpCode(200)
+  enviarRevisaoDocumento(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(enviarRevisaoDocumentoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      SERVICES.SGI,
+      P.enviarRevisaoDocumento,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Post(':id/aprovar')
+  @Permissao('sgi.excluir')
+  @HttpCode(200)
+  aprovarDocumento(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(aprovarDocumentoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      SERVICES.SGI,
+      P.aprovarDocumento,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Post(':id/nova-revisao')
+  @Permissao('sgi.editar')
+  @HttpCode(200)
+  novaRevisaoDocumento(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(novaRevisaoDocumentoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      SERVICES.SGI,
+      P.novaRevisaoDocumento,
+      { id, alteracoes },
+      ctx,
+    );
+  }
+
+  @Post(':id/obsoletar')
+  @Permissao('sgi.excluir')
+  @HttpCode(200)
+  obsoletarDocumento(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    validarEntrada(obsoletarDocumentoSchema, alteracoes, ctx.rastreioId);
+    return this.mensageria.enviar(
+      SERVICES.SGI,
+      P.obsoletarDocumento,
       { id, alteracoes },
       ctx,
     );

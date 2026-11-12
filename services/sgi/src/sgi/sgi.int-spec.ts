@@ -158,3 +158,73 @@ describe('Gestão do SGI', () => {
     expect(feita.status).toBe('implementada');
   });
 });
+
+describe('Controle de documentos (7.5)', () => {
+  it('rascunho → revisão → aprovação (segregação) → nova revisão → obsoleto', async () => {
+    const doc = await sgi.criarDocumento(ana, {
+      codigo: 'PR-001',
+      titulo: 'Controle de não conformidade',
+      tipo: 'procedimento',
+      elaboradoPor: 'Ana',
+    });
+    expect(doc).toMatchObject({ status: 'rascunho', revisaoAtual: 0 });
+
+    const emRevisao = await sgi.enviarRevisaoDocumento(ana, {
+      id: doc.id,
+      alteracoes: { versao: doc.versao },
+    });
+    expect(emRevisao.status).toBe('em_revisao');
+
+    // quem elaborou não aprova a própria revisão
+    expect(
+      (
+        await recusa(
+          sgi.aprovarDocumento(ana, {
+            id: doc.id,
+            alteracoes: { versao: emRevisao.versao, dataVigencia: hoje },
+          }),
+        )
+      ).codigo,
+    ).toBe('REGRA_DE_NEGOCIO');
+
+    const vigente = await sgi.aprovarDocumento(diretor, {
+      id: doc.id,
+      alteracoes: {
+        versao: emRevisao.versao,
+        dataVigencia: hoje,
+        proximaRevisao: somarMeses(hoje, 12),
+      },
+    });
+    expect(vigente).toMatchObject({ status: 'vigente', revisaoAtual: 1 });
+    expect(vigente.revisoes[0]).toMatchObject({
+      revisao: 1,
+      oQueMudou: 'Emissão inicial',
+    });
+
+    const rev2 = await sgi.novaRevisaoDocumento(ana, {
+      id: vigente.id,
+      alteracoes: {
+        versao: vigente.versao,
+        oQueMudou: 'Ajuste no fluxo de verificação',
+      },
+    });
+    expect(rev2).toMatchObject({ status: 'em_revisao', revisaoAtual: 1 });
+
+    const vigente2 = await sgi.aprovarDocumento(diretor, {
+      id: doc.id,
+      alteracoes: { versao: rev2.versao, dataVigencia: hoje },
+    });
+    expect(vigente2).toMatchObject({ status: 'vigente', revisaoAtual: 2 });
+    expect(vigente2.revisoes.map((r) => r.revisao)).toEqual([2, 1]);
+    expect(vigente2.revisoes[0].oQueMudou).toBe('Ajuste no fluxo de verificação');
+
+    const obsoleto = await sgi.obsoletarDocumento(diretor, {
+      id: doc.id,
+      alteracoes: { versao: vigente2.versao, motivo: 'Processo descontinuado' },
+    });
+    expect(obsoleto.status).toBe('obsoleto');
+
+    expect(await sgi.listarDocumentos(ana, { status: 'vigente' })).toEqual([]);
+    expect(await sgi.listarDocumentos(ana, {})).toHaveLength(1);
+  });
+});
