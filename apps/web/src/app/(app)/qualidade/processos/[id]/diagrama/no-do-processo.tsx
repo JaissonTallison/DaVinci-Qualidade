@@ -2,11 +2,11 @@
 
 import type { CSSProperties } from "react";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
-import type { DadosDoNo } from "./elementos";
+import type { DadosDoNo, FormaDoNo } from "./elementos";
 
 export type NoProcesso = Node<DadosDoNo, "no">;
 
-/** Cor de destaque por tipo de elemento (borda). Petróleo é o padrão. */
+/** Cor de destaque por tipo de elemento. Petróleo é o padrão. */
 const ACENTO: Record<string, string> = {
   inicio: "#0F766E",
   fim: "#334155",
@@ -18,108 +18,187 @@ const ACENTO: Record<string, string> = {
   inspecao: "#0F766E",
   anotacao: "#94A3B8",
 };
-
 const PADRAO = "#102A43";
-const TAM_PONTO = { width: 8, height: 8, background: "#102A43", border: "none" };
+const SELECIONADO = "#0F766E";
+const PONTO: CSSProperties = {
+  width: 9,
+  height: 9,
+  background: "#102A43",
+  border: "2px solid var(--color-superficie)",
+};
+
+const LARGURA: Record<FormaDoNo, number> = {
+  terminal: 150,
+  processo: 170,
+  subprocesso: 170,
+  decisao: 160,
+  documento: 172,
+  dados: 184,
+  armazenamento: 150,
+  anotacao: 170,
+  qualidade: 184,
+};
+const ALTURA: Record<FormaDoNo, number> = {
+  terminal: 46,
+  processo: 58,
+  subprocesso: 58,
+  decisao: 108,
+  documento: 66,
+  dados: 58,
+  armazenamento: 68,
+  anotacao: 58,
+  qualidade: 66,
+};
+
+const COM_SVG: FormaDoNo[] = ["decisao", "documento", "dados", "armazenamento"];
 
 export function NoDoProcesso({ data, selected }: NodeProps<NoProcesso>) {
   const acento = ACENTO[data.categoria] ?? PADRAO;
-  const anel = selected ? "0 0 0 2px #0F766E" : undefined;
-  const rotulo = data.forma === "qualidade" ? data.rotulo : null;
+  const cor = selected ? SELECIONADO : acento;
+  const w = LARGURA[data.forma];
+  const h = ALTURA[data.forma];
   const texto = data.nome || data.rotulo;
-
-  const base: CSSProperties = {
-    boxShadow: anel,
-    borderColor: acento,
-  };
-
-  const conteudo = (
-    <div className="flex flex-col items-center gap-0.5 px-3 py-2 text-center">
-      {rotulo && (
-        <span className="text-[10px] font-semibold tracking-[0.04em] text-texto-2 uppercase">
-          {rotulo}
-        </span>
-      )}
-      <span className="text-[13px] leading-tight font-medium text-texto">
-        {texto}
-      </span>
-    </div>
-  );
+  const usaSvg = COM_SVG.includes(data.forma);
 
   return (
-    <div className="relative" style={{ minWidth: 120 }}>
-      <Handle type="target" position={Position.Top} style={TAM_PONTO} />
+    <div className="relative" style={{ width: w, height: h }}>
+      <Handle type="target" position={Position.Top} style={PONTO} />
 
-      {data.forma === "decisao" ? (
-        <div
-          className="flex items-center justify-center bg-superficie"
-          style={{
-            ...base,
-            width: 140,
-            height: 96,
-            borderWidth: 2,
-            borderStyle: "solid",
-            clipPath: "polygon(50% 0, 100% 50%, 50% 100%, 0 50%)",
-          }}
-        >
-          <div className="max-w-[88px] text-center text-[12px] leading-tight font-medium text-texto">
-            {texto}
-          </div>
-        </div>
-      ) : data.forma === "dados" ? (
-        <div
-          className="bg-superficie"
-          style={{
-            ...base,
-            borderWidth: 2,
-            borderStyle: "solid",
-            clipPath:
-              "polygon(14% 0, 100% 0, 86% 100%, 0 100%)",
-          }}
-        >
-          {conteudo}
-        </div>
+      {usaSvg ? (
+        <FormaSvg forma={data.forma} cor={cor} w={w} h={h} />
       ) : (
         <div
-          className="bg-superficie"
-          style={{
-            ...base,
-            borderWidth: data.forma === "subprocesso" ? undefined : 2,
-            borderStyle: data.forma === "anotacao" ? "dashed" : "solid",
-            borderRadius:
-              data.forma === "terminal"
-                ? 999
-                : data.forma === "armazenamento"
-                  ? 14
-                  : 8,
-            borderLeftWidth: data.forma === "qualidade" ? 4 : undefined,
-            borderInlineWidth: data.forma === "subprocesso" ? 5 : undefined,
-            borderBlockWidth: data.forma === "subprocesso" ? 2 : undefined,
-            borderTopWidth: data.forma === "documento" ? 2 : undefined,
-            borderBottomWidth: data.forma === "documento" ? 4 : undefined,
-          }}
-        >
-          {conteudo}
-        </div>
+          className="absolute inset-0 bg-superficie transition-shadow"
+          style={estiloDaCaixa(data.forma, cor, Boolean(selected))}
+        />
       )}
 
-      <Handle type="source" position={Position.Bottom} style={TAM_PONTO} />
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 px-3 text-center">
+        {data.forma === "qualidade" && (
+          <span className="text-[10px] font-semibold tracking-[0.04em] text-texto-2 uppercase">
+            {data.rotulo}
+          </span>
+        )}
+        <span
+          className="leading-tight font-medium text-texto"
+          style={{ fontSize: data.forma === "decisao" ? 12 : 13.5 }}
+        >
+          {texto}
+        </span>
+      </div>
+
+      <Handle type="source" position={Position.Bottom} style={PONTO} />
       {data.forma === "decisao" && (
         <>
           <Handle
             id="sim"
             type="source"
             position={Position.Right}
-            style={TAM_PONTO}
+            style={PONTO}
           />
           <Handle
             id="nao"
             type="source"
             position={Position.Left}
-            style={TAM_PONTO}
+            style={PONTO}
           />
         </>
       )}
     </div>
+  );
+}
+
+function estiloDaCaixa(
+  forma: FormaDoNo,
+  cor: string,
+  selecionado: boolean,
+): CSSProperties {
+  const base: CSSProperties = {
+    borderColor: cor,
+    borderStyle: forma === "anotacao" ? "dashed" : "solid",
+    borderWidth: 2,
+    boxShadow: selecionado
+      ? "0 0 0 3px rgba(15,118,110,0.22)"
+      : "0 1px 2px rgb(16 42 67 / 0.05)",
+  };
+  if (forma === "terminal") return { ...base, borderRadius: 999 };
+  if (forma === "subprocesso")
+    return { ...base, borderRadius: 8, borderLeftWidth: 6, borderRightWidth: 6 };
+  if (forma === "qualidade")
+    return { ...base, borderRadius: 8, borderLeftWidth: 5 };
+  if (forma === "armazenamento") return { ...base, borderRadius: 14 };
+  return { ...base, borderRadius: 8 };
+}
+
+/** Formas com contorno limpo (decisão, documento, dados, banco de dados). */
+function FormaSvg({
+  forma,
+  cor,
+  w,
+  h,
+}: {
+  forma: FormaDoNo;
+  cor: string;
+  w: number;
+  h: number;
+}) {
+  const comum = {
+    style: {
+      fill: "var(--color-superficie)",
+      stroke: cor,
+      strokeWidth: 2,
+      strokeLinejoin: "round" as const,
+    },
+  };
+  return (
+    <svg
+      className="absolute inset-0"
+      width={w}
+      height={h}
+      viewBox={`0 0 ${w} ${h}`}
+    >
+      {forma === "decisao" && (
+        <polygon
+          points={`${w / 2},2 ${w - 2},${h / 2} ${w / 2},${h - 2} 2,${h / 2}`}
+          {...comum}
+        />
+      )}
+      {forma === "dados" && (
+        <polygon
+          points={`16,2 ${w - 2},2 ${w - 16},${h - 2} 2,${h - 2}`}
+          {...comum}
+        />
+      )}
+      {forma === "documento" && (
+        <>
+          <path
+            d={`M2,2 L${w - 16},2 L${w - 2},16 L${w - 2},${h - 2} L2,${h - 2} Z`}
+            {...comum}
+          />
+          <path
+            d={`M${w - 16},2 L${w - 16},16 L${w - 2},16`}
+            fill="none"
+            stroke={cor}
+            strokeWidth={2}
+            strokeLinejoin="round"
+          />
+        </>
+      )}
+      {forma === "armazenamento" && (
+        <>
+          <path
+            d={`M2,11 L2,${h - 11} A ${w / 2 - 2} 9 0 0 0 ${w - 2},${h - 11} L${w - 2},11`}
+            {...comum}
+          />
+          <ellipse
+            cx={w / 2}
+            cy={11}
+            rx={w / 2 - 2}
+            ry={9}
+            {...comum}
+          />
+        </>
+      )}
+    </svg>
   );
 }
