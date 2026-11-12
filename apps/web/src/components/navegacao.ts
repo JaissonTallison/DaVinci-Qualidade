@@ -57,6 +57,11 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/qualidade/calibracao",
         permissao: "qualidade.ver",
       },
+      {
+        rotulo: "Modelagem de processos",
+        href: "/qualidade/processos",
+        permissao: "qualidade.ver",
+      },
       // Modelos de inspeção saiu do menu principal e passou a viver em "Configurações da
       // qualidade" (a rota /qualidade/modelos-de-inspecao continua a mesma).
       {

@@ -20,6 +20,7 @@ import { ContextoMiddleware } from './contexto.js';
 import { FiltroDeErrosHttp } from './filtro-erros-http.js';
 import { HealthController } from './health.controller.js';
 import { NaoConformidadesController } from './qualidade/nao-conformidades.controller.js';
+import { ProcessosController } from './qualidade/processos.controller.js';
 import { PlanosDeAcaoController } from './qualidade/planos-de-acao.controller.js';
 import {
   InspecoesController,
@@ -152,6 +153,7 @@ export const observeEnabled = Boolean(
     ChavesDeApiController,
     IntegracoesController,
     NaoConformidadesController,
+    ProcessosController,
     PlanosDeAcaoController,
     InspecoesController,
     ModelosDeInspecaoController,

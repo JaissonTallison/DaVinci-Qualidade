@@ -10,6 +10,7 @@ import { CalibracaoModule } from './calibracao/calibracao.module.js';
 import { PrazosModule } from './prazos/prazos.module.js';
 import { BuscaModule } from './busca/busca.module.js';
 import { AutomotivoModule } from './automotivo/automotivo.module.js';
+import { ProcessosModule } from './processos/processos.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AutomotivoModule } from './automotivo/automotivo.module.js';
     InspecoesModule,
     CalibracaoModule,
     AutomotivoModule,
+    ProcessosModule,
   ],
   controllers: [HealthController],
 })
