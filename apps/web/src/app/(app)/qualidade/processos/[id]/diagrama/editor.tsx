@@ -156,9 +156,15 @@ function Editor({
   const onConnect: OnConnect = useCallback(
     (conexao) => {
       registrar();
+      const label =
+        conexao.sourceHandle === "sim"
+          ? "Sim"
+          : conexao.sourceHandle === "nao"
+            ? "Não"
+            : undefined;
       setEdges((eds) =>
         addEdge(
-          { ...conexao, markerEnd: { type: MarkerType.ArrowClosed } },
+          { ...conexao, label, markerEnd: { type: MarkerType.ArrowClosed } },
           eds,
         ),
       );
