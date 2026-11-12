@@ -20,9 +20,11 @@ import {
   CLASSES_RO,
   STATUS_MUDANCA,
   STATUS_DOCUMENTO,
+  STATUS_PROCESSO,
   type ClasseRo,
   type StatusMudanca,
   type StatusDocumento,
+  type StatusProcesso,
   NIVEIS_DE_RISCO,
   STATUS_PT,
   type NivelDeRisco,
@@ -287,6 +289,34 @@ export function StatusDoDocumento({
       />
     );
   return <Selo tom={tom[status]}>{STATUS_DOCUMENTO[status]}</Selo>;
+}
+
+export function StatusDoProcesso({
+  status,
+  vencida = false,
+  proximaRevisao,
+}: {
+  status: StatusProcesso;
+  vencida?: boolean;
+  proximaRevisao?: string | null;
+}) {
+  const tom: Record<StatusProcesso, TomDoSelo> = {
+    em_elaboracao: "neutro",
+    em_revisao: "atencao",
+    aprovado: "info",
+    publicado: "sucesso",
+    obsoleto: "neutro",
+    cancelado: "neutro",
+  };
+  if (vencida)
+    return (
+      <Alerta
+        texto="Revisão vencida"
+        desde={proximaRevisao}
+        detalhe={STATUS_PROCESSO[status]}
+      />
+    );
+  return <Selo tom={tom[status]}>{STATUS_PROCESSO[status]}</Selo>;
 }
 
 /** Atrasada vira alerta com há quanto tempo. */

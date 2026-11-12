@@ -403,3 +403,62 @@ export const ppaps = pgTable(
     check('ppaps_nivel', sql`${t.nivel} BETWEEN 1 AND 5`),
   ],
 );
+
+/**
+ * Modelagem de processos (fase 1: cadastro e governança). O diagrama (nós/conexões/estilos) entra na
+ * coluna `conteudo` (jsonb) na fase 2. Governança: em elaboração → em revisão → aprovado → publicado →
+ * obsoleto; cada aprovação gera a próxima revisão e preserva as anteriores em `processos_revisoes`.
+ */
+export const processos = pgTable(
+  'processos',
+  {
+    ...colunasPadrao(),
+    codigo: varchar({ length: 30 }).notNull(),
+    nome: varchar({ length: 150 }).notNull(),
+    descricao: text(),
+    objetivo: text(),
+    escopo: text(),
+    unidade: varchar({ length: 120 }),
+    departamento: varchar({ length: 120 }),
+    gestor: varchar({ length: 120 }),
+    elaboradoPor: varchar({ length: 120 }).notNull(),
+    normas: varchar({ length: 300 }),
+    status: varchar({ length: 20 }).notNull().default('em_elaboracao'),
+    revisaoAtual: integer().notNull().default(0),
+    /** Conteúdo do diagrama (nós, conexões, posições, estilos). Preenchido na fase 2 (editor). */
+    conteudo: jsonb(),
+    oQueMudouPendente: varchar({ length: 500 }),
+    aprovadoPor: uuid(),
+    aprovadoPorNome: varchar({ length: 120 }),
+    aprovadoEm: timestamp({ withTimezone: true, precision: 3 }),
+    publicadoEm: timestamp({ withTimezone: true, precision: 3 }),
+    dataProximaRevisao: date({ mode: 'string' }),
+    motivoEncerramento: varchar({ length: 500 }),
+  },
+  (t) => [
+    unique('processos_codigo_por_empresa').on(t.empresaId, t.codigo),
+    index('processos_empresa_status_idx').on(t.empresaId, t.status),
+  ],
+);
+
+/** Histórico imutável das revisões aprovadas de um processo. Nunca se edita. */
+export const processosRevisoes = pgTable(
+  'processos_revisoes',
+  {
+    ...colunasPadrao(),
+    processoId: uuid()
+      .notNull()
+      .references(() => processos.id),
+    revisao: integer().notNull(),
+    oQueMudou: varchar({ length: 500 }).notNull(),
+    elaboradoPor: varchar({ length: 120 }).notNull(),
+    aprovadoPorNome: varchar({ length: 120 }),
+    aprovadoEm: timestamp({ withTimezone: true, precision: 3 }).notNull(),
+    /** Snapshot do diagrama nesta revisão (fase 2). */
+    conteudo: jsonb(),
+  },
+  (t) => [
+    unique('processos_revisao_por_processo').on(t.processoId, t.revisao),
+    index('processos_revisoes_processo_idx').on(t.processoId),
+  ],
+);
