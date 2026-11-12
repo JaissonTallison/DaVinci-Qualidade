@@ -285,6 +285,90 @@ export interface Mudanca {
   versao: string;
 }
 
+// ---------------------------------------------------------------- documentos (controle de documentos, 7.5)
+
+export const TIPOS_DOCUMENTO = {
+  politica: 'Política',
+  manual: 'Manual',
+  procedimento: 'Procedimento',
+  instrucao: 'Instrução de trabalho',
+  formulario: 'Formulário',
+  norma_externa: 'Norma externa',
+} as const;
+export type TipoDocumento = keyof typeof TIPOS_DOCUMENTO;
+
+export const STATUS_DOCUMENTO = {
+  rascunho: 'Rascunho',
+  em_revisao: 'Em revisão',
+  vigente: 'Vigente',
+  obsoleto: 'Obsoleto',
+} as const;
+export type StatusDocumento = keyof typeof STATUS_DOCUMENTO;
+
+const camposDocumento = {
+  codigo: texto('o código', 30, 2),
+  titulo: texto('o título', 150, 3),
+  tipo: z.enum(chaves(TIPOS_DOCUMENTO), { error: 'Escolha o tipo.' }),
+  area: textoOpcional(120),
+  elaboradoPor: texto('o elaborador', 120, 3),
+};
+export const novoDocumentoSchema = z.object(camposDocumento);
+export type NovoDocumento = z.input<typeof novoDocumentoSchema>;
+export const atualizarDocumentoSchema = z.object({ ...camposDocumento, versao });
+export const enviarRevisaoDocumentoSchema = z.object({ versao });
+export const aprovarDocumentoSchema = z.object({
+  versao,
+  dataVigencia: data('a data de vigência'),
+  proximaRevisao: opcional(data('a próxima revisão')),
+});
+export const novaRevisaoDocumentoSchema = z.object({
+  versao,
+  oQueMudou: texto('o que muda nesta revisão', 500, 5),
+});
+export const obsoletarDocumentoSchema = z.object({
+  versao,
+  motivo: texto('o motivo', 500, 5),
+});
+export const filtroDocumentosSchema = z.object({
+  tipo: enumOpcional(TIPOS_DOCUMENTO, 'Tipo desconhecido.'),
+  status: enumOpcional(STATUS_DOCUMENTO, 'Status desconhecido.'),
+});
+
+export interface RevisaoDoDocumento {
+  revisao: number;
+  oQueMudou: string;
+  elaboradoPor: string;
+  aprovadoPorNome: string | null;
+  aprovadoEm: string;
+  dataVigencia: string | null;
+  proximaRevisao: string | null;
+}
+export interface Documento {
+  id: string;
+  codigo: string;
+  titulo: string;
+  tipo: TipoDocumento;
+  area: string | null;
+  elaboradoPor: string;
+  status: StatusDocumento;
+  revisaoAtual: number;
+  oQueMudouPendente: string | null;
+  aprovadoPorNome: string | null;
+  aprovadoEm: string | null;
+  dataVigencia: string | null;
+  proximaRevisao: string | null;
+  motivoObsolescencia: string | null;
+  /** Vigente com a próxima revisão vencida. */
+  revisaoVencida: boolean;
+  /** Quem criou o documento não aprova a própria revisão (segregação). */
+  criadoPorMim: boolean;
+  versao: string;
+}
+export interface DocumentoComRevisoes extends Documento {
+  /** Mais recentes primeiro. */
+  revisoes: RevisaoDoDocumento[];
+}
+
 export interface ResumoSgi {
   rosAltosAbertos: number;
   rosComPrazoVencido: number;

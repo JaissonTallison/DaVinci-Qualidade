@@ -107,3 +107,56 @@ export const mudancas = pgTable(
   },
   (t) => [unique('mudancas_numero_por_empresa').on(t.empresaId, t.numero)],
 );
+
+/**
+ * Controle de documentos: normas e procedimentos (ISO 9001 7.5 — informação documentada).
+ * Esta tabela guarda o documento atual; cada revisão aprovada fica em `documentos_revisoes` (imutável).
+ */
+export const documentos = pgTable(
+  'documentos',
+  {
+    ...colunasPadrao(),
+    codigo: varchar({ length: 30 }).notNull(),
+    titulo: varchar({ length: 150 }).notNull(),
+    tipo: varchar({ length: 20 }).notNull(),
+    area: varchar({ length: 120 }),
+    elaboradoPor: varchar({ length: 120 }).notNull(),
+    status: varchar({ length: 15 }).notNull().default('rascunho'),
+    revisaoAtual: integer().notNull().default(0),
+    /** O que muda na próxima revisão, informado ao abrir a revisão; vira linha no histórico ao aprovar. */
+    oQueMudouPendente: varchar({ length: 500 }),
+    aprovadoPor: uuid(),
+    /** Nome de quem aprovou, gravado no momento (auditoria). */
+    aprovadoPorNome: varchar({ length: 120 }),
+    aprovadoEm: timestamp({ withTimezone: true, precision: 3 }),
+    dataVigencia: date({ mode: 'string' }),
+    proximaRevisao: date({ mode: 'string' }),
+    motivoObsolescencia: varchar({ length: 500 }),
+  },
+  (t) => [
+    unique('documentos_codigo_por_empresa').on(t.empresaId, t.codigo),
+    index('documentos_empresa_status_idx').on(t.empresaId, t.status),
+  ],
+);
+
+/** Histórico imutável das revisões aprovadas de um documento. Nunca se edita. */
+export const documentosRevisoes = pgTable(
+  'documentos_revisoes',
+  {
+    ...colunasPadrao(),
+    documentoId: uuid()
+      .notNull()
+      .references(() => documentos.id),
+    revisao: integer().notNull(),
+    oQueMudou: varchar({ length: 500 }).notNull(),
+    elaboradoPor: varchar({ length: 120 }).notNull(),
+    aprovadoPorNome: varchar({ length: 120 }),
+    aprovadoEm: timestamp({ withTimezone: true, precision: 3 }).notNull(),
+    dataVigencia: date({ mode: 'string' }),
+    proximaRevisao: date({ mode: 'string' }),
+  },
+  (t) => [
+    unique('documentos_revisao_por_documento').on(t.documentoId, t.revisao),
+    index('documentos_revisoes_documento_idx').on(t.documentoId),
+  ],
+);

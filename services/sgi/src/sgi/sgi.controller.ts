@@ -106,4 +106,44 @@ export class SgiController {
   implementarMudanca(@Contexto() ctx: Ctx, @Dados() d: ComId) {
     return this.sgi.implementarMudanca(ctx, d);
   }
+
+  @MessagePattern(P.listarDocumentos)
+  listarDocumentos(@Contexto() ctx: Ctx, @Dados() d: unknown) {
+    return this.sgi.listarDocumentos(ctx, d);
+  }
+
+  @MessagePattern(P.obterDocumento)
+  obterDocumento(@Contexto() ctx: Ctx, @Dados() d: { id?: unknown }) {
+    return this.sgi.obterDocumento(ctx, d);
+  }
+
+  @MessagePattern(P.criarDocumento)
+  criarDocumento(@Contexto() ctx: Ctx, @Dados() d: unknown) {
+    return this.sgi.criarDocumento(ctx, d);
+  }
+
+  @MessagePattern(P.atualizarDocumento)
+  atualizarDocumento(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.sgi.atualizarDocumento(ctx, d);
+  }
+
+  @MessagePattern(P.enviarRevisaoDocumento)
+  enviarRevisaoDocumento(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.sgi.enviarRevisaoDocumento(ctx, d);
+  }
+
+  @MessagePattern(P.aprovarDocumento)
+  aprovarDocumento(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.sgi.aprovarDocumento(ctx, d);
+  }
+
+  @MessagePattern(P.novaRevisaoDocumento)
+  novaRevisaoDocumento(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.sgi.novaRevisaoDocumento(ctx, d);
+  }
+
+  @MessagePattern(P.obsoletarDocumento)
+  obsoletarDocumento(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.sgi.obsoletarDocumento(ctx, d);
+  }
 }

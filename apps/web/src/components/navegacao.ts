@@ -123,6 +123,11 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
         href: "/sgi/inovacao",
         permissao: "sgi.ver",
       },
+      {
+        rotulo: "Normas e procedimentos",
+        href: "/sgi/documentos",
+        permissao: "sgi.ver",
+      },
     ],
   },
   {

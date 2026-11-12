@@ -21,7 +21,8 @@ export const PERMISSOES = {
   'auditorias.excluir': 'Excluir registros de Auditorias',
   'auditorias.conteudo':
     'Gerenciar o conteúdo próprio da empresa: roteiros, evidências, modelos de NC, prompts e auditores',
-  'sgi.ver': 'Ver Gestão do SGI: riscos, objetivos, análise crítica e mudanças',
+  'sgi.ver':
+    'Ver Gestão do SGI: riscos, objetivos, análise crítica, inovação e documentos (normas e procedimentos)',
   'sgi.editar': 'Criar e editar registros de Gestão do SGI',
   'sgi.excluir': 'Excluir registros de Gestão do SGI',
   'servicos.ver':

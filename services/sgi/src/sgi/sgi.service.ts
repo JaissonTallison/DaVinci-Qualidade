@@ -12,35 +12,49 @@ import {
 import { DATABASE, type Database, ordemAlfabetica } from '@davinci/database';
 import { ErroDeNegocio, hojeEmBrasilia, validar } from '@davinci/shared';
 import {
+  aprovarDocumentoSchema,
+  atualizarDocumentoSchema,
   atualizarObjetivoSchema,
   atualizarRoSchema,
   classeDoRo,
   decidirMudancaSchema,
   encerrarRoSchema,
+  enviarRevisaoDocumentoSchema,
+  filtroDocumentosSchema,
   filtroMudancasSchema,
   filtroRosSchema,
   implementarMudancaSchema,
   isUuid,
   novaAnaliseCriticaSchema,
   novaMudancaSchema,
+  novaRevisaoDocumentoSchema,
+  novoDocumentoSchema,
   novoObjetivoSchema,
   novoRoSchema,
+  obsoletarDocumentoSchema,
   registrarMedicaoSchema,
   situacaoDoObjetivoSchema,
   type AnaliseCritica,
   type Contexto,
+  type Documento,
+  type DocumentoComRevisoes,
   type Medicao,
   type Mudanca,
   type Objetivo,
   type ResumoSgi,
+  type RevisaoDoDocumento,
   type RiscoOuOportunidade,
   type SentidoMeta,
+  type StatusDocumento,
   type StatusMudanca,
+  type TipoDocumento,
   type TipoRo,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
 import {
   analisesCriticas,
+  documentos,
+  documentosRevisoes,
   medicoes,
   mudancas,
   objetivos,
@@ -355,6 +369,192 @@ export class SgiService {
     });
   }
 
+  // ---------------------------------------------------------------- documentos (7.5)
+
+  async listarDocumentos(ctx: Contexto, dados: unknown): Promise<Documento[]> {
+    const f = validar(filtroDocumentosSchema, dados ?? {});
+    const c: SQL[] = [eq(documentos.empresaId, ctx.empresaId)];
+    if (f.tipo) c.push(eq(documentos.tipo, f.tipo));
+    if (f.status) c.push(eq(documentos.status, f.status));
+    const hoje = hojeEmBrasilia();
+    return (
+      await this.db
+        .select()
+        .from(documentos)
+        .where(and(...c))
+        .orderBy(ordemAlfabetica(documentos.codigo))
+    ).map((l) => montarDocumento(l, ctx, hoje));
+  }
+
+  async obterDocumento(
+    ctx: Contexto,
+    dados: { id?: unknown },
+  ): Promise<DocumentoComRevisoes> {
+    const l = await this.documento(ctx, dados?.id);
+    const revs = await this.db
+      .select()
+      .from(documentosRevisoes)
+      .where(eq(documentosRevisoes.documentoId, l.id))
+      .orderBy(desc(documentosRevisoes.revisao));
+    return {
+      ...montarDocumento(l, ctx, hojeEmBrasilia()),
+      revisoes: revs.map(montarRevisao),
+    };
+  }
+
+  async criarDocumento(ctx: Contexto, dados: unknown): Promise<Documento> {
+    const novo = validar(novoDocumentoSchema, dados);
+    const [l] = await this.db
+      .insert(documentos)
+      .values({ ...novo, area: novo.area ?? null, ...autoria(ctx) })
+      .returning();
+    return montarDocumento(l!, ctx, hojeEmBrasilia());
+  }
+
+  async atualizarDocumento(ctx: Contexto, dados: ComId): Promise<Documento> {
+    const { versao, ...campos } = validar(
+      atualizarDocumentoSchema,
+      dados?.alteracoes,
+    );
+    const atual = await this.documento(ctx, dados?.id);
+    if (atual.status !== 'rascunho' && atual.status !== 'em_revisao')
+      throw regra('Só documento em rascunho ou em revisão pode ser editado.');
+    return this.gravarDocumento(ctx, atual.id, versao, {
+      ...campos,
+      area: campos.area ?? null,
+    });
+  }
+
+  async enviarRevisaoDocumento(
+    ctx: Contexto,
+    dados: ComId,
+  ): Promise<Documento> {
+    const { versao } = validar(enviarRevisaoDocumentoSchema, dados?.alteracoes);
+    const atual = await this.documento(ctx, dados?.id);
+    if (atual.status !== 'rascunho')
+      throw regra('Só um rascunho é enviado para revisão.');
+    return this.gravarDocumento(ctx, atual.id, versao, { status: 'em_revisao' });
+  }
+
+  /** Aprova a revisão em andamento: vira vigente e gera a linha no histórico. Quem elaborou não aprova. */
+  async aprovarDocumento(
+    ctx: Contexto,
+    dados: ComId,
+  ): Promise<DocumentoComRevisoes> {
+    const { versao, dataVigencia, proximaRevisao } = validar(
+      aprovarDocumentoSchema,
+      dados?.alteracoes,
+    );
+    const atual = await this.documento(ctx, dados?.id);
+    if (atual.status !== 'em_revisao')
+      throw regra('Só documento em revisão é aprovado.');
+    if (atual.criadoPor === ctx.usuarioId)
+      throw regra(
+        'Quem elaborou o documento não aprova a própria revisão: peça a outro gestor.',
+      );
+    const revisao = atual.revisaoAtual + 1;
+    const nome = ctx.usuarioNome ?? null;
+    const agora = new Date();
+    await this.db.transaction(async (tx) => {
+      const [l] = await tx
+        .update(documentos)
+        .set({
+          status: 'vigente',
+          revisaoAtual: revisao,
+          aprovadoPor: ctx.usuarioId,
+          aprovadoPorNome: nome,
+          aprovadoEm: agora,
+          dataVigencia,
+          proximaRevisao: proximaRevisao ?? null,
+          oQueMudouPendente: null,
+          atualizadoPor: ctx.usuarioId,
+        })
+        .where(
+          and(
+            eq(documentos.id, atual.id),
+            eq(documentos.atualizadoEm, new Date(versao)),
+          ),
+        )
+        .returning();
+      if (!l) throw new ErroDeNegocio('CONFLITO', CONFLITO);
+      await tx.insert(documentosRevisoes).values({
+        documentoId: atual.id,
+        revisao,
+        oQueMudou: atual.oQueMudouPendente ?? 'Emissão inicial',
+        elaboradoPor: atual.elaboradoPor,
+        aprovadoPorNome: nome,
+        aprovadoEm: agora,
+        dataVigencia,
+        proximaRevisao: proximaRevisao ?? null,
+        ...autoria(ctx),
+      });
+    });
+    return this.obterDocumento(ctx, { id: atual.id });
+  }
+
+  async novaRevisaoDocumento(ctx: Contexto, dados: ComId): Promise<Documento> {
+    const { versao, oQueMudou } = validar(
+      novaRevisaoDocumentoSchema,
+      dados?.alteracoes,
+    );
+    const atual = await this.documento(ctx, dados?.id);
+    if (atual.status !== 'vigente')
+      throw regra('Só um documento vigente abre nova revisão.');
+    return this.gravarDocumento(ctx, atual.id, versao, {
+      status: 'em_revisao',
+      oQueMudouPendente: oQueMudou,
+    });
+  }
+
+  async obsoletarDocumento(ctx: Contexto, dados: ComId): Promise<Documento> {
+    const { versao, motivo } = validar(
+      obsoletarDocumentoSchema,
+      dados?.alteracoes,
+    );
+    const atual = await this.documento(ctx, dados?.id);
+    if (atual.status === 'obsoleto') throw regra('Documento já está obsoleto.');
+    if (atual.status === 'rascunho')
+      throw regra('Rascunho não tem o que tornar obsoleto: exclua ou revise.');
+    return this.gravarDocumento(ctx, atual.id, versao, {
+      status: 'obsoleto',
+      motivoObsolescencia: motivo,
+    });
+  }
+
+  private async documento(ctx: Contexto, id: unknown) {
+    const [l] = isUuid(id)
+      ? await this.db
+          .select()
+          .from(documentos)
+          .where(
+            and(eq(documentos.id, id), eq(documentos.empresaId, ctx.empresaId)),
+          )
+      : [];
+    if (!l)
+      throw new ErroDeNegocio('NAO_ENCONTRADO', 'Documento não encontrado.');
+    return l;
+  }
+
+  private async gravarDocumento(
+    ctx: Contexto,
+    id: string,
+    versao: string,
+    valores: Partial<typeof documentos.$inferInsert>,
+  ): Promise<Documento> {
+    const [l] = await this.db
+      .update(documentos)
+      .set({ ...valores, atualizadoPor: ctx.usuarioId })
+      .where(
+        and(
+          eq(documentos.id, id),
+          eq(documentos.atualizadoEm, new Date(versao)),
+        ),
+      )
+      .returning();
+    if (!l) throw new ErroDeNegocio('CONFLITO', CONFLITO);
+    return montarDocumento(l, ctx, hojeEmBrasilia());
+  }
+
   // ---------------------------------------------------------------- resumo
 
   async resumo(ctx: Contexto): Promise<ResumoSgi> {
@@ -532,6 +732,48 @@ function montarAnalise(
     entradas: l.entradas,
     decisoes: l.decisoes,
     proximaAnalise: l.proximaAnalise,
+  };
+}
+
+function montarDocumento(
+  l: typeof documentos.$inferSelect,
+  ctx: Contexto,
+  hoje: string,
+): Documento {
+  return {
+    id: l.id,
+    codigo: l.codigo,
+    titulo: l.titulo,
+    tipo: l.tipo as TipoDocumento,
+    area: l.area,
+    elaboradoPor: l.elaboradoPor,
+    status: l.status as StatusDocumento,
+    revisaoAtual: l.revisaoAtual,
+    oQueMudouPendente: l.oQueMudouPendente,
+    aprovadoPorNome: l.aprovadoPorNome,
+    aprovadoEm: l.aprovadoEm?.toISOString() ?? null,
+    dataVigencia: l.dataVigencia,
+    proximaRevisao: l.proximaRevisao,
+    motivoObsolescencia: l.motivoObsolescencia,
+    revisaoVencida:
+      l.status === 'vigente' &&
+      Boolean(l.proximaRevisao && l.proximaRevisao < hoje),
+    criadoPorMim: l.criadoPor === ctx.usuarioId,
+    versao: l.atualizadoEm.toISOString(),
+  };
+}
+
+function montarRevisao(
+  l: typeof documentosRevisoes.$inferSelect,
+): RevisaoDoDocumento {
+  return {
+    revisao: l.revisao,
+    oQueMudou: l.oQueMudou,
+    elaboradoPor: l.elaboradoPor,
+    aprovadoPorNome: l.aprovadoPorNome,
+    aprovadoEm: l.aprovadoEm.toISOString(),
+    dataVigencia: l.dataVigencia,
+    proximaRevisao: l.proximaRevisao,
   };
 }
 
