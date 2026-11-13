@@ -12,17 +12,30 @@ import {
   isUuid,
   novaRevisaoProcessoSchema,
   novoProcessoSchema,
+  novoVinculoSchema,
   publicarProcessoSchema,
+  removerVinculoSchema,
+  gerarIaDiagramaSchema,
   salvarDiagramaProcessoSchema,
+  type AcaoProcesso,
   type Contexto,
   type DiagramaProcesso,
+  type EventoDoProcesso,
+  type TipoVinculo,
+  type VinculoDoProcesso,
   type Processo,
   type ProcessoComRevisoes,
   type RevisaoDoProcesso,
   type StatusProcesso,
 } from '@davinci/types';
 import * as schema from '../db/schema.js';
-import { processos, processosRevisoes } from '../db/schema.js';
+import {
+  processos,
+  processosEventos,
+  processosRevisoes,
+  processosVinculos,
+} from '../db/schema.js';
+import { gerarDiagramaComClaude } from './ia.js';
 
 type Db = Database<typeof schema>;
 type ComId = { id?: unknown; alteracoes?: unknown };
@@ -52,15 +65,82 @@ export class ProcessosService {
     dados: { id?: unknown },
   ): Promise<ProcessoComRevisoes> {
     const l = await this.processo(ctx, dados?.id);
-    const revs = await this.db
-      .select()
-      .from(processosRevisoes)
-      .where(eq(processosRevisoes.processoId, l.id))
-      .orderBy(desc(processosRevisoes.revisao));
+    const [revs, vinculos, eventos] = await Promise.all([
+      this.db
+        .select()
+        .from(processosRevisoes)
+        .where(eq(processosRevisoes.processoId, l.id))
+        .orderBy(desc(processosRevisoes.revisao)),
+      this.db
+        .select()
+        .from(processosVinculos)
+        .where(eq(processosVinculos.processoId, l.id))
+        .orderBy(desc(processosVinculos.criadoEm)),
+      this.db
+        .select()
+        .from(processosEventos)
+        .where(eq(processosEventos.processoId, l.id))
+        .orderBy(desc(processosEventos.criadoEm)),
+    ]);
     return {
       ...montar(l, ctx, hojeEmBrasilia()),
       revisoes: revs.map(montarRevisao),
+      vinculos: vinculos.map(montarVinculo),
+      eventos: eventos.map(montarEvento),
     };
+  }
+
+  /** Registra uma ação na trilha de auditoria. */
+  private async registrarEvento(
+    ctx: Contexto,
+    processoId: string,
+    acao: AcaoProcesso,
+    comentario?: string | null,
+  ): Promise<void> {
+    await this.db.insert(processosEventos).values({
+      processoId,
+      acao,
+      usuarioNome: ctx.usuarioNome ?? null,
+      comentario: comentario ?? null,
+      ...autoria(ctx),
+    });
+  }
+
+  async adicionarVinculo(
+    ctx: Contexto,
+    dados: ComId,
+  ): Promise<ProcessoComRevisoes> {
+    const v = validar(novoVinculoSchema, dados?.alteracoes);
+    const atual = await this.processo(ctx, dados?.id);
+    await this.db
+      .insert(processosVinculos)
+      .values({
+        processoId: atual.id,
+        tipo: v.tipo,
+        registroId: v.registroId,
+        rotulo: v.rotulo,
+        ...autoria(ctx),
+      })
+      .onConflictDoNothing();
+    return this.obter(ctx, { id: atual.id });
+  }
+
+  async removerVinculo(
+    ctx: Contexto,
+    dados: ComId,
+  ): Promise<ProcessoComRevisoes> {
+    const { vinculoId } = validar(removerVinculoSchema, dados?.alteracoes);
+    const atual = await this.processo(ctx, dados?.id);
+    await this.db
+      .delete(processosVinculos)
+      .where(
+        and(
+          eq(processosVinculos.id, vinculoId),
+          eq(processosVinculos.processoId, atual.id),
+          eq(processosVinculos.empresaId, ctx.empresaId),
+        ),
+      );
+    return this.obter(ctx, { id: atual.id });
   }
 
   async criar(ctx: Contexto, dados: unknown): Promise<Processo> {
@@ -69,6 +149,7 @@ export class ProcessosService {
       .insert(processos)
       .values({ ...comNulos(novo), ...autoria(ctx) })
       .returning();
+    await this.registrarEvento(ctx, l!.id, 'criado');
     return montar(l!, ctx, hojeEmBrasilia());
   }
 
@@ -88,12 +169,14 @@ export class ProcessosService {
     const atual = await this.processo(ctx, dados?.id);
     if (atual.status !== 'em_elaboracao')
       throw regra('Só um processo em elaboração é enviado para revisão.');
-    return this.gravar(ctx, atual.id, versao, { status: 'em_revisao' });
+    const r = await this.gravar(ctx, atual.id, versao, { status: 'em_revisao' });
+    await this.registrarEvento(ctx, atual.id, 'enviado_revisao');
+    return r;
   }
 
   /** Aprova a revisão: vira aprovado e gera a linha no histórico. Quem elaborou não aprova. */
   async aprovar(ctx: Contexto, dados: ComId): Promise<ProcessoComRevisoes> {
-    const { versao, dataProximaRevisao } = validar(
+    const { versao, dataProximaRevisao, parecer } = validar(
       aprovarProcessoSchema,
       dados?.alteracoes,
     );
@@ -138,6 +221,13 @@ export class ProcessosService {
         conteudo: atual.conteudo ?? null,
         ...autoria(ctx),
       });
+      await tx.insert(processosEventos).values({
+        processoId: atual.id,
+        acao: 'aprovado',
+        usuarioNome: nome,
+        comentario: parecer ?? null,
+        ...autoria(ctx),
+      });
     });
     return this.obter(ctx, { id: atual.id });
   }
@@ -147,10 +237,12 @@ export class ProcessosService {
     const atual = await this.processo(ctx, dados?.id);
     if (atual.status !== 'aprovado')
       throw regra('Só um processo aprovado é publicado.');
-    return this.gravar(ctx, atual.id, versao, {
+    const r = await this.gravar(ctx, atual.id, versao, {
       status: 'publicado',
       publicadoEm: new Date(),
     });
+    await this.registrarEvento(ctx, atual.id, 'publicado');
+    return r;
   }
 
   async novaRevisao(ctx: Contexto, dados: ComId): Promise<Processo> {
@@ -161,10 +253,12 @@ export class ProcessosService {
     const atual = await this.processo(ctx, dados?.id);
     if (atual.status !== 'publicado' && atual.status !== 'aprovado')
       throw regra('Só processo aprovado ou publicado abre nova revisão.');
-    return this.gravar(ctx, atual.id, versao, {
+    const r = await this.gravar(ctx, atual.id, versao, {
       status: 'em_elaboracao',
       oQueMudouPendente: oQueMudou,
     });
+    await this.registrarEvento(ctx, atual.id, 'nova_revisao', oQueMudou);
+    return r;
   }
 
   async encerrar(ctx: Contexto, dados: ComId): Promise<Processo> {
@@ -175,10 +269,22 @@ export class ProcessosService {
     const atual = await this.processo(ctx, dados?.id);
     if (atual.status !== 'aprovado' && atual.status !== 'publicado')
       throw regra('Só processo aprovado ou publicado se torna obsoleto.');
-    return this.gravar(ctx, atual.id, versao, {
+    const r = await this.gravar(ctx, atual.id, versao, {
       status: 'obsoleto',
       motivoEncerramento: motivo,
     });
+    await this.registrarEvento(ctx, atual.id, 'obsoleto', motivo);
+    return r;
+  }
+
+  /** Gera um rascunho de diagrama a partir de texto, com o provedor de IA do Claude. */
+  async gerarIaDiagrama(
+    ctx: Contexto,
+    dados: unknown,
+  ): Promise<DiagramaProcesso> {
+    void ctx;
+    const { texto } = validar(gerarIaDiagramaSchema, dados);
+    return gerarDiagramaComClaude(texto);
   }
 
   /** Salva o conteúdo do diagrama (nós/conexões). Só com o processo editável. */
@@ -205,10 +311,12 @@ export class ProcessosService {
     const atual = await this.processo(ctx, dados?.id);
     if (atual.status !== 'em_elaboracao' && atual.status !== 'em_revisao')
       throw regra('Só processo em elaboração ou em revisão pode ser cancelado.');
-    return this.gravar(ctx, atual.id, versao, {
+    const r = await this.gravar(ctx, atual.id, versao, {
       status: 'cancelado',
       motivoEncerramento: motivo,
     });
+    await this.registrarEvento(ctx, atual.id, 'cancelado', motivo);
+    return r;
   }
 
   private async processo(ctx: Contexto, id: unknown) {
@@ -308,6 +416,29 @@ function montar(
       Boolean(l.dataProximaRevisao && l.dataProximaRevisao < hoje),
     criadoPorMim: l.criadoPor === ctx.usuarioId,
     versao: l.atualizadoEm.toISOString(),
+  };
+}
+
+function montarEvento(
+  l: typeof processosEventos.$inferSelect,
+): EventoDoProcesso {
+  return {
+    id: l.id,
+    acao: l.acao as EventoDoProcesso['acao'],
+    usuarioNome: l.usuarioNome,
+    comentario: l.comentario,
+    criadoEm: l.criadoEm.toISOString(),
+  };
+}
+
+function montarVinculo(
+  l: typeof processosVinculos.$inferSelect,
+): VinculoDoProcesso {
+  return {
+    id: l.id,
+    tipo: l.tipo as TipoVinculo,
+    registroId: l.registroId,
+    rotulo: l.rotulo,
   };
 }
 

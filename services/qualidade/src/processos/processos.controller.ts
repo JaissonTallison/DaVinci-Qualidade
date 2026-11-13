@@ -66,4 +66,19 @@ export class ProcessosController {
   salvarDiagrama(@Contexto() ctx: Ctx, @Dados() d: ComId) {
     return this.processos.salvarDiagrama(ctx, d);
   }
+
+  @MessagePattern(P.gerarIaDiagrama)
+  gerarIaDiagrama(@Contexto() ctx: Ctx, @Dados() d: unknown) {
+    return this.processos.gerarIaDiagrama(ctx, d);
+  }
+
+  @MessagePattern(P.adicionarVinculo)
+  adicionarVinculo(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.processos.adicionarVinculo(ctx, d);
+  }
+
+  @MessagePattern(P.removerVinculo)
+  removerVinculo(@Contexto() ctx: Ctx, @Dados() d: ComId) {
+    return this.processos.removerVinculo(ctx, d);
+  }
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import {
+  ACOES_PROCESSO,
   STATUS_PROCESSO,
   type DadosDoUsuario,
   type ProcessoComRevisoes,
@@ -27,6 +28,7 @@ import {
   PublicarProcesso,
 } from "./acoes";
 import { CriarDocumentoControlado } from "./documento-controlado";
+import { VinculosDoProcesso } from "./vinculos";
 import { CabecalhoComVoltar } from "@/components/pagina-de-cadastro";
 
 export const metadata: Metadata = { title: "Processo" };
@@ -39,6 +41,9 @@ const AVISOS: Record<string, string> = {
   revisao: "Nova revisão aberta.",
   obsoleto: "Processo tornado obsoleto.",
   cancelado: "Processo cancelado.",
+  vinculado: "Registro relacionado.",
+  "vinculo-removido": "Vínculo removido.",
+  "erro-vinculo": "Não foi possível alterar o vínculo. Tente de novo.",
 };
 
 export default async function DetalheDoProcesso({
@@ -189,6 +194,45 @@ export default async function DetalheDoProcesso({
           </div>
         </div>
       </section>
+
+      <section className={`${painel} mt-6`}>
+        <header className={cabecalhoDoPainel}>
+          <h2 className={tituloDoPainel}>Registros relacionados</h2>
+        </header>
+        <div className="p-5">
+          <VinculosDoProcesso
+            processoId={p.id}
+            vinculos={p.vinculos}
+            podeEditar={podeEditar}
+          />
+        </div>
+      </section>
+
+      {p.eventos.length > 0 && (
+        <section className={`${painel} mt-6`}>
+          <header className={cabecalhoDoPainel}>
+            <h2 className={tituloDoPainel}>Histórico de ações</h2>
+          </header>
+          <ul className="divide-y divide-borda">
+            {p.eventos.map((e) => (
+              <li key={e.id} className="px-5 py-3">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                  <span className="text-sm font-medium text-texto">
+                    {ACOES_PROCESSO[e.acao]}
+                    {e.usuarioNome ? ` · ${e.usuarioNome}` : ""}
+                  </span>
+                  <span className="text-sm whitespace-nowrap text-texto-2">
+                    {formatarMomento(e.criadoEm)}
+                  </span>
+                </div>
+                {e.comentario && (
+                  <p className="mt-0.5 text-sm text-texto-2">{e.comentario}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {p.revisoes.length > 0 && (
         <section className={`${painel} mt-6`}>

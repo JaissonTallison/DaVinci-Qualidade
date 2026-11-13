@@ -462,3 +462,39 @@ export const processosRevisoes = pgTable(
     index('processos_revisoes_processo_idx').on(t.processoId),
   ],
 );
+
+/** Vínculos do processo com registros de outros módulos (NC, plano, inspeção, documento, risco). */
+export const processosVinculos = pgTable(
+  'processos_vinculos',
+  {
+    ...colunasPadrao(),
+    processoId: uuid()
+      .notNull()
+      .references(() => processos.id),
+    tipo: varchar({ length: 30 }).notNull(),
+    /** Id do registro no módulo dono (sem chave estrangeira: outro serviço/banco). */
+    registroId: uuid().notNull(),
+    /** Rótulo do registro no momento do vínculo (ex.: "NC-2026-007 · título"). */
+    rotulo: varchar({ length: 200 }).notNull(),
+  },
+  (t) => [
+    unique('processos_vinculo_unico').on(t.processoId, t.tipo, t.registroId),
+    index('processos_vinculos_processo_idx').on(t.processoId),
+  ],
+);
+
+/** Trilha de auditoria do processo: uma linha por ação de governança. Nunca se edita. */
+export const processosEventos = pgTable(
+  'processos_eventos',
+  {
+    ...colunasPadrao(),
+    processoId: uuid()
+      .notNull()
+      .references(() => processos.id),
+    acao: varchar({ length: 20 }).notNull(),
+    /** Nome de quem fez a ação, gravado no momento. */
+    usuarioNome: varchar({ length: 120 }),
+    comentario: varchar({ length: 500 }),
+  },
+  (t) => [index('processos_eventos_processo_idx').on(t.processoId, t.criadoEm)],
+);

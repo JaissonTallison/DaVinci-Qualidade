@@ -85,3 +85,41 @@ export const PALETA: GrupoDaPaleta[] = [
 export function dadosPadrao(el: ElementoDaPaleta): DadosDoNo {
   return { forma: el.forma, categoria: el.chave, rotulo: el.rotulo, nome: el.rotulo };
 }
+
+/** Tamanho fixo de cada nó (usado no editor e na exportação). */
+export const LARGURA_DO_NO: Record<FormaDoNo, number> = {
+  terminal: 150,
+  processo: 170,
+  subprocesso: 170,
+  decisao: 160,
+  documento: 172,
+  dados: 184,
+  armazenamento: 150,
+  anotacao: 170,
+  qualidade: 184,
+};
+export const ALTURA_DO_NO: Record<FormaDoNo, number> = {
+  terminal: 46,
+  processo: 58,
+  subprocesso: 58,
+  decisao: 108,
+  documento: 66,
+  dados: 58,
+  armazenamento: 68,
+  anotacao: 58,
+  qualidade: 66,
+};
+
+/** Cor de destaque por tipo de elemento (editor e exportação). */
+export const ACENTO_DO_NO: Record<string, string> = {
+  inicio: "#0F766E",
+  fim: "#334155",
+  decisao: "#B45309",
+  nao_conformidade: "#B45309",
+  risco: "#B45309",
+  acao_corretiva: "#0F766E",
+  aprovacao: "#0F766E",
+  inspecao: "#0F766E",
+  anotacao: "#94A3B8",
+};
+export const ACENTO_PADRAO = "#102A43";

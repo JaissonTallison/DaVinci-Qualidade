@@ -2,52 +2,23 @@
 
 import type { CSSProperties } from "react";
 import { Handle, Position, type Node, type NodeProps } from "@xyflow/react";
-import type { DadosDoNo, FormaDoNo } from "./elementos";
+import {
+  ACENTO_DO_NO as ACENTO,
+  ACENTO_PADRAO as PADRAO,
+  ALTURA_DO_NO as ALTURA,
+  LARGURA_DO_NO as LARGURA,
+  type DadosDoNo,
+  type FormaDoNo,
+} from "./elementos";
 
 export type NoProcesso = Node<DadosDoNo, "no">;
 
-/** Cor de destaque por tipo de elemento. Petróleo é o padrão. */
-const ACENTO: Record<string, string> = {
-  inicio: "#0F766E",
-  fim: "#334155",
-  decisao: "#B45309",
-  nao_conformidade: "#B45309",
-  risco: "#B45309",
-  acao_corretiva: "#0F766E",
-  aprovacao: "#0F766E",
-  inspecao: "#0F766E",
-  anotacao: "#94A3B8",
-};
-const PADRAO = "#102A43";
 const SELECIONADO = "#0F766E";
 const PONTO: CSSProperties = {
   width: 9,
   height: 9,
   background: "#102A43",
   border: "2px solid var(--color-superficie)",
-};
-
-const LARGURA: Record<FormaDoNo, number> = {
-  terminal: 150,
-  processo: 170,
-  subprocesso: 170,
-  decisao: 160,
-  documento: 172,
-  dados: 184,
-  armazenamento: 150,
-  anotacao: 170,
-  qualidade: 184,
-};
-const ALTURA: Record<FormaDoNo, number> = {
-  terminal: 46,
-  processo: 58,
-  subprocesso: 58,
-  decisao: 108,
-  documento: 66,
-  dados: 58,
-  armazenamento: 68,
-  anotacao: 58,
-  qualidade: 66,
 };
 
 const COM_SVG: FormaDoNo[] = ["decisao", "documento", "dados", "armazenamento"];

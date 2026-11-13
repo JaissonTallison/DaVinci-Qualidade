@@ -5,6 +5,7 @@
  */
 import { z } from 'zod';
 import {
+  chaves,
   data,
   enumOpcional,
   opcional,
@@ -45,7 +46,28 @@ export const enviarRevisaoProcessoSchema = z.object({ versao });
 export const aprovarProcessoSchema = z.object({
   versao,
   dataProximaRevisao: opcional(data('a próxima revisão')),
+  parecer: textoOpcional(500),
 });
+
+/** Ações registradas na trilha de auditoria do processo (fase 5). */
+export const ACOES_PROCESSO = {
+  criado: 'Criado',
+  enviado_revisao: 'Enviado para revisão',
+  aprovado: 'Aprovado',
+  publicado: 'Publicado',
+  nova_revisao: 'Nova revisão aberta',
+  obsoleto: 'Tornado obsoleto',
+  cancelado: 'Cancelado',
+} as const;
+export type AcaoProcesso = keyof typeof ACOES_PROCESSO;
+
+export interface EventoDoProcesso {
+  id: string;
+  acao: AcaoProcesso;
+  usuarioNome: string | null;
+  comentario: string | null;
+  criadoEm: string;
+}
 export const publicarProcessoSchema = z.object({ versao });
 export const novaRevisaoProcessoSchema = z.object({
   versao,
@@ -77,6 +99,36 @@ export const salvarDiagramaProcessoSchema = z.object({
     edges: z.array(arestaDoDiagrama).max(2000, 'Diagrama grande demais.'),
   }),
 });
+// ---- Vínculos: registros de outros módulos ligados ao processo (fase 6). ----
+export const TIPOS_VINCULO = {
+  nao_conformidade: 'Não conformidade',
+  plano_de_acao: 'Plano de ação',
+  inspecao: 'Inspeção',
+  documento: 'Documento controlado',
+  risco: 'Risco / oportunidade',
+} as const;
+export type TipoVinculo = keyof typeof TIPOS_VINCULO;
+
+export const novoVinculoSchema = z.object({
+  tipo: z.enum(chaves(TIPOS_VINCULO), { error: 'Escolha o tipo de registro.' }),
+  registroId: z.uuid('Registro inválido.'),
+  rotulo: texto('o registro', 200, 1),
+});
+export const removerVinculoSchema = z.object({
+  vinculoId: z.uuid('Vínculo inválido.'),
+});
+export interface VinculoDoProcesso {
+  id: string;
+  tipo: TipoVinculo;
+  registroId: string;
+  rotulo: string;
+}
+
+/** Geração de diagrama a partir de texto por IA (fase 4). */
+export const gerarIaDiagramaSchema = z.object({
+  texto: texto('o texto do procedimento', 20000, 10),
+});
+
 export interface DiagramaProcesso {
   nodes: Array<{
     id: string;
@@ -132,4 +184,8 @@ export interface Processo {
 export interface ProcessoComRevisoes extends Processo {
   /** Mais recentes primeiro. */
   revisoes: RevisaoDoProcesso[];
+  /** Registros de outros módulos ligados a este processo. */
+  vinculos: VinculoDoProcesso[];
+  /** Trilha de auditoria (mais recentes primeiro). */
+  eventos: EventoDoProcesso[];
 }

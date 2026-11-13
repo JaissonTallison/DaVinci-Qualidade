@@ -28,13 +28,24 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import type { DiagramaProcesso } from "@davinci/types";
-import { salvarDiagramaProcesso } from "@/lib/acoes-processos";
+import {
+  gerarDiagramaIaProcesso,
+  salvarDiagramaProcesso,
+} from "@/lib/acoes-processos";
 import {
   dadosPadrao,
   PALETA,
   type ElementoDaPaleta,
 } from "./elementos";
 import { NoDoProcesso, type NoProcesso } from "./no-do-processo";
+import {
+  baixarPng,
+  baixarSvg,
+  baixarTexto,
+  gerarSvg,
+} from "./exportar-diagrama";
+import { gerarBpmn, importarBpmn } from "./bpmn";
+import { gerarDoTexto } from "./assistente-texto";
 
 const TIPO_ARRASTO = "application/davinci-no";
 
@@ -84,6 +95,10 @@ function Editor({
   const [sujo, setSujo] = useState(false);
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [assistente, setAssistente] = useState(false);
+  const [texto, setTexto] = useState("");
+  const [erroAssistente, setErroAssistente] = useState<string | null>(null);
+  const [iaProcessando, setIaProcessando] = useState(false);
 
   const nodesRef = useRef(nodes);
   const edgesRef = useRef(edges);
@@ -249,6 +264,76 @@ function Editor({
     setSujo(false);
   }, [processoId]);
 
+  const exportar = useCallback(
+    async (tipo: "png" | "svg" | "bpmn") => {
+      const nome = `${codigo}-diagrama`;
+      if (tipo === "bpmn") {
+        const xml = gerarBpmn(nodesRef.current, edgesRef.current);
+        baixarTexto(xml, `${codigo}-processo.bpmn`, "application/bpmn+xml");
+        return;
+      }
+      const { svg, width, height } = gerarSvg(nodesRef.current, edgesRef.current);
+      if (tipo === "svg") baixarSvg(svg, nome);
+      else await baixarPng(svg, width, height, nome);
+    },
+    [codigo],
+  );
+
+  const aplicarRascunho = useCallback(
+    (novos: NoProcesso[], novasArestas: Edge[]) => {
+      if (novos.length === 0) return;
+      registrar();
+      setNodes(novos);
+      setEdges(novasArestas);
+      setSelecionadoId(null);
+      setSujo(true);
+      setAssistente(false);
+      setErroAssistente(null);
+    },
+    [registrar],
+  );
+
+  const gerarDoTextoAgora = useCallback(() => {
+    const { nodes: ns, edges: es } = gerarDoTexto(texto);
+    if (ns.length === 0) {
+      setErroAssistente("Escreva ao menos uma etapa (uma por linha).");
+      return;
+    }
+    aplicarRascunho(ns as unknown as NoProcesso[], es as unknown as Edge[]);
+  }, [texto, aplicarRascunho]);
+
+  const gerarComIa = useCallback(async () => {
+    setErroAssistente(null);
+    setIaProcessando(true);
+    const r = await gerarDiagramaIaProcesso(texto);
+    setIaProcessando(false);
+    if ("erro" in r) {
+      setErroAssistente(r.erro.mensagem);
+      return;
+    }
+    aplicarRascunho(
+      r.diagrama.nodes as unknown as NoProcesso[],
+      r.diagrama.edges as unknown as Edge[],
+    );
+  }, [texto, aplicarRascunho]);
+
+  const importarArquivoBpmn = useCallback(
+    async (arquivo: File) => {
+      try {
+        const xml = await arquivo.text();
+        const { nodes: ns, edges: es } = importarBpmn(xml);
+        if (ns.length === 0) {
+          setErroAssistente("Nenhum elemento compatível no arquivo BPMN.");
+          return;
+        }
+        aplicarRascunho(ns as unknown as NoProcesso[], es as unknown as Edge[]);
+      } catch {
+        setErroAssistente("Não foi possível ler o arquivo BPMN.");
+      }
+    },
+    [aplicarRascunho],
+  );
+
   const nodeTypes = useMemo(() => ({ no: NoDoProcesso }), []);
   const selecionado = nodes.find((n) => n.id === selecionadoId) ?? null;
 
@@ -265,6 +350,42 @@ function Editor({
           <span className="font-mono text-sm text-texto-2">{codigo}</span>{" "}
           <span className="text-sm font-medium text-texto">{nome}</span>
         </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-texto-2">Exportar</span>
+          <button
+            type="button"
+            onClick={() => exportar("png")}
+            className="rounded-md border border-borda px-2.5 py-1.5 text-sm text-texto"
+          >
+            PNG
+          </button>
+          <button
+            type="button"
+            onClick={() => exportar("svg")}
+            className="rounded-md border border-borda px-2.5 py-1.5 text-sm text-texto"
+          >
+            SVG
+          </button>
+          <button
+            type="button"
+            onClick={() => exportar("bpmn")}
+            className="rounded-md border border-borda px-2.5 py-1.5 text-sm text-texto"
+          >
+            BPMN
+          </button>
+        </div>
+        {podeEditar && (
+          <button
+            type="button"
+            onClick={() => {
+              setErroAssistente(null);
+              setAssistente(true);
+            }}
+            className="rounded-md border border-borda px-3 py-1.5 text-sm text-texto"
+          >
+            Gerar / importar
+          </button>
+        )}
         {podeEditar && (
           <div className="flex items-center gap-2">
             {erro && <span className="text-sm text-nao-conforme">{erro}</span>}
@@ -374,6 +495,88 @@ function Editor({
           </aside>
         )}
       </div>
+
+      {assistente && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-lg rounded-md bg-superficie p-5 shadow-cartao">
+            <div className="flex items-center justify-between">
+              <h2 className="text-md font-semibold text-texto">
+                Gerar ou importar diagrama
+              </h2>
+              <button
+                type="button"
+                onClick={() => setAssistente(false)}
+                className="text-sm text-texto-2 hover:text-texto"
+              >
+                Fechar
+              </button>
+            </div>
+            <p className="mt-1 text-sm text-texto-2">
+              Isto substitui o diagrama atual por um rascunho. Revise e ajuste
+              antes de salvar.
+            </p>
+
+            <div className="mt-4">
+              <p className="text-sm font-medium text-texto">
+                A partir de um texto
+              </p>
+              <p className="mb-1.5 text-xs text-texto-2">
+                Uma etapa por linha. Linhas que começam com “se/caso/quando” ou
+                terminam com “?” viram decisão. Nada é inventado: só o que está
+                no texto.
+              </p>
+              <textarea
+                value={texto}
+                onChange={(e) => setTexto(e.target.value)}
+                rows={6}
+                placeholder={
+                  "1. Receber matéria-prima\n2. Conferir documentação\n3. Se aprovado?\n4. Liberar para estoque"
+                }
+                className="w-full rounded-md border border-borda bg-afundado px-3 py-2 text-sm text-texto"
+              />
+              <div className="mt-2 flex flex-wrap justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={gerarDoTextoAgora}
+                  disabled={iaProcessando}
+                  className="rounded-md border border-borda px-4 py-1.5 text-sm text-texto disabled:opacity-50"
+                >
+                  Gerar rascunho simples
+                </button>
+                <button
+                  type="button"
+                  onClick={gerarComIa}
+                  disabled={iaProcessando}
+                  className="rounded-md bg-marinho px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+                >
+                  {iaProcessando ? "Gerando com IA…" : "Gerar com IA (Claude)"}
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-4 border-t border-borda pt-4">
+              <p className="text-sm font-medium text-texto">Importar BPMN 2.0</p>
+              <p className="mb-1.5 text-xs text-texto-2">
+                Arquivo .bpmn ou .xml. São lidos os elementos e posições
+                compatíveis.
+              </p>
+              <input
+                type="file"
+                accept=".bpmn,.xml,application/xml,text/xml"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) void importarArquivoBpmn(f);
+                }}
+                className="text-sm text-texto"
+              />
+            </div>
+
+            {erroAssistente && (
+              <p className="mt-3 text-sm text-nao-conforme">{erroAssistente}</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
