@@ -451,6 +451,9 @@ export const PATTERNS = {
     encerrar: 'processos.encerrar',
     cancelar: 'processos.cancelar',
     salvarDiagrama: 'processos.salvar-diagrama',
+    adicionarVinculo: 'processos.adicionar-vinculo',
+    removerVinculo: 'processos.remover-vinculo',
+    gerarIaDiagrama: 'processos.ia-diagrama',
   },
   servicos: {
     resumo: 'servicos.resumo',

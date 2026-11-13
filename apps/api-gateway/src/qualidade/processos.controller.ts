@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -16,12 +17,16 @@ import {
   enviarRevisaoProcessoSchema,
   filtroProcessosSchema,
   novaRevisaoProcessoSchema,
+  gerarIaDiagramaSchema,
   novoProcessoSchema,
+  novoVinculoSchema,
   publicarProcessoSchema,
+  removerVinculoSchema,
   salvarDiagramaProcessoSchema,
   PATTERNS,
   SERVICES,
   type Contexto,
+  type DiagramaProcesso,
   type Processo,
   type ProcessoComRevisoes,
 } from '@davinci/types';
@@ -74,6 +79,20 @@ export class ProcessosController {
     return this.mensageria.enviar<Processo>(
       SERVICES.QUALIDADE,
       P.criar,
+      dados,
+      ctx,
+    );
+  }
+
+  // Literal antes de ':id' para não ser capturada como id.
+  @Post('ia-diagrama')
+  @Permissao('qualidade.editar')
+  @HttpCode(200)
+  gerarIaDiagrama(@ContextoHttp() ctx: Contexto, @Body() dados: unknown) {
+    validarEntrada(gerarIaDiagramaSchema, dados, ctx.rastreioId);
+    return this.mensageria.enviar<DiagramaProcesso>(
+      SERVICES.QUALIDADE,
+      P.gerarIaDiagrama,
       dados,
       ctx,
     );
@@ -181,6 +200,34 @@ export class ProcessosController {
       P.salvarDiagrama,
       id,
       alteracoes,
+    );
+  }
+
+  @Post(':id/vinculos')
+  @Permissao('qualidade.editar')
+  @HttpCode(200)
+  adicionarVinculo(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Body() alteracoes: unknown,
+  ) {
+    return this.acao(ctx, novoVinculoSchema, P.adicionarVinculo, id, alteracoes);
+  }
+
+  @Delete(':id/vinculos/:vinculoId')
+  @Permissao('qualidade.editar')
+  @HttpCode(200)
+  removerVinculo(
+    @ContextoHttp() ctx: Contexto,
+    @Param('id') id: string,
+    @Param('vinculoId') vinculoId: string,
+  ) {
+    validarEntrada(removerVinculoSchema, { vinculoId }, ctx.rastreioId);
+    return this.mensageria.enviar(
+      SERVICES.QUALIDADE,
+      P.removerVinculo,
+      { id, alteracoes: { vinculoId } },
+      ctx,
     );
   }
 

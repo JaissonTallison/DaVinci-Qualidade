@@ -46,20 +46,32 @@ export function AprovarProcesso({ processo }: { processo: Processo }) {
         rotuloDoBotao="Aprovar processo"
       >
         {(erros, v) => (
-          <Campo
-            id="dataProximaRevisao"
-            rotulo="Próxima revisão"
-            erro={erros.dataProximaRevisao}
-            ajuda="Opcional: quando o processo deve ser revisado de novo."
-          >
-            <input
+          <div className="grid gap-5">
+            <Campo
               id="dataProximaRevisao"
-              name="dataProximaRevisao"
-              type="date"
-              defaultValue={v.dataProximaRevisao}
-              className={campo}
-            />
-          </Campo>
+              rotulo="Próxima revisão"
+              erro={erros.dataProximaRevisao}
+              ajuda="Opcional: quando o processo deve ser revisado de novo."
+            >
+              <input
+                id="dataProximaRevisao"
+                name="dataProximaRevisao"
+                type="date"
+                defaultValue={v.dataProximaRevisao}
+                className={campo}
+              />
+            </Campo>
+            <Campo id="parecer" rotulo="Parecer" erro={erros.parecer}>
+              <textarea
+                id="parecer"
+                name="parecer"
+                rows={2}
+                maxLength={500}
+                defaultValue={v.parecer}
+                className={areaDeTexto}
+              />
+            </Campo>
+          </div>
         )}
       </Formulario>
     </Bloco>

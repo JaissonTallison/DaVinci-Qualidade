@@ -176,4 +176,67 @@ describe('Modelagem de processos', () => {
       ).codigo,
     ).toBe('REGRA_DE_NEGOCIO');
   });
+
+  it('vincula e desvincula um registro de outro módulo', async () => {
+    const proc = await processos.criar(ana, {
+      codigo: 'PR-VINC-004',
+      nome: 'Processo com vínculo',
+      elaboradoPor: 'Ana',
+    });
+    const registroId = uuidv7();
+    const comVinculo = await processos.adicionarVinculo(ana, {
+      id: proc.id,
+      alteracoes: {
+        tipo: 'nao_conformidade',
+        registroId,
+        rotulo: 'NC-2026-010 · Teste',
+      },
+    });
+    expect(comVinculo.vinculos).toHaveLength(1);
+    expect(comVinculo.vinculos[0]).toMatchObject({
+      tipo: 'nao_conformidade',
+      registroId,
+    });
+
+    // o mesmo registro não duplica
+    const denovo = await processos.adicionarVinculo(ana, {
+      id: proc.id,
+      alteracoes: {
+        tipo: 'nao_conformidade',
+        registroId,
+        rotulo: 'NC-2026-010 · Teste',
+      },
+    });
+    expect(denovo.vinculos).toHaveLength(1);
+
+    const sem = await processos.removerVinculo(ana, {
+      id: proc.id,
+      alteracoes: { vinculoId: comVinculo.vinculos[0]!.id },
+    });
+    expect(sem.vinculos).toHaveLength(0);
+  });
+
+  it('registra a trilha de ações da governança', async () => {
+    const proc = await processos.criar(ana, {
+      codigo: 'PR-LOG-005',
+      nome: 'Processo com trilha',
+      elaboradoPor: 'Ana',
+    });
+    const emRev = await processos.enviarRevisao(ana, {
+      id: proc.id,
+      alteracoes: { versao: proc.versao },
+    });
+    await processos.aprovar(diretor, {
+      id: proc.id,
+      alteracoes: { versao: emRev.versao, parecer: 'Revisado e aprovado.' },
+    });
+    const completo = await processos.obter(ana, { id: proc.id });
+    const acoes = completo.eventos.map((e) => e.acao);
+    expect(acoes).toContain('criado');
+    expect(acoes).toContain('enviado_revisao');
+    expect(acoes).toContain('aprovado');
+    const aprovado = completo.eventos.find((e) => e.acao === 'aprovado');
+    expect(aprovado?.comentario).toBe('Revisado e aprovado.');
+    expect(aprovado?.usuarioNome).toBe('Diretor');
+  });
 });
